@@ -18,7 +18,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
-		public void ConnectTest()
+		public void CreateFileTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
 
