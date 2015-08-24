@@ -1,4 +1,6 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Security;
 
@@ -6,7 +8,7 @@ namespace SystemInterface
 {
 	public class RemoteAdministration
 	{
-		public void CreateFile(string ip, string username, string password, string path, string value)
+		private Collection<PSObject> ExecutePowershell(string ip, string username, string password, Action<PowerShell> powershellAction)
 		{
 			string shell = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell";
 
@@ -34,13 +36,25 @@ namespace SystemInterface
 					PowerShell powershell = PowerShell.Create();
 					powershell.Runspace = runSpace;
 
-					powershell.AddCommand("Set-Content");
-					powershell.AddParameter("Path", path);
-					powershell.AddParameter("Value", value);
+					powershellAction(powershell);
 
-					powershell.Invoke();
+					Collection<PSObject> returnValue = powershell.Invoke();
+
+					return returnValue;
 				}
 			}
+		}
+
+		public void CreateFile(string ip, string username, string password, string path, string value)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("Set-Content");
+				powershell.AddParameter("Path", path);
+				powershell.AddParameter("Value", value);
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
 		}
 	}
 }
