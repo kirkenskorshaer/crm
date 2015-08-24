@@ -40,5 +40,16 @@ namespace SystemInterfaceTest
 
 			Assert.True(exists);
 		}
+
+		[Test]
+		public void ServiceExistsRetunsFalseOnNonExistingService()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			bool exists = remoteAdministration.ServiceExists(server.Ip, server.Username, server.Password, Guid.NewGuid().ToString());
+
+			Assert.False(exists);
+		}
 	}
 }
