@@ -29,5 +29,16 @@ namespace SystemInterfaceTest
 
 			remoteAdministration.CreateFile(server.Ip, server.Username, server.Password, path, testText);
 		}
+
+		[Test]
+		public void ServiceExistsRetunsTrueOnExistingService()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			bool exists = remoteAdministration.ServiceExists(server.Ip, server.Username, server.Password, "WinRM");
+
+			Assert.True(exists);
+		}
 	}
 }
