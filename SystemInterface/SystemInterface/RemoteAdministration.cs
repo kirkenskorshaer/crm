@@ -56,5 +56,18 @@ namespace SystemInterface
 
 			ExecutePowershell(ip, username, password, powerShellAction);
 		}
+
+		public bool ServiceExists(string ip, string username, string password, string serviceName)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("Get-Service");
+				powershell.AddParameter("Name", serviceName);
+			};
+
+			Collection<PSObject> psObjects = ExecutePowershell(ip, username, password, powerShellAction);
+
+			return psObjects.Count == 1;
+		}
 	}
 }
