@@ -174,5 +174,15 @@ namespace SystemInterface
 
 			ExecutePowershell(ip, username, password, powerShellAction);
 		}
+
+		public void ServiceDelete(string ip, string username, string password, string serviceName)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddScript("(Get-WmiObject Win32_Service -filter \"name = '" + serviceName + "'\").Delete()");
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
+		}
 	}
 }
