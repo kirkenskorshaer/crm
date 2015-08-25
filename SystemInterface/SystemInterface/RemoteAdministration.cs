@@ -97,12 +97,11 @@ namespace SystemInterface
 				{
 					runSpace.Open();
 
-					PowerShell powershell = PowerShell.Create();
-					powershell.Runspace = runSpace;
-					string powershellScript = "";
-					powershellScript += Environment.NewLine + "$append = [System.io.FileMode]::Append";
+					string powershellScriptBegin = "$append = [System.io.FileMode]::Append";
+					powershellScriptBegin += Environment.NewLine + "[System.io.FileStream] $targetStream = New-Object -TypeName 'System.io.FileStream' -ArgumentList(\"" + targetPath + "\", $append);";
 
-					powershellScript += Environment.NewLine + "[System.io.FileStream] $targetStream = New-Object -TypeName 'System.io.FileStream' -ArgumentList(\"" + targetPath + "\", $append);";
+					string powershellScriptEnd = Environment.NewLine + "$targetStream.Flush();";
+					powershellScriptEnd += Environment.NewLine + "$targetStream.Dispose()";
 
 					FileStream sourceStream = File.OpenRead(sourcePath);
 					int bufferSize = 1024;
@@ -110,20 +109,20 @@ namespace SystemInterface
 					int readBytes;
 					while ((readBytes = sourceStream.Read(readBuffer, 0, readBuffer.Length)) > 0)
 					{
+						PowerShell powershell = PowerShell.Create();
+						powershell.Runspace = runSpace;
+
 						string binaryString = readBuffer.ToList().Aggregate("", (summed, byteValue) => (string.IsNullOrWhiteSpace(summed) ? "" : summed + ",") + byteValue.ToString());
-						powershellScript += Environment.NewLine + "[byte[]] $readBuffer = " + binaryString;
-						powershellScript += Environment.NewLine + "$targetStream.Write($readBuffer, 0, " + readBytes + ");";
+						string powershellScriptData = Environment.NewLine + "[byte[]] $readBuffer = " + binaryString;
+						powershellScriptData += Environment.NewLine + "$targetStream.Write($readBuffer, 0, " + readBytes + ");";
+
+						powershell.AddScript(powershellScriptBegin + powershellScriptData + powershellScriptEnd);
+
+						powershell.Invoke();
 					}
 
 					sourceStream.Flush();
 					sourceStream.Dispose();
-
-					powershellScript += Environment.NewLine + "$targetStream.Flush();";
-					powershellScript += Environment.NewLine + "$targetStream.Dispose()";
-
-					powershell.AddScript(powershellScript);
-
-					powershell.Invoke();
 				}
 			}
 		}
