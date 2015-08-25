@@ -59,6 +59,7 @@ namespace SystemInterfaceTest
 			Server server = Server.GetFirst(_connection);
 
 			remoteAdministration.CopyFile(server.Ip, server.Username, server.Password, "C:/test/testfile.txt", "C:/test/testfile_copy.txt");
+			remoteAdministration.CopyFile(server.Ip, server.Username, server.Password, "C:/Users/Svend/Documents/GitHub/crm/ServiceRunner/ServiceRunner/bin/Release/ServiceRunner.exe", "C:/test/testfolder/ServiceRunner.exe");
 		}
 	}
 }
