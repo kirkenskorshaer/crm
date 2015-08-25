@@ -150,5 +150,17 @@ namespace SystemInterface
 
 			ExecutePowershell(ip, username, password, powerShellAction);
 		}
+
+		public void ServiceStart(string ip, string username, string password, string serviceName)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("Set-Service");
+				powershell.AddParameter("Name", serviceName);
+				powershell.AddParameter("Status", "Running");
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
+		}
 	}
 }
