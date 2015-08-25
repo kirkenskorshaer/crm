@@ -162,5 +162,17 @@ namespace SystemInterface
 
 			ExecutePowershell(ip, username, password, powerShellAction);
 		}
+
+		public void ServiceStop(string ip, string username, string password, string serviceName)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("Set-Service");
+				powershell.AddParameter("Name", serviceName);
+				powershell.AddParameter("Status", "Stopped");
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
+		}
 	}
 }
