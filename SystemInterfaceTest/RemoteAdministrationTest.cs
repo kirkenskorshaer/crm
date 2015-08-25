@@ -79,5 +79,14 @@ namespace SystemInterfaceTest
 
 			remoteAdministration.ServiceCreate(server.Ip, server.Username, server.Password, "kkkTest", "C:/test/testfolder/ServiceRunner.exe");
 		}
+
+		[Test]
+		public void ServiceStartTest()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			remoteAdministration.ServiceStart(server.Ip, server.Username, server.Password, "kkkTest");
+		}
 	}
 }
