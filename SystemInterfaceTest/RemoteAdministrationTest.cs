@@ -88,5 +88,14 @@ namespace SystemInterfaceTest
 
 			remoteAdministration.ServiceStart(server.Ip, server.Username, server.Password, "kkkTest");
 		}
+
+		[Test]
+		public void ServiceStopTest()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			remoteAdministration.ServiceStop(server.Ip, server.Username, server.Password, "kkkTest");
+		}
 	}
 }
