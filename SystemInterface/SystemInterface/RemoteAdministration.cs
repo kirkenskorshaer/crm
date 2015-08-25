@@ -138,5 +138,17 @@ namespace SystemInterface
 
 			ExecutePowershell(ip, username, password, powerShellAction);
 		}
+
+		public void ServiceCreate(string ip, string username, string password, string serviceName, string path)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("New-Service");
+				powershell.AddParameter("Name", serviceName);
+				powershell.AddParameter("BinaryPathName", path);
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
+		}
 	}
 }
