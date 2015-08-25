@@ -126,5 +126,17 @@ namespace SystemInterface
 				}
 			}
 		}
+
+		public void DirectoryCreate(string ip, string username, string password, string path)
+		{
+			Action<PowerShell> powerShellAction = (powershell) =>
+			{
+				powershell.AddCommand("New-Item");
+				powershell.AddParameter("ItemType", "directory");
+				powershell.AddParameter("Path", path);
+			};
+
+			ExecutePowershell(ip, username, password, powerShellAction);
+		}
 	}
 }
