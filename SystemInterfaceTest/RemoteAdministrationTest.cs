@@ -97,5 +97,14 @@ namespace SystemInterfaceTest
 
 			remoteAdministration.ServiceStop(server.Ip, server.Username, server.Password, "kkkTest");
 		}
+
+		[Test]
+		public void ServiceDeleteTest()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			remoteAdministration.ServiceDelete(server.Ip, server.Username, server.Password, "kkkTest");
+		}
 	}
 }
