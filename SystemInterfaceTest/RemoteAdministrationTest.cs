@@ -51,5 +51,14 @@ namespace SystemInterfaceTest
 
 			Assert.False(exists);
 		}
+
+		[Test]
+		public void CopyFileTest()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			remoteAdministration.CopyFile(server.Ip, server.Username, server.Password, "C:/test/testfile.txt", "C:/test/testfile_copy.txt");
+		}
 	}
 }
