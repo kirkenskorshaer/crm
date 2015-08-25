@@ -61,5 +61,14 @@ namespace SystemInterfaceTest
 			remoteAdministration.CopyFile(server.Ip, server.Username, server.Password, "C:/test/testfile.txt", "C:/test/testfile_copy.txt");
 			remoteAdministration.CopyFile(server.Ip, server.Username, server.Password, "C:/Users/Svend/Documents/GitHub/crm/ServiceRunner/ServiceRunner/bin/Release/ServiceRunner.exe", "C:/test/testfolder/ServiceRunner.exe");
 		}
+
+		[Test]
+		public void DirectoryCreateTest()
+		{
+			RemoteAdministration remoteAdministration = new RemoteAdministration();
+			Server server = Server.GetFirst(_connection);
+
+			remoteAdministration.DirectoryCreate(server.Ip, server.Username, server.Password, "c:/test/testfolder");
+		}
 	}
 }
