@@ -18,6 +18,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void CreateFileTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -53,6 +54,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void CopyFileTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -63,6 +65,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void DirectoryCreateTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -72,6 +75,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void ServiceCreateTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -81,6 +85,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void ServiceStartTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -90,6 +95,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void ServiceStopTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
@@ -99,6 +105,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
+		[Ignore]
 		public void ServiceDeleteTest()
 		{
 			RemoteAdministration remoteAdministration = new RemoteAdministration();
