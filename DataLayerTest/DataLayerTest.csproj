@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoDataTest\ConfigTest.cs" />
+    <Compile Include="MongoDataTest\Option\Options\EmailTest.cs" />
     <Compile Include="MongoDataTest\Option\ScheduleTest.cs" />
     <Compile Include="MongoDataTest\ServerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +60,7 @@
       <Name>DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
