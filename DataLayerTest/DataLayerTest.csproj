@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoDataTest\ConfigTest.cs" />
+    <Compile Include="MongoDataTest\Option\ScheduleTest.cs" />
     <Compile Include="MongoDataTest\ServerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
