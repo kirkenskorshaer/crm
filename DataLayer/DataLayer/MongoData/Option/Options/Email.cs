@@ -38,5 +38,5 @@ namespace DataLayer.MongoData.Option.Options
 		{
 			Delete<Email>(connection);
 		}
-    }
+	}
 }
