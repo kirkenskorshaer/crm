@@ -43,6 +43,7 @@
     <Compile Include="Heart.cs" />
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
+    <Compile Include="Option\Finder\OptionFinder.cs" />
     <Compile Include="Option\Options\Sleep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
