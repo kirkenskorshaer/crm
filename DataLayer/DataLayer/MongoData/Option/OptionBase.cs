@@ -29,8 +29,23 @@ namespace DataLayer.MongoData.Option
 			insertTask.Wait();
 		}
 
-		protected static List<TOptionType> Read<TOptionType>(MongoConnection connection, Expression<Func<TOptionType, bool>> filter)
+		protected static List<TOptionType> ReadById<TOptionType>(MongoConnection connection, ObjectId id)
+		where TOptionType : OptionBase
 		{
+			Expression<Func<TOptionType, bool>> filter = option => option._id == id;
+
+			IMongoCollection<TOptionType> options = connection.Database.GetCollection<TOptionType>(typeof(TOptionType).Name);
+			IFindFluent<TOptionType, TOptionType> configFind = options.Find(filter);
+			Task<List<TOptionType>> optionTask = configFind.ToListAsync();
+
+			return optionTask.Result;
+		}
+
+		public static List<TOptionType> ReadAllowed<TOptionType>(MongoConnection connection)
+		where TOptionType : OptionBase
+		{
+			Expression<Func<TOptionType, bool>> filter = option => option.Schedule.NextAllowedExecution <= DateTime.Now;
+
 			IMongoCollection<TOptionType> options = connection.Database.GetCollection<TOptionType>(typeof(TOptionType).Name);
 			IFindFluent<TOptionType, TOptionType> configFind = options.Find(filter);
 			Task<List<TOptionType>> optionTask = configFind.ToListAsync();

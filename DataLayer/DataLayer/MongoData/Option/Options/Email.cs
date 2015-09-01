@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using MongoDB.Bson;
 
@@ -24,8 +25,8 @@ namespace DataLayer.MongoData.Option.Options
 
 		public static List<Email> Read(MongoConnection connection, string id)
 		{
-			ObjectId mongoId = new ObjectId(id);
-			return Read<Email>(connection, email => email._id == mongoId);
+			ObjectId objectId = new ObjectId(id);
+			return ReadById<Email>(connection, objectId);
 		}
 
 		public void Update(MongoConnection connection)
