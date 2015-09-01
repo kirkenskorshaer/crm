@@ -50,6 +50,10 @@
       <Project>{4cbe92ce-9259-4154-a810-fff1d1234f71}</Project>
       <Name>DataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SystemInterface\SystemInterface\SystemInterface.csproj">
+      <Project>{869cba0e-a4e8-4339-851e-1c4e8d70041b}</Project>
+      <Name>SystemInterface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
