@@ -9,6 +9,7 @@ namespace DataLayer.MongoData.Option.Options
 	{
 		public string To { get; set; }
 		public string MessageBody { get; set; }
+		public string Subject { get; set; }
 
 		public static Email Create(MongoConnection connection, string name, Schedule schedule, string to, string messageBody)
 		{
