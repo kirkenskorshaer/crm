@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Heart.cs" />
+    <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
