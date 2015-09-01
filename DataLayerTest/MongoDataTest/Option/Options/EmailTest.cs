@@ -31,6 +31,27 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 		}
 
 		[Test]
+		public void ReadAllowedTest()
+		{
+			Email emailCreatedAllowedIn2Days = CreateEmail();
+			emailCreatedAllowedIn2Days.Schedule.NextAllowedExecution = emailCreatedAllowedIn2Days.Schedule.NextAllowedExecution.AddDays(2);
+			emailCreatedAllowedIn2Days.Update(_connection);
+
+			Email emailCreatedAllowed = CreateEmail();
+			emailCreatedAllowed.Schedule.NextAllowedExecution = emailCreatedAllowed.Schedule.NextAllowedExecution.AddDays(-1);
+			emailCreatedAllowed.Update(_connection);
+
+			Email emailCreatedAllowedTomorrow = CreateEmail();
+			emailCreatedAllowedTomorrow.Schedule.NextAllowedExecution = emailCreatedAllowedTomorrow.Schedule.NextAllowedExecution.AddDays(1);
+			emailCreatedAllowedTomorrow.Update(_connection);
+
+			List<Email> emails = OptionBase.ReadAllowed<Email>(_connection);
+			Email emailRetreived = emails.Single();
+
+			AssertEmail(emailCreatedAllowed, emailRetreived);
+		}
+
+		[Test]
 		public void Update()
 		{
 			Email emailCreated = CreateEmail();
