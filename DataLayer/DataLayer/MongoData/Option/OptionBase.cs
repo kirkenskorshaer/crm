@@ -20,6 +20,7 @@ namespace DataLayer.MongoData.Option
 		protected static void Create<TOptionType>(MongoConnection connection, TOptionType option, string name, Schedule schedule)
 		where TOptionType : OptionBase
 		{
+			option._id = ObjectId.GenerateNewId(DateTime.Now);
 			option.Name = name;
 			option.Schedule = schedule;
 
