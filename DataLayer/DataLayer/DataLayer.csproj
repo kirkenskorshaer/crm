@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="MongoData\Config.cs" />
     <Compile Include="MongoConnection.cs" />
+    <Compile Include="MongoData\Log.cs" />
     <Compile Include="MongoData\Option\Options\Email.cs" />
     <Compile Include="MongoData\Server.cs" />
     <Compile Include="MongoData\Option\Schedule.cs" />
