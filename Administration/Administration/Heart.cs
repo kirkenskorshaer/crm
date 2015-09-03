@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Administration.Option;
 using Administration.Option.Decider;
 using Administration.Option.Finder;
 using DataLayer;
+using DataLayer.MongoData;
 
 namespace Administration
 {
@@ -12,12 +14,13 @@ namespace Administration
 	{
 		private readonly OptionFinder _optionFinder;
 		private readonly OptionDecider _optionDecider;
+		private readonly MongoConnection _connection;
 
 		public Heart()
 		{
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
-			MongoConnection connection = MongoConnection.GetConnection(databaseName);
-			_optionFinder = new OptionFinder(connection);
+			_connection = MongoConnection.GetConnection(databaseName);
+			_optionFinder = new OptionFinder(_connection);
 			_optionDecider = new OptionDecider();
 		}
 
@@ -31,9 +34,9 @@ namespace Administration
 				{
 					HeartBeat();
 				}
-				catch
+				catch (Exception exception)
 				{
-					// ignored
+					Log.Write(_connection, exception.Message, exception.StackTrace);
 				}
 			}
 		}
