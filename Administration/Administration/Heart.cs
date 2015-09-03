@@ -41,6 +41,11 @@ namespace Administration
 			}
 		}
 
+		public void Stop()
+		{
+			_run = false;
+		}
+
 		public void HeartBeat()
 		{
 			List<OptionBase> options = _optionFinder.Find();
