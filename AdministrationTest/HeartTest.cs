@@ -69,5 +69,13 @@ namespace AdministrationTest
 
 			Assert.Greater(stopwatch.ElapsedMilliseconds, 100);
 		}
+
+		[Test]
+		[Ignore]
+		public void RunTest()
+		{
+			Heart heart = new Heart();
+			heart.Run();
+		}
 	}
 }
