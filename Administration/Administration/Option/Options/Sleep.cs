@@ -11,7 +11,7 @@ namespace Administration.Option.Options
 		{
 		}
 
-		public override void Execute()
+		protected override void ExecuteOption()
 		{
 			Thread.Sleep(SleepTime);
 		}

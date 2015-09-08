@@ -24,7 +24,7 @@ namespace Administration.Option.Options
 			}).ToList();
 		}
 
-		public override void Execute()
+		protected override void ExecuteOption()
 		{
 			SystemInterface.Email emailSender = new SystemInterface.Email();
 			emailSender.Send(_databaseEmail.MessageBody, _databaseEmail.Subject, Config.Email, _databaseEmail.To, Config.EmailSmtpHost, Config.EmailSmtpPort, Config.Email, Config.EmailPassword);

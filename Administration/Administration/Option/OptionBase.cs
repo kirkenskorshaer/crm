@@ -16,6 +16,13 @@ namespace Administration.Option
 			DatabaseOption = databaseOption;
 		}
 
-		public abstract void Execute();
+		protected abstract void ExecuteOption();
+
+		public void Execute()
+		{
+			ExecuteOption();
+
+			DatabaseOption?.Execute(Connection);
+		}
 	}
 }
