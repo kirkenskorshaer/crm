@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
 using MongoDB.Bson;
 
 namespace DataLayer.MongoData.Option.Options
@@ -38,6 +36,18 @@ namespace DataLayer.MongoData.Option.Options
 		public void Delete(MongoConnection connection)
 		{
 			Delete<Email>(connection);
+		}
+
+		protected override void Execute(MongoConnection connection, bool recurring)
+		{
+			if (recurring)
+			{
+				Update(connection);
+			}
+			else
+			{
+				Delete(connection);
+			}
 		}
 	}
 }

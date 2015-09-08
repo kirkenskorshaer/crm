@@ -71,5 +71,20 @@ namespace DataLayer.MongoData.Option
 			Task deleteTask = options.DeleteOneAsync(option => option._id == _id);
 			deleteTask.Wait();
 		}
+
+		protected abstract void Execute(MongoConnection connection, bool recurring);
+
+		public void Execute(MongoConnection connection)
+		{
+			if (Schedule.Recurring)
+			{
+				Schedule.MoveNext();
+				Execute(connection,true);
+			}
+			else
+			{
+				Execute(connection, false);
+			}
+		}
 	}
 }
