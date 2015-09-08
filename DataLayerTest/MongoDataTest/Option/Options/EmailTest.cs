@@ -79,6 +79,14 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 
 		private Email CreateEmail()
 		{
+			Schedule schedule = CreateSchedule();
+
+			Email emailCreated = Email.Create(_connection, "test", schedule, "svend.l@kirkenskorshaer.dk", "test");
+			return emailCreated;
+		}
+
+		private Schedule CreateSchedule()
+		{
 			Schedule schedule = new Schedule()
 			{
 				DaysOfMonthToSkip = new List<int> { 1, 2, 3 },
@@ -88,9 +96,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 				NextAllowedExecution = DateTime.Now,
 				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
 			};
-
-			Email emailCreated = Email.Create(_connection, "test", schedule, "svend.l@kirkenskorshaer.dk", "test");
-			return emailCreated;
+			return schedule;
 		}
 
 		private void AssertEmail(Email emailCreated, Email emailRetreived)
