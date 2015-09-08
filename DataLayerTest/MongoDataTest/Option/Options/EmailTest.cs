@@ -81,9 +81,9 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 		{
 			Schedule schedule = new Schedule()
 			{
-				DaysOfMonthToSkip = new List<int> {1, 2, 3},
-				DaysOfWeekToSkip = new List<DayOfWeek> {DayOfWeek.Monday, DayOfWeek.Thursday},
-				HoursOfDayToSkip = new List<int>() {3, 4, 5},
+				DaysOfMonthToSkip = new List<int> { 1, 2, 3 },
+				DaysOfWeekToSkip = new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Thursday },
+				HoursOfDayToSkip = new List<int>() { 3, 4, 5 },
 				Recurring = true,
 				NextAllowedExecution = DateTime.Now,
 				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
