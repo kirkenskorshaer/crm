@@ -8,7 +8,7 @@ namespace Administration.Option.Options
 {
 	public class Email : OptionBase
 	{
-		public Email(MongoConnection connection) : base(connection)
+		public Email(MongoConnection connection, DatabaseOptionBase databaseOption) : base(connection, databaseOption)
 		{
 		}
 
@@ -18,7 +18,7 @@ namespace Administration.Option.Options
 		{
 			List<DatabaseEmail> databaseEmails = DatabaseOptionBase.ReadAllowed<DatabaseEmail>(connection);
 
-			return databaseEmails.Select(databaseEmail => new Email(connection)
+			return databaseEmails.Select(databaseEmail => new Email(connection, databaseEmail)
 			{
 				_databaseEmail = databaseEmail,
 			}).ToList();
