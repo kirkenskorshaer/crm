@@ -58,6 +58,7 @@
     <Compile Include="MongoConnection.cs" />
     <Compile Include="MongoData\Log.cs" />
     <Compile Include="MongoData\Option\Options\Email.cs" />
+    <Compile Include="MongoData\Option\Options\ServiceCreate.cs" />
     <Compile Include="MongoData\Server.cs" />
     <Compile Include="MongoData\Option\Schedule.cs" />
     <Compile Include="MongoData\Option\OptionBase.cs" />
