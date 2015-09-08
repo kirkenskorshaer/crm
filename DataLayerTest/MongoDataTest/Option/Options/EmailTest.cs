@@ -95,24 +95,28 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 
 		private void AssertEmail(Email emailCreated, Email emailRetreived)
 		{
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Year, emailRetreived.Schedule.NextAllowedExecution.Year);
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Month, emailRetreived.Schedule.NextAllowedExecution.Month);
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Day, emailRetreived.Schedule.NextAllowedExecution.Day);
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Hour, emailRetreived.Schedule.NextAllowedExecution.Hour);
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Minute, emailRetreived.Schedule.NextAllowedExecution.Minute);
-			Assert.AreEqual(emailCreated.Schedule.NextAllowedExecution.Second, emailRetreived.Schedule.NextAllowedExecution.Second);
-
-			Assert.AreEqual(emailCreated.Schedule.DaysOfMonthToSkip, emailRetreived.Schedule.DaysOfMonthToSkip);
-			Assert.AreEqual(emailCreated.Schedule.DaysOfWeekToSkip, emailRetreived.Schedule.DaysOfWeekToSkip);
-			Assert.AreEqual(emailCreated.Schedule.HoursOfDayToSkip, emailRetreived.Schedule.HoursOfDayToSkip);
-			Assert.AreEqual(emailCreated.Schedule.Recurring, emailRetreived.Schedule.Recurring);
-			Assert.AreEqual(emailCreated.Schedule.TimeBetweenAllowedExecutions,
-				emailRetreived.Schedule.TimeBetweenAllowedExecutions);
+			AssertSchedule(emailCreated.Schedule, emailRetreived.Schedule);
 
 			Assert.AreEqual(emailCreated.MessageBody, emailRetreived.MessageBody);
 			Assert.AreEqual(emailCreated.To, emailRetreived.To);
 			Assert.AreEqual(emailCreated.Name, emailRetreived.Name);
 			Assert.AreEqual(emailCreated.Id, emailRetreived.Id);
+		}
+
+		private void AssertSchedule(Schedule scheduleExpected, Schedule scheduleActual)
+		{
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Year, scheduleActual.NextAllowedExecution.Year);
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Month, scheduleActual.NextAllowedExecution.Month);
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Day, scheduleActual.NextAllowedExecution.Day);
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Hour, scheduleActual.NextAllowedExecution.Hour);
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Minute, scheduleActual.NextAllowedExecution.Minute);
+			Assert.AreEqual(scheduleExpected.NextAllowedExecution.Second, scheduleActual.NextAllowedExecution.Second);
+
+			Assert.AreEqual(scheduleExpected.DaysOfMonthToSkip, scheduleActual.DaysOfMonthToSkip);
+			Assert.AreEqual(scheduleExpected.DaysOfWeekToSkip, scheduleActual.DaysOfWeekToSkip);
+			Assert.AreEqual(scheduleExpected.HoursOfDayToSkip, scheduleActual.HoursOfDayToSkip);
+			Assert.AreEqual(scheduleExpected.Recurring, scheduleActual.Recurring);
+			Assert.AreEqual(scheduleExpected.TimeBetweenAllowedExecutions, scheduleActual.TimeBetweenAllowedExecutions);
 		}
 	}
 }
