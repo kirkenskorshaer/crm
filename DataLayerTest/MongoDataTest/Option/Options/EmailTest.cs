@@ -77,6 +77,20 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 			Assert.False(emails.Any());
 		}
 
+		[Test]
+		public void ExecuteUpdatesRecurring()
+		{
+			Email emailCreated = CreateEmail();
+
+			emailCreated.Execute(_connection);
+
+			List<Email> emails = Email.Read(_connection, emailCreated.Id);
+			Schedule emailCreatedSchedule = CreateSchedule();
+			emailCreatedSchedule.MoveNext();
+
+			AssertSchedule(emailCreatedSchedule, emails.Single().Schedule);
+		}
+
 		private Email CreateEmail()
 		{
 			Schedule schedule = CreateSchedule();
