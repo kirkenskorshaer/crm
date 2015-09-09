@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataLayer.MongoData.Option.Options.Service
+﻿namespace DataLayer.MongoData.Option.Options.Service
 {
-	class ServiceDelete
+	public class ServiceDelete: OptionBase
 	{
+		public string Ip { get; set; }
+		public string ServiceName { get; set; }
+
+		protected override void Execute(MongoConnection connection, bool recurring)
+		{
+			if (recurring)
+			{
+				Update<ServiceCreate>(connection);
+			}
+			else
+			{
+				Delete<ServiceCreate>(connection);
+			}
+		}
 	}
 }
