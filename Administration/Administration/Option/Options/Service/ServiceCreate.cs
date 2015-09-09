@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SystemInterface;
+using DataLayer;
 
 namespace Administration.Option.Options.Service
 {
-	class ServiceCreate
+	public class ServiceCreate : OptionBase
 	{
+		public ServiceCreate(MongoConnection connection, DataLayer.MongoData.Option.OptionBase databaseOption) : base(connection, databaseOption)
+		{
+		}
+
+		protected override void ExecuteOption()
+		{
+			RemoteAdministration administration = new RemoteAdministration();
+
+			DataLayer.MongoData.Option.Options.ServiceCreate serviceCreateDatabase = (DataLayer.MongoData.Option.Options.ServiceCreate)DatabaseOption;
+
+			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceCreateDatabase.Ip);
+
+			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
+
+			if (serviceExists == false)
+			{
+				administration.ServiceCreate(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName, serviceCreateDatabase.Path);
+			}
+		}
 	}
 }
