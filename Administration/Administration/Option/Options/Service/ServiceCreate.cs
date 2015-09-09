@@ -15,6 +15,13 @@ namespace Administration.Option.Options.Service
 
 			DataLayer.MongoData.Option.Options.Service.ServiceCreate serviceCreateDatabase = (DataLayer.MongoData.Option.Options.Service.ServiceCreate)DatabaseOption;
 
+			bool serverExists = DataLayer.MongoData.Server.Exists(Connection, serviceCreateDatabase.Ip);
+
+			if (serverExists == false)
+			{
+				return;
+			}
+
 			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceCreateDatabase.Ip);
 
 			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
