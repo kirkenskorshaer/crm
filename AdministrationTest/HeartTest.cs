@@ -11,37 +11,12 @@ using NUnit.Framework;
 namespace AdministrationTest
 {
 	[TestFixture]
-	public class HeartTest
+	public class HeartTest : TestBase
 	{
-		private MongoConnection _connection;
-
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
-			_connection = MongoConnection.GetConnection(databaseName);
-		}
-
-		[SetUp]
-		public void SetUp()
-		{
-			_connection.DropDatabase();
-
-			Config config = new Config()
-			{
-				EmailPassword = "testPassword",
-				Email = "testEmail",
-				EmailSmtpPort = 0,
-				EmailSmtpHost = "testHost",
-			};
-
-			config.Insert(_connection);
-		}
-
 		[Test]
 		public void HeartBeatPrefersEmail()
 		{
-			Email.Create(_connection, "testName", new Schedule(), "testTo", "testMessageBody");
+			Email.Create(Connection, "testName", new Schedule(), "testTo", "testMessageBody");
 
 			Heart heart = new Heart();
 
