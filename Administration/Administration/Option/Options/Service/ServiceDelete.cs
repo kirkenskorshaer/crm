@@ -16,22 +16,22 @@ namespace Administration.Option.Options.Service
 		{
 			RemoteAdministration administration = new RemoteAdministration();
 
-			DataLayer.MongoData.Option.Options.Service.ServiceCreate serviceCreateDatabase = (DataLayer.MongoData.Option.Options.Service.ServiceCreate)DatabaseOption;
+			DataLayer.MongoData.Option.Options.Service.ServiceDelete serviceDeleteDatabase = (DataLayer.MongoData.Option.Options.Service.ServiceDelete)DatabaseOption;
 
-			bool serverExists = DataLayer.MongoData.Server.Exists(Connection, serviceCreateDatabase.Ip);
+			bool serverExists = DataLayer.MongoData.Server.Exists(Connection, serviceDeleteDatabase.Ip);
 
 			if (serverExists == false)
 			{
 				return;
 			}
 
-			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceCreateDatabase.Ip);
+			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceDeleteDatabase.Ip);
 
-			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
+			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceDeleteDatabase.ServiceName);
 
 			if (serviceExists == false)
 			{
-				administration.ServiceDelete(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
+				administration.ServiceDelete(server.Ip, server.Username, server.Password, serviceDeleteDatabase.ServiceName);
 			}
 		}
 
