@@ -13,7 +13,7 @@ namespace Administration.Option.Options.Service
 		{
 			RemoteAdministration administration = new RemoteAdministration();
 
-			DataLayer.MongoData.Option.Options.ServiceCreate serviceCreateDatabase = (DataLayer.MongoData.Option.Options.ServiceCreate)DatabaseOption;
+			DataLayer.MongoData.Option.Options.Service.ServiceCreate serviceCreateDatabase = (DataLayer.MongoData.Option.Options.Service.ServiceCreate)DatabaseOption;
 
 			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceCreateDatabase.Ip);
 

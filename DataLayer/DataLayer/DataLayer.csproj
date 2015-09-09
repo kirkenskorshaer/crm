@@ -58,7 +58,7 @@
     <Compile Include="MongoConnection.cs" />
     <Compile Include="MongoData\Log.cs" />
     <Compile Include="MongoData\Option\Options\Email.cs" />
-    <Compile Include="MongoData\Option\Options\ServiceCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Service\ServiceCreate.cs" />
     <Compile Include="MongoData\Server.cs" />
     <Compile Include="MongoData\Option\Schedule.cs" />
     <Compile Include="MongoData\Option\OptionBase.cs" />
@@ -67,6 +67,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

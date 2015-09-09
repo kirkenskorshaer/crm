@@ -1,4 +1,4 @@
-﻿namespace DataLayer.MongoData.Option.Options
+﻿namespace DataLayer.MongoData.Option.Options.Service
 {
 	public class ServiceCreate : OptionBase
 	{
