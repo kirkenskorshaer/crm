@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SystemInterface;
 using DataLayer;
 
@@ -35,6 +32,13 @@ namespace Administration.Option.Options.Service
 			{
 				administration.ServiceStop(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
 			}
+		}
+
+		public static List<ServiceStop> Find(MongoConnection connection)
+		{
+			List<DataLayer.MongoData.Option.Options.Service.ServiceStop> options = DataLayer.MongoData.Option.OptionBase.ReadAllowed<DataLayer.MongoData.Option.Options.Service.ServiceStop>(connection);
+
+			return options.Select(option => new ServiceStop(connection, option)).ToList();
 		}
 	}
 }
