@@ -59,6 +59,9 @@
     <Compile Include="MongoData\Log.cs" />
     <Compile Include="MongoData\Option\Options\Email.cs" />
     <Compile Include="MongoData\Option\Options\Service\ServiceCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Service\ServiceDelete.cs" />
+    <Compile Include="MongoData\Option\Options\Service\ServiceStart.cs" />
+    <Compile Include="MongoData\Option\Options\Service\ServiceStop.cs" />
     <Compile Include="MongoData\Server.cs" />
     <Compile Include="MongoData\Option\Schedule.cs" />
     <Compile Include="MongoData\Option\OptionBase.cs" />
