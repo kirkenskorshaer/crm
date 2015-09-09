@@ -47,6 +47,9 @@
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
+    <Compile Include="Option\Options\Service\ServiceDelete.cs" />
+    <Compile Include="Option\Options\Service\ServiceStart.cs" />
+    <Compile Include="Option\Options\Service\ServiceStop.cs" />
     <Compile Include="Option\Options\Sleep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
