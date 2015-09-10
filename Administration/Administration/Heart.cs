@@ -36,7 +36,7 @@ namespace Administration
 				}
 				catch (Exception exception)
 				{
-					Log.Write(_connection, exception.Message, exception.StackTrace);
+					Log.Write(_connection, exception.Message, exception.StackTrace, Config.LogLevelEnum.HeartError);
 				}
 			}
 		}
@@ -48,6 +48,7 @@ namespace Administration
 
 		public void HeartBeat()
 		{
+			Log.Write(_connection, $"heartbeat at {DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm")}", Config.LogLevelEnum.HeartMessage);
 			List<OptionBase> options = _optionFinder.Find();
 
 			if (options.Any() == false)

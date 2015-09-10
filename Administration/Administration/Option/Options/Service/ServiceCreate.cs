@@ -21,6 +21,7 @@ namespace Administration.Option.Options.Service
 
 			if (serverExists == false)
 			{
+				Log.Write(Connection, $"Could not find server {serviceCreateDatabase.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				return;
 			}
 
@@ -28,9 +29,14 @@ namespace Administration.Option.Options.Service
 
 			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName);
 
-			if (serviceExists == false)
+			if (serviceExists)
+			{
+				Log.Write(Connection, $"Service already existed {serviceCreateDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+			}
+			else
 			{
 				administration.ServiceCreate(server.Ip, server.Username, server.Password, serviceCreateDatabase.ServiceName, serviceCreateDatabase.Path);
+				Log.Write(Connection, $"Created service {serviceCreateDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 			}
 		}
 
