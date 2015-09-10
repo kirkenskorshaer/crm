@@ -15,14 +15,16 @@ namespace DataLayer.MongoData
 		public string StackTrace { get; set; }
 		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
 		public DateTime CreatedTime { get; set; }
+		public Config.LogLevelEnum LogLevel { get; set; }
 
-		public static void Write(MongoConnection connection, string message, string stackTrace)
+		public static void Write(MongoConnection connection, string message, string stackTrace, Config.LogLevelEnum logLevel)
 		{
 			Log log = new Log()
 			{
 				CreatedTime = DateTime.Now,
 				Message = message,
 				StackTrace = stackTrace,
+				LogLevel = logLevel,
 			};
 
 			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(name);
