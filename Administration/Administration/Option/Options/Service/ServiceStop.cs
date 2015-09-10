@@ -29,7 +29,7 @@ namespace Administration.Option.Options.Service
 
 			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceStopDatabase.ServiceName);
 
-			if (serviceExists == false)
+			if (serviceExists)
 			{
 				administration.ServiceStart(server.Ip, server.Username, server.Password, serviceStopDatabase.ServiceName);
 				Log.Write(Connection, $"Stopped service {serviceStopDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);

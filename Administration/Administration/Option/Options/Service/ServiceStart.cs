@@ -29,7 +29,7 @@ namespace Administration.Option.Options.Service
 
 			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceStartDatabase.ServiceName);
 
-			if (serviceExists == false)
+			if (serviceExists)
 			{
 				administration.ServiceStart(server.Ip, server.Username, server.Password, serviceStartDatabase.ServiceName);
 				Log.Write(Connection, $"Started service {serviceStartDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);

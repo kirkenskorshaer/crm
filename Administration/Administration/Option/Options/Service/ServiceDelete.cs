@@ -30,7 +30,7 @@ namespace Administration.Option.Options.Service
 
 			bool serviceExists = administration.ServiceExists(server.Ip, server.Username, server.Password, serviceDeleteDatabase.ServiceName);
 
-			if (serviceExists == false)
+			if (serviceExists)
 			{
 				administration.ServiceDelete(server.Ip, server.Username, server.Password, serviceDeleteDatabase.ServiceName);
 				Log.Write(Connection, $"Deleted service {serviceDeleteDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
