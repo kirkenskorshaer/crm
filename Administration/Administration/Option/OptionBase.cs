@@ -13,6 +13,7 @@ namespace Administration.Option
 		{
 			Connection = connection;
 			Config = DataLayer.MongoData.Config.GetConfig(Connection);
+			Log.LogLevel = Config.LogLevel;
 			DatabaseOption = databaseOption;
 		}
 
