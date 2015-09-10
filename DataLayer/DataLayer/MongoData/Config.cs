@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -14,6 +15,16 @@ namespace DataLayer.MongoData
 		public string EmailPassword { get; set; }
 		public string EmailSmtpHost { get; set; }
 		public int EmailSmtpPort { get; set; }
+		public LogLevelEnum LogLevel { get; set; }
+
+		[Flags]
+		public enum LogLevelEnum
+		{
+			HeartError = 1,
+			HeartMessage = 2,
+			OptionError = 4,
+			OptionMessage = 8,
+		}
 
 		public static Config GetConfig(MongoConnection connection)
 		{
