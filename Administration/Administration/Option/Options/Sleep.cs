@@ -5,7 +5,7 @@ namespace Administration.Option.Options
 {
 	public class Sleep : OptionBase
 	{
-		internal static int SleepTime = 100;
+		internal static int SleepTime = 1000;
 
 		public Sleep(MongoConnection connection) : base(connection, null)
 		{
