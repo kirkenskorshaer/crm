@@ -58,7 +58,26 @@ namespace Administration
 
 			OptionBase bestOption = _optionDecider.Decide(options);
 
-			bestOption.Execute();
+			try
+			{
+				bool isSuccess = bestOption.Execute();
+
+				if (isSuccess)
+				{
+					_optionDecider.MarkAsSuccess(bestOption);
+				}
+				else
+				{
+					_optionDecider.MarkAsFailiure(bestOption);
+				}
+			}
+			catch (Exception exception)
+			{
+				Log.Write(_connection, exception.Message, exception.StackTrace, Config.LogLevelEnum.HeartError);
+				_optionDecider.MarkAsFailiure(bestOption);
+			}
+
+			_optionDecider.Decrease();
 		}
 	}
 }

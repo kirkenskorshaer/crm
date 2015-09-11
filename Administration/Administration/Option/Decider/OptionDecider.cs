@@ -45,5 +45,30 @@ namespace Administration.Option.Decider
 
 			return 1-successSignal.Strength;
 		}
+
+		public void MarkAsSuccess(OptionBase bestOption)
+		{
+			if (bestOption.DatabaseOption == null)
+			{
+				return;
+			}
+
+			Signal.IncreaseSignal(_connection, bestOption.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Success, 1d);
+		}
+
+		public void MarkAsFailiure(OptionBase bestOption)
+		{
+			if (bestOption.DatabaseOption == null)
+			{
+				return;
+			}
+
+			Signal.IncreaseSignal(_connection, bestOption.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Fail, 25d);
+		}
+
+		public void Decrease()
+		{
+			Signal.DecreaseAll(_connection, 1.2d);
+		}
 	}
 }
