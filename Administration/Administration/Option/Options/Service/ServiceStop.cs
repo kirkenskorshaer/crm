@@ -11,7 +11,7 @@ namespace Administration.Option.Options.Service
 		{
 		}
 
-		protected override void ExecuteOption()
+		protected override bool ExecuteOption()
 		{
 			RemoteAdministration administration = new RemoteAdministration();
 
@@ -22,7 +22,7 @@ namespace Administration.Option.Options.Service
 			if (serverExists == false)
 			{
 				Log.Write(Connection, $"Could not find server {serviceStopDatabase.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
-				return;
+				return false;
 			}
 
 			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceStopDatabase.Ip);
@@ -33,10 +33,12 @@ namespace Administration.Option.Options.Service
 			{
 				administration.ServiceStart(server.Ip, server.Username, server.Password, serviceStopDatabase.ServiceName);
 				Log.Write(Connection, $"Stopped service {serviceStopDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+				return true;
 			}
 			else
 			{
 				Log.Write(Connection, $"Service not found {serviceStopDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				return false;
 			}
 		}
 

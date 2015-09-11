@@ -11,9 +11,10 @@ namespace Administration.Option.Options
 		{
 		}
 
-		protected override void ExecuteOption()
+		protected override bool ExecuteOption()
 		{
 			Thread.Sleep(SleepTime);
+			return true;
 		}
 	}
 }

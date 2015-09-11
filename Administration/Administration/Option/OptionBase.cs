@@ -17,13 +17,15 @@ namespace Administration.Option
 			DatabaseOption = databaseOption;
 		}
 
-		protected abstract void ExecuteOption();
+		protected abstract bool ExecuteOption();
 
-		public void Execute()
+		public bool Execute()
 		{
-			ExecuteOption();
+			bool isSuccess = ExecuteOption();
 
 			DatabaseOption?.Execute(Connection);
+
+			return isSuccess;
 		}
 	}
 }

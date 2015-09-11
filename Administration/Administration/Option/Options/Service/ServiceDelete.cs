@@ -12,7 +12,7 @@ namespace Administration.Option.Options.Service
 		{
 		}
 
-		protected override void ExecuteOption()
+		protected override bool ExecuteOption()
 		{
 			RemoteAdministration administration = new RemoteAdministration();
 
@@ -23,7 +23,7 @@ namespace Administration.Option.Options.Service
 			if (serverExists == false)
 			{
 				Log.Write(Connection, $"Could not find server {serviceDeleteDatabase.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
-				return;
+				return true;
 			}
 
 			DataLayer.MongoData.Server server = DataLayer.MongoData.Server.GetServer(Connection, serviceDeleteDatabase.Ip);
@@ -34,10 +34,12 @@ namespace Administration.Option.Options.Service
 			{
 				administration.ServiceDelete(server.Ip, server.Username, server.Password, serviceDeleteDatabase.ServiceName);
 				Log.Write(Connection, $"Deleted service {serviceDeleteDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+				return true;
 			}
 			else
 			{
 				Log.Write(Connection, $"Service not found {serviceDeleteDatabase.ServiceName} on ip {server.Ip}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				return false;
 			}
 		}
 
