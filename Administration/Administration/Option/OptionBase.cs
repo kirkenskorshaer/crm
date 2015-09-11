@@ -7,7 +7,7 @@ namespace Administration.Option
 	{
 		protected readonly MongoConnection Connection;
 		protected readonly DataLayer.MongoData.Config Config;
-		protected readonly DatabaseOptionType DatabaseOption;
+		internal readonly DatabaseOptionType DatabaseOption;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{

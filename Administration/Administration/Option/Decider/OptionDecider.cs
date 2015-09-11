@@ -21,7 +21,29 @@ namespace Administration.Option.Decider
 				return options.First(option => option.GetType().Name == "Email");
 			}
 
+			options = options.OrderByDescending(option => SignalStrength(option)).ToList();
+
 			return options.First();
+		}
+
+		private double SignalStrength(OptionBase option)
+		{
+			string name = option.GetType().Name;
+
+			if (name == "Sleep")
+			{
+				return 0d;
+			}
+
+			Signal failSignal = Signal.ReadSignal(_connection, option.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Fail);
+			Signal successSignal = Signal.ReadSignal(_connection, option.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Success);
+
+			if (failSignal.Strength >= 1)
+			{
+				return -1;
+			}
+
+			return 1-successSignal.Strength;
 		}
 	}
 }
