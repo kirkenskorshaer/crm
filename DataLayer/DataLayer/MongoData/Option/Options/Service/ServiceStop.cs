@@ -9,11 +9,11 @@
 		{
 			if (recurring)
 			{
-				Update<ServiceCreate>(connection);
+				Update<ServiceStop>(connection);
 			}
 			else
 			{
-				Delete<ServiceCreate>(connection);
+				Delete<ServiceStop>(connection);
 			}
 		}
 	}
