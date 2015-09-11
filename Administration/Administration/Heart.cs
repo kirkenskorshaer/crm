@@ -21,7 +21,7 @@ namespace Administration
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
 			_connection = MongoConnection.GetConnection(databaseName);
 			_optionFinder = new OptionFinder(_connection);
-			_optionDecider = new OptionDecider();
+			_optionDecider = new OptionDecider(_connection);
 		}
 
 		private bool _run = true;
