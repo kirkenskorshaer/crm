@@ -65,6 +65,7 @@
     <Compile Include="MongoData\Server.cs" />
     <Compile Include="MongoData\Option\Schedule.cs" />
     <Compile Include="MongoData\Option\OptionBase.cs" />
+    <Compile Include="MongoData\Signal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
