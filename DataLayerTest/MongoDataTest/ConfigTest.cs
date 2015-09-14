@@ -17,6 +17,12 @@ namespace DataLayerTest.MongoDataTest
 			_connection.DropDatabase();
 		}
 
+		[TestFixtureTearDown]
+		public void TestFixtureTearDown()
+		{
+			_connection.DropDatabase();
+		}
+
 		[Test]
 		public void GetConfigFailsForEmptyDatabase()
 		{
