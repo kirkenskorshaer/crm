@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DataLayer;
 using DataLayer.MongoData;
@@ -25,7 +26,9 @@ namespace DataLayerTest.MongoDataTest
 		public void ReadLatestTest()
 		{
 			Log.Write(_connection, "test1", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Thread.Sleep(50);
 			Log.Write(_connection, "test2", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Thread.Sleep(50);
 			Log.Write(_connection, "test3", string.Empty, Config.LogLevelEnum.OptionMessage);
 
 			Log log = Log.ReadLatest(_connection);
