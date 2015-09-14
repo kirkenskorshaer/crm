@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using MongoDB.Driver;
 
 namespace DataLayer
@@ -13,7 +15,8 @@ namespace DataLayer
 
 		private MongoConnection(string databaseName)
 		{
-			_client = new MongoClient();
+			string connectionString = ConfigurationManager.ConnectionStrings[databaseName].ConnectionString;
+			_client = new MongoClient(connectionString);
 			_databaseName = databaseName;
 			Database = _client.GetDatabase(databaseName);
 		}
