@@ -33,9 +33,60 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AntiXSSLibrary">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\AntiXSSLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.6.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.9.6\lib\net20\Ionic.Zip.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Outlook.Sdk">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Crm.Outlook.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Tools.EmailProviders">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Crm.Tools.EmailProviders.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Client">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Client.CodeGeneration">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Client.CodeGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Portal">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Portal.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Portal.Files">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Portal.Files.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Deployment">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.Connector">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.CrmConnector.Powershell">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.CrmConnector.Powershell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.PackageDeployment.Powershell">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.PackageDeployment.Powershell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.Ui.Styles">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility">
+      <HintPath>..\..\..\..\..\Downloads\crm sdk\SDK\Bin\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
