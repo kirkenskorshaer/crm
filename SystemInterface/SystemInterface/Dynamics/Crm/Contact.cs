@@ -29,11 +29,16 @@ namespace SystemInterface.Dynamics.Crm
 			};
 		}
 
-		private CrmEntity GetContactAsEntity()
+		private CrmEntity GetContactAsEntity(bool includeContactId)
 		{
 			CrmEntity crmEntity = new CrmEntity("contact");
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", Firstname));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("lastname", Lastname));
+
+			if (includeContactId)
+			{
+				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", ContactId));
+			}
 
 			return crmEntity;
 		}
@@ -79,14 +84,14 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Insert(DynamicsCrmConnection connection)
 		{
-			CrmEntity crmEntity = GetContactAsEntity();
+			CrmEntity crmEntity = GetContactAsEntity(false);
 
 			ContactId = connection.Service.Create(crmEntity);
 		}
 
 		public void Update(DynamicsCrmConnection connection)
 		{
-			CrmEntity crmEntity = GetContactAsEntity();
+			CrmEntity crmEntity = GetContactAsEntity(true);
 
 			connection.Service.Update(crmEntity);
 		}
