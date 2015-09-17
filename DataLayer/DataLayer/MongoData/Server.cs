@@ -34,7 +34,7 @@ namespace DataLayer.MongoData
 		public static bool Exists(MongoConnection connection, string ip)
 		{
 			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
-			Task<long> serverTask = serverCollection.CountAsync(config => true);
+			Task<long> serverTask = serverCollection.CountAsync(server => server.Ip == ip);
 
 			return serverTask.Result > 0;
 		}

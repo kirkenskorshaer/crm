@@ -63,6 +63,19 @@ namespace DataLayerTest.MongoDataTest
 		}
 
 		[Test]
+		public void ExistsReturnFalseIfOtherServerExists()
+		{
+			_connection.DropDatabase();
+
+			InsertServer();
+			string ip = "127.0.0.2";
+
+			bool exists = Server.Exists(_connection, ip);
+
+			Assert.False(exists);
+		}
+
+		[Test]
 		public void ExistsReturnTrueIfServerExists()
 		{
 			Server server = InsertServer();
