@@ -66,6 +66,24 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Assert.AreNotEqual(Guid.Empty, contactInserted.ContactId);
 		}
 
+		[Test]
+		public void UpdateUpdatesData()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+			string firstnameTest = "firstnameTest";
+
+			contactInserted.Insert(_connection);
+			contactInserted.Firstname = firstnameTest;
+
+			contactInserted.Update(_connection);
+
+			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+			contactInserted.Delete(_connection);
+
+			Assert.AreEqual(firstnameTest, contactRead.Firstname);
+		}
+
 		private Contact CreateTestContact(DateTime testDate)
 		{
 			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");
