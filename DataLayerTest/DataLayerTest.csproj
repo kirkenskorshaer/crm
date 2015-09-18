@@ -51,6 +51,7 @@
     <Compile Include="MongoDataTest\Option\ScheduleTest.cs" />
     <Compile Include="MongoDataTest\ServerTest.cs" />
     <Compile Include="MongoDataTest\SignalTest.cs" />
+    <Compile Include="MongoDataTest\SqlConnectionStringTest.cs" />
     <Compile Include="MongoDataTest\UrlLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
