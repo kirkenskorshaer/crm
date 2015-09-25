@@ -74,6 +74,7 @@
     <Compile Include="SqlData\Procedures\AddColumn.cs" />
     <Compile Include="SqlData\Procedures\CreateTable.cs" />
     <Compile Include="SqlData\Procedures\DropTable.cs" />
+    <Compile Include="SqlData\Contact.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
