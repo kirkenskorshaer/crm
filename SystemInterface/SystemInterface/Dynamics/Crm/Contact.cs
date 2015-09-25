@@ -68,6 +68,19 @@ namespace SystemInterface.Dynamics.Crm
 			return contacts;
 		}
 
+		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid contactId)
+		{
+			List<string> attributeNames = new List<string>();
+
+			ColumnSet columnsAll = new ColumnSet(true);
+
+			Entity entity = connection.Service.Retrieve("contact", contactId, columnsAll);
+
+			attributeNames = entity.Attributes.Select(attribute => attribute.Key).ToList();
+
+			return attributeNames;
+		}
+
 		public static Contact Read(DynamicsCrmConnection connection, Guid contactid)
 		{
 			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContact);
