@@ -72,6 +72,7 @@
     <Compile Include="SqlConnectionHolder.cs" />
     <Compile Include="SqlData\Utilities.cs" />
     <Compile Include="SqlData\Procedures\CreateTable.cs" />
+    <Compile Include="SqlData\Procedures\DropTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
