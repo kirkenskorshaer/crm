@@ -70,6 +70,7 @@
     <Compile Include="MongoData\UrlLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionHolder.cs" />
+    <Compile Include="SqlData\Procedures\MaintainForeignKey.cs" />
     <Compile Include="SqlData\Utilities.cs" />
     <Compile Include="SqlData\Procedures\AddColumn.cs" />
     <Compile Include="SqlData\Procedures\CreateTable.cs" />
