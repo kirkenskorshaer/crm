@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionHolder.cs" />
     <Compile Include="SqlData\Utilities.cs" />
+    <Compile Include="SqlData\Procedures\CreateTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
