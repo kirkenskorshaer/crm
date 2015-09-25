@@ -41,6 +41,32 @@ namespace DataLayer.SqlData
 			}
 		}
 
+		public void Insert(SqlConnection sqlConnection)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("INSERT INTO");
+			sqlStringBuilder.AppendLine("	" + _databaseName);
+			sqlStringBuilder.AppendLine("(");
+			sqlStringBuilder.AppendLine("	Firstname");
+			sqlStringBuilder.AppendLine("	,Lastname");
+			sqlStringBuilder.AppendLine("	,ModifiedOn");
+			sqlStringBuilder.AppendLine("	,CreatedOn");
+			sqlStringBuilder.AppendLine(")");
+			sqlStringBuilder.AppendLine("VALUES");
+			sqlStringBuilder.AppendLine("(");
+			sqlStringBuilder.AppendLine("	@Firstname");
+			sqlStringBuilder.AppendLine("	,@Lastname");
+			sqlStringBuilder.AppendLine("	,@ModifiedOn");
+			sqlStringBuilder.AppendLine("	,@CreatedOn");
+			sqlStringBuilder.AppendLine(")");
+
+			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
+				new KeyValuePair<string, object>("Firstname", Firstname),
+				new KeyValuePair<string, object>("Lastname", Lastname),
+				new KeyValuePair<string, object>("ModifiedOn", ModifiedOn),
+				new KeyValuePair<string, object>("CreatedOn", CreatedOn));
+		}
+
 		public static List<Contact> ReadLatest(SqlConnection sqlConnection, DateTime lastSearchDate)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
