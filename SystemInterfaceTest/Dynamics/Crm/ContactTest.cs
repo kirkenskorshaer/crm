@@ -39,6 +39,24 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
+		[Ignore]
+		public void GetAllAttributeNamesTest()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+			contactInserted.Insert(_connection);
+
+			List<string> attributeNames = Contact.GetAllAttributeNames(_connection, contactInserted.ContactId);
+
+			contactInserted.Delete(_connection);
+
+			Assert.True(attributeNames.Count > 10);
+			Assert.True(attributeNames.Any(name => name == "contactid"));
+
+			attributeNames.ForEach(name => Console.Out.WriteLine(name));
+		}
+
+		[Test]
 		public void InsertCreatesNewContact()
 		{
 			DateTime testDate = DateTime.Now;
