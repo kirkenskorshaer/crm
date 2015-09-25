@@ -104,5 +104,20 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("allowNull", allowNull),
 				new KeyValuePair<string, object>("debug", 0));
 		}
+
+		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName)
+		{
+			Procedures.MaintainForeignKey.MakeSureMaintainForeignKeyProcedureArePresent(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("MaintainForeignKey");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("foreignKeyName", foreignKeyName),
+				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
+				new KeyValuePair<string, object>("primaryKeyName", primaryKeyName),
+				new KeyValuePair<string, object>("debug", 0));
+		}
 	}
 }
