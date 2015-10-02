@@ -110,6 +110,14 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
+		public static void MaintainAllTables(SqlConnection sqlConnection)
+		{
+			ChangeProvider.MaintainTable(sqlConnection);
+			ExternalContact.MaintainTable(sqlConnection);
+			Contact.Contact.MaintainTable(sqlConnection);
+			ContactChange.MaintainTable(sqlConnection);
+		}
+
 		public static void DropTable(SqlConnection sqlConnection, string tableName)
 		{
 			Procedures.DropTable.MakeSureProcedureExists(sqlConnection);
