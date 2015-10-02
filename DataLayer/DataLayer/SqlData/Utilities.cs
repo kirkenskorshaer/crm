@@ -52,6 +52,7 @@ namespace DataLayer.SqlData
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	COLUMNS.TABLE_NAME");
+			sqlStringBuilder.AppendLine("	,COLUMNS.COLUMN_NAME");
 			sqlStringBuilder.AppendLine("	,COLUMNS.DATA_TYPE");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	INFORMATION_SCHEMA.COLUMNS");
@@ -60,7 +61,7 @@ namespace DataLayer.SqlData
 
 			DataTable columnsTable = ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("tableName", tableName));
 
-			List<string> columns = columnsTable.Select().Select(row => (string)row["DATA_TYPE"]).ToList();
+			List<string> columns = columnsTable.Select().Select(row => (string)row["COLUMN_NAME"]).ToList();
 
 			return columns;
 		}
