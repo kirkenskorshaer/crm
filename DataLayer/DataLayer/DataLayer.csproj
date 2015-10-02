@@ -73,6 +73,7 @@
     <Compile Include="SqlData\AbstractData.cs" />
     <Compile Include="SqlData\AbstractIdData.cs" />
     <Compile Include="SqlData\ChangeProvider.cs" />
+    <Compile Include="SqlData\Contact\ExternalContact.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable2Tables.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable3Tables.cs" />
     <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey2Keys.cs" />
