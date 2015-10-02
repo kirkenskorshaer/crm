@@ -70,6 +70,7 @@
     <Compile Include="MongoData\UrlLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionHolder.cs" />
+    <Compile Include="SqlData\AbstractData.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable2Tables.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable3Tables.cs" />
     <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey2Keys.cs" />
