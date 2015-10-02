@@ -91,9 +91,34 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
-		public static void AddColumn(SqlConnection sqlConnection, string tableName, string columnName, string type, SqlBoolean allowNull)
+		public enum DataType
 		{
-			Procedures.AddColumn.MakeSureAddColumnProcedureArePresent(sqlConnection);
+			NVARCHAR_MAX = 1
+			, INT = 2
+			, DATETIME = 3
+			, UNIQUEIDENTIFIER = 4
+		}
+
+		private static string GetTypeString(DataType type)
+		{
+			switch (type)
+			{
+				case DataType.NVARCHAR_MAX:
+					return "NVARCHAR(MAX)";
+				case DataType.INT:
+					return "INT";
+				case DataType.DATETIME:
+					return "DATETIME";
+				case DataType.UNIQUEIDENTIFIER:
+					return "UNIQUEIDENTIFIER";
+				default:
+					throw new ArgumentException($"unknown datatype {type}");
+			}
+		}
+
+		public static void AddColumn(SqlConnection sqlConnection, string tableName, string columnName, DataType type, SqlBoolean allowNull)
+		{
+			Procedures.AddColumn.MakeSureProcedureExists(sqlConnection);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.Append("AddColumn");
@@ -101,7 +126,7 @@ namespace DataLayer.SqlData
 			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
 				new KeyValuePair<string, object>("tableName", tableName),
 				new KeyValuePair<string, object>("columnName", columnName),
-				new KeyValuePair<string, object>("type", type),
+				new KeyValuePair<string, object>("type", GetTypeString(type)),
 				new KeyValuePair<string, object>("allowNull", allowNull),
 				new KeyValuePair<string, object>("debug", 0));
 		}
