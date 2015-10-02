@@ -95,6 +95,21 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
+		public static void CreateCompositeTable3Tables(SqlConnection sqlConnection, string tableName, string primaryKeyName1, string primaryKeyName2, string primaryKeyName3)
+		{
+			Procedures.CreateCompositeTable3Tables.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("CreateCompositeTable3Tables");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("primaryKeyName1", primaryKeyName1),
+				new KeyValuePair<string, object>("primaryKeyName2", primaryKeyName2),
+				new KeyValuePair<string, object>("primaryKeyName3", primaryKeyName3),
+				new KeyValuePair<string, object>("debug", 0));
+		}
+
 		public static void DropTable(SqlConnection sqlConnection, string tableName)
 		{
 			Procedures.DropTable.MakeSureProcedureExists(sqlConnection);
