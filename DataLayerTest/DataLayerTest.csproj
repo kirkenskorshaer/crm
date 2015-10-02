@@ -54,7 +54,7 @@
     <Compile Include="MongoDataTest\SqlConnectionStringTest.cs" />
     <Compile Include="MongoDataTest\UrlLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlData\UtilitiesTest.cs" />
+    <Compile Include="SqlDataTest\UtilitiesTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ContactTest.cs" />
   </ItemGroup>
   <ItemGroup>
