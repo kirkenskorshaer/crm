@@ -184,5 +184,22 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("primaryKeyName", primaryKeyName),
 				new KeyValuePair<string, object>("debug", 0));
 		}
+
+		public static void MaintainCompositeForeignKey2Keys(SqlConnection sqlConnection, string tableName, string foreignKey1Name, string foreignKey2Name, string primaryTablename, string primaryKey1Name, string primaryKey2Name)
+		{
+			Procedures.MaintainCompositeForeignKey2Keys.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("MaintainCompositeForeignKey2Keys");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("foreignKey1Name", foreignKey1Name),
+				new KeyValuePair<string, object>("foreignKey2Name", foreignKey2Name),
+				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
+				new KeyValuePair<string, object>("primaryKey1Name", primaryKey1Name),
+				new KeyValuePair<string, object>("primaryKey2Name", primaryKey2Name),
+				new KeyValuePair<string, object>("debug", 0));
+		}
 	}
 }
