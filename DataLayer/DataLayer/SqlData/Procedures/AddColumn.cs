@@ -71,6 +71,10 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("	BEGIN");
 			sqlStringBuilder.AppendLine("		SET @sql = @sql + ' DATETIME'");
 			sqlStringBuilder.AppendLine("	END");
+			sqlStringBuilder.AppendLine("	ELSE IF (QUOTENAME(@type) = '[UNIQUEIDENTIFIER]')");
+			sqlStringBuilder.AppendLine("	BEGIN");
+			sqlStringBuilder.AppendLine("		SET @sql = @sql + ' UNIQUEIDENTIFIER'");
+			sqlStringBuilder.AppendLine("	END");
 			sqlStringBuilder.AppendLine("	ELSE");
 			sqlStringBuilder.AppendLine("	BEGIN");
 			sqlStringBuilder.AppendLine("		DECLARE @error NVARCHAR(MAX) = 'unknown type ' + QUOTENAME(@type)");
