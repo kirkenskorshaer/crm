@@ -5,7 +5,7 @@ namespace DataLayer.SqlData.Procedures
 {
 	internal static class AddColumn
 	{
-		internal static void MakeSureAddColumnProcedureArePresent(SqlConnection sqlConnection)
+		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
 			DeleteProcedure(sqlConnection);
 

@@ -9,7 +9,7 @@ namespace DataLayer.SqlData.Procedures
 {
 	internal static class MaintainForeignKey
 	{
-		internal static void MakeSureMaintainForeignKeyProcedureArePresent(SqlConnection sqlConnection)
+		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
 			DeleteProcedure(sqlConnection);
 

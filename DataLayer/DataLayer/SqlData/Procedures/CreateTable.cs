@@ -5,7 +5,7 @@ namespace DataLayer.SqlData.Procedures
 {
 	internal static class CreateTable
 	{
-		internal static void MakeSureCreateTableProcedureArePresent(SqlConnection sqlConnection)
+		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
 			DeleteProcedure(sqlConnection);
 

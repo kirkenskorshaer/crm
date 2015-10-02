@@ -5,7 +5,7 @@ namespace DataLayer.SqlData.Procedures
 {
 	internal static class DropTable
 	{
-		internal static void MakeSureDropTableProcedureArePresent(SqlConnection sqlConnection)
+		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
 			DeleteProcedure(sqlConnection);
 

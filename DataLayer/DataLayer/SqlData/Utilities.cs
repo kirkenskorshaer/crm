@@ -68,7 +68,7 @@ namespace DataLayer.SqlData
 
 		public static void CreateTable(SqlConnection sqlConnection, string tableName, string primaryKeyName)
 		{
-			Procedures.CreateTable.MakeSureCreateTableProcedureArePresent(sqlConnection);
+			Procedures.CreateTable.MakeSureProcedureExists(sqlConnection);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.Append("CreateTable");
@@ -81,7 +81,7 @@ namespace DataLayer.SqlData
 
 		public static void DropTable(SqlConnection sqlConnection, string tableName)
 		{
-			Procedures.DropTable.MakeSureDropTableProcedureArePresent(sqlConnection);
+			Procedures.DropTable.MakeSureProcedureExists(sqlConnection);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.Append("DropTable");
@@ -108,7 +108,7 @@ namespace DataLayer.SqlData
 
 		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName)
 		{
-			Procedures.MaintainForeignKey.MakeSureMaintainForeignKeyProcedureArePresent(sqlConnection);
+			Procedures.MaintainForeignKey.MakeSureProcedureExists(sqlConnection);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.Append("MaintainForeignKey");
