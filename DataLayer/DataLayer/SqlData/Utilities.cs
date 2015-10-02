@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DataLayer.SqlData.Contact;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
@@ -76,6 +78,20 @@ namespace DataLayer.SqlData
 			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
 				new KeyValuePair<string, object>("tableName", tableName),
 				new KeyValuePair<string, object>("primaryKeyName", primaryKeyName),
+				new KeyValuePair<string, object>("debug", 0));
+		}
+
+		public static void CreateCompositeTable2Tables(SqlConnection sqlConnection, string tableName, string primaryKeyName1, string primaryKeyName2)
+		{
+			Procedures.CreateCompositeTable2Tables.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("CreateCompositeTable2Tables");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("primaryKeyName1", primaryKeyName1),
+				new KeyValuePair<string, object>("primaryKeyName2", primaryKeyName2),
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
