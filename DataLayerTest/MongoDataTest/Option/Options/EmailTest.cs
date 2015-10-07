@@ -85,7 +85,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 			emailCreated.Execute(_connection);
 
 			List<Email> emails = Email.Read(_connection, emailCreated.Id);
-			Schedule emailCreatedSchedule = CreateSchedule();
+			Schedule emailCreatedSchedule = MongoTestUtilities.CreateSchedule();
 			emailCreatedSchedule.MoveNext();
 
 			AssertSchedule(emailCreatedSchedule, emails.Single().Schedule);
@@ -105,24 +105,10 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 
 		private Email CreateEmail()
 		{
-			Schedule schedule = CreateSchedule();
+			Schedule schedule = MongoTestUtilities.CreateSchedule();
 
 			Email emailCreated = Email.Create(_connection, "test", schedule, "svend.l@kirkenskorshaer.dk", "test");
 			return emailCreated;
-		}
-
-		private Schedule CreateSchedule()
-		{
-			Schedule schedule = new Schedule()
-			{
-				DaysOfMonthToSkip = new List<int> { 1, 2, 3 },
-				DaysOfWeekToSkip = new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Thursday },
-				HoursOfDayToSkip = new List<int>() { 3, 4, 5 },
-				Recurring = true,
-				NextAllowedExecution = DateTime.Now,
-				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
-			};
-			return schedule;
 		}
 
 		private void AssertEmail(Email emailCreated, Email emailRetreived)
