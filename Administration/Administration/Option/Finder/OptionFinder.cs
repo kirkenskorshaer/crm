@@ -2,6 +2,7 @@
 using Administration.Option.Options;
 using Administration.Option.Options.Service;
 using DataLayer;
+using Administration.Option.Options.Csv;
 
 namespace Administration.Option.Finder
 {
@@ -22,6 +23,11 @@ namespace Administration.Option.Finder
 			options.AddRange(ServiceDelete.Find(_connection));
 			options.AddRange(ServiceStart.Find(_connection));
 			options.AddRange(ServiceStop.Find(_connection));
+
+			options.AddRange(CsvWriteLine.Find(_connection));
+			options.AddRange(CsvRead.Find(_connection));
+			options.AddRange(CsvUpdate.Find(_connection));
+			options.AddRange(CsvDelete.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);
 			options.Add(sleep);
