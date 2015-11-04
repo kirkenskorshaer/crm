@@ -58,6 +58,8 @@
     <Compile Include="Option\Options\Data\Contact\ContactRead.cs" />
     <Compile Include="Option\Options\Data\ExternalContact\ExternalContactCreate.cs" />
     <Compile Include="Option\Options\Data\ExternalContact\ExternalContactRead.cs" />
+    <Compile Include="Option\Options\Data\MaintainTables.cs" />
+    <Compile Include="Option\Options\Data\Utilities\MaintainAllTables.cs" />
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
