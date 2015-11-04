@@ -123,5 +123,33 @@ namespace DataLayer.SqlData.Contact
 
 			return contact;
 		}
+
+		public static List<Contact> Read(SqlConnection sqlConnection, string firstName)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("	,Firstname");
+			sqlStringBuilder.AppendLine("	,Lastname");
+			sqlStringBuilder.AppendLine("	,ModifiedOn");
+			sqlStringBuilder.AppendLine("	,CreatedOn");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	Firstname = @Firstname");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("Firstname", firstName));
+
+			List<Contact> contacts = new List<Contact>();
+
+			foreach (DataRow row in dataTable.Rows)
+			{
+				Contact contact = CreateFromRow(row);
+
+				contacts.Add(contact);
+			}
+
+			return contacts;
+		}
 	}
 }
