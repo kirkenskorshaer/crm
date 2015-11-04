@@ -92,6 +92,52 @@ namespace DataLayer.SqlData.Contact
 			Id = (Guid)row["id"];
 		}
 
+		public static bool ContactChangeExists(SqlConnection sqlConnection, Guid contactId, Guid externalContactId, Guid changeProviderId, DateTime modifiedOn)
+		{
+			string tableName = typeof(ContactChange).Name;
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT TOP 1");
+			sqlStringBuilder.AppendLine("	NULL");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	EXISTS");
+			sqlStringBuilder.AppendLine("	(");
+			sqlStringBuilder.AppendLine("		SELECT");
+			sqlStringBuilder.AppendLine("			*");
+			sqlStringBuilder.AppendLine("		FROM");
+			sqlStringBuilder.AppendLine("			" + tableName);
+			sqlStringBuilder.AppendLine("		WHERE");
+			sqlStringBuilder.AppendLine("			ContactChange.ContactId = @ContactId");
+			sqlStringBuilder.AppendLine("			AND");
+			sqlStringBuilder.AppendLine("			ContactChange.ExternalContactId = @ExternalContactId");
+			sqlStringBuilder.AppendLine("			AND");
+			sqlStringBuilder.AppendLine("			ContactChange.ChangeProviderId = @ChangeProviderId");
+			sqlStringBuilder.AppendLine("			AND");
+			sqlStringBuilder.AppendLine("			CASE");
+			sqlStringBuilder.AppendLine("				WHEN");
+			sqlStringBuilder.AppendLine("					DATEDIFF(DAY, ModifiedOn, @ModifiedOn) = 0");
+			sqlStringBuilder.AppendLine("				THEN");
+			sqlStringBuilder.AppendLine("					0");
+			sqlStringBuilder.AppendLine("				WHEN");
+			sqlStringBuilder.AppendLine("					DATEDIFF(MILLISECOND, ModifiedOn, @ModifiedOn) = 0");
+			sqlStringBuilder.AppendLine("				THEN");
+			sqlStringBuilder.AppendLine("					0");
+			sqlStringBuilder.AppendLine("				ELSE");
+			sqlStringBuilder.AppendLine("					1");
+			sqlStringBuilder.AppendLine("			END = 0");
+			sqlStringBuilder.AppendLine("	)");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+				, new KeyValuePair<string, object>("ContactId", contactId)
+				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
+				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId)
+				, new KeyValuePair<string, object>("ModifiedOn", modifiedOn));
+
+			bool exists = dataTable.Rows.Count == 1;
+
+			return exists;
+		}
+
 		public enum IdType
 		{
 			ContactChangeId = 1
