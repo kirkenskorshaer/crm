@@ -2,6 +2,7 @@
 using DataLayer;
 using DataLayer.MongoData;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DataLayerTest.MongoDataTest
 {
@@ -9,17 +10,23 @@ namespace DataLayerTest.MongoDataTest
 	{
 		private MongoConnection _connection;
 
+		private List<SqlConnectionString> _createdSqlConnectionStrings;
+
 		[SetUp]
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
 			_connection.CleanDatabase();
+
+			_createdSqlConnectionStrings = new List<SqlConnectionString>();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_connection.CleanDatabase();
+
+			_createdSqlConnectionStrings.ForEach(sqlConnectionString => sqlConnectionString.Delete(_connection));
 		}
 
 		[Test]
@@ -83,6 +90,8 @@ namespace DataLayerTest.MongoDataTest
 				};
 
 				sqlConnectionString.Insert(_connection);
+
+				_createdSqlConnectionStrings.Add(sqlConnectionString);
 			}
 			else
 			{

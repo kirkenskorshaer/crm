@@ -14,17 +14,23 @@ namespace DataLayerTest.MongoDataTest
 	{
 		private MongoConnection _connection;
 
+		private List<Server> _createdServers;
+
 		[SetUp]
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
 			_connection.CleanDatabase();
+
+			_createdServers = new List<Server>();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_connection.CleanDatabase();
+
+			_createdServers.ForEach(server => server.Delete(_connection));
 		}
 
 		[Test]
@@ -101,6 +107,8 @@ namespace DataLayerTest.MongoDataTest
 				};
 
 				server.Insert(_connection);
+
+				_createdServers.Add(server);
 			}
 			else
 			{
