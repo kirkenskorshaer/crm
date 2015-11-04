@@ -62,6 +62,15 @@
     <Compile Include="MongoData\Option\Options\Csv\CsvRead.cs" />
     <Compile Include="MongoData\Option\Options\Csv\CsvUpdate.cs" />
     <Compile Include="MongoData\Option\Options\Csv\CsvWriteLine.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ChangeProvider\ChangeProviderCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ChangeProvider\ChangeProviderRead.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ChangeProvider\ChangeProviderReadAll.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ContactChange\ContactChangeCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ContactChange\ContactChangeRead.cs" />
+    <Compile Include="MongoData\Option\Options\Data\Contact\ContactCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Data\Contact\ContactRead.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ExternalContact\ExternalContactCreate.cs" />
+    <Compile Include="MongoData\Option\Options\Data\ExternalContact\ExternalContactRead.cs" />
     <Compile Include="MongoData\SqlConnectionString.cs" />
     <Compile Include="MongoData\Log.cs" />
     <Compile Include="MongoData\Option\Options\Email.cs" />
