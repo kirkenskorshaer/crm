@@ -23,7 +23,7 @@ namespace AdministrationTest
 		[SetUp]
 		public void SetUp()
 		{
-			Connection.DropDatabase();
+			Connection.CleanDatabase();
 
 			Config config = new Config()
 			{

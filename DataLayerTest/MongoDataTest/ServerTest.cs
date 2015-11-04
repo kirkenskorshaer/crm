@@ -18,19 +18,19 @@ namespace DataLayerTest.MongoDataTest
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[Test]
 		public void GetFirstTest()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 			Server serverInserted = InsertServer();
 
 			Server serverReturned = Server.GetFirst(_connection);
@@ -53,7 +53,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfNoServerExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			string ip = "127.0.0.1";
 
@@ -65,7 +65,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfOtherServerExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			InsertServer();
 			string ip = "127.0.0.2";

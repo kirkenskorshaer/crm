@@ -17,7 +17,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[Test]

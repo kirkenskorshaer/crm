@@ -14,19 +14,19 @@ namespace DataLayerTest.MongoDataTest
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[Test]
 		public void GetFirstTest()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 			UrlLogin urlLoginInserted = InsertUrlLogin();
 
 			UrlLogin urlLoginReturned = UrlLogin.GetFirst(_connection);
@@ -49,7 +49,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfNoUrlLoginExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -61,7 +61,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfOtherUrlLoginExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			InsertUrlLogin();
 			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");

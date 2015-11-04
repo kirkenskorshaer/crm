@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using MongoDB.Driver;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace DataLayer
 {
@@ -35,9 +37,32 @@ namespace DataLayer
 			return connection;
 		}
 
-		public void DropDatabase()
+		public void CleanDatabase()
 		{
-			_client.DropDatabaseAsync(_databaseName);
+			List<string> CollectionsToPreserve = new List<string> { "system.indexes", "server", "sqlConnectionString", "urlLogin" };
+			//List<string> CollectionsToPreserve = new List<string> { "system.indexes" };
+
+			ListCollectionsOptions options = new ListCollectionsOptions()
+			{
+				Filter = Builders<MongoDB.Bson.BsonDocument>.Filter.Nin("name", CollectionsToPreserve),
+			};
+
+			Task<IAsyncCursor<MongoDB.Bson.BsonDocument>> listTask = Database.ListCollectionsAsync(options);
+
+			IAsyncCursor<MongoDB.Bson.BsonDocument> listCursor = listTask.Result;
+
+			Action<MongoDB.Bson.BsonDocument> clearAction = (document) =>
+			{
+				string name = document.GetValue("name").AsString;
+
+				IMongoCollection<MongoDB.Bson.BsonDocument> collection = Database.GetCollection<MongoDB.Bson.BsonDocument>(name);
+				Task<DeleteResult> deleteTask = collection.DeleteManyAsync(lDocument => true);
+				deleteTask.Wait();
+			};
+
+			Task clearTask = listCursor.ForEachAsync(clearAction);
+
+			clearTask.Wait();
 		}
 	}
 }

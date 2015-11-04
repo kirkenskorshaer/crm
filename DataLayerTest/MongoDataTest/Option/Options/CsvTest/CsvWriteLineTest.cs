@@ -19,7 +19,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options.CsvTest
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[Test]

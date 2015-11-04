@@ -13,13 +13,13 @@ namespace DataLayerTest.MongoDataTest
 		public void SetUp()
 		{
 			_connection = MongoConnection.GetConnection("test");
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 		}
 
 		[Test]
@@ -35,7 +35,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfNoSqlConnectionStringExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -47,7 +47,7 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ExistsReturnFalseIfOtherSqlConnectionStringExists()
 		{
-			_connection.DropDatabase();
+			_connection.CleanDatabase();
 
 			InsertSqlConnectionString();
 			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
