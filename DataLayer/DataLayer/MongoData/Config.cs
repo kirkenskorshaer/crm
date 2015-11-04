@@ -55,6 +55,11 @@ namespace DataLayer.MongoData
 
 		public void Insert(MongoConnection connection)
 		{
+			if(Exists(connection))
+			{
+				throw new Exception("Config already exists");
+			}
+
 			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(ConfigName);
 			Task insertTask = configs.InsertOneAsync(this);
 			insertTask.Wait();
