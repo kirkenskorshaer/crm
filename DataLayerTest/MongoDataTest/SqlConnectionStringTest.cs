@@ -50,7 +50,7 @@ namespace DataLayerTest.MongoDataTest
 			_connection.CleanDatabase();
 
 			InsertSqlConnectionString();
-			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			string name = DateTime.Now.ToString("_yyyy-MM-dd HH:mm:ss");
 
 			bool exists = SqlConnectionString.Exists(_connection, name);
 

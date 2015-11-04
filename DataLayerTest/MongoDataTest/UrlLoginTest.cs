@@ -64,7 +64,7 @@ namespace DataLayerTest.MongoDataTest
 			_connection.CleanDatabase();
 
 			InsertUrlLogin();
-			string name = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+			string name = DateTime.Now.ToString("_yyyy-MM-dd HH:mm:ss");
 
 			bool exists = UrlLogin.Exists(_connection, name);
 
