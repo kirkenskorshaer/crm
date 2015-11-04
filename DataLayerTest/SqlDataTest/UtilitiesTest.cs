@@ -20,7 +20,7 @@ namespace DataLayerTest.SqlDataTest
 		public void SetUp()
 		{
 			_mongoConnection = MongoConnection.GetConnection("test");
-			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "testMssql");
+			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "sql");
 		}
 
 		[Test]

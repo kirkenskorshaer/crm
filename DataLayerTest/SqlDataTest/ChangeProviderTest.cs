@@ -20,7 +20,7 @@ namespace DataLayerTest.SqlDataTest
 		{
 			_mongoConnection = MongoConnection.GetConnection("test");
 
-			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "testMssql");
+			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "sql");
 		}
 
 		[SetUp]
@@ -28,13 +28,13 @@ namespace DataLayerTest.SqlDataTest
 		{
 			if (Utilities.GetExistingColumns(_sqlConnection, typeof(ChangeProvider).Name).Any())
 			{
-				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ExternalContact).Name).Any())
-				{
-					Utilities.DropTable(_sqlConnection, typeof(ExternalContact).Name);
-				}
 				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ContactChange).Name).Any())
 				{
 					Utilities.DropTable(_sqlConnection, typeof(ContactChange).Name);
+				}
+				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ExternalContact).Name).Any())
+				{
+					Utilities.DropTable(_sqlConnection, typeof(ExternalContact).Name);
 				}
 				Utilities.DropTable(_sqlConnection, typeof(ChangeProvider).Name);
 			}
