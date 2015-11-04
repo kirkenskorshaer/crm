@@ -46,5 +46,12 @@ namespace DataLayer.MongoData
 			Task insertTask = urlLoginCollection.InsertOneAsync(this);
 			insertTask.Wait();
 		}
+
+		public void Delete(MongoConnection connection)
+		{
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			Task deleteTask = urlLoginCollection.DeleteOneAsync(urlLogin => urlLogin._id == _id);
+			deleteTask.Wait();
+		}
 	}
 }
