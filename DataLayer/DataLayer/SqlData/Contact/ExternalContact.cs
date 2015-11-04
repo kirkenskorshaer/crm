@@ -61,6 +61,27 @@ namespace DataLayer.SqlData.Contact
 			return externalContact;
 		}
 
+		public static bool Exists(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	NULL");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	ExternalContactId = @ExternalContactId");
+			sqlStringBuilder.AppendLine("	AND");
+			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
+				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
+
+			bool exists = dataTable.Rows.Count == 1;
+
+			return exists;
+		}
+
 		private static ExternalContact CreateFromDataRow(SqlConnection sqlConnection, DataRow row)
 		{
 			Guid externalContactId = (Guid)row["ExternalContactId"];
