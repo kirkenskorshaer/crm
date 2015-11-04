@@ -76,15 +76,31 @@ namespace DataLayerTest.MongoDataTest
 
 		private Config InsertData()
 		{
-			Config config = new Config()
-			{
-				EmailPassword = "testPassword",
-				Email = "testEmail",
-				EmailSmtpPort = 0,
-				EmailSmtpHost = "testHost",
-			};
+			Config config;
+			bool configAlreadyExist = Config.Exists(_connection);
 
-			config.Insert(_connection);
+			if (configAlreadyExist)
+			{
+				config = Config.GetConfig(_connection);
+			}
+			else
+			{
+				config = new Config();
+			}
+
+			config.EmailPassword = "testPassword";
+			config.Email = "testEmail";
+			config.EmailSmtpPort = 0;
+			config.EmailSmtpHost = "testHost";
+
+			if (configAlreadyExist)
+			{
+				config.Update(_connection);
+			}
+			else
+			{
+				config.Insert(_connection);
+			}
 
 			return config;
 		}
