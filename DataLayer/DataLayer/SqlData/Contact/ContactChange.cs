@@ -200,5 +200,25 @@ namespace DataLayer.SqlData.Contact
 
 			return externalContacts;
 		}
+
+		public static DateTime GetLatestModifiedOn(SqlConnection sqlConnection, Guid changeProviderId)
+		{
+			string tableName = typeof(ContactChange).Name;
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	COALESCE(MAX(ModifiedOn),'2000-01-01') ModifiedOn");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + tableName);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	ContactChange.ChangeProviderId = @ChangeProviderId");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
+
+			DataRow row = dataTable.Rows[0];
+			DateTime modifiedOn = (DateTime)row["ModifiedOn"];
+
+			return modifiedOn;
+		}
 	}
 }
