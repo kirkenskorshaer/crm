@@ -49,5 +49,19 @@ namespace AdministrationTest
 			};
 			return schedule;
 		}
+
+		protected Schedule CreateScheduleAlwaysOnDoOnce()
+		{
+			Schedule schedule = new Schedule()
+			{
+				DaysOfMonthToSkip = new List<int> { },
+				DaysOfWeekToSkip = new List<DayOfWeek> { },
+				HoursOfDayToSkip = new List<int>() { },
+				Recurring = false,
+				NextAllowedExecution = DateTime.Now,
+				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
+			};
+			return schedule;
+		}
 	}
 }
