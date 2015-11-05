@@ -105,6 +105,26 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void SynchronizeCreatesContactChangesWithCorrectData()
+		{
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+
+			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
+			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+
+			synchronizeFromCsv.Execute();
+
+			List<DatabaseContactChange> databaseChanges = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
+
+			DatabaseContactChange contactChange = databaseChanges.FirstOrDefault(change => change.Firstname == "name1");
+
+			Assert.NotNull(contactChange);
+		}
+
+		[Test]
 		public void SynchronizeCreatesCorrectNumberOfContacts()
 		{
 			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
