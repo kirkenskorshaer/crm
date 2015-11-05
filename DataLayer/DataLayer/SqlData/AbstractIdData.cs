@@ -20,5 +20,23 @@ namespace DataLayer.SqlData
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, new KeyValuePair<string, object>("id", Id));
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (GetType() != obj.GetType())
+			{
+				return false;
+			}
+
+			AbstractIdData abstractIdDataObj = obj as AbstractIdData;
+
+			return Id == abstractIdDataObj.Id;
+        }
+
+		public override int GetHashCode()
+		{
+			string idAndType = Id.ToString() + GetType().GUID.ToString();
+			return idAndType.GetHashCode();
+		}
 	}
 }
