@@ -90,6 +90,21 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			Assert.AreEqual(createdContact.Firstname, contactRead.Firstname);
 		}
 
+		[Test]
+		public void ContactCanBeUpdated()
+		{
+			Contact createdContact = ContactInsert(_sqlConnection);
+			createdContact.Firstname = "newFirstName";
+
+			createdContact.Update(_sqlConnection);
+
+			Contact contactRead = Contact.Read(_sqlConnection, createdContact.Id);
+
+			createdContact.Delete(_sqlConnection);
+
+			Assert.AreEqual(createdContact.Firstname, contactRead.Firstname);
+		}
+
 		private Contact ContactInsertWithoutLastname(SqlConnection sqlConnection)
 		{
 			DateTime creationDate = DateTime.Now;
