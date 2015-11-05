@@ -62,6 +62,24 @@ namespace DataLayer.SqlData
 			parameters.Add(new KeyValuePair<string, object>(databaseObjectName, databaseObject));
 		}
 
+		protected void AddUpdateParameter(object databaseObject, string databaseObjectName, StringBuilder sqlStringBuilderSets, List<KeyValuePair<string, object>> parameters)
+		{
+			if (sqlStringBuilderSets.Length == 0)
+			{
+				sqlStringBuilderSets.Append("	");
+			}
+			else
+			{
+				sqlStringBuilderSets.Append("	,");
+			}
+
+			sqlStringBuilderSets.Append(databaseObjectName);
+			sqlStringBuilderSets.Append(" = @");
+			sqlStringBuilderSets.AppendLine(databaseObjectName);
+
+			parameters.Add(new KeyValuePair<string, object>(databaseObjectName, databaseObject));
+		}
+
 		protected static ModelType ConvertFromDatabaseValue<ModelType>(object databaseObject)
 		{
 			if (databaseObject == null || databaseObject == DBNull.Value)
