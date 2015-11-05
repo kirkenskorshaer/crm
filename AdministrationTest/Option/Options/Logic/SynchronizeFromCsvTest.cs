@@ -164,5 +164,35 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(2, externalContacts.Count);
 		}
 
+		[Test]
+		public void Synchronize2CsvFilesDoesNotMakeExtraContacts()
+		{
+			SystemInterface.Csv.Csv csv1 = new SystemInterface.Csv.Csv(delimeter, fileName1, fileNameTmp, fields);
+
+			csv1.WriteLine("1", "20010101 00:00:00", "name1", "123");
+			csv1.WriteLine("2", "20010103 00:00:00", "name2", "234");
+
+			SystemInterface.Csv.Csv csv2 = new SystemInterface.Csv.Csv(delimeter, fileName2, fileNameTmp, fields);
+
+			csv2.WriteLine("2", "20010103 00:00:00", "name2", "234");
+			csv2.WriteLine("3", "20010105 00:00:00", "name3", "345");
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv1 = GetDatabaseSynchronizeFromCsv(_changeProvider1, fileName1);
+			SynchronizeFromCsv synchronizeFromCsv1 = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv1);
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv2 = GetDatabaseSynchronizeFromCsv(_changeProvider2, fileName2);
+			SynchronizeFromCsv synchronizeFromCsv2 = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv2);
+
+			synchronizeFromCsv1.Execute();
+			synchronizeFromCsv2.Execute();
+
+			List<DatabaseContactChange> databaseChanges1 = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
+			List<DatabaseContactChange> databaseChanges2 = DatabaseContactChange.Read(_sqlConnection, _changeProvider2.Id, DatabaseContactChange.IdType.ChangeProviderId);
+
+			List<DatabaseContact> contacts1 = databaseChanges1.Select(contactChange => DatabaseContact.Read(_sqlConnection, contactChange.ContactId)).ToList();
+			List<DatabaseContact> contacts2 = databaseChanges2.Select(contactChange => DatabaseContact.Read(_sqlConnection, contactChange.ContactId)).ToList();
+
+			Assert.AreEqual(3, contacts1.Union(contacts2).Count());
+		}
 	}
 }
