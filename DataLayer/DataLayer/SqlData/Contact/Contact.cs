@@ -90,6 +90,28 @@ namespace DataLayer.SqlData.Contact
 			return contacts;
 		}
 
+		public void Update(SqlConnection sqlConnection)
+		{
+			StringBuilder sqlStringBuilderSets = new StringBuilder();
+			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+			AddUpdateParameter(Firstname, "Firstname", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(Lastname, "Lastname", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(ModifiedOn, "ModifiedOn", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(CreatedOn, "CreatedOn", sqlStringBuilderSets, parameters);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("Update");
+			sqlStringBuilder.AppendLine("	" + TableName);
+			sqlStringBuilder.AppendLine("SET");
+			sqlStringBuilder.Append(sqlStringBuilderSets);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	id = @id");
+
+			parameters.Add(new KeyValuePair<string, object>("id", Id));
+
+			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder,CommandType.Text, parameters.ToArray());
+		}
+
 		private static Contact CreateFromRow(DataRow row)
 		{
 			return new Contact
