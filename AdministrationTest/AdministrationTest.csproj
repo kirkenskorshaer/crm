@@ -53,7 +53,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +66,10 @@
     <ProjectReference Include="..\DataLayer\DataLayer\DataLayer.csproj">
       <Project>{4CBE92CE-9259-4154-A810-FFF1D1234F71}</Project>
       <Name>DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemInterface\SystemInterface\SystemInterface.csproj">
+      <Project>{869cba0e-a4e8-4339-851e-1c4e8d70041b}</Project>
+      <Name>SystemInterface</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
