@@ -21,7 +21,8 @@ namespace AdministrationTest.Option.Options.Logic
 		private SqlConnection _sqlConnection;
 
 		private string[] fields = new string[] { "id", "collectedDate", "firstName", "test" };
-		private string fileName = @"C:\test\csv\test.csv";
+		private string fileName1 = @"C:\test\csv\test1.csv";
+		private string fileName2 = @"C:\test\csv\test2.csv";
 		private string fileNameTmp = @"C:\test\csv\test_tmp.csv";
 		private char delimeter = ';';
 
@@ -38,9 +39,9 @@ namespace AdministrationTest.Option.Options.Logic
 			_changeProvider1 = FindOrCreateChangeProvider(testCsvProvider1, changeProviders);
 			_changeProvider2 = FindOrCreateChangeProvider(testCsvProvider2, changeProviders);
 
-			if (File.Exists(fileName))
+			if (File.Exists(fileName1))
 			{
-				File.Delete(fileName);
+				File.Delete(fileName1);
 			}
 		}
 
@@ -70,11 +71,11 @@ namespace AdministrationTest.Option.Options.Logic
 			return changeProvider;
 		}
 
-		private DatabaseSynchronizeFromCsv GetDatabaseSynchronizeFromCsv()
+		private DatabaseSynchronizeFromCsv GetDatabaseSynchronizeFromCsv(DatabaseChangeProvider changeProvider, string fileName)
 		{
 			return new DatabaseSynchronizeFromCsv()
 			{
-				changeProviderId = _changeProvider1.Id,
+				changeProviderId = changeProvider.Id,
 				dateName = "collectedDate",
 				keyName = "id",
 				delimeter = delimeter,
@@ -89,12 +90,12 @@ namespace AdministrationTest.Option.Options.Logic
 		[Test]
 		public void SynchronizeCreatesCorrectNumberOfContactChanges()
 		{
-			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName1, fileNameTmp, fields);
 
 			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
 			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv(_changeProvider1, fileName1);
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 
 			synchronizeFromCsv.Execute();
@@ -107,12 +108,12 @@ namespace AdministrationTest.Option.Options.Logic
 		[Test]
 		public void SynchronizeCreatesContactChangesWithCorrectData()
 		{
-			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName1, fileNameTmp, fields);
 
 			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
 			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv(_changeProvider1, fileName1);
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 
 			synchronizeFromCsv.Execute();
@@ -127,12 +128,12 @@ namespace AdministrationTest.Option.Options.Logic
 		[Test]
 		public void SynchronizeCreatesCorrectNumberOfContacts()
 		{
-			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName1, fileNameTmp, fields);
 
 			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
 			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv(_changeProvider1, fileName1);
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 
@@ -147,13 +148,12 @@ namespace AdministrationTest.Option.Options.Logic
 		[Test]
 		public void SynchronizeCreatesCorrectNumberOfExternalContacts()
 		{
-			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName1, fileNameTmp, fields);
 
 			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
 			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
-
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv(_changeProvider1, fileName1);
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 
 			synchronizeFromCsv.Execute();
