@@ -2,6 +2,9 @@
 using NUnit.Framework;
 using DatabaseSynchronizeFromCsv = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCsv;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
+using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using System.Data.SqlClient;
 using System.IO;
 using System.Collections.Generic;
@@ -41,6 +44,13 @@ namespace AdministrationTest.Option.Options.Logic
 			}
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			_changeProvider1.Delete(_sqlConnection);
+			_changeProvider2.Delete(_sqlConnection);
+		}
+
 		private DatabaseChangeProvider FindOrCreateChangeProvider(string testCsvProvider, List<DatabaseChangeProvider> changeProviders)
 		{
 			Func<DatabaseChangeProvider, bool> findChangeProvider = lChangeProvider => lChangeProvider.Name == testCsvProvider;
@@ -60,15 +70,9 @@ namespace AdministrationTest.Option.Options.Logic
 			return changeProvider;
 		}
 
-		[Test]
-		public void ExecuteOption()
+		private DatabaseSynchronizeFromCsv GetDatabaseSynchronizeFromCsv()
 		{
-			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
-
-			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
-			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
-
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = new DatabaseSynchronizeFromCsv()
+			return new DatabaseSynchronizeFromCsv()
 			{
 				changeProviderId = _changeProvider1.Id,
 				dateName = "collectedDate",
@@ -80,10 +84,65 @@ namespace AdministrationTest.Option.Options.Logic
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
 				fields = fields,
 			};
+		}
+
+		[Test]
+		public void SynchronizeCreatesCorrectNumberOfContactChanges()
+		{
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+
+			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
+			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+
+			synchronizeFromCsv.Execute();
+
+			List<DatabaseContactChange> databaseChanges = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
+
+			Assert.AreEqual(2, databaseChanges.Count);
+		}
+
+		[Test]
+		public void SynchronizeCreatesCorrectNumberOfContacts()
+		{
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+
+			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
+			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 
 			synchronizeFromCsv.Execute();
+
+			List<DatabaseContactChange> databaseChanges = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
+			List<DatabaseContact> contacts = databaseChanges.Select(contactChange => DatabaseContact.Read(_sqlConnection, contactChange.ContactId)).ToList();
+
+			Assert.AreEqual(2, contacts.Count);
 		}
+
+		[Test]
+		public void SynchronizeCreatesCorrectNumberOfExternalContacts()
+		{
+			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
+
+			csv.WriteLine("1", "20010101 00:00:00", "name1", "123");
+			csv.WriteLine("2", "20010103 00:00:00", "name2", "234");
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = GetDatabaseSynchronizeFromCsv();
+
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+
+			synchronizeFromCsv.Execute();
+
+			List<DatabaseContactChange> databaseChanges = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
+			List<DatabaseExternalContact> externalContacts = databaseChanges.Select(contactChange => DatabaseExternalContact.Read(_sqlConnection, contactChange.ExternalContactId, _changeProvider1.Id)).ToList();
+
+			Assert.AreEqual(2, externalContacts.Count);
+		}
+
 	}
 }
