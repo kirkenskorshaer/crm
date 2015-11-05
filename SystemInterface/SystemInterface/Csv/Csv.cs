@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -209,7 +210,37 @@ namespace SystemInterface.Csv
 			File.Move(_fileNameTmp, _fileName);
 		}
 
-		public List<List<KeyValuePair<string, string>>> ReadFields(string keyName, string keyValue)
+		public List<Dictionary<string, string>> ReadFields(string keyName, string keyValue)
+		{
+			Func<string, string, bool> compareFunc = (stringInCsv, stringInputValue) =>
+			{
+				return stringInCsv == stringInputValue;
+			};
+
+			Func<string, string> convertFunc = (value) => value;
+
+			return ReadCompared(keyName, keyValue, compareFunc, convertFunc);
+		}
+
+		public List<Dictionary<string, string>> ReadLatest(string keyName, DateTime minimumDateToReturn)
+		{
+			Func<DateTime, DateTime, bool> compareFunc = (DateTime dateInCsv, DateTime minimumDate) =>
+			{
+				return dateInCsv >= minimumDate;
+			};
+
+			Func<string, DateTime> convertFunc = (input) =>
+			{
+				DateTime convertedDateTime;
+				DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss", null, DateTimeStyles.None, out convertedDateTime);
+
+				return convertedDateTime;
+			};
+
+			return ReadCompared(keyName, minimumDateToReturn, compareFunc, convertFunc);
+		}
+
+		public List<Dictionary<string, string>> ReadCompared<CompareType>(string keyName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
 		{
 			int keyIndex = keyNameToKeyIndex(keyName);
 
@@ -220,23 +251,24 @@ namespace SystemInterface.Csv
 
 			StreamReader streamReader = GetReader();
 
-			List<List<KeyValuePair<string, string>>> collectedValues = new List<List<KeyValuePair<string, string>>>();
+			List<Dictionary<string, string>> collectedValues = new List<Dictionary<string, string>>();
 
 			while (streamReader.EndOfStream == false)
 			{
 				string line = streamReader.ReadLine();
 				string[] parts = line.Split(_delimeter);
 
-				if (parts[keyIndex] == keyValue)
+				CompareType objectInCsv = convertFunc(parts[keyIndex]);
+
+				if (compareFunc(objectInCsv, compareObject))
 				{
-					List<KeyValuePair<string, string>> rowValues = new List<KeyValuePair<string, string>>();
+					Dictionary<string, string> rowValues = new Dictionary<string, string>();
 					for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
 					{
 						string key = Columns[columnIndex];
 						string value = parts[columnIndex];
 
-						KeyValuePair<string, string> keyValuePair = new KeyValuePair<string, string>(key, value);
-						rowValues.Add(keyValuePair);
+						rowValues.Add(key, value);
 					}
 					collectedValues.Add(rowValues);
 				}
