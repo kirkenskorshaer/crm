@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Heart.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Mapping\Contact\ContactCsvMapping.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Csv\CsvDelete.cs" />
     <Compile Include="Option\Options\Csv\CsvRead.cs" />
