@@ -74,10 +74,10 @@ namespace SystemInterfaceTest.CsvTest
 			csv.WriteLine("2", "name22");
 			csv.WriteLine("3", "name3");
 
-			List<List<KeyValuePair<string, string>>> recoveredValues = csv.ReadFields("id", "2");
+			List<Dictionary<string, string>> recoveredValues = csv.ReadFields("id", "2");
 
-			Assert.AreEqual("name21", recoveredValues[0][1].Value);
-			Assert.AreEqual("name22", recoveredValues[1][1].Value);
+			Assert.AreEqual("name21", recoveredValues[0]["name"]);
+			Assert.AreEqual("name22", recoveredValues[1]["name"]);
 		}
 
 		[Test]
