@@ -27,17 +27,15 @@ namespace AdministrationTest.Option.Options.Logic
 		private char delimeter = ';';
 
 		[SetUp]
-		public void SetUp()
+		new public void SetUp()
 		{
 			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
-
-			List<DatabaseChangeProvider> changeProviders = DatabaseChangeProvider.ReadAll(_sqlConnection);
 
 			string testCsvProvider1 = "testCsvProvider1";
 			string testCsvProvider2 = "testCsvProvider2";
 
-			_changeProvider1 = FindOrCreateChangeProvider(testCsvProvider1, changeProviders);
-			_changeProvider2 = FindOrCreateChangeProvider(testCsvProvider2, changeProviders);
+			_changeProvider1 = FindOrCreateChangeProvider(_sqlConnection, testCsvProvider1);
+			_changeProvider2 = FindOrCreateChangeProvider(_sqlConnection, testCsvProvider2);
 
 			if (File.Exists(fileName1))
 			{
@@ -50,25 +48,6 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			_changeProvider1.Delete(_sqlConnection);
 			_changeProvider2.Delete(_sqlConnection);
-		}
-
-		private DatabaseChangeProvider FindOrCreateChangeProvider(string testCsvProvider, List<DatabaseChangeProvider> changeProviders)
-		{
-			Func<DatabaseChangeProvider, bool> findChangeProvider = lChangeProvider => lChangeProvider.Name == testCsvProvider;
-
-			if (changeProviders.Any(findChangeProvider))
-			{
-				return changeProviders.Single(findChangeProvider);
-			}
-
-			DatabaseChangeProvider changeProvider = new DatabaseChangeProvider()
-			{
-				Name = testCsvProvider,
-			};
-
-			changeProvider.Insert(_sqlConnection);
-
-			return changeProvider;
 		}
 
 		private DatabaseSynchronizeFromCsv GetDatabaseSynchronizeFromCsv(DatabaseChangeProvider changeProvider, string fileName)

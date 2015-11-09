@@ -5,6 +5,9 @@ using DataLayer;
 using DataLayer.MongoData;
 using DataLayer.MongoData.Option;
 using NUnit.Framework;
+using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
+using System.Linq;
+using System.Data.SqlClient;
 
 namespace AdministrationTest
 {
@@ -62,6 +65,27 @@ namespace AdministrationTest
 				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
 			};
 			return schedule;
+		}
+
+		protected DatabaseChangeProvider FindOrCreateChangeProvider(SqlConnection sqlConnection, string providerName)
+		{
+			List<DatabaseChangeProvider> changeProviders = DatabaseChangeProvider.ReadAll(sqlConnection);
+
+			Func<DatabaseChangeProvider, bool> findChangeProvider = lChangeProvider => lChangeProvider.Name == providerName;
+
+			if (changeProviders.Any(findChangeProvider))
+			{
+				return changeProviders.Single(findChangeProvider);
+			}
+
+			DatabaseChangeProvider changeProvider = new DatabaseChangeProvider()
+			{
+				Name = providerName,
+			};
+
+			changeProvider.Insert(sqlConnection);
+
+			return changeProvider;
 		}
 	}
 }
