@@ -44,6 +44,16 @@ namespace DataLayer.MongoData
 			insertTask.Wait();
 		}
 
+		public static bool Exists(MongoConnection connection, string targetName, Guid targetId)
+		{
+			IMongoCollection<Progress> progressCollection = connection.Database.GetCollection<Progress>(typeof(Progress).Name);
+			Task<long> progressFind = progressCollection.CountAsync(progress =>
+				progress.TargetName == targetName &&
+				progress.TargetId == targetId);
+
+			return progressFind.Result > 0;
+		}
+
 		public void UpdateAndSetLastProgressDateToNow(MongoConnection connection)
 		{
 			LastProgressDate = DateTime.Now;
