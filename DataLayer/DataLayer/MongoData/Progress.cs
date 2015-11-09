@@ -44,7 +44,7 @@ namespace DataLayer.MongoData
 			insertTask.Wait();
 		}
 
-		public void UpdateLastProgressDateToNow(MongoConnection connection)
+		public void UpdateAndSetLastProgressDateToNow(MongoConnection connection)
 		{
 			LastProgressDate = DateTime.Now;
 

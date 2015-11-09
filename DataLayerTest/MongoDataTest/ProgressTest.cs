@@ -52,7 +52,7 @@ namespace DataLayerTest.MongoDataTest
 		public void UpdateLastProgressDateToNowUpdatesProgress()
 		{
 			Progress createdProgress = CreateProgress(new DateTime(2000, 1, 2));
-			createdProgress.UpdateLastProgressDateToNow(_connection);
+			createdProgress.UpdateAndSetLastProgressDateToNow(_connection);
 
 			Progress progress = Progress.ReadNext(_connection, testTargetName);
 

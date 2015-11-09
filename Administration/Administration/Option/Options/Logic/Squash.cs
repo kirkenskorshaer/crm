@@ -58,7 +58,7 @@ namespace Administration.Option.Options.Logic
 			if (contactChanged == true)
 			{
 				contact.Update(SqlConnection);
-				progress.UpdateLastProgressDateToNow(Connection);
+				progress.UpdateAndSetLastProgressDateToNow(Connection);
 			}
 
 			return true;
