@@ -64,6 +64,7 @@
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
+    <Compile Include="Option\Options\Logic\Squash.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedField.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
