@@ -59,6 +59,26 @@ namespace DataLayerTest.MongoDataTest
 			Assert.AreEqual(DateTime.Now.Year, progress.LastProgressDate.Year);
 		}
 
+		[Test]
+		public void ExistsReturnsFalseIfProgressDoesNotExist()
+		{
+			Progress createdProgress = CreateProgress(new DateTime(2000, 1, 2));
+
+			bool exists = Progress.Exists(_connection, createdProgress.TargetName + "_test", createdProgress.TargetId);
+
+			Assert.IsFalse(exists);
+		}
+
+		[Test]
+		public void ExistsReturnsTrueIfProgressExist()
+		{
+			Progress createdProgress = CreateProgress(new DateTime(2000, 1, 2));
+
+			bool exists = Progress.Exists(_connection, createdProgress.TargetName, createdProgress.TargetId);
+
+			Assert.IsTrue(exists);
+		}
+
 		private Progress CreateProgress(DateTime progressDate)
 		{
 			Progress createdProgress = new Progress()
