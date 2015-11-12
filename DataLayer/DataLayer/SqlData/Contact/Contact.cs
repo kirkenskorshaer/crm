@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataLayer.MongoData;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -33,7 +34,7 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
 		}
 
-		public void Insert(SqlConnection sqlConnection)
+		public void Insert(SqlConnection sqlConnection, MongoConnection mongoConnection = null)
 		{
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
@@ -60,6 +61,32 @@ namespace DataLayer.SqlData.Contact
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
+
+			CreateProgressForContact(mongoConnection);
+		}
+
+		private void CreateProgressForContact(MongoConnection mongoConnection)
+		{
+			if (mongoConnection == null)
+			{
+				return;
+			}
+
+			string progressName = "Contact";
+
+			if (Progress.Exists(mongoConnection, progressName, Id))
+			{
+				return;
+			}
+
+			Progress newContactProgress = new Progress()
+			{
+				LastProgressDate = DateTime.Now,
+				TargetId = Id,
+				TargetName = progressName,
+			};
+
+			newContactProgress.Insert(mongoConnection);
 		}
 
 		public static List<Contact> ReadLatest(SqlConnection sqlConnection, DateTime lastSearchDate)
