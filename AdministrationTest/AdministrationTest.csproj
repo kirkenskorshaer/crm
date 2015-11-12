@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HeartTest.cs" />
+    <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
     <Compile Include="Option\Options\Logic\SquashTest.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsvTest.cs" />
     <Compile Include="Option\Options\Service\ServiceCreateTest.cs" />
