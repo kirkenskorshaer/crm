@@ -90,6 +90,41 @@ namespace DataLayer.SqlData.Contact
 			return contacts;
 		}
 
+		public static Contact ReadNextById(SqlConnection sqlConnection, Guid id)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT TOP 1");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("	,Firstname");
+			sqlStringBuilder.AppendLine("	,Lastname");
+			sqlStringBuilder.AppendLine("	,ModifiedOn");
+			sqlStringBuilder.AppendLine("	,CreatedOn");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	contact.id > @id");
+			sqlStringBuilder.AppendLine("ORDER BY");
+			sqlStringBuilder.AppendLine("	contact.id");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+
+			if (dataTable.Rows.Count == 1)
+			{
+				DataRow row = dataTable.Rows[0];
+
+				Contact contact = CreateFromRow(row);
+
+				return contact;
+			}
+
+			if (id == Guid.Empty)
+			{
+				return null;
+			}
+
+			return ReadNextById(sqlConnection, Guid.Empty);
+		}
+
 		public void Update(SqlConnection sqlConnection)
 		{
 			StringBuilder sqlStringBuilderSets = new StringBuilder();
@@ -109,7 +144,7 @@ namespace DataLayer.SqlData.Contact
 
 			parameters.Add(new KeyValuePair<string, object>("id", Id));
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder,CommandType.Text, parameters.ToArray());
+			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		private static Contact CreateFromRow(DataRow row)
