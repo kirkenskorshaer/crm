@@ -176,7 +176,7 @@ namespace Administration.Option.Options.Logic
 
 		private DatabaseContact GetContactToSquash(out DataLayer.MongoData.Progress progress)
 		{
-			progress = DataLayer.MongoData.Progress.ReadNext(Connection, "Contact");
+			progress = DataLayer.MongoData.Progress.ReadNext(Connection, MaintainProgress.ProgressContact);
 
 			if (progress == null)
 			{
