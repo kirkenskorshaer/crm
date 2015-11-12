@@ -186,6 +186,19 @@ namespace DataLayer.SqlData.Contact
 			};
 		}
 
+		public static bool Exists(SqlConnection sqlConnection, Guid id)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT NULL FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	id = @id");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+
+			return dataTable.Rows.Count > 0;
+		}
+
 		public static Contact Read(SqlConnection sqlConnection, Guid contactId)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
