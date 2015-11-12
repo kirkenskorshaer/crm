@@ -7,6 +7,7 @@ using System.Linq;
 using DataLayer;
 using DataLayer.SqlData.Contact;
 using System.Data.SqlTypes;
+using DataLayer.MongoData;
 
 namespace DataLayerTest.SqlDataTest.ContactTest
 {
@@ -137,6 +138,15 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			Assert.AreEqual(sortedGuids[0], new SqlGuid(readContact5.Id));
 		}
 
+		[Test]
+		public void InsertCreatesProgress()
+		{
+			Contact createdContact1 = ContactInsert(_sqlConnection, true);
+
+			bool progressExists = Progress.Exists(_mongoConnection, "Contact", createdContact1.Id);
+
+			Assert.IsTrue(progressExists);
+		}
 
 		private Contact ContactInsertWithoutLastname(SqlConnection sqlConnection)
 		{
@@ -153,7 +163,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			return createdContact;
 		}
 
-		private Contact ContactInsert(SqlConnection sqlConnection)
+		private Contact ContactInsert(SqlConnection sqlConnection, bool useMongoConnection = false)
 		{
 			DateTime creationDate = DateTime.Now;
 
@@ -165,7 +175,14 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 				CreatedOn = creationDate,
 			};
 
-			createdContact.Insert(sqlConnection);
+			if (useMongoConnection)
+			{
+				createdContact.Insert(sqlConnection, _mongoConnection);
+			}
+			else
+			{
+				createdContact.Insert(sqlConnection);
+			}
 			return createdContact;
 		}
 	}
