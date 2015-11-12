@@ -38,6 +38,8 @@ namespace Administration.Option.Options.Logic
 
 			Guid currentId = progress.TargetId;
 
+			RemoveLastContactProgressIfContactIsDeleted(currentId);
+
 			DatabaseContact contact = DatabaseContact.ReadNextById(SqlConnection, currentId);
 
 			if (contact == null)
@@ -62,6 +64,23 @@ namespace Administration.Option.Options.Logic
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 
 			return true;
+		}
+
+		private void RemoveLastContactProgressIfContactIsDeleted(Guid currentId)
+		{
+			bool contactExists = DatabaseContact.Exists(SqlConnection, currentId);
+
+			if (contactExists)
+			{
+				return;
+			}
+
+			if (DatabaseProgress.Exists(Connection, ProgressContact, currentId))
+			{
+				DatabaseProgress contactProgress = DatabaseProgress.Read(Connection, ProgressContact, currentId);
+
+				contactProgress.Delete(Connection);
+			}
 		}
 	}
 }
