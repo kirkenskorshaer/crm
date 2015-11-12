@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System.Linq;
 using DataLayer;
 using DataLayer.SqlData.Contact;
+using System.Data.SqlTypes;
 
 namespace DataLayerTest.SqlDataTest.ContactTest
 {
@@ -104,6 +105,38 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Assert.AreEqual(createdContact.Firstname, contactRead.Firstname);
 		}
+
+		[Test]
+		public void ReadNextByIdReturnsNullWhenThereIsNoContacts()
+		{
+			Contact readContact = Contact.ReadNextById(_sqlConnection, Guid.Empty);
+
+			Assert.IsNull(readContact);
+		}
+
+		[Test]
+		public void ReadNextByIdReturnsContactsInOrder()
+		{
+			Contact createdContact1 = ContactInsert(_sqlConnection);
+			Contact createdContact2 = ContactInsert(_sqlConnection);
+			Contact createdContact3 = ContactInsert(_sqlConnection);
+			Contact createdContact4 = ContactInsert(_sqlConnection);
+
+			Contact readContact1 = Contact.ReadNextById(_sqlConnection, Guid.Empty);
+			Contact readContact2 = Contact.ReadNextById(_sqlConnection, readContact1.Id);
+			Contact readContact3 = Contact.ReadNextById(_sqlConnection, readContact2.Id);
+			Contact readContact4 = Contact.ReadNextById(_sqlConnection, readContact3.Id);
+			Contact readContact5 = Contact.ReadNextById(_sqlConnection, readContact4.Id);
+
+			SqlGuid[] sortedGuids = new List<Contact>() { createdContact1, createdContact2, createdContact3, createdContact4 }.Select(contact => new SqlGuid(contact.Id)).OrderBy(sqlGuid => sqlGuid).ToArray();
+
+			Assert.AreEqual(sortedGuids[0], new SqlGuid(readContact1.Id));
+			Assert.AreEqual(sortedGuids[1], new SqlGuid(readContact2.Id));
+			Assert.AreEqual(sortedGuids[2], new SqlGuid(readContact3.Id));
+			Assert.AreEqual(sortedGuids[3], new SqlGuid(readContact4.Id));
+			Assert.AreEqual(sortedGuids[0], new SqlGuid(readContact5.Id));
+		}
+
 
 		private Contact ContactInsertWithoutLastname(SqlConnection sqlConnection)
 		{
