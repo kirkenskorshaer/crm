@@ -54,6 +54,22 @@ namespace DataLayer.MongoData
 			return progressFind.Result > 0;
 		}
 
+		public static Progress Read(MongoConnection connection, string targetName, Guid targetId)
+		{
+			IMongoCollection<Progress> progressCollection = connection.Database.GetCollection<Progress>(typeof(Progress).Name);
+			IFindFluent<Progress, Progress> progressFind = progressCollection.Find(progress =>
+				progress.TargetName == targetName &&
+				progress.TargetId == targetId);
+
+			Task<List<Progress>> progressTask = progressFind.ToListAsync();
+
+			progressTask.Wait();
+
+			List<Progress> progressFound = progressTask.Result;
+
+			return progressFound.Single();
+		}
+
 		public void UpdateAndSetLastProgressDateToNow(MongoConnection connection)
 		{
 			LastProgressDate = DateTime.Now;
