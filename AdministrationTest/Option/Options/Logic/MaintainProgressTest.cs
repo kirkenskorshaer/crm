@@ -74,5 +74,25 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Assert.AreEqual(databaseProgress.TargetId, _contact.Id);
 		}
+
+		[Test]
+		public void ExecuteOptionRemovesMaintainProgressIfContactDoesNotExist()
+		{
+			DatabaseMaintainProgress databaseMaintainProgress = new DatabaseMaintainProgress()
+			{
+				Name = "test",
+				Schedule = CreateScheduleAlwaysOnDoOnce(),
+			};
+
+			MaintainProgress maintainProgress = new MaintainProgress(Connection, databaseMaintainProgress);
+
+			maintainProgress.Execute();
+			_contact.Delete(_sqlConnection);
+			maintainProgress.Execute();
+
+			bool databaseProgressExists = DatabaseProgress.Exists(Connection, MaintainProgress.ProgressContact, _contact.Id);
+
+			Assert.IsFalse(databaseProgressExists);
+		}
 	}
 }
