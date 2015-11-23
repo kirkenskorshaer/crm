@@ -37,6 +37,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 				Utilities.DropTable(_sqlConnection, typeof(ExternalContact).Name);
 			}
 			ExternalContact.MaintainTable(_sqlConnection);
+			ContactChange.MaintainTable(_sqlConnection);
 		}
 
 		[TearDown]
