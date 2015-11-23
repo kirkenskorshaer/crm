@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DataLayerTest.SqlDataTest.ContactTest
 {
 	[TestFixture]
-	public class ExternalContactTest
+	public class ExternalContactTest : TestSqlBase
 	{
 		private MongoConnection _mongoConnection;
 		private SqlConnection _sqlConnection;
