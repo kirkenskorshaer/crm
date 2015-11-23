@@ -48,7 +48,7 @@ namespace SystemInterface.Dynamics.Crm
 			ConditionExpression modifiedOnExpression = new ConditionExpression
 			{
 				AttributeName = "modifiedon",
-				Operator = ConditionOperator.GreaterThan
+				Operator = ConditionOperator.GreaterEqual
 			};
 			modifiedOnExpression.Values.Add(lastSearchDate);
 
