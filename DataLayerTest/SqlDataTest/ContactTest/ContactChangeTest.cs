@@ -10,7 +10,7 @@ using System.Linq;
 namespace DataLayerTest.SqlDataTest.ContactTest
 {
 	[TestFixture]
-	public class ContactChangeTest
+	public class ContactChangeTest : TestSqlBase
 	{
 		private MongoConnection _mongoConnection;
 		private SqlConnection _sqlConnection;
@@ -31,23 +31,6 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 				Utilities.DropTable(_sqlConnection, "ContactChange");
 			}
 			ContactChange.MaintainTable(_sqlConnection);
-		}
-
-		private Contact InsertContact(SqlConnection sqlConnection)
-		{
-			DateTime creationDate = DateTime.Now;
-
-			Contact createdContact = new Contact
-			{
-				Firstname = $"FirstnameTest_{Guid.NewGuid()}",
-				Lastname = $"LastNameTest_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
-			};
-
-			createdContact.Insert(sqlConnection);
-
-			return createdContact;
 		}
 
 		private ExternalContact InsertExternalContact(SqlConnection sqlConnection)
