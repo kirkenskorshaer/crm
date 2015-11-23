@@ -118,6 +118,25 @@ namespace DataLayer.SqlData.Contact
 			return externalContacts;
 		}
 
+		public static ExternalContact ReadOrCreate(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
+		{
+			bool externalContactExists = Exists(sqlConnection, externalContactId, changeProviderId);
+
+			ExternalContact externalContact;
+
+			if (externalContactExists)
+			{
+				externalContact = Read(sqlConnection, externalContactId, changeProviderId);
+			}
+			else
+			{
+				externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId);
+				externalContact.Insert();
+			}
+
+			return externalContact;
+		}
+
 		public static bool Exists(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
