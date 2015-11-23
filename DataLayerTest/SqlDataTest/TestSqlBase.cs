@@ -22,5 +22,19 @@ namespace DataLayerTest.SqlDataTest
 
 			return createdContact;
 		}
+
+		protected ContactChange InsertContactChange(SqlConnection sqlConnection, Guid contactId, Guid externalContactId, Guid changeProviderId, DateTime createdTime)
+		{
+			ContactChange contactChangeCreated = new ContactChange(sqlConnection, contactId, externalContactId, changeProviderId)
+			{
+				Firstname = $"name_{Guid.NewGuid()}",
+				CreatedOn = createdTime,
+				ModifiedOn = createdTime,
+			};
+
+			contactChangeCreated.Insert();
+
+			return contactChangeCreated;
+		}
 	}
 }
