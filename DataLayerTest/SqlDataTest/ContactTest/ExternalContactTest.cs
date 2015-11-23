@@ -17,6 +17,8 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		private MongoConnection _mongoConnection;
 		private SqlConnection _sqlConnection;
 
+		private List<ChangeProvider> _changeProviders = new List<ChangeProvider>();
+
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
@@ -39,11 +41,22 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			ExternalContact.MaintainTable(_sqlConnection);
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			_changeProviders.ForEach(changeProvider => changeProvider.Delete(_sqlConnection));
+
+			_changeProviders.Clear();
+		}
+
 		private ChangeProvider InsertChangeProvider()
 		{
 			ChangeProvider changeProvider = new ChangeProvider();
 			changeProvider.Name = $"name_{Guid.NewGuid()}";
 			changeProvider.Insert(_sqlConnection);
+
+			_changeProviders.Add(changeProvider);
+
 			return changeProvider;
 		}
 
@@ -57,8 +70,6 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			externalContactCreated.Insert();
 
 			ExternalContact externalContactRead = ExternalContact.Read(_sqlConnection, externalContactId, changeProvider.Id);
-
-			changeProvider.Delete(_sqlConnection);
 
 			Assert.AreEqual(externalContactCreated.ChangeProviderId, externalContactRead.ChangeProviderId);
 			Assert.AreEqual(externalContactCreated.ExternalContactId, externalContactRead.ExternalContactId);
