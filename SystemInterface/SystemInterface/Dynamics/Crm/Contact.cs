@@ -123,5 +123,32 @@ namespace SystemInterface.Dynamics.Crm
 			Active = 1,
 			Inactive = 2,
 		}
+
+		public void SetActive(DynamicsCrmConnection connection, bool isActive)
+		{
+			SetStateRequest setStateRequest = new SetStateRequest()
+			{
+				EntityMoniker = new EntityReference
+				{
+					Id = ContactId,
+					LogicalName = "contact",
+				},
+				//State = new OptionSetValue(1),
+				//Status = new OptionSetValue(2),
+			};
+
+			if (isActive == true)
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Active);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Active);
+			}
+			else
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Inactive);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Inactive);
+			}
+
+			connection.Service.Execute(setStateRequest);
+		}
 	}
 }
