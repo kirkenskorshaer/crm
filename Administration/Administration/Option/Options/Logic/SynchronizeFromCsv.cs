@@ -65,7 +65,7 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid externalContactId = GetIdFromRow(csvRow);
 
-				ExternalContact externalContact = ReadOrCreateExternalContact(SqlConnection, externalContactId, changeProviderId);
+				ExternalContact externalContact = ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId);
 
 				Contact contact = ReadOrCreateContact(csvRow, externalContactId, dateName);
 
@@ -82,25 +82,6 @@ namespace Administration.Option.Options.Logic
 
 				CreateContactChange(changeProviderId, csvRow, externalContactId, contactId, collectedDate);
 			}
-		}
-
-		private ExternalContact ReadOrCreateExternalContact(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
-		{
-			bool externalContactExists = ExternalContact.Exists(sqlConnection, externalContactId, changeProviderId);
-
-			ExternalContact externalContact;
-
-			if (externalContactExists)
-			{
-				externalContact = ExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
-			}
-			else
-			{
-				externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId);
-				externalContact.Insert();
-            }
-
-			return externalContact;
 		}
 
 		private Contact ReadOrCreateContact(Dictionary<string, string> csvRow, Guid externalContactId, string dateName)

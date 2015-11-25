@@ -15,6 +15,7 @@ namespace AdministrationTest
 	public class TestBase
 	{
 		protected MongoConnection Connection;
+		protected SqlConnection _sqlConnection;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -23,10 +24,13 @@ namespace AdministrationTest
 			Connection = MongoConnection.GetConnection(databaseName);
 		}
 
+		private List<DatabaseChangeProvider> _changeProviders = new List<DatabaseChangeProvider>();
+
 		[SetUp]
 		public void SetUp()
 		{
 			Connection.CleanDatabase();
+			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
 
 			Config config = new Config()
 			{
@@ -37,6 +41,12 @@ namespace AdministrationTest
 			};
 
 			config.Insert(Connection);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_changeProviders.ForEach(changeProvider => changeProvider.Delete(_sqlConnection));
 		}
 
 		protected Schedule CreateSchedule()

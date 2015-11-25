@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Heart.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Mapping\Contact\ContactCrmMapping.cs" />
     <Compile Include="Mapping\Contact\ContactCsvMapping.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Csv\CsvDelete.cs" />
@@ -67,7 +68,9 @@
     <Compile Include="Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="Option\Options\Logic\Squash.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedField.cs" />
+    <Compile Include="Option\Options\Logic\SynchronizeFromCrm.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsv.cs" />
+    <Compile Include="Option\Options\Logic\SynchronizeToCrm.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
     <Compile Include="Option\Options\Service\ServiceDelete.cs" />
     <Compile Include="Option\Options\Service\ServiceStart.cs" />
