@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -14,8 +15,9 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime ModifiedOn;
 		public string Firstname;
 		public string Lastname;
+		public StateEnum State { get; private set; }
 
-		private static readonly ColumnSet ColumnSetContact = new ColumnSet("contactid", "createdon", "modifiedon", "firstname", "lastname");
+		private static readonly ColumnSet ColumnSetContact = new ColumnSet("contactid", "createdon", "modifiedon", "firstname", "lastname", "statecode");
 
 		private static Contact EntityToContact(Entity entity)
 		{
@@ -26,6 +28,7 @@ namespace SystemInterface.Dynamics.Crm
 				ModifiedOn = (DateTime)entity.Attributes["modifiedon"],
 				Firstname = entity.Attributes["firstname"].ToString(),
 				Lastname = entity.Attributes["lastname"].ToString(),
+				State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value,
 			};
 		}
 
@@ -107,6 +110,18 @@ namespace SystemInterface.Dynamics.Crm
 			CrmEntity crmEntity = GetContactAsEntity(true);
 
 			connection.Service.Update(crmEntity);
+		}
+
+		public enum StateEnum
+		{
+			Active = 0,
+			Inactive = 1,
+		}
+
+		public enum StatusEnum
+		{
+			Active = 1,
+			Inactive = 2,
 		}
 	}
 }
