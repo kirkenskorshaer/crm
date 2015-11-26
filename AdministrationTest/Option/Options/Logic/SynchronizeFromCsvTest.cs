@@ -42,13 +42,6 @@ namespace AdministrationTest.Option.Options.Logic
 			}
 		}
 
-		[TearDown]
-		public void TearDown()
-		{
-			_changeProvider1.Delete(_sqlConnection);
-			_changeProvider2.Delete(_sqlConnection);
-		}
-
 		private DatabaseSynchronizeFromCsv GetDatabaseSynchronizeFromCsv(DatabaseChangeProvider changeProvider, string fileName)
 		{
 			return new DatabaseSynchronizeFromCsv()

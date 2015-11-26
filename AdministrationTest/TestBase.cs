@@ -24,6 +24,8 @@ namespace AdministrationTest
 			Connection = MongoConnection.GetConnection(databaseName);
 		}
 
+		private List<DatabaseChangeProvider> _changeProviders = new List<DatabaseChangeProvider>();
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -39,6 +41,12 @@ namespace AdministrationTest
 			};
 
 			config.Insert(Connection);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_changeProviders.ForEach(changeProvider => changeProvider.Delete(_sqlConnection));
 		}
 
 		protected Schedule CreateSchedule()
