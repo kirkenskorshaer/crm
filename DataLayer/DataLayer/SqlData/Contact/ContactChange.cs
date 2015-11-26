@@ -117,13 +117,14 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("				WHEN");
 			sqlStringBuilder.AppendLine("					DATEDIFF(DAY, ModifiedOn, @ModifiedOn) = 0");
 			sqlStringBuilder.AppendLine("				THEN");
-			sqlStringBuilder.AppendLine("					0");
-			sqlStringBuilder.AppendLine("				WHEN");
-			sqlStringBuilder.AppendLine("					DATEDIFF(MILLISECOND, ModifiedOn, @ModifiedOn) = 0");
-			sqlStringBuilder.AppendLine("				THEN");
-			sqlStringBuilder.AppendLine("					0");
-			sqlStringBuilder.AppendLine("				ELSE");
-			sqlStringBuilder.AppendLine("					1");
+			sqlStringBuilder.AppendLine("					CASE");
+			sqlStringBuilder.AppendLine("						WHEN");
+			sqlStringBuilder.AppendLine("							DATEDIFF(MILLISECOND, ModifiedOn, @ModifiedOn) = 0");
+			sqlStringBuilder.AppendLine("						THEN");
+			sqlStringBuilder.AppendLine("							0");
+			sqlStringBuilder.AppendLine("						ELSE");
+			sqlStringBuilder.AppendLine("							1");
+			sqlStringBuilder.AppendLine("					END");
 			sqlStringBuilder.AppendLine("			END = 0");
 			sqlStringBuilder.AppendLine("	)");
 
