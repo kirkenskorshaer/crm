@@ -15,6 +15,7 @@ namespace AdministrationTest
 	public class TestBase
 	{
 		protected MongoConnection Connection;
+		protected SqlConnection _sqlConnection;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -27,6 +28,7 @@ namespace AdministrationTest
 		public void SetUp()
 		{
 			Connection.CleanDatabase();
+			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
 
 			Config config = new Config()
 			{

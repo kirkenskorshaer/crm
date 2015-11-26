@@ -18,7 +18,6 @@ namespace AdministrationTest.Option.Options.Logic
 	{
 		private DatabaseChangeProvider _changeProvider1;
 		private DatabaseChangeProvider _changeProvider2;
-		private SqlConnection _sqlConnection;
 
 		private string[] fields = new string[] { "id", "collectedDate", "firstName", "test" };
 		private string fileName1 = @"C:\test\csv\test1.csv";
@@ -29,7 +28,7 @@ namespace AdministrationTest.Option.Options.Logic
 		[SetUp]
 		new public void SetUp()
 		{
-			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
+			base.SetUp();
 
 			string testCsvProvider1 = "testCsvProvider1";
 			string testCsvProvider2 = "testCsvProvider2";
