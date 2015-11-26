@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conversion\Contact.cs" />
     <Compile Include="Heart.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Mapping\Contact\ContactCrmMapping.cs" />
