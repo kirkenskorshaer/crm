@@ -69,6 +69,7 @@
     <Compile Include="Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="Option\Options\Logic\Squash.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedField.cs" />
+    <Compile Include="Option\Options\Logic\SynchronizeFromCrm.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
     <Compile Include="Option\Options\Service\ServiceDelete.cs" />
