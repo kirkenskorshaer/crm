@@ -83,17 +83,23 @@ namespace AdministrationTest
 
 			Func<DatabaseChangeProvider, bool> findChangeProvider = lChangeProvider => lChangeProvider.Name == providerName;
 
+			DatabaseChangeProvider changeProvider;
+
 			if (changeProviders.Any(findChangeProvider))
 			{
-				return changeProviders.Single(findChangeProvider);
+				changeProvider = changeProviders.Single(findChangeProvider);
+			}
+			else
+			{
+				changeProvider = new DatabaseChangeProvider()
+				{
+					Name = providerName,
+				};
+
+				changeProvider.Insert(sqlConnection);
 			}
 
-			DatabaseChangeProvider changeProvider = new DatabaseChangeProvider()
-			{
-				Name = providerName,
-			};
-
-			changeProvider.Insert(sqlConnection);
+			_changeProviders.Add(changeProvider);
 
 			return changeProvider;
 		}
