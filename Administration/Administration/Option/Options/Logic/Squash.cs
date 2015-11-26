@@ -31,6 +31,19 @@ namespace Administration.Option.Options.Logic
 				return false;
 			}
 
+			bool contactChanged = SquashContact(contact);
+
+			if (contactChanged == true)
+			{
+				contact.Update(SqlConnection);
+				progress.UpdateAndSetLastProgressDateToNow(Connection);
+			}
+
+			return true;
+		}
+
+		public bool SquashContact(DatabaseContact contact)
+		{
 			List<DatabaseContactChange> contactChanges = DatabaseContactChange.Read(SqlConnection, contact.Id, DatabaseContactChange.IdType.ContactId);
 
 			contactChanges = contactChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
@@ -55,13 +68,7 @@ namespace Administration.Option.Options.Logic
 
 			bool contactChanged = UpdateContactFieldsIfNeeded(contact, columnNames, changedFields);
 
-			if (contactChanged == true)
-			{
-				contact.Update(SqlConnection);
-				progress.UpdateAndSetLastProgressDateToNow(Connection);
-			}
-
-			return true;
+			return contactChanged;
 		}
 
 		private static void CollectModifiedFieldsForAllProviders(List<DatabaseContactChange> contactChanges, List<string> columnNames, Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId, List<ModifiedField> modifiedFields)
