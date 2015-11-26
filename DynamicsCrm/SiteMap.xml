@@ -1,0 +1,95 @@
+<SiteMap IntroducedVersion="7.0.0.0">
+  <Area Id="landsarbejde" Icon="/_imgs/marketing_24x24.gif" Description="Landsarbejde" Title="Landsarbejde" ShowGroups="true">
+    <Group Id="tempId_635835338915795508" Description="Landsarbejde" Title="Landsarbejde" IsProfile="false">
+      <SubArea Entity="contact" Id="tempId_635835341385936868" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="campaign" Id="tempId_635835341460816613" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="email" Id="tempId_635835341483640180" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
+    <Group Id="tempId_635835385237193417">
+      <SubArea Entity="contact" Id="tempId_635835385309571883" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="email" Id="tempId_635835385629881767" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="Settings" ResourceId="Area_Settings" ShowGroups="true" Icon="/_imgs/settings_24x24.gif" DescriptionResourceId="Settings_Area_Description" IntroducedVersion="7.0.0.0">
+    <Group Id="Business_Setting" ResourceId="Menu_Label_Business" DescriptionResourceId="Menu_Label_Business" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_businessmanagement" ResourceId="Homepage_BusinessManagement" DescriptionResourceId="BizManagement_SubArea_Description" Icon="/_imgs/ico_18_busmanagement.gif" Url="/tools/business/business.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_template" ResourceId="Homepage_Template" DescriptionResourceId="Template_SubArea_Description" Icon="/_imgs/ico_18_templates.gif" Url="/tools/templates/templates.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_productcatalog" ResourceId="Homepage_ProductCatalog" DescriptionResourceId="ProductCatalog_SubArea_Description" Icon="/_imgs/ico_18_productcatalog.gif" Url="/tools/productcatalog/productcatalog.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="product" Privilege="Read" />
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_servicemanagement" ResourceId="Homepage_ServiceManagement" DescriptionResourceId="ServiceManagement_SubArea_Description" Url="/tools/servicemanagement/servicemanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Customizations" ResourceId="Homepage_SystemCustomization" DescriptionResourceId="Homepage_SystemCustomization" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_syscust" ResourceId="Menu_Label_Customizations" DescriptionResourceId="Customization_SubArea_Description" Icon="/_imgs/area/18_syscust.gif" Url="/tools/systemcustomization/systemcustomization.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_solution" Entity="solution" ResourceId="Web.Tools.Solution.map_xml.aspx_1" AvailableOffline="false" GetStartedPanePath="Solutions_Web_Admin_Visor.html" GetStartedPanePathAdmin="Solutions_Web_Admin_Visor.html" GetStartedPanePathOutlook="Solutions_Outlook_Admin_Visor.html" GetStartedPanePathAdminOutlook="Solutions_Outlook_Admin_Visor.html" DescriptionResourceId="Web.Tools.Solution.map_xml.aspx_2" Url="/tools/Solution/home_solution.aspx?etc=7100" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="solution" Privilege="Read" />
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_marketplace" ResourceId="Homepage_Marketplace" DescriptionResourceId="Marketplace_SubArea_Description" Icon="/_imgs/SystemCustomization/ico_18_marketplace.png" Url="/tools/SystemCustomization/SolutionsMarketplace/SolutionsMarketplace.aspx" Client="Web" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="System_Setting" ResourceId="Menu_Label_System" DescriptionResourceId="Menu_Label_System" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_administration" ResourceId="Homepage_Administration" DescriptionResourceId="Administration_SubArea_Description" Icon="/_imgs/ico_18_administration.gif" Url="/tools/Admin/admin.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_security" ResourceId="AdminSecurity_SubArea_Title" DescriptionResourceId="AdminSecurity_SubArea_Description" Icon="/_imgs/area/Security_32.png" Url="/tools/AdminSecurity/adminsecurity_area.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_datamanagement" ResourceId="Homepage_DataManagement" DescriptionResourceId="DataManagement_SubArea_Description" Icon="/_imgs/ico_18_datamanagement.gif" Url="/tools/DataManagement/datamanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_systemjobs" ResourceId="Homepage_SystemJobs" DescriptionResourceId="SystemJobs_SubArea_Description" Entity="asyncoperation" Url="/tools/business/home_asyncoperation.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_documentmanagement" ResourceId="DocumentManagement.SettingsArea.Heading" DescriptionResourceId="DocumentManagement.SettingsArea.Description" Icon="/_imgs/DocumentManagement_16.png" Url="/tools/documentmanagement/documentmanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="sharepointsite" Privilege="Read" />
+        <Privilege Entity="sharepointdocumentlocation" Privilege="Read" />
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_audit" ResourceId="Audit_SubArea_Title" DescriptionResourceId="Audit_SubArea_Description" Icon="/_imgs/area/16_audit.png" Url="/tools/audit/audit_area.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_social" ResourceId="Social_SubArea_Title" DescriptionResourceId="Social_SubArea_Description" Icon="/_imgs/area/16_social.png" Url="/tools/social/social_area.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="msdyn_postconfig" ResourceId="Activity_Feed_Configuration" Entity="msdyn_postconfig" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="msdyn_postruleconfig" ResourceId="Activity_Feed_Rules_Configuration" Entity="msdyn_postruleconfig" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="ProcessCenter" ResourceId="Menu_Label_ProcessCenter" DescriptionResourceId="Menu_Label_ProcessCenter" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_workflow" Entity="workflow" DescriptionResourceId="Workflow_SubArea_Description" AvailableOffline="false" GetStartedPanePath="Workflows_Web_User_Visor.html" GetStartedPanePathAdmin="Workflows_Web_Admin_Visor.html" GetStartedPanePathOutlook="Workflows_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Workflows_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="HLP" ResourceId="Area_Help" ShowGroups="true" Icon="/_imgs/icn_help16.png" DescriptionResourceId="Help_Area_Description" IntroducedVersion="7.0.0.0">
+    <Group Id="HLP_GRP" ResourceId="Group_Help" DescriptionResourceId="Help_Description" IntroducedVersion="7.0.0.0">
+      <SubArea Id="Help_Resource_Center" Url="http://go.microsoft.com/fwlink/?LinkId=296269&amp;clcid=0x409" ResourceId="Area_CustomerCenter" DescriptionResourceId="ResourceCenter_Area_Description" AvailableOffline="false" IntroducedVersion="7.0.0.0" />
+    </Group>
+  </Area>
+</SiteMap>

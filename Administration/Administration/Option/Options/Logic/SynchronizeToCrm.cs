@@ -1,20 +1,15 @@
 ﻿using Administration.Option.Options.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DatabaseSynchronizeToCrm = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
-using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
-using DataLayer.SqlData.Contact;
 
 namespace Administration.Option.Options.Logic
 {
@@ -74,16 +69,15 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			SystemInterfaceContact.Lock(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
+			systemInterfaceContact.SetActive(_dynamicsCrmConnection, false);
 
 			systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
 			_synchronizeFromCrm.StoreInContactChangesIfNeeded(systemInterfaceContactInCrm, changeProviderId);
 
-
 			systemInterfaceContact.Update(_dynamicsCrmConnection);
 
-			SystemInterfaceContact.UnLock(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
+			systemInterfaceContact.SetActive(_dynamicsCrmConnection, true);
 		}
 
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)

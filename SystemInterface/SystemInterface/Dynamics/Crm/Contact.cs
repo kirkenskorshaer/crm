@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -14,8 +15,9 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime ModifiedOn;
 		public string Firstname;
 		public string Lastname;
+		public StateEnum State { get; private set; }
 
-		private static readonly ColumnSet ColumnSetContact = new ColumnSet("contactid", "createdon", "modifiedon", "firstname", "lastname");
+		private static readonly ColumnSet ColumnSetContact = new ColumnSet("contactid", "createdon", "modifiedon", "firstname", "lastname", "statecode");
 
 		private static Contact EntityToContact(Entity entity)
 		{
@@ -26,6 +28,7 @@ namespace SystemInterface.Dynamics.Crm
 				ModifiedOn = (DateTime)entity.Attributes["modifiedon"],
 				Firstname = entity.Attributes["firstname"].ToString(),
 				Lastname = entity.Attributes["lastname"].ToString(),
+				State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value,
 			};
 		}
 
@@ -43,12 +46,18 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
+		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
 		public static List<Contact> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate)
 		{
+			if(lastSearchDate <= _minimumSearchDate)
+			{
+				lastSearchDate = _minimumSearchDate;
+			}
+
 			ConditionExpression modifiedOnExpression = new ConditionExpression
 			{
 				AttributeName = "modifiedon",
-				Operator = ConditionOperator.GreaterThan
+				Operator = ConditionOperator.GreaterEqual
 			};
 			modifiedOnExpression.Values.Add(lastSearchDate);
 
@@ -107,6 +116,45 @@ namespace SystemInterface.Dynamics.Crm
 			CrmEntity crmEntity = GetContactAsEntity(true);
 
 			connection.Service.Update(crmEntity);
+		}
+
+		public enum StateEnum
+		{
+			Active = 0,
+			Inactive = 1,
+		}
+
+		public enum StatusEnum
+		{
+			Active = 1,
+			Inactive = 2,
+		}
+
+		public void SetActive(DynamicsCrmConnection connection, bool isActive)
+		{
+			SetStateRequest setStateRequest = new SetStateRequest()
+			{
+				EntityMoniker = new EntityReference
+				{
+					Id = ContactId,
+					LogicalName = "contact",
+				},
+				//State = new OptionSetValue(1),
+				//Status = new OptionSetValue(2),
+			};
+
+			if (isActive == true)
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Active);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Active);
+			}
+			else
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Inactive);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Inactive);
+			}
+
+			connection.Service.Execute(setStateRequest);
 		}
 	}
 }

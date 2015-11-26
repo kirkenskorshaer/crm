@@ -102,6 +102,35 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Assert.AreEqual(firstnameTest, contactRead.Firstname);
 		}
 
+		[Test]
+		public void ContactIsCreatedAsActive()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+			contactInserted.Insert(_connection);
+
+			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+
+			contactInserted.Delete(_connection);
+
+			Assert.AreEqual(Contact.StateEnum.Active, contactRead.State);
+		}
+
+		[Test]
+		public void SetActiveSetsState()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+			contactInserted.Insert(_connection);
+
+			contactInserted.SetActive(_connection, false);
+
+			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+
+			contactInserted.Delete(_connection);
+			Assert.AreEqual(Contact.StateEnum.Inactive, contactRead.State);
+		}
+
 		private Contact CreateTestContact(DateTime testDate)
 		{
 			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");

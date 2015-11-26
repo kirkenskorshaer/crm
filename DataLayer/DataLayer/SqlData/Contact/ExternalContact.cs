@@ -88,9 +88,9 @@ namespace DataLayer.SqlData.Contact
 		public static List<ExternalContact> ReadFromChangeProviderAndContact(SqlConnection sqlConnection, Guid changeProviderId, Guid contactId)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.AppendLine("SELECT");
-			sqlStringBuilder.AppendLine("	ExternalContactId");
-			sqlStringBuilder.AppendLine("	,ChangeProviderId");
+			sqlStringBuilder.AppendLine("SELECT DISTINCT");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ExternalContactId");
+			sqlStringBuilder.AppendLine($"	,{typeof(ExternalContact).Name}.ChangeProviderId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
 			sqlStringBuilder.AppendLine("JOIN");

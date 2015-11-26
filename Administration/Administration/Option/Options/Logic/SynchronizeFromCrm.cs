@@ -33,8 +33,9 @@ namespace Administration.Option.Options.Logic
 		protected override bool ExecuteOption()
 		{
 			Guid changeProviderId = _databaseSynchronizeFromCrm.changeProviderId;
+			string urlLoginName = _databaseSynchronizeFromCrm.urlLoginName;
 
-			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, "DynamicsCrm");
+			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection connection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
 
 			DateTime currentSearchDate = DateTime.Now;
