@@ -40,13 +40,12 @@ namespace Administration.Mapping.Contact
 
 			if (externalContacts.Count == 0)
 			{
-				Log.Write(connection, $"no external contact found for changeProvider {changeProviderId} and contact {contactId}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
-				return null;
+				Log.Write(connection, $"no external contact found for changeProvider {changeProviderId} and contact {contactId}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 			}
 
 			if (externalContacts.Count > 1)
 			{
-				Log.Write(connection, $"more than one external contacts found on changeProvider {0} and contact {contactId}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(connection, $"more than one external contacts found on changeProvider {0} and contact {contactId}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 			}
 
 			return externalContacts;
