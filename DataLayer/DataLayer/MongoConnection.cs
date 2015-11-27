@@ -64,5 +64,16 @@ namespace DataLayer
 
 			clearTask.Wait();
 		}
+
+		public List<Dictionary<string, object>> ReadAsDictionaries(string name)
+		{
+			IMongoCollection<MongoDB.Bson.BsonDocument> collection = Database.GetCollection<MongoDB.Bson.BsonDocument>(name);
+			IFindFluent<MongoDB.Bson.BsonDocument, MongoDB.Bson.BsonDocument> findFluent = collection.Find(bson => true);
+
+			Task<List<MongoDB.Bson.BsonDocument>> findTask = findFluent.ToListAsync();
+			findTask.Wait();
+
+			return findTask.Result.Select(bson => bson.ToDictionary()).ToList();
+		}
 	}
 }
