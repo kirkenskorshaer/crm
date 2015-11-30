@@ -114,10 +114,51 @@
     <Compile Include="Email.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
+    <Compile Include="Service References\KKAdminService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Service References\KKAdminService\KbhKKAdminServiceWsdl0.wsdl" />
+    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\KKAdminService\KKAdminService.wsdl" />
+    <None Include="Service References\KKAdminService\SystemInterface.KKAdminService.Stamdata.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DsiNext\wsdl\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\KKAdminService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\KKAdminService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\KKAdminService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\KKAdminService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

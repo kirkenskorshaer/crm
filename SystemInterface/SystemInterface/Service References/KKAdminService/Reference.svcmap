@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="2a70006a-217a-44e2-8cda-2aa4586c1bcb" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="C:\Users\Svend\Documents\GitHub\crm\SystemInterface\SystemInterface\DsiNext\wsdl\KbhKKAdminServiceWsdl.wsdl" Protocol="file" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="KKAdminService.wsdl" MetadataType="Wsdl" ID="130e2123-a9e7-449d-a3c6-ab55b8d02128" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceWsdl.wsdl" />
+    <MetadataFile FileName="KbhKKAdminServiceWsdl0.wsdl" MetadataType="Wsdl" ID="9af7582b-6dee-42e8-916a-1be776c77d61" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceWsdl0.wsdl" />
+    <MetadataFile FileName="KbhKKAdminServiceXsd2.xsd" MetadataType="Schema" ID="52e63803-414a-476e-92da-a3df69e40c82" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd2.xsd" />
+    <MetadataFile FileName="KbhKKAdminServiceXsd1.xsd" MetadataType="Schema" ID="4b1a662b-693e-4cfe-867a-d109e119f292" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd1.xsd" />
+    <MetadataFile FileName="KbhKKAdminServiceXsd0.xsd" MetadataType="Schema" ID="222f5f8a-2032-40ba-be9b-df6cb0518de3" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd0.xsd" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
