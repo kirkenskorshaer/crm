@@ -123,6 +123,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DsiNext\wsdl\KbhKKAdminServiceWsdl.wsdl" />
+    <None Include="DsiNext\wsdl\KbhKKAdminServiceWsdl0.wsdl" />
+    <None Include="DsiNext\wsdl\KbhKKAdminServiceXsd0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DsiNext\wsdl\KbhKKAdminServiceXsd1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DsiNext\wsdl\KbhKKAdminServiceXsd2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Service References\KKAdminService\KbhKKAdminServiceWsdl0.wsdl" />
     <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd0.xsd">
@@ -139,9 +150,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DsiNext\wsdl\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
