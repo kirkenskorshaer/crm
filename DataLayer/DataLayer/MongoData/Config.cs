@@ -7,8 +7,6 @@ namespace DataLayer.MongoData
 {
 	public class Config
 	{
-		private static readonly string ConfigName = "config";
-
 		public ObjectId _id { get; set; }
 
 		public string Email { get; set; }
@@ -28,7 +26,7 @@ namespace DataLayer.MongoData
 
 		public static Config GetConfig(MongoConnection connection)
 		{
-			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(ConfigName);
+			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(typeof(Config).Name);
 			IFindFluent<Config, Config> configFind = configs.Find(config => true);
 			Task<Config> configTask = configFind.SingleAsync();
 
@@ -37,7 +35,7 @@ namespace DataLayer.MongoData
 
 		public static bool Exists(MongoConnection connection)
 		{
-			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(ConfigName);
+			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(typeof(Config).Name);
 			Task<long> configFind = configs.CountAsync(config => true);
 
 			return configFind.Result > 0;
@@ -45,7 +43,7 @@ namespace DataLayer.MongoData
 
 		public void Update(MongoConnection connection)
 		{
-			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(ConfigName);
+			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(typeof(Config).Name);
 
 			FilterDefinition<Config> filter = Builders<Config>.Filter.Eq(config => config._id, _id);
 
@@ -60,7 +58,7 @@ namespace DataLayer.MongoData
 				throw new Exception("Config already exists");
 			}
 
-			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(ConfigName);
+			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(typeof(Config).Name);
 			Task insertTask = configs.InsertOneAsync(this);
 			insertTask.Wait();
 		}

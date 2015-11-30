@@ -6,8 +6,6 @@ namespace DataLayer.MongoData
 {
 	public class Server
 	{
-		private static readonly string Name = "server";
-
 		public ObjectId _id { get; set; }
 		public string Ip { get; set; }
 		public string Username { get; set; }
@@ -15,7 +13,7 @@ namespace DataLayer.MongoData
 
 		public static Server GetFirst(MongoConnection connection)
 		{
-			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
+			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(typeof(Server).Name);
 			IFindFluent<Server, Server> serverFind = serverCollection.Find(server => true);
 			Task<Server> serverTask = serverFind.FirstAsync();
 
@@ -24,7 +22,7 @@ namespace DataLayer.MongoData
 
 		public static Server GetServer(MongoConnection connection, string ip)
 		{
-			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
+			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(typeof(Server).Name);
 			IFindFluent<Server, Server> serverFind = serverCollection.Find(server => server.Ip == ip);
 			Task<Server> serverTask = serverFind.SingleAsync();
 
@@ -33,7 +31,7 @@ namespace DataLayer.MongoData
 
 		public static bool Exists(MongoConnection connection, string ip)
 		{
-			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
+			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(typeof(Server).Name);
 			Task<long> serverTask = serverCollection.CountAsync(server => server.Ip == ip);
 
 			return serverTask.Result > 0;
@@ -41,14 +39,14 @@ namespace DataLayer.MongoData
 
 		public void Insert(MongoConnection connection)
 		{
-			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
+			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(typeof(Server).Name);
 			Task insertTask = serverCollection.InsertOneAsync(this);
 			insertTask.Wait();
 		}
 
 		public void Delete(MongoConnection connection)
 		{
-			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(Name);
+			IMongoCollection<Server> serverCollection = connection.Database.GetCollection<Server>(typeof(Server).Name);
 			Task deleteTask = serverCollection.DeleteOneAsync(server => server._id == _id);
 			deleteTask.Wait();
 		}

@@ -8,8 +8,6 @@ namespace DataLayer.MongoData
 {
 	public class Log
 	{
-		private static readonly string name = "log";
-
 		public ObjectId _id { get; set; }
 		public string Message { get; set; }
 		public string StackTrace { get; set; }
@@ -27,14 +25,14 @@ namespace DataLayer.MongoData
 				LogLevel = logLevel,
 			};
 
-			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(name);
+			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(typeof(Log).Name);
 			Task insertTask = logs.InsertOneAsync(log);
 			insertTask.Wait();
 		}
 
 		public static Log ReadLatest(MongoConnection connection)
 		{
-			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(name);
+			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(typeof(Log).Name);
 
 			SortDefinitionBuilder<Log> sortBuilder = new SortDefinitionBuilder<Log>();
 			SortDefinition<Log> sortDefinition = sortBuilder.Descending(log => log.CreatedTime);

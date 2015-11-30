@@ -6,8 +6,6 @@ namespace DataLayer.MongoData
 {
 	public class UrlLogin
 	{
-		private static readonly string Name = "urlLogin";
-
 		public ObjectId _id { get; set; }
 		public string UrlName { get; set; }
 		public string Url { get; set; }
@@ -16,7 +14,7 @@ namespace DataLayer.MongoData
 
 		public static UrlLogin GetFirst(MongoConnection connection)
 		{
-			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(typeof(UrlLogin).Name);
 			IFindFluent<UrlLogin, UrlLogin> urlLoginFind = urlLoginCollection.Find(urlLogin => true);
 			Task<UrlLogin> urlLoginTask = urlLoginFind.FirstAsync();
 
@@ -25,7 +23,7 @@ namespace DataLayer.MongoData
 
 		public static UrlLogin GetUrlLogin(MongoConnection connection, string urlName)
 		{
-			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(typeof(UrlLogin).Name);
 			IFindFluent<UrlLogin, UrlLogin> urlLoginFind = urlLoginCollection.Find(urlLogin => urlLogin.UrlName == urlName);
 			Task<UrlLogin> urlLoginTask = urlLoginFind.SingleAsync();
 
@@ -34,7 +32,7 @@ namespace DataLayer.MongoData
 
 		public static bool Exists(MongoConnection connection, string urlName)
 		{
-			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(typeof(UrlLogin).Name);
 			Task<long> urlLoginTask = urlLoginCollection.CountAsync(urlLogin => urlLogin.UrlName == urlName);
 
 			return urlLoginTask.Result > 0;
@@ -42,14 +40,14 @@ namespace DataLayer.MongoData
 
 		public void Insert(MongoConnection connection)
 		{
-			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(typeof(UrlLogin).Name);
 			Task insertTask = urlLoginCollection.InsertOneAsync(this);
 			insertTask.Wait();
 		}
 
 		public void Delete(MongoConnection connection)
 		{
-			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(Name);
+			IMongoCollection<UrlLogin> urlLoginCollection = connection.Database.GetCollection<UrlLogin>(typeof(UrlLogin).Name);
 			Task deleteTask = urlLoginCollection.DeleteOneAsync(urlLogin => urlLogin._id == _id);
 			deleteTask.Wait();
 		}

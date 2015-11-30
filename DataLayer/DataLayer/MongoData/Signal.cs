@@ -7,8 +7,6 @@ namespace DataLayer.MongoData
 {
 	public class Signal
 	{
-		private static readonly string name = "signal";
-
 		public enum SignalTypeEnum
 		{
 			Fail = 1,
@@ -22,7 +20,7 @@ namespace DataLayer.MongoData
 
 		public static List<Signal> ReadSignalsByOption(MongoConnection connection, string option)
 		{
-			IMongoCollection<Signal> collection = connection.Database.GetCollection<Signal>(name);
+			IMongoCollection<Signal> collection = connection.Database.GetCollection<Signal>(typeof(Signal).Name);
 			IFindFluent<Signal, Signal> signalFind = collection.Find(signal => signal.Option == option);
 			Task<List<Signal>> signals = signalFind.ToListAsync();
 			return signals.Result;
@@ -30,7 +28,7 @@ namespace DataLayer.MongoData
 
 		public static Signal ReadSignal(MongoConnection connection, string option, SignalTypeEnum signalType)
 		{
-			IMongoCollection<Signal> collection = connection.Database.GetCollection<Signal>(name);
+			IMongoCollection<Signal> collection = connection.Database.GetCollection<Signal>(typeof(Signal).Name);
 			IFindFluent<Signal, Signal> signalFind = collection.Find(lSignal =>
 				lSignal.Option == option &&
 				lSignal.SignalType == signalType);
@@ -54,7 +52,7 @@ namespace DataLayer.MongoData
 
 		public static void IncreaseSignal(MongoConnection connection, string option, SignalTypeEnum signalType, double strength)
 		{
-			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(name);
+			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(typeof(Signal).Name);
 
 			FilterDefinition<Signal> filter =
 				Builders<Signal>.Filter.Eq(signal => signal.Option, option) &
@@ -87,7 +85,7 @@ namespace DataLayer.MongoData
 
 		public static void IncreaseSignal(MongoConnection connection, SignalTypeEnum signalType, double strength)
 		{
-			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(name);
+			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(typeof(Signal).Name);
 
 			FilterDefinition<Signal> filter = Builders<Signal>.Filter.Eq(signal => signal.SignalType, signalType);
 			UpdateDefinition<Signal> update = Builders<Signal>.Update.Inc(signal => signal.Strength, strength);
@@ -99,7 +97,7 @@ namespace DataLayer.MongoData
 
 		public static void DecreaseAll(MongoConnection connection, double factor)
 		{
-			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(name);
+			IMongoCollection<Signal> signalsCollection = connection.Database.GetCollection<Signal>(typeof(Signal).Name);
 
 			UpdateDefinition<Signal> update = Builders<Signal>.Update.Mul(signal => signal.Strength, 1 / factor);
 
