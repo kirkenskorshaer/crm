@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:UserInterface"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<TabControl Grid.Column="0" Grid.Row="0" Name="TabControlGlobal"/>
+	</Grid>
 </Window>
