@@ -101,7 +101,8 @@
     <Compile Include="SqlData\Procedures\CreateCompositeTable3Tables.cs" />
     <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey2Keys.cs" />
     <Compile Include="SqlData\Procedures\MaintainForeignKey.cs" />
-    <Compile Include="SqlData\Procedures\MaintainUniqueConstraint.cs" />
+    <Compile Include="SqlData\Procedures\MaintainUniqueConstraint1Column.cs" />
+    <Compile Include="SqlData\Procedures\MaintainUniqueConstraint2Columns.cs" />
     <Compile Include="SqlData\Utilities.cs" />
     <Compile Include="SqlData\Procedures\AddColumn.cs" />
     <Compile Include="SqlData\Procedures\CreateTable.cs" />

@@ -204,16 +204,30 @@ namespace DataLayer.SqlData
 
 		public static void MaintainUniqueConstraint(SqlConnection sqlConnection, string tableName, string constraintName, string constraintColumn1, string constraintColumn2)
 		{
-			Procedures.MaintainUniqueConstraint.MakeSureProcedureExists(sqlConnection);
+			Procedures.MaintainUniqueConstraint2Columns.MakeSureProcedureExists(sqlConnection);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.Append("MaintainUniqueConstraint");
+			sqlStringBuilder.Append(Procedures.MaintainUniqueConstraint2Columns.ProcedureName);
 
 			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
 				new KeyValuePair<string, object>("tableName", tableName),
 				new KeyValuePair<string, object>("constraintName", constraintName),
 				new KeyValuePair<string, object>("constraintColumn1", constraintColumn1),
 				new KeyValuePair<string, object>("constraintColumn2", constraintColumn2),
+				new KeyValuePair<string, object>("debug", 0));
+		}
+
+		public static void MaintainUniqueConstraint(SqlConnection sqlConnection, string tableName, string constraintName, string constraintColumn)
+		{
+			Procedures.MaintainUniqueConstraint1Column.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append(Procedures.MaintainUniqueConstraint1Column.ProcedureName);
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("constraintName", constraintName),
+				new KeyValuePair<string, object>("constraintColumn", constraintColumn),
 				new KeyValuePair<string, object>("debug", 0));
 		}
 	}

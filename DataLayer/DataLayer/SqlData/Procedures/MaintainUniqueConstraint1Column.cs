@@ -3,8 +3,10 @@ using System.Text;
 
 namespace DataLayer.SqlData.Procedures
 {
-	public static class MaintainUniqueConstraint
+	public static class MaintainUniqueConstraint1Column
 	{
+		public const string ProcedureName = "MaintainUniqueConstraint1Column";
+
 		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
 			DeleteProcedure(sqlConnection);
@@ -27,11 +29,11 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("		WHERE");
 			sqlStringBuilder.AppendLine("			objects.type = 'P'");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			objects.name = 'MaintainUniqueConstraint'");
+			sqlStringBuilder.AppendLine($"			objects.name = '{ProcedureName}'");
 			sqlStringBuilder.AppendLine("	)");
 			sqlStringBuilder.AppendLine(")");
 			sqlStringBuilder.AppendLine("BEGIN");
-			sqlStringBuilder.AppendLine("	DROP PROCEDURE MaintainUniqueConstraint");
+			sqlStringBuilder.AppendLine($"	DROP PROCEDURE {ProcedureName}");
 			sqlStringBuilder.AppendLine("END");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
@@ -43,11 +45,10 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder = new StringBuilder();
 
 			sqlStringBuilder.AppendLine("CREATE PROCEDURE");
-			sqlStringBuilder.AppendLine("	MaintainUniqueConstraint");
+			sqlStringBuilder.AppendLine($"	{ProcedureName}");
 			sqlStringBuilder.AppendLine("	@tablename NVARCHAR(128)");
 			sqlStringBuilder.AppendLine("	,@constraintName NVARCHAR(128)");
-			sqlStringBuilder.AppendLine("	,@constraintColumn1 NVARCHAR(128)");
-			sqlStringBuilder.AppendLine("	,@constraintColumn2 NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@constraintColumn NVARCHAR(128)");
 			sqlStringBuilder.AppendLine("	,@debug BIT = 1");
 			sqlStringBuilder.AppendLine("AS");
 			sqlStringBuilder.AppendLine("BEGIN");
@@ -82,8 +83,7 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("			' + QUOTENAME(@constraintName) + '");
 			sqlStringBuilder.AppendLine("		UNIQUE");
 			sqlStringBuilder.AppendLine("		(");
-			sqlStringBuilder.AppendLine("			' + QUOTENAME(@constraintColumn1) + '");
-			sqlStringBuilder.AppendLine("			,' + QUOTENAME(@constraintColumn2) + '");
+			sqlStringBuilder.AppendLine("			' + QUOTENAME(@constraintColumn) + '");
 			sqlStringBuilder.AppendLine("		)'");
 			sqlStringBuilder.AppendLine("");
 			sqlStringBuilder.AppendLine("		IF(@debug = 1)");
@@ -92,7 +92,7 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("		END");
 			sqlStringBuilder.AppendLine("		ELSE");
 			sqlStringBuilder.AppendLine("		BEGIN");
-			sqlStringBuilder.AppendLine("			EXEC SP_EXECUTESQL @sql, N'@tablename NVARCHAR(128), @constraintName NVARCHAR(128), @constraintColumn1 NVARCHAR(128), @constraintColumn2 NVARCHAR(128)', @tablename = @tablename, @constraintName = @constraintName, @constraintColumn1 = @constraintColumn1, @constraintColumn2 = @constraintColumn2");
+			sqlStringBuilder.AppendLine("			EXEC SP_EXECUTESQL @sql, N'@tablename NVARCHAR(128), @constraintName NVARCHAR(128), @constraintColumn NVARCHAR(128)', @tablename = @tablename, @constraintName = @constraintName, @constraintColumn = @constraintColumn");
 			sqlStringBuilder.AppendLine("		END");
 			sqlStringBuilder.AppendLine("	END");
 			sqlStringBuilder.AppendLine("	ELSE");
