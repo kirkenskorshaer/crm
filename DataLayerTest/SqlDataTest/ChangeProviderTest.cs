@@ -26,19 +26,7 @@ namespace DataLayerTest.SqlDataTest
 		[SetUp]
 		public void SetUp()
 		{
-			if (Utilities.GetExistingColumns(_sqlConnection, typeof(ChangeProvider).Name).Any())
-			{
-				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ContactChange).Name).Any())
-				{
-					Utilities.DropTable(_sqlConnection, typeof(ContactChange).Name);
-				}
-				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ExternalContact).Name).Any())
-				{
-					Utilities.DropTable(_sqlConnection, typeof(ExternalContact).Name);
-				}
-				Utilities.DropTable(_sqlConnection, typeof(ChangeProvider).Name);
-			}
-			ChangeProvider.MaintainTable(_sqlConnection);
+			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
 		private ChangeProvider InsertChangeProvider()

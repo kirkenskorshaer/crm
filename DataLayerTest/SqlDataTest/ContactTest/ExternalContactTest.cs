@@ -28,16 +28,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		[SetUp]
 		public void SetUp()
 		{
-			if (Utilities.GetExistingColumns(_sqlConnection, typeof(ExternalContact).Name).Any())
-			{
-				if (Utilities.GetExistingColumns(_sqlConnection, typeof(ContactChange).Name).Any())
-				{
-					Utilities.DropTable(_sqlConnection, typeof(ContactChange).Name);
-				}
-				Utilities.DropTable(_sqlConnection, typeof(ExternalContact).Name);
-			}
-			ExternalContact.MaintainTable(_sqlConnection);
-			ContactChange.MaintainTable(_sqlConnection);
+			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
 		[TearDown]

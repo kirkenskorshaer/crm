@@ -28,15 +28,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		[SetUp]
 		public void SetUp()
 		{
-			if (Utilities.GetExistingColumns(_sqlConnection, "Contact").Any())
-			{
-				if (Utilities.GetExistingColumns(_sqlConnection, "ContactChange").Any())
-				{
-					Utilities.DropTable(_sqlConnection, "ContactChange");
-				}
-				Utilities.DropTable(_sqlConnection, "Contact");
-			}
-			Contact.MaintainTable(_sqlConnection);
+			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
 		[Test]
