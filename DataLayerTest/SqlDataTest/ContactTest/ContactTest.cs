@@ -155,7 +155,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			return createdContact;
 		}
 
-		private Contact ContactInsert(SqlConnection sqlConnection, bool useMongoConnection = false)
+		internal Contact ContactInsert(SqlConnection sqlConnection, bool useMongoConnection = false)
 		{
 			DateTime creationDate = DateTime.Now;
 
