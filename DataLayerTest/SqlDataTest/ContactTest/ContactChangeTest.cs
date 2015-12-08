@@ -29,7 +29,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
-		private ExternalContact InsertExternalContact(SqlConnection sqlConnection)
+		internal ExternalContact InsertExternalContact(SqlConnection sqlConnection)
 		{
 			DateTime creationDate = DateTime.Now;
 
@@ -57,12 +57,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			Contact contactCreated = InsertContact(_sqlConnection);
 			DateTime createdTime = DateTime.Now;
 
-			ContactChange contactChangeCreated = new ContactChange(_sqlConnection, contactCreated.Id, externalContactCreated.ExternalContactId, externalContactCreated.ChangeProviderId)
-			{
-				Firstname = $"name_{Guid.NewGuid()}",
-				CreatedOn = createdTime,
-				ModifiedOn = createdTime,
-			};
+			ContactChange contactChangeCreated = ContactChangeInsert(externalContactCreated, contactCreated, createdTime);
 
 			contactChangeCreated.Insert();
 
@@ -91,6 +86,16 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Assert.AreEqual(contactChangeCreated.Firstname, contactChangesRead.Single().Firstname);
 			Assert.AreEqual(contactChangeCreated.Lastname, contactChangesRead.Single().Lastname);
+		}
+
+		internal ContactChange ContactChangeInsert(ExternalContact externalContactCreated, Contact contactCreated, DateTime createdTime)
+		{
+			return new ContactChange(_sqlConnection, contactCreated.Id, externalContactCreated.ExternalContactId, externalContactCreated.ChangeProviderId)
+			{
+				Firstname = $"name_{Guid.NewGuid()}",
+				CreatedOn = createdTime,
+				ModifiedOn = createdTime,
+			};
 		}
 
 		[Test]
