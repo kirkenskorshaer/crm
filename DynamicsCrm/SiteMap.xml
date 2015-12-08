@@ -1,23 +1,29 @@
 <SiteMap IntroducedVersion="7.0.0.0">
-  <Area Id="landsarbejde" Icon="/_imgs/marketing_24x24.gif" Description="Landsarbejde" Title="Landsarbejde" ShowGroups="true">
-    <Group Id="tempId_635835338915795508" Description="Landsarbejde" Title="Landsarbejde" IsProfile="false">
-      <SubArea Entity="contact" Id="tempId_635835341385936868" AvailableOffline="false" PassParams="false">
+  <Area Id="Landsarbejde" Icon="/_imgs/marketing_24x24.gif" Description="Landsarbejde" Title="Landsarbejde" ShowGroups="true">
+    <Group Id="Landsarbejde" Description="Landsarbejde" Title="Landsarbejde" IsProfile="false">
+      <SubArea Entity="account" Id="Account" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
-      <SubArea Entity="campaign" Id="tempId_635835341460816613" AvailableOffline="false" PassParams="false">
+      <SubArea Entity="contact" Id="Contact" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
-      <SubArea Entity="email" Id="tempId_635835341483640180" AvailableOffline="false" PassParams="false">
+      <SubArea Entity="campaign" Id="Campaign" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="list" Id="List" Title="Lists" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="new_group" Id="Group" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
     </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
-    <Group Id="tempId_635835385237193417">
-      <SubArea Entity="contact" Id="tempId_635835385309571883" AvailableOffline="false" PassParams="false">
+    <Group Id="Fundraising" IsProfile="false">
+      <SubArea Entity="contact" Id="Contact" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
       </SubArea>
-      <SubArea Entity="email" Id="tempId_635835385629881767" AvailableOffline="false" PassParams="false">
+      <SubArea Entity="list" Id="List" Title="Lists" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
       </SubArea>
     </Group>
