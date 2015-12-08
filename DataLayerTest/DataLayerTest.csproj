@@ -61,6 +61,9 @@
     <Compile Include="SqlDataTest\ChangeProviderTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ContactChangeTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ExternalContactTest.cs" />
+    <Compile Include="SqlDataTest\GroupTest\ContactChangeGroupTest.cs" />
+    <Compile Include="SqlDataTest\GroupTest\ContactGroupTest.cs" />
+    <Compile Include="SqlDataTest\GroupTest\GroupTest.cs" />
     <Compile Include="SqlDataTest\TestSqlBase.cs" />
     <Compile Include="SqlDataTest\UtilitiesTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ContactTest.cs" />
@@ -78,6 +81,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
