@@ -97,6 +97,9 @@
     <Compile Include="SqlData\ChangeProvider.cs" />
     <Compile Include="SqlData\Contact\ContactChange.cs" />
     <Compile Include="SqlData\Contact\ExternalContact.cs" />
+    <Compile Include="SqlData\Group\ContactChangeGroup.cs" />
+    <Compile Include="SqlData\Group\ContactGroup.cs" />
+    <Compile Include="SqlData\Group\Group.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable2Tables.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable3Tables.cs" />
     <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey2Keys.cs" />
