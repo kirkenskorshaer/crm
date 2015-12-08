@@ -230,5 +230,40 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("constraintColumn", constraintColumn),
 				new KeyValuePair<string, object>("debug", 0));
 		}
+
+		public static DataType ReadNextById<DataType>(SqlConnection sqlConnection, Guid id, string[] columns, Func<DataRow, DataType> CreateFromRow)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT TOP 1");
+			sqlStringBuilder.AppendLine("	id");
+			foreach (string column in columns)
+			{
+				sqlStringBuilder.AppendLine($"	,{column}");
+			}
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(DataType).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{typeof(DataType).Name}.id > @id");
+			sqlStringBuilder.AppendLine("ORDER BY");
+			sqlStringBuilder.AppendLine($"	{typeof(DataType).Name}.id");
+
+			DataTable dataTable = ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+
+			if (dataTable.Rows.Count == 1)
+			{
+				DataRow row = dataTable.Rows[0];
+
+				DataType dataObject = CreateFromRow(row);
+
+				return dataObject;
+			}
+
+			if (id == Guid.Empty)
+			{
+				return default(DataType);
+			}
+
+			return ReadNextById(sqlConnection, Guid.Empty, columns, CreateFromRow);
+		}
 	}
 }
