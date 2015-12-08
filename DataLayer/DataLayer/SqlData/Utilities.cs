@@ -116,6 +116,26 @@ namespace DataLayer.SqlData
 			ExternalContact.MaintainTable(sqlConnection);
 			Contact.Contact.MaintainTable(sqlConnection);
 			ContactChange.MaintainTable(sqlConnection);
+			Group.Group.MaintainTable(sqlConnection);
+			Group.ContactGroup.MaintainTable(sqlConnection);
+			Group.ContactChangeGroup.MaintainTable(sqlConnection);
+		}
+
+		public static void DeleteAllTables(SqlConnection sqlConnection)
+		{
+			DropTable(sqlConnection, typeof(Group.ContactChangeGroup).Name);
+			DropTable(sqlConnection, typeof(ContactChange).Name);
+			DropTable(sqlConnection, typeof(Group.ContactGroup).Name);
+			DropTable(sqlConnection, typeof(Contact.Contact).Name);
+			DropTable(sqlConnection, typeof(Group.Group).Name);
+			DropTable(sqlConnection, typeof(ExternalContact).Name);
+			DropTable(sqlConnection, typeof(ChangeProvider).Name);
+		}
+
+		public static void RecreateAllTables(SqlConnection sqlConnection)
+		{
+			DeleteAllTables(sqlConnection);
+			MaintainAllTables(sqlConnection);
 		}
 
 		public static void DropTable(SqlConnection sqlConnection, string tableName)
