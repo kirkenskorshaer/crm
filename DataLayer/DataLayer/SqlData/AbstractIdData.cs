@@ -14,7 +14,7 @@ namespace DataLayer.SqlData
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("DELETE FROM");
-			sqlStringBuilder.AppendLine("	" + TableName);
+			sqlStringBuilder.AppendLine($"	[{TableName}]");
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
@@ -31,7 +31,7 @@ namespace DataLayer.SqlData
 			AbstractIdData abstractIdDataObj = obj as AbstractIdData;
 
 			return Id == abstractIdDataObj.Id;
-        }
+		}
 
 		public override int GetHashCode()
 		{
