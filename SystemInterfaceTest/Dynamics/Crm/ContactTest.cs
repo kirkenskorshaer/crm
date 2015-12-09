@@ -46,12 +46,12 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Contact contactInserted = CreateTestContact(testDate);
 			contactInserted.Insert(_connection);
 
-			List<string> attributeNames = Contact.GetAllAttributeNames(_connection, contactInserted.ContactId);
+			List<string> attributeNames = Contact.GetAllAttributeNames(_connection, contactInserted.contactid);
 
 			contactInserted.Delete(_connection);
 
 			Assert.True(attributeNames.Count > 10);
-			Assert.True(attributeNames.Any(name => name == "contactid"));
+			Assert.True(attributeNames.Any(name => name == "Guid contactid"));
 
 			attributeNames.ForEach(name => Console.Out.WriteLine(name));
 		}
@@ -66,8 +66,8 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			List<Contact> contacts = Contact.ReadLatest(_connection, testDate);
 			contactInserted.Delete(_connection);
 
-			Assert.True(contacts.Any(contact => contact.ContactId == contactInserted.ContactId));
-			Assert.AreNotEqual(Guid.Empty, contactInserted.ContactId);
+			Assert.True(contacts.Any(contact => contact.contactid == contactInserted.contactid));
+			Assert.AreNotEqual(Guid.Empty, contactInserted.contactid);
 		}
 
 		[Test]
@@ -80,8 +80,8 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			contactInserted.Delete(_connection);
 			List<Contact> contacts = Contact.ReadLatest(_connection, testDate);
 
-			Assert.False(contacts.Any(contact => contact.ContactId == contactInserted.ContactId));
-			Assert.AreNotEqual(Guid.Empty, contactInserted.ContactId);
+			Assert.False(contacts.Any(contact => contact.contactid == contactInserted.contactid));
+			Assert.AreNotEqual(Guid.Empty, contactInserted.contactid);
 		}
 
 		[Test]
@@ -92,14 +92,14 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			string firstnameTest = "firstnameTest";
 
 			contactInserted.Insert(_connection);
-			contactInserted.Firstname = firstnameTest;
+			contactInserted.firstname = firstnameTest;
 
 			contactInserted.Update(_connection);
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
 			contactInserted.Delete(_connection);
 
-			Assert.AreEqual(firstnameTest, contactRead.Firstname);
+			Assert.AreEqual(firstnameTest, contactRead.firstname);
 		}
 
 		[Test]
@@ -109,7 +109,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Contact contactInserted = CreateTestContact(testDate);
 			contactInserted.Insert(_connection);
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
 
 			contactInserted.Delete(_connection);
 
@@ -125,19 +125,19 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			contactInserted.SetActive(_connection, false);
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.ContactId);
+			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
 
 			contactInserted.Delete(_connection);
 			Assert.AreEqual(Contact.StateEnum.Inactive, contactRead.State);
 		}
 
-		private Contact CreateTestContact(DateTime testDate)
+		internal Contact CreateTestContact(DateTime testDate)
 		{
 			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");
 			Contact contactCreated = new Contact
 			{
-				Firstname = $"firstname_{dateString}",
-				Lastname = $"lastname_{dateString}",
+				firstname = $"firstname_{dateString}",
+				lastname = $"lastname_{dateString}",
 			};
 			return contactCreated;
 		}
