@@ -156,6 +156,7 @@ namespace DataLayer.SqlData
 			, INT = 2
 			, DATETIME = 3
 			, UNIQUEIDENTIFIER = 4
+			, BIT = 5
 		}
 
 		private static string GetTypeString(DataType type)
@@ -170,6 +171,8 @@ namespace DataLayer.SqlData
 					return "DATETIME";
 				case DataType.UNIQUEIDENTIFIER:
 					return "UNIQUEIDENTIFIER";
+				case DataType.BIT:
+					return "BIT";
 				default:
 					throw new ArgumentException($"unknown datatype {type}");
 			}
