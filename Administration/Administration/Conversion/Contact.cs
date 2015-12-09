@@ -25,7 +25,7 @@ namespace Administration.Conversion
 		public static SystemInterfaceContact Convert(DatabaseContact fromContact, Guid ExternalContactIdFrom, SystemInterfaceContact toContact)
 		{
 			SystemInterfaceContact systemInterfaceContact = Convert(fromContact, toContact);
-			systemInterfaceContact.ContactId = ExternalContactIdFrom;
+			systemInterfaceContact.contactid = ExternalContactIdFrom;
 			return systemInterfaceContact;
 		}
 
@@ -33,10 +33,10 @@ namespace Administration.Conversion
 		{
 			SystemInterfaceContact systemInterfaceContact = new SystemInterfaceContact()
 			{
-				CreatedOn = fromContact.CreatedOn,
-				Firstname = fromContact.Firstname,
-				Lastname = fromContact.Lastname,
-				ModifiedOn = fromContact.ModifiedOn,
+				createdon = fromContact.CreatedOn,
+				firstname = fromContact.Firstname,
+				lastname = fromContact.Lastname,
+				modifiedon = fromContact.ModifiedOn,
 			};
 
 			return systemInterfaceContact;

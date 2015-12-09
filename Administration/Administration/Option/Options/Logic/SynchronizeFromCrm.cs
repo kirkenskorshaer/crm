@@ -54,7 +54,7 @@ namespace Administration.Option.Options.Logic
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId)
 		{
-			Guid externalContactId = crmContact.ContactId;
+			Guid externalContactId = crmContact.contactid;
 			DataLayer.SqlData.Contact.ExternalContact externalContact = DataLayer.SqlData.Contact.ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId);
 
 			DatabaseContact contact = ReadOrCreateContact(crmContact, externalContactId);
@@ -65,7 +65,7 @@ namespace Administration.Option.Options.Logic
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId, Guid externalContactId, DatabaseContact contact)
 		{
 			Guid contactId = contact.Id;
-			DateTime modifiedOn = crmContact.ModifiedOn;
+			DateTime modifiedOn = crmContact.modifiedon;
 
 			bool ContactChangeExists = DatabaseContactChange.ContactChangeExists(SqlConnection, contactId, externalContactId, changeProviderId, modifiedOn);
 
@@ -94,9 +94,9 @@ namespace Administration.Option.Options.Logic
 			DatabaseContact contact = new DatabaseContact()
 			{
 				CreatedOn = DateTime.Now,
-				ModifiedOn = crmContact.ModifiedOn,
-				Firstname = crmContact.Firstname,
-				Lastname = crmContact.Lastname,
+				ModifiedOn = crmContact.modifiedon,
+				Firstname = crmContact.firstname,
+				Lastname = crmContact.lastname,
 			};
 
 			contact.Insert(sqlConnection);
@@ -108,10 +108,10 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
-			contactChange.CreatedOn = crmContact.CreatedOn;
-			contactChange.ModifiedOn = crmContact.ModifiedOn;
-			contactChange.Firstname = crmContact.Firstname;
-			contactChange.Lastname = crmContact.Lastname;
+			contactChange.CreatedOn = crmContact.createdon;
+			contactChange.ModifiedOn = crmContact.modifiedon;
+			contactChange.Firstname = crmContact.firstname;
+			contactChange.Lastname = crmContact.lastname;
 
 			contactChange.Insert();
 		}

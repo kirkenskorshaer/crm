@@ -61,7 +61,7 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(databaseContact);
 			systemInterfaceContact.Insert(_dynamicsCrmConnection);
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.ContactId, changeProviderId);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.contactid, changeProviderId);
 			externalContact.Insert();
 		}
 

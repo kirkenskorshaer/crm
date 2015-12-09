@@ -55,20 +55,20 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Contact crmContact = new Contact
 			{
-				CreatedOn = DateTime.Now,
-				Firstname = firstname1,
-				Lastname = "lastname1",
-				ModifiedOn = DateTime.Now,
+				createdon = DateTime.Now,
+				firstname = firstname1,
+				lastname = "lastname1",
+				modifiedon = DateTime.Now,
 			};
 
 			crmContact.Insert(_dynamicsCrmConnection);
 			synchronizeFromCrm.Execute();
 
-			crmContact.Firstname = firstname2;
+			crmContact.firstname = firstname2;
 			crmContact.Update(_dynamicsCrmConnection);
 			synchronizeFromCrm.Execute();
 
-			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.ContactId, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
+			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.contactid, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
 
 			crmContact.Delete(_dynamicsCrmConnection);
 

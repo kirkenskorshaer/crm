@@ -10,38 +10,133 @@ namespace SystemInterface.Dynamics.Crm
 {
 	public class Contact
 	{
-		public Guid ContactId;
-		public DateTime CreatedOn;
-		public DateTime ModifiedOn;
-		public string Firstname;
-		public string Lastname;
 		public StateEnum State { get; private set; }
 
-		private static readonly ColumnSet ColumnSetContact = new ColumnSet("contactid", "createdon", "modifiedon", "firstname", "lastname", "statecode");
+		public Guid address1_addressid;
+		public DateTime createdon;
+		public DateTime modifiedon;
+		public Guid contactid;
+		public Guid address3_addressid;
+		public string lastname;
+		public string firstname;
+		public Guid address2_addressid;
+		public DateTime? birthdate;
+
+		public string address1_line1;
+		public string address1_line2;
+		public string address1_city;
+		public string address1_postalcode;
+		public string emailaddress1;
+		public string mobilephone;
+		public string telephone1;
+
+		public string new_cprnr;
+
+		public int new_kkadminmedlemsnr;
+		public string new_storkredsnavn;
+		public int new_storkredsnr;
+		public string new_kkadminsoegenavn;
+		public DateTime? new_gavebrevudloebsdato;
+		public string new_titel;
+		public bool new_hargavebrev;
+		public bool new_kkadminstatus;
+
+		public string notat;
+
+		public List<Group> Groups;
+
+		private static readonly ColumnSet ColumnSetContact = new ColumnSet(
+			"contactid",
+
+			"new_cprnr",
+
+			"address1_line1",
+			"address1_line2",
+			"address1_city",
+			"address1_postalcode",
+			"emailaddress1",
+			"mobilephone",
+			"telephone1",
+			"new_kkadminmedlemsnr",
+			"birthdate",
+
+			"new_gavebrevudloebsdato",
+			"new_storkredsnavn",
+			"new_storkredsnr",
+			"new_kkadminsoegenavn",
+			"new_titel",
+			"new_hargavebrev",
+			"new_kkadminstatus",
+
+			"address1_addressid",
+			"address2_addressid",
+			"address3_addressid",
+
+			"createdon",
+			"modifiedon",
+
+			"firstname",
+			"lastname",
+			"statecode");
+
+		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "contactid", "address3_addressid", "address2_addressid", "statecode");
 
 		private static Contact EntityToContact(Entity entity)
 		{
-			return new Contact
+			Contact contact = new Contact();
+
+			contact.State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value;
+
+			foreach (string key in entity.Attributes.Keys)
 			{
-				ContactId = (Guid)entity.Attributes["contactid"],
-				CreatedOn = (DateTime)entity.Attributes["createdon"],
-				ModifiedOn = (DateTime)entity.Attributes["modifiedon"],
-				Firstname = entity.Attributes["firstname"].ToString(),
-				Lastname = entity.Attributes["lastname"].ToString(),
-				State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value,
-			};
+				Utilities.ReflectionHelper.SetValue(contact, key, entity.Attributes[key]);
+			}
+
+			return contact;
+		}
+
+		private void ReadCrmGeneratedFields(Entity entity)
+		{
+			contactid = (Guid)entity.Attributes["contactid"];
+
+			createdon = (DateTime)entity.Attributes["createdon"];
+
+			modifiedon = (DateTime)entity.Attributes["modifiedon"];
+
+			address1_addressid = (Guid)entity.Attributes["address1_addressid"];
+			address2_addressid = (Guid)entity.Attributes["address2_addressid"];
+			address3_addressid = (Guid)entity.Attributes["address3_addressid"];
 		}
 
 		private CrmEntity GetContactAsEntity(bool includeContactId)
 		{
 			CrmEntity crmEntity = new CrmEntity("contact");
-			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", Firstname));
-			crmEntity.Attributes.Add(new KeyValuePair<string, object>("lastname", Lastname));
 
 			if (includeContactId)
 			{
-				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", ContactId));
+				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", contactid));
 			}
+
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", firstname));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("lastname", lastname));
+
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_hargavebrev", new_hargavebrev));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminstatus", new_kkadminstatus));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_gavebrevudloebsdato", new_gavebrevudloebsdato));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_storkredsnavn", new_storkredsnavn));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_storkredsnr", new_storkredsnr));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminsoegenavn", new_kkadminsoegenavn));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_titel", new_titel));
+
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line1", address1_line1));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line2", address1_line2));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_city", address1_city));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_postalcode", address1_postalcode));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("emailaddress1", emailaddress1));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("mobilephone", mobilephone));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("telephone1", telephone1));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("birthdate", birthdate));
 
 			return crmEntity;
 		}
@@ -85,7 +180,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			Entity entity = connection.Service.Retrieve("contact", contactId, columnsAll);
 
-			attributeNames = entity.Attributes.Select(attribute => attribute.Key).ToList();
+			attributeNames = entity.Attributes.Select(attribute => $"{attribute.Value.GetType().Name} {attribute.Key}").ToList();
 
 			return attributeNames;
 		}
@@ -101,14 +196,17 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Delete(DynamicsCrmConnection connection)
 		{
-			connection.Service.Delete("contact", ContactId);
+			connection.Service.Delete("contact", contactid);
 		}
 
 		public void Insert(DynamicsCrmConnection connection)
 		{
 			CrmEntity crmEntity = GetContactAsEntity(false);
 
-			ContactId = connection.Service.Create(crmEntity);
+			contactid = connection.Service.Create(crmEntity);
+
+			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContactCrmGenerated);
+			ReadCrmGeneratedFields(contactEntity);
 		}
 
 		public void Update(DynamicsCrmConnection connection)
@@ -136,7 +234,7 @@ namespace SystemInterface.Dynamics.Crm
 			{
 				EntityMoniker = new EntityReference
 				{
-					Id = ContactId,
+					Id = contactid,
 					LogicalName = "contact",
 				},
 				//State = new OptionSetValue(1),
