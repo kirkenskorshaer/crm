@@ -75,6 +75,10 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("	BEGIN");
 			sqlStringBuilder.AppendLine("		SET @sql = @sql + ' UNIQUEIDENTIFIER'");
 			sqlStringBuilder.AppendLine("	END");
+			sqlStringBuilder.AppendLine("	ELSE IF (QUOTENAME(@type) = '[BIT]')");
+			sqlStringBuilder.AppendLine("	BEGIN");
+			sqlStringBuilder.AppendLine("		SET @sql = @sql + ' BIT'");
+			sqlStringBuilder.AppendLine("	END");
 			sqlStringBuilder.AppendLine("	ELSE");
 			sqlStringBuilder.AppendLine("	BEGIN");
 			sqlStringBuilder.AppendLine("		DECLARE @error NVARCHAR(MAX) = 'unknown type ' + QUOTENAME(@type)");
