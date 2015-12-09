@@ -38,7 +38,7 @@ namespace Utilities
 			return propertyInfo.GetValue(holderObject);
 		}
 
-		public static void SetValue(object holderObject, string fieldOrPropertyName, object value)
+		public static bool SetValue(object holderObject, string fieldOrPropertyName, object value)
 		{
 			Type holderType = holderObject.GetType();
 
@@ -47,12 +47,19 @@ namespace Utilities
 			if (fieldInfo != null)
 			{
 				fieldInfo.SetValue(holderObject, value);
-				return;
+				return true;
 			}
 
 			PropertyInfo propertyInfo = holderType.GetProperty(fieldOrPropertyName, BindingFlags.Public | BindingFlags.Instance);
 
+			if(propertyInfo == null)
+			{
+				return false;
+			}
+
 			propertyInfo.SetValue(holderObject, value);
+
+			return true;
 		}
 	}
 }
