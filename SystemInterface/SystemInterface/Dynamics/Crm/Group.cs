@@ -14,7 +14,8 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime ModifiedOn { get; private set; }
 		public string Name;
 
-		private static readonly ColumnSet ColumnSetGroup = new ColumnSet("new_groupid", "new_name", "modifiedon", "createdon");
+		//private static readonly ColumnSet ColumnSetGroup = new ColumnSet("createdby", "createdon", "modifiedby", "modifiedon", "new_groupid", "new_name", "ownerid", "owningbusinessunit", "owninguser", "statecode", "statuscode");
+		private static readonly ColumnSet ColumnSetGroup = new ColumnSet("new_groupid", "new_name", "createdon", "modifiedon");
 
 		private static Group EntityToGroup(Entity entity)
 		{
