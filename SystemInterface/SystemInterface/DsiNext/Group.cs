@@ -9,6 +9,5 @@ namespace SystemInterface.DsiNext
 	public class Group
 	{
 		public string Name;
-		public int 
 	}
 }
