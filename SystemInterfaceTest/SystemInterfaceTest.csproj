@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsvTest\CsvTest.cs" />
+    <Compile Include="Dynamics\Crm\AddressTest.cs" />
     <Compile Include="Dynamics\Crm\ContactTest.cs" />
     <Compile Include="Dynamics\Crm\GroupTest.cs" />
     <Compile Include="EmailTest.cs" />
