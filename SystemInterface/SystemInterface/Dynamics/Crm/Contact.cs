@@ -49,7 +49,7 @@ namespace SystemInterface.Dynamics.Crm
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
 		public static List<Contact> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate)
 		{
-			if(lastSearchDate <= _minimumSearchDate)
+			if (lastSearchDate <= _minimumSearchDate)
 			{
 				lastSearchDate = _minimumSearchDate;
 			}
