@@ -11,7 +11,6 @@ namespace DataLayer.SqlData.Contact
 {
 	public class Contact : AbstractIdData
 	{
-		public Guid ContactId;
 		public DateTime CreatedOn;
 		public DateTime ModifiedOn;
 		public string Firstname;
