@@ -131,6 +131,57 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Assert.AreEqual(Contact.StateEnum.Inactive, contactRead.State);
 		}
 
+		[Test]
+		public void GroupsCanBeAdded()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+
+			Group group1 = Group.ReadOrCreate(_connection, "test1");
+			Group group2 = Group.ReadOrCreate(_connection, "test2");
+			Group group3 = Group.ReadOrCreate(_connection, "test3");
+
+			contactInserted.Groups.Add(group1);
+			contactInserted.Groups.Add(group2);
+
+			contactInserted.Insert(_connection);
+
+			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+
+			contactInserted.Delete(_connection);
+			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group1.Name));
+			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group2.Name));
+			Assert.IsFalse(contactRead.Groups.Any(group => group.Name == group3.Name));
+		}
+
+		[Test]
+		public void GroupsCanBeDeleted()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+
+			Group group1 = Group.ReadOrCreate(_connection, "test1");
+			Group group2 = Group.ReadOrCreate(_connection, "test2");
+			Group group3 = Group.ReadOrCreate(_connection, "test3");
+
+			contactInserted.Groups.Add(group1);
+			contactInserted.Groups.Add(group2);
+
+			contactInserted.Insert(_connection);
+
+			contactInserted.Groups.Remove(group2);
+			contactInserted.Groups.Add(group3);
+
+			contactInserted.Update(_connection);
+
+			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+
+			contactInserted.Delete(_connection);
+			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group1.Name));
+			Assert.IsFalse(contactRead.Groups.Any(group => group.Name == group2.Name));
+			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group3.Name));
+		}
+
 		internal Contact CreateTestContact(DateTime testDate)
 		{
 			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");
