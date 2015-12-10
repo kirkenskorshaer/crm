@@ -88,6 +88,26 @@ namespace SystemInterface.Dynamics.Crm
 			return groups;
 		}
 
+		public static Group ReadOrCreate(DynamicsCrmConnection connection, string name)
+		{
+			List<Group> groups = Read(connection, name);
+			Group group = groups.FirstOrDefault(lGroup => lGroup.Name == name);
+
+			if (group != null)
+			{
+				return group;
+			}
+
+			group = new Group()
+			{
+				Name = name,
+			};
+
+			group.Insert(connection);
+
+			return group;
+		}
+
 		public void Delete(DynamicsCrmConnection connection)
 		{
 			connection.Service.Delete("new_group", GroupId);
