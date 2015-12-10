@@ -17,15 +17,30 @@ namespace SystemInterface.Dynamics.Crm
 		//private static readonly ColumnSet ColumnSetGroup = new ColumnSet("createdby", "createdon", "modifiedby", "modifiedon", "new_groupid", "new_name", "ownerid", "owningbusinessunit", "owninguser", "statecode", "statuscode");
 		private static readonly ColumnSet ColumnSetGroup = new ColumnSet("new_groupid", "new_name", "createdon", "modifiedon");
 
+		public Group()
+		{
+		}
+
+		public Group(Entity groupEntity)
+		{
+			SetValuesFromEntity(groupEntity);
+		}
+
 		private static Group EntityToGroup(Entity entity)
 		{
-			return new Group
-			{
-				GroupId = (Guid)entity.Attributes["new_groupid"],
-				CreatedOn = (DateTime)entity.Attributes["createdon"],
-				ModifiedOn = (DateTime)entity.Attributes["modifiedon"],
-				Name = entity.Attributes["new_name"].ToString(),
-			};
+			Group group = new Group();
+
+			group.SetValuesFromEntity(entity);
+
+			return group;
+		}
+
+		private void SetValuesFromEntity(Entity entity)
+		{
+			GroupId = (Guid)entity.Attributes["new_groupid"];
+			CreatedOn = (DateTime)entity.Attributes["createdon"];
+			ModifiedOn = (DateTime)entity.Attributes["modifiedon"];
+			Name = entity.Attributes["new_name"].ToString();
 		}
 
 		private CrmEntity GetGroupAsEntity(bool includeId)
