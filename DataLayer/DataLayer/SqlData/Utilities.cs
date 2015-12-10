@@ -33,7 +33,15 @@ namespace DataLayer.SqlData
 
 			for (int parameterIndex = 0; parameterIndex < parameters.Length; parameterIndex++)
 			{
-				SqlParameter sqlParameter = new SqlParameter(parameters[parameterIndex].Key, parameters[parameterIndex].Value);
+				object value = parameters[parameterIndex].Value;
+
+				if(value == null)
+				{
+					value = DBNull.Value;
+				}
+
+				SqlParameter sqlParameter = new SqlParameter(parameters[parameterIndex].Key, value);
+
 				sqlCommand.Parameters.Add(sqlParameter);
 			}
 
