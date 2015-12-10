@@ -15,9 +15,56 @@ namespace DataLayer.SqlData.Contact
 		public string Firstname;
 		public string Lastname;
 
+		public DateTime? birthdate;
+
+		public string address1_line1;
+		public string address1_line2;
+		public string address1_city;
+		public string address1_postalcode;
+		public string emailaddress1;
+		public string mobilephone;
+		public string telephone1;
+
+		public string cprnr;
+
+		public int kkadminmedlemsnr;
+		public string storkredsnavn;
+		public int storkredsnr;
+		public string kkadminsoegenavn;
+		public DateTime? gavebrevudloebsdato;
+		public string titel;
+		public bool hargavebrev;
+		public bool kkadminstatus;
+
 		public Guid ExternalContactId { get; private set; }
 		public Guid ChangeProviderId { get; private set; }
 		public Guid ContactId { get; private set; }
+
+		private static readonly List<string> _fields = new List<string>()
+		{
+			"FirstName",
+			"LastName",
+			"CreatedOn",
+			"ModifiedOn",
+
+			"birthdate",
+			"address1_line1",
+			"address1_line2",
+			"address1_city",
+			"address1_postalcode",
+			"emailaddress1",
+			"mobilephone",
+			"telephone1",
+			"cprnr",
+			"kkadminmedlemsnr",
+			"storkredsnavn",
+			"storkredsnr",
+			"kkadminsoegenavn",
+			"gavebrevudloebsdato",
+			"titel",
+			"hargavebrev",
+			"kkadminstatus",
+		};
 
 		private static string _tableName = typeof(ContactChange).Name;
 
@@ -46,14 +93,32 @@ namespace DataLayer.SqlData.Contact
 				Utilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ExternalContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "FirstName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "LastName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "CreatedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ExternalContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", Utilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", Utilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", Utilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "gavebrevudloebsdato", Utilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", Utilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", Utilities.DataType.BIT, SqlBoolean.True);
 
 			CreateKeyIfMissing(sqlConnection, _tableName, "ContactId", typeof(Contact).Name, "id");
 
@@ -69,6 +134,25 @@ namespace DataLayer.SqlData.Contact
 			AddInsertParameterIfNotNull(Lastname, "Lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
+			AddInsertParameterIfNotNull(birthdate, "birthdate", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_line2, "address1_line2", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_city, "address1_city", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_postalcode, "address1_postalcode", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(emailaddress1, "emailaddress1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(mobilephone, "mobilephone", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(cprnr, "cprnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminmedlemsnr, "kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(storkredsnavn, "storkredsnavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(storkredsnr, "storkredsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminsoegenavn, "kkadminsoegenavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(gavebrevudloebsdato, "gavebrevudloebsdato", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(titel, "titel", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(hargavebrev, "hargavebrev", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminstatus, "kkadminstatus", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
 			AddInsertParameterIfNotNull(ContactId, "ContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ExternalContactId, "ExternalContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ChangeProviderId, "ChangeProviderId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -154,10 +238,9 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Firstname");
-			sqlStringBuilder.AppendLine("	,Lastname");
-			sqlStringBuilder.AppendLine("	,ModifiedOn");
-			sqlStringBuilder.AppendLine("	,CreatedOn");
+
+			AddFieldsToStringBuilder(sqlStringBuilder);
+
 			sqlStringBuilder.AppendLine("	,ContactId");
 			sqlStringBuilder.AppendLine("	,ExternalContactId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
@@ -199,6 +282,11 @@ namespace DataLayer.SqlData.Contact
 			return contactChanges;
 		}
 
+		private static void AddFieldsToStringBuilder(StringBuilder sqlStringBuilder)
+		{
+			_fields.ForEach(field => sqlStringBuilder.AppendLine($"	,{field}"));
+		}
+
 		private static ContactChange CreateFromRow(SqlConnection sqlConnection, DataRow row)
 		{
 			Guid externalContactId = (Guid)row["ExternalContactId"];
@@ -212,6 +300,24 @@ namespace DataLayer.SqlData.Contact
 				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
 				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
+
+				birthdate = ConvertFromDatabaseValue<DateTime?>(row["birthdate"]),
+				address1_line1 = ConvertFromDatabaseValue<string>(row["address1_line1"]),
+				address1_line2 = ConvertFromDatabaseValue<string>(row["address1_line2"]),
+				address1_city = ConvertFromDatabaseValue<string>(row["address1_city"]),
+				address1_postalcode = ConvertFromDatabaseValue<string>(row["address1_postalcode"]),
+				emailaddress1 = ConvertFromDatabaseValue<string>(row["emailaddress1"]),
+				mobilephone = ConvertFromDatabaseValue<string>(row["mobilephone"]),
+				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
+				cprnr = ConvertFromDatabaseValue<string>(row["cprnr"]),
+				kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["kkadminmedlemsnr"]),
+				storkredsnavn = ConvertFromDatabaseValue<string>(row["storkredsnavn"]),
+				storkredsnr = ConvertFromDatabaseValue<int>(row["storkredsnr"]),
+				kkadminsoegenavn = ConvertFromDatabaseValue<string>(row["kkadminsoegenavn"]),
+				gavebrevudloebsdato = ConvertFromDatabaseValue<DateTime?>(row["gavebrevudloebsdato"]),
+				titel = ConvertFromDatabaseValue<string>(row["titel"]),
+				hargavebrev = ConvertFromDatabaseValue<bool>(row["hargavebrev"]),
+				kkadminstatus = ConvertFromDatabaseValue<bool>(row["kkadminstatus"]),
 			};
 
 			return contactChange;
