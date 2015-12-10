@@ -110,6 +110,65 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
+		private void SynchronizeGroupsInCrm(DynamicsCrmConnection connection, Entity contactEntity)
+		{
+			Relationship relationShip = new Relationship(_groupRelationshipName);
+			IEnumerable<Entity> relatedEntities = contactEntity.GetRelatedEntities(connection.Context, relationShip);
+
+			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.ToDictionary(entity => entity.GetAttributeValue<Guid>("new_groupid"));
+
+			List<Group> groupsLocalButNotInCrm = Groups.Where(group => entitiesByKey.ContainsKey(group.GroupId) == false).ToList();
+
+			List<Entity> groupInCrmButNotLocal = entitiesByKey.
+				Where(entityAndKey => Groups.
+					Any(group => group.GroupId == entityAndKey.Key) == false).
+				Select(entityAndKey => entityAndKey.Value).ToList();
+
+			AddGroupRelationShip(connection, groupsLocalButNotInCrm);
+
+			RemoveGroupRelationShip(connection, groupInCrmButNotLocal);
+		}
+
+		private void AddGroupRelationShip(DynamicsCrmConnection connection, List<Group> groupsToAdd)
+		{
+			if (groupsToAdd.Any() == false)
+			{
+				return;
+			}
+
+			Relationship relationShip = new Relationship(_groupRelationshipName);
+			EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
+
+			foreach (Group group in groupsToAdd)
+			{
+				EntityReference entityReference = new EntityReference("new_group", group.GroupId);
+				entityReferenceCollection.Add(entityReference);
+			}
+
+			connection.Service.Associate("contact", contactid, relationShip, entityReferenceCollection);
+		}
+
+		private void RemoveGroupRelationShip(DynamicsCrmConnection connection, List<Entity> groupsToRemove)
+		{
+			if (groupsToRemove.Any() == false)
+			{
+				return;
+			}
+
+			Relationship relationShip = new Relationship(_groupRelationshipName);
+			EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
+
+			foreach (Entity groupEntity in groupsToRemove)
+			{
+				Guid groupId = groupEntity.GetAttributeValue<Guid>("new_groupid");
+
+				EntityReference entityReference = new EntityReference("new_group", groupId);
+				entityReferenceCollection.Add(entityReference);
+			}
+
+			connection.Service.Disassociate("contact", contactid, relationShip, entityReferenceCollection);
+		}
+
 		private void ReadCrmGeneratedFields(Entity entity)
 		{
 			contactid = (Guid)entity.Attributes["contactid"];
@@ -205,6 +264,7 @@ namespace SystemInterface.Dynamics.Crm
 			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContact);
 
 			Contact contact = EntityToContact(contactEntity);
+			contact.ReadGroups(connection, contactEntity);
 
 			return contact;
 		}
@@ -222,6 +282,8 @@ namespace SystemInterface.Dynamics.Crm
 
 			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContactCrmGenerated);
 			ReadCrmGeneratedFields(contactEntity);
+
+			SynchronizeGroupsInCrm(connection, contactEntity);
 		}
 
 		public void Update(DynamicsCrmConnection connection)
@@ -229,6 +291,11 @@ namespace SystemInterface.Dynamics.Crm
 			CrmEntity crmEntity = GetContactAsEntity(true);
 
 			connection.Service.Update(crmEntity);
+
+			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContactCrmGenerated);
+			ReadCrmGeneratedFields(contactEntity);
+
+			SynchronizeGroupsInCrm(connection, contactEntity);
 		}
 
 		public enum StateEnum
