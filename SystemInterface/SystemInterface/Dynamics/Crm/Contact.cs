@@ -44,6 +44,7 @@ namespace SystemInterface.Dynamics.Crm
 		public string notat;
 
 		public List<Group> Groups;
+		private static string _groupRelationshipName = "relationshipName";
 
 		private static readonly ColumnSet ColumnSetContact = new ColumnSet(
 			"contactid",
@@ -93,6 +94,20 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			return contact;
+		}
+
+		private void ReadGroups(DynamicsCrmConnection connection, Entity contactEntity)
+		{
+			Relationship relationShip = new Relationship(_groupRelationshipName);
+			IEnumerable<Entity> relatedEntities = contactEntity.GetRelatedEntities(connection.Context, relationShip);
+
+			Groups = new List<Group>();
+
+			foreach (Entity relatedEntity in relatedEntities)
+			{
+				Group group = new Group(relatedEntity);
+				Groups.Add(group);
+			}
 		}
 
 		private void ReadCrmGeneratedFields(Entity entity)
