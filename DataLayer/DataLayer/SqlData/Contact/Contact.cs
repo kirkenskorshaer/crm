@@ -38,6 +38,32 @@ namespace DataLayer.SqlData.Contact
 		public bool hargavebrev;
 		public bool kkadminstatus;
 
+		private static readonly List<string> _fields = new List<string>()
+		{
+			"FirstName",
+			"LastName",
+			"CreatedOn",
+			"ModifiedOn",
+
+			"birthdate",
+			"address1_line1",
+			"address1_line2",
+			"address1_city",
+			"address1_postalcode",
+			"emailaddress1",
+			"mobilephone",
+			"telephone1",
+			"cprnr",
+			"kkadminmedlemsnr",
+			"storkredsnavn",
+			"storkredsnr",
+			"kkadminsoegenavn",
+			"gavebrevudloebsdato",
+			"titel",
+			"hargavebrev",
+			"kkadminstatus",
+		};
+
 		public static void MaintainTable(SqlConnection sqlConnection)
 		{
 			string tableName = typeof(Contact).Name;
@@ -78,10 +104,29 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+
 			AddInsertParameterIfNotNull(Firstname, "Firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(Lastname, "Lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
+			AddInsertParameterIfNotNull(birthdate, "birthdate", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_line2, "address1_line2", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_city, "address1_city", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(address1_postalcode, "address1_postalcode", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(emailaddress1, "emailaddress1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(mobilephone, "mobilephone", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(cprnr, "cprnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminmedlemsnr, "kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(storkredsnavn, "storkredsnavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(storkredsnr, "storkredsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminsoegenavn, "kkadminsoegenavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(gavebrevudloebsdato, "gavebrevudloebsdato", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(titel, "titel", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(hargavebrev, "hargavebrev", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kkadminstatus, "kkadminstatus", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -133,10 +178,9 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Firstname");
-			sqlStringBuilder.AppendLine("	,Lastname");
-			sqlStringBuilder.AppendLine("	,ModifiedOn");
-			sqlStringBuilder.AppendLine("	,CreatedOn");
+
+			AddFieldsToStringBuilder(sqlStringBuilder);
+
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
 			sqlStringBuilder.AppendLine("WHERE");
@@ -156,15 +200,19 @@ namespace DataLayer.SqlData.Contact
 			return contacts;
 		}
 
+		private static void AddFieldsToStringBuilder(StringBuilder sqlStringBuilder)
+		{
+			_fields.ForEach(field => sqlStringBuilder.AppendLine($"	,{field}"));
+		}
+
 		public static Contact ReadNextById(SqlConnection sqlConnection, Guid id)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT TOP 1");
 			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Firstname");
-			sqlStringBuilder.AppendLine("	,Lastname");
-			sqlStringBuilder.AppendLine("	,ModifiedOn");
-			sqlStringBuilder.AppendLine("	,CreatedOn");
+
+			AddFieldsToStringBuilder(sqlStringBuilder);
+
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
 			sqlStringBuilder.AppendLine("WHERE");
@@ -200,6 +248,24 @@ namespace DataLayer.SqlData.Contact
 			AddUpdateParameter(ModifiedOn, "ModifiedOn", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(CreatedOn, "CreatedOn", sqlStringBuilderSets, parameters);
 
+			AddUpdateParameter(birthdate, "birthdate", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(address1_line1, "address1_line1", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(address1_line2, "address1_line2", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(address1_city, "address1_city", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(address1_postalcode, "address1_postalcode", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(emailaddress1, "emailaddress1", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(mobilephone, "mobilephone", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(telephone1, "telephone1", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(cprnr, "cprnr", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(kkadminmedlemsnr, "kkadminmedlemsnr", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(storkredsnavn, "storkredsnavn", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(storkredsnr, "storkredsnr", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(kkadminsoegenavn, "kkadminsoegenavn", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(gavebrevudloebsdato, "gavebrevudloebsdato", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(titel, "titel", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(hargavebrev, "hargavebrev", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(kkadminstatus, "kkadminstatus", sqlStringBuilderSets, parameters);
+
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("Update");
 			sqlStringBuilder.AppendLine("	" + TableName);
@@ -222,6 +288,24 @@ namespace DataLayer.SqlData.Contact
 				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
 				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
+
+				birthdate = ConvertFromDatabaseValue<DateTime?>(row["birthdate"]),
+				address1_line1 = ConvertFromDatabaseValue<string>(row["address1_line1"]),
+				address1_line2 = ConvertFromDatabaseValue<string>(row["address1_line2"]),
+				address1_city = ConvertFromDatabaseValue<string>(row["address1_city"]),
+				address1_postalcode = ConvertFromDatabaseValue<string>(row["address1_postalcode"]),
+				emailaddress1 = ConvertFromDatabaseValue<string>(row["emailaddress1"]),
+				mobilephone = ConvertFromDatabaseValue<string>(row["mobilephone"]),
+				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
+				cprnr = ConvertFromDatabaseValue<string>(row["cprnr"]),
+				kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["kkadminmedlemsnr"]),
+				storkredsnavn = ConvertFromDatabaseValue<string>(row["storkredsnavn"]),
+				storkredsnr = ConvertFromDatabaseValue<int>(row["storkredsnr"]),
+				kkadminsoegenavn = ConvertFromDatabaseValue<string>(row["kkadminsoegenavn"]),
+				gavebrevudloebsdato = ConvertFromDatabaseValue<DateTime?>(row["gavebrevudloebsdato"]),
+				titel = ConvertFromDatabaseValue<string>(row["titel"]),
+				hargavebrev = ConvertFromDatabaseValue<bool>(row["hargavebrev"]),
+				kkadminstatus = ConvertFromDatabaseValue<bool>(row["kkadminstatus"]),
 			};
 		}
 
@@ -243,10 +327,9 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Firstname");
-			sqlStringBuilder.AppendLine("	,Lastname");
-			sqlStringBuilder.AppendLine("	,ModifiedOn");
-			sqlStringBuilder.AppendLine("	,CreatedOn");
+
+			AddFieldsToStringBuilder(sqlStringBuilder);
+
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
 			sqlStringBuilder.AppendLine("WHERE");
@@ -265,10 +348,9 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Firstname");
-			sqlStringBuilder.AppendLine("	,Lastname");
-			sqlStringBuilder.AppendLine("	,ModifiedOn");
-			sqlStringBuilder.AppendLine("	,CreatedOn");
+
+			AddFieldsToStringBuilder(sqlStringBuilder);
+
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
 			sqlStringBuilder.AppendLine("WHERE");
