@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Client.Services;
+using Microsoft.Xrm.Sdk.Client;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -7,6 +8,7 @@ namespace SystemInterface.Dynamics.Crm
 	{
 		private static DynamicsCrmConnection _connection;
 		public OrganizationService Service;
+		public OrganizationServiceContext Context;
 
 		private DynamicsCrmConnection(string url, string username, string password)
 		{
@@ -14,6 +16,7 @@ namespace SystemInterface.Dynamics.Crm
 			CrmConnection crmConnection = CrmConnection.Parse(connectionString);
 
 			Service = new OrganizationService(crmConnection);
+			Context = new OrganizationServiceContext(Service);
 		}
 
 		public static DynamicsCrmConnection GetConnection(string url, string username, string password)
