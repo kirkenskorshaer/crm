@@ -46,6 +46,7 @@
     <Compile Include="Log.cs" />
     <Compile Include="Mapping\Contact\ContactCrmMapping.cs" />
     <Compile Include="Mapping\Contact\ContactCsvMapping.cs" />
+    <Compile Include="Mapping\Contact\ContactAnonymousMapping.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Csv\CsvDelete.cs" />
     <Compile Include="Option\Options\Csv\CsvRead.cs" />
