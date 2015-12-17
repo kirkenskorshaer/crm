@@ -24,18 +24,18 @@ namespace DataLayer.MongoData.Statistics
 			statistics._id = ObjectId.GenerateNewId(DateTime.Now);
 			statistics.Name = name;
 
-			IMongoCollection<TStatisticsType> options = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
-			Task insertTask = options.InsertOneAsync(statistics);
+			IMongoCollection<TStatisticsType> statisticsCollection = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
+			Task insertTask = statisticsCollection.InsertOneAsync(statistics);
 			insertTask.Wait();
 		}
 
 		protected static List<TStatisticsType> ReadById<TStatisticsType>(MongoConnection connection, ObjectId id)
 		where TStatisticsType : AbstractStatistics
 		{
-			Expression<Func<TStatisticsType, bool>> filter = option => option._id == id;
+			Expression<Func<TStatisticsType, bool>> filter = statistics => statistics._id == id;
 
-			IMongoCollection<TStatisticsType> statistics = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
-			IFindFluent<TStatisticsType, TStatisticsType> statisticsFind = statistics.Find(filter);
+			IMongoCollection<TStatisticsType> statisticsCollection = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
+			IFindFluent<TStatisticsType, TStatisticsType> statisticsFind = statisticsCollection.Find(filter);
 			Task<List<TStatisticsType>> optionTask = statisticsFind.ToListAsync();
 
 			return optionTask.Result;
@@ -44,19 +44,19 @@ namespace DataLayer.MongoData.Statistics
 		protected void Update<TStatisticsType>(MongoConnection connection)
 		where TStatisticsType : AbstractStatistics
 		{
-			IMongoCollection<TStatisticsType> statistics = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
+			IMongoCollection<TStatisticsType> statisticsCollection = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
 
-			FilterDefinition<TStatisticsType> filter = Builders<TStatisticsType>.Filter.Eq(option => option._id, _id);
+			FilterDefinition<TStatisticsType> filter = Builders<TStatisticsType>.Filter.Eq(statistics => statistics._id, _id);
 
-			Task<ReplaceOneResult> result = statistics.ReplaceOneAsync(filter, (TStatisticsType)this);
+			Task<ReplaceOneResult> result = statisticsCollection.ReplaceOneAsync(filter, (TStatisticsType)this);
 			result.Wait();
 		}
 
 		protected void Delete<TStatisticsType>(MongoConnection connection)
 		where TStatisticsType : AbstractStatistics
 		{
-			IMongoCollection<TStatisticsType> statistics = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
-			Task deleteTask = statistics.DeleteOneAsync(option => option._id == _id);
+			IMongoCollection<TStatisticsType> statisticsCollection = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
+			Task deleteTask = statisticsCollection.DeleteOneAsync(statistics => statistics._id == _id);
 			deleteTask.Wait();
 		}
 	}
