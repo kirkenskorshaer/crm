@@ -75,6 +75,7 @@
     <Compile Include="MongoData\Option\Options\Data\Utilities\MaintainAllTables.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="MongoData\Option\Options\Logic\Squash.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\StressTestCrm.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeFromCrm.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeToCrm.cs" />
