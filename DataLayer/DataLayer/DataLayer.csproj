@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="MongoData\Config.cs" />
     <Compile Include="MongoConnection.cs" />
+    <Compile Include="MongoData\IntProgress.cs" />
     <Compile Include="MongoData\Option\Options\Csv\CsvBase.cs" />
     <Compile Include="MongoData\Option\Options\Csv\CsvDelete.cs" />
     <Compile Include="MongoData\Option\Options\Csv\CsvElement.cs" />
