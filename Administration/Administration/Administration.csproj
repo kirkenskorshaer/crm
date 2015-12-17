@@ -67,6 +67,7 @@
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
+    <Compile Include="Option\Options\Logic\StressTestCrm.cs" />
     <Compile Include="Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="Option\Options\Logic\Squash.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedField.cs" />
