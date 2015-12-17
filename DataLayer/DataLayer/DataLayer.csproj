@@ -89,7 +89,9 @@
     <Compile Include="MongoData\Option\Schedule.cs" />
     <Compile Include="MongoData\Option\OptionBase.cs" />
     <Compile Include="MongoData\Signal.cs" />
+    <Compile Include="MongoData\Statistics\AbstractStringStatistics.cs" />
     <Compile Include="MongoData\Statistics\AbstractStatistics.cs" />
+    <Compile Include="MongoData\Statistics\StringStatistics\StringIntStatistics.cs" />
     <Compile Include="MongoData\UrlLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionHolder.cs" />
