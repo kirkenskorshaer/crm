@@ -25,5 +25,10 @@ namespace DataLayer.MongoData.Statistics.StringStatistics
 			ObjectId objectId = new ObjectId(id);
 			return ReadById<StringIntStatistics>(connection, objectId);
 		}
+
+		public static List<StringIntStatistics> ReadByName(MongoConnection connection, string name)
+		{
+			return ReadByName<StringIntStatistics>(connection, name);
+		}
 	}
 }

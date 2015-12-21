@@ -41,6 +41,19 @@ namespace DataLayer.MongoData.Statistics
 			return optionTask.Result;
 		}
 
+		protected static List<TStatisticsType> ReadByName<TStatisticsType>(MongoConnection connection, string name)
+		where TStatisticsType : AbstractStatistics
+		{
+			Expression<Func<TStatisticsType, bool>> filter = statistics => statistics.Name == name;
+
+			IMongoCollection<TStatisticsType> statisticsCollection = connection.Database.GetCollection<TStatisticsType>(typeof(TStatisticsType).Name);
+			IFindFluent<TStatisticsType, TStatisticsType> statisticsFind = statisticsCollection.Find(filter);
+			Task<List<TStatisticsType>> optionTask = statisticsFind.ToListAsync();
+
+			return optionTask.Result;
+		}
+
+
 		protected void Update<TStatisticsType>(MongoConnection connection)
 		where TStatisticsType : AbstractStatistics
 		{
