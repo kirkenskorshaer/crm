@@ -8,6 +8,7 @@ using NUnit.Framework;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using System.Linq;
 using System.Data.SqlClient;
+using SystemInterface.Dynamics.Crm;
 
 namespace AdministrationTest
 {
@@ -16,6 +17,7 @@ namespace AdministrationTest
 	{
 		protected MongoConnection Connection;
 		protected SqlConnection _sqlConnection;
+		protected DynamicsCrmConnection DynamicsCrmConnection;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -41,6 +43,9 @@ namespace AdministrationTest
 			};
 
 			config.Insert(Connection);
+
+			UrlLogin urlLogin = UrlLogin.GetUrlLogin(Connection, "test");
+			DynamicsCrmConnection = DynamicsCrmConnection.GetConnection(urlLogin.Url, urlLogin.Username, urlLogin.Password);
 		}
 
 		[TearDown]
