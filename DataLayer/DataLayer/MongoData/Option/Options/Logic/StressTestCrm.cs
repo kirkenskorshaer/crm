@@ -11,6 +11,19 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		public string urlLoginName { get; set; }
 		public int contactsToCreate { get; set; }
 
+		public static StressTestCrm Create(MongoConnection connection, string name, Schedule schedule, string urlLoginName, int contactsToCreate)
+		{
+			StressTestCrm stressTestCrm = new StressTestCrm
+			{
+				urlLoginName = urlLoginName,
+				contactsToCreate = contactsToCreate
+			};
+
+			Create(connection, stressTestCrm, name, schedule);
+
+			return stressTestCrm;
+		}
+
 		protected override void Execute(MongoConnection connection, bool recurring)
 		{
 			if (recurring)
