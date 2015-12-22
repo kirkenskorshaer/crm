@@ -3,6 +3,7 @@ using Administration.Option.Options;
 using Administration.Option.Options.Service;
 using DataLayer;
 using Administration.Option.Options.Csv;
+using Administration.Option.Options.Logic;
 
 namespace Administration.Option.Finder
 {
@@ -28,6 +29,13 @@ namespace Administration.Option.Finder
 			options.AddRange(CsvRead.Find(_connection));
 			options.AddRange(CsvUpdate.Find(_connection));
 			options.AddRange(CsvDelete.Find(_connection));
+
+			options.AddRange(MaintainProgress.Find(_connection));
+			options.AddRange(Squash.Find(_connection));
+			options.AddRange(StressTestCrm.Find(_connection));
+			options.AddRange(SynchronizeFromCrm.Find(_connection));
+			options.AddRange(SynchronizeFromCsv.Find(_connection));
+			options.AddRange(SynchronizeToCrm.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);
 			options.Add(sleep);
