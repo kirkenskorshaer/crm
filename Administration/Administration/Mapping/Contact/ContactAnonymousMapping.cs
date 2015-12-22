@@ -274,7 +274,7 @@ namespace Administration.Mapping.Contact
 
 			List<Group> groups = new List<Group>();
 
-			for (int groupIndex = 0; groupIndex <= numberOfGroups; groupIndex++)
+			for (int groupIndex = 0; groupIndex < numberOfGroups; groupIndex++)
 			{
 				Group group = new Group()
 				{
@@ -287,7 +287,7 @@ namespace Administration.Mapping.Contact
 			MaybeAddGroup(random, groups, "Indsamler", 30);
 			MaybeAddGroup(random, groups, "Indsamlingsleder", 5);
 
-			groups = groups.Where(group => groups.Any(innerGroup => innerGroup.Name != group.Name) == false).ToList();
+			groups = groups.Where(group => groups.Any(innerGroup => innerGroup.Name == group.Name && innerGroup != group) == false).ToList();
 
 			return groups;
 		}
