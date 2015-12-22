@@ -40,6 +40,13 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
+		public static List<StressTestCrm> Find(MongoConnection connection)
+		{
+			List<DatabaseStressTestCrm> options = DatabaseOptionBase.ReadAllowed<DatabaseStressTestCrm>(connection);
+
+			return options.Select(option => new StressTestCrm(connection, option)).ToList();
+		}
+
 		protected override bool ExecuteOption()
 		{
 			int contactsToCreate = _databaseStressTestCrm.contactsToCreate;

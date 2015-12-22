@@ -5,6 +5,8 @@ using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseMaintainProgress = DataLayer.MongoData.Option.Options.Logic.MaintainProgress;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseProgress = DataLayer.MongoData.Progress;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Administration.Option.Options.Logic
 {
@@ -19,6 +21,13 @@ namespace Administration.Option.Options.Logic
 		public MaintainProgress(MongoConnection connection, DatabaseOptionBase databaseOption) : base(connection, databaseOption)
 		{
 			_databaseMaintainProgress = (DatabaseMaintainProgress)databaseOption;
+		}
+
+		public static List<MaintainProgress> Find(MongoConnection connection)
+		{
+			List<DatabaseMaintainProgress> options = DatabaseOptionBase.ReadAllowed<DatabaseMaintainProgress>(connection);
+
+			return options.Select(option => new MaintainProgress(connection, option)).ToList();
 		}
 
 		protected override bool ExecuteOption()

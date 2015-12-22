@@ -11,6 +11,7 @@ using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace Administration.Option.Options.Logic
 {
@@ -31,6 +32,13 @@ namespace Administration.Option.Options.Logic
 
 			_synchronizeFromCrm = new SynchronizeFromCrm(connection, null);
 			_squash = new Squash(connection, null);
+		}
+
+		public static List<SynchronizeToCrm> Find(MongoConnection connection)
+		{
+			List<DatabaseSynchronizeToCrm> options = DatabaseOptionBase.ReadAllowed<DatabaseSynchronizeToCrm>(connection);
+
+			return options.Select(option => new SynchronizeToCrm(connection, option)).ToList();
 		}
 
 		protected override bool ExecuteOption()

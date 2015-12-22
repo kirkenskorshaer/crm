@@ -21,6 +21,13 @@ namespace Administration.Option.Options.Logic
 			_databaseSquash = (DatabaseSquash)databaseOption;
 		}
 
+		public static List<Squash> Find(MongoConnection connection)
+		{
+			List<DatabaseSquash> options = DatabaseOptionBase.ReadAllowed<DatabaseSquash>(connection);
+
+			return options.Select(option => new Squash(connection, option)).ToList();
+		}
+
 		protected override bool ExecuteOption()
 		{
 			DataLayer.MongoData.Progress progress;
