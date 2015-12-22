@@ -30,13 +30,9 @@ namespace AdministrationTest.Option.Options.Logic
 
 		private DatabaseStressTestCrm GetDatabaseStressTestCrm()
 		{
-			return new DatabaseStressTestCrm()
-			{
-				contactsToCreate = 10,
-				Name = "StressTestCrm",
-				Schedule = CreateScheduleAlwaysOnDoOnce(),
-				urlLoginName = "test",
-			};
+			DatabaseStressTestCrm databaseStressTestCrm = DatabaseStressTestCrm.Create(Connection, "StressTestCrm", CreateScheduleAlwaysOnDoOnce(), "test", 10);
+
+			return databaseStressTestCrm;
 		}
 	}
 }
