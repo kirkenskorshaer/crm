@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,22 @@ namespace DataLayer.MongoData.Option.Options.Logic
 			Create(connection, stressTestCrm, name, schedule);
 
 			return stressTestCrm;
+		}
+
+		public void Update(MongoConnection connection)
+		{
+			Update<Email>(connection);
+		}
+
+		public static List<StressTestCrm> Read(MongoConnection connection, string id)
+		{
+			ObjectId objectId = new ObjectId(id);
+			return ReadById<StressTestCrm>(connection, objectId);
+		}
+
+		public void Delete(MongoConnection connection)
+		{
+			Delete<StressTestCrm>(connection);
 		}
 
 		protected override void Execute(MongoConnection connection, bool recurring)

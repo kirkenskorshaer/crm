@@ -1,32 +1,26 @@
 ﻿using System.ComponentModel;
 using System.ServiceProcess;
 using Administration;
+using System.Threading;
 
 namespace ServiceRunner
 {
 	public partial class CrmService : ServiceBase
 	{
-		private BackgroundWorker _backgroundWorker;
 		private Heart _heart;
+		private Thread _mainThread;
 
 		public CrmService()
 		{
 			InitializeComponent();
 		}
 
-		private void _backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-		{
-			_heart.Run();
-		}
-
 		protected override void OnStart(string[] args)
 		{
-			_backgroundWorker = new BackgroundWorker();
 			_heart = new Heart();
 
-			_backgroundWorker.DoWork += _backgroundWorker_DoWork;
-
-			_backgroundWorker.RunWorkerAsync();
+			_mainThread = new Thread(new ThreadStart(_heart.Run));
+			_mainThread.Start();
 		}
 
 		protected override void OnStop()

@@ -27,7 +27,7 @@ namespace DataLayer.MongoData
 			IFindFluent<UrlLogin, UrlLogin> urlLoginFind = urlLoginCollection.Find(urlLogin => urlLogin.UrlName == urlName);
 			Task<UrlLogin> urlLoginTask = urlLoginFind.SingleAsync();
 
-			return urlLoginTask.Result;
+			return MongoDataHelper.GetValueOrThrowTimeout(urlLoginTask);
 		}
 
 		public static bool Exists(MongoConnection connection, string urlName)

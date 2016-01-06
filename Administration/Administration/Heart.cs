@@ -16,6 +16,8 @@ namespace Administration
 		private readonly OptionDecider _optionDecider;
 		private readonly MongoConnection _connection;
 
+		private DateTime _startTime;
+
 		public Heart()
 		{
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
@@ -28,6 +30,9 @@ namespace Administration
 
 		public void Run()
 		{
+			_startTime = DateTime.Now;
+			Log.Write(_connection, $"starting at {_startTime.ToString("yyyyMMdd HH:mm:ss")}", Config.LogLevelEnum.HeartMessage);
+
 			while (_run)
 			{
 				try
@@ -36,8 +41,23 @@ namespace Administration
 				}
 				catch (Exception exception)
 				{
-					Log.Write(_connection, exception.Message, exception.StackTrace, Config.LogLevelEnum.HeartError);
+					WriteException(exception, Config.LogLevelEnum.HeartError);
 				}
+			}
+
+			DateTime endTime = DateTime.Now;
+			TimeSpan runtime = endTime - _startTime;
+
+			Log.Write(_connection, $"stopping, ran from {_startTime.ToString("yyyyMMdd HH:mm:ss")} to {endTime.ToString("yyyyMMdd HH:mm:ss")}, running time = {Math.Round(runtime.TotalSeconds, 0)} Seconds", Config.LogLevelEnum.HeartMessage);
+		}
+
+		private void WriteException(Exception exception, Config.LogLevelEnum logLevel)
+		{
+			Log.Write(_connection, exception.Message, exception.StackTrace, logLevel);
+
+			if (exception.InnerException != null)
+			{
+				WriteException(exception.InnerException, logLevel);
 			}
 		}
 
