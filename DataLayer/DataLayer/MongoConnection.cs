@@ -14,6 +14,7 @@ namespace DataLayer
 		private readonly string _databaseName;
 
 		private static readonly Dictionary<string, MongoConnection> Connections = new Dictionary<string, MongoConnection>();
+		public static int TimeoutMilliSeconds = 10000;
 
 		private MongoConnection(string databaseName)
 		{
