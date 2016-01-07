@@ -39,7 +39,7 @@ namespace DataLayer.MongoData.Option
 
 		private bool HourBlocksForExecution()
 		{
-			if (HoursOfDayToSkip.Contains(NextAllowedExecution.Hour))
+			if (HoursOfDayToSkip != null && HoursOfDayToSkip.Contains(NextAllowedExecution.Hour))
 			{
 				return true;
 			}
@@ -48,11 +48,11 @@ namespace DataLayer.MongoData.Option
 
 		private bool DayBlocksForExecution()
 		{
-			if (DaysOfWeekToSkip.Contains(NextAllowedExecution.DayOfWeek))
+			if (DaysOfWeekToSkip != null && DaysOfWeekToSkip.Contains(NextAllowedExecution.DayOfWeek))
 			{
 				return true;
 			}
-			if (DaysOfMonthToSkip.Contains(NextAllowedExecution.Day))
+			if (DaysOfMonthToSkip != null && DaysOfMonthToSkip.Contains(NextAllowedExecution.Day))
 			{
 				return true;
 			}
