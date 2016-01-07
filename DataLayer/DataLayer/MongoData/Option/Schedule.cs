@@ -16,7 +16,14 @@ namespace DataLayer.MongoData.Option
 
 		public void MoveNext()
 		{
+			DateTime currentTime = DateTime.Now;
+
 			NextAllowedExecution += TimeBetweenAllowedExecutions;
+
+			if (NextAllowedExecution < currentTime)
+			{
+				NextAllowedExecution = currentTime + TimeBetweenAllowedExecutions;
+			}
 			MoveToFreeTime();
 		}
 
