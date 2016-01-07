@@ -284,8 +284,8 @@ namespace Administration.Mapping.Contact
 				groups.Add(group);
 			}
 
-			MaybeAddGroup(random, groups, "Indsamler", 30);
-			MaybeAddGroup(random, groups, "Indsamlingsleder", 5);
+			//MaybeAddGroup(random, groups, "Indsamler", 30);
+			//MaybeAddGroup(random, groups, "Indsamlingsleder", 5);
 
 			groups = groups.Where(group => groups.Any(innerGroup => innerGroup.Name == group.Name && innerGroup != group) == false).ToList();
 
