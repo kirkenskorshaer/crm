@@ -30,7 +30,7 @@ namespace DataLayer.MongoData
 			IFindFluent<Config, Config> configFind = configs.Find(config => true);
 			Task<Config> configTask = configFind.SingleAsync();
 
-			return configTask.Result;
+			return MongoDataHelper.GetValueOrThrowTimeout(configTask);
 		}
 
 		public static bool Exists(MongoConnection connection)
