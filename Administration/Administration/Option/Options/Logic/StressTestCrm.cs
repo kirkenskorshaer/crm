@@ -66,13 +66,13 @@ namespace Administration.Option.Options.Logic
 
 			DateTime AfterContacts = DateTime.Now;
 
-			int seconds = (int)(AfterContacts - BeforeContacts).TotalSeconds;
+			int milliSecondsForEachContact = (int)((AfterContacts - BeforeContacts).TotalMilliseconds / contactsToCreate);
 
 			int step = 1000;
 			int min = (intProgress.progressValue / step);
 			int max = min + step;
 
-			StringIntStatistics.Create(Connection, intProgress.TargetName, $"{min} - {max}", seconds);
+			StringIntStatistics.Create(Connection, intProgress.TargetName, $"{min} - {max}", milliSecondsForEachContact);
 
 			intProgress.progressValue += contactsToCreate;
 			intProgress.Update(Connection);
