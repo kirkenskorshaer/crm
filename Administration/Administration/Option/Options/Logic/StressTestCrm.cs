@@ -69,7 +69,7 @@ namespace Administration.Option.Options.Logic
 			int milliSecondsForEachContact = (int)((AfterContacts - BeforeContacts).TotalMilliseconds / contactsToCreate);
 
 			int step = 1000;
-			int min = (intProgress.progressValue / step);
+			int min = (intProgress.progressValue / step) * step;
 			int max = min + step;
 
 			StringIntStatistics.Create(Connection, intProgress.TargetName, $"{min} - {max}", milliSecondsForEachContact);
