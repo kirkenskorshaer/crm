@@ -1,13 +1,13 @@
-function IndsamlereHide()
+function HideSubGridIfOptionSelected(selectedAttribute, showOptionValue, subGridToHide)
 {
-	var selectedOption = Xrm.Page.getAttribute("new_erindsamlingsleder").getText();
+	var selectedOption = Xrm.Page.getAttribute(selectedAttribute).getText();
 
-	if (selectedOption == "Yes")
+	if (selectedOption == showOptionValue)
 	{
-		Xrm.Page.getControl("Indsamlere").setVisible(true);
+		Xrm.Page.getControl(subGridToHide).setVisible(true);
 	}
 	else
 	{
-		Xrm.Page.getControl("Indsamlere").setVisible(false);
+		Xrm.Page.getControl(subGridToHide).setVisible(false);
 	}
 }
