@@ -34,7 +34,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options.LogicTest
 		{
 			Schedule schedule = MongoTestUtilities.CreateSchedule();
 
-			StressTestCrm stressTestCrm = StressTestCrm.Create(_connection, "stressTest", schedule, "test", 10);
+			StressTestCrm stressTestCrm = StressTestCrm.Create(_connection, "stressTest", schedule, "test", 10, 1);
 
 			return stressTestCrm;
 		}
