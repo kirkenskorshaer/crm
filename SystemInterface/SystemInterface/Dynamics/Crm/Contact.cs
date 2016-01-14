@@ -133,32 +133,9 @@ namespace SystemInterface.Dynamics.Crm
 		}
 
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
-		public static List<Contact> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate)
+		public static List<Contact> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfContacts = null)
 		{
-			if (lastSearchDate <= _minimumSearchDate)
-			{
-				lastSearchDate = _minimumSearchDate;
-			}
-
-			ConditionExpression modifiedOnExpression = new ConditionExpression
-			{
-				AttributeName = "modifiedon",
-				Operator = ConditionOperator.GreaterEqual
-			};
-			modifiedOnExpression.Values.Add(lastSearchDate);
-
-			FilterExpression filterExpression = new FilterExpression();
-			filterExpression.Conditions.Add(modifiedOnExpression);
-
-			QueryExpression query = new QueryExpression("contact")
-			{
-				ColumnSet = ColumnSetContact
-			};
-			query.Criteria.AddFilter(filterExpression);
-
-			EntityCollection entityCollection = connection.Service.RetrieveMultiple(query);
-
-			List<Contact> contacts = entityCollection.Entities.Select(entity => new Contact(connection, entity)).ToList();
+			List<Contact> contacts = StaticCrm.ReadLatest(connection, "contact", ColumnSetContact, lastSearchDate, (lConnection, entity) => new Contact(lConnection, entity), maximumNumberOfContacts);
 
 			return contacts;
 		}
