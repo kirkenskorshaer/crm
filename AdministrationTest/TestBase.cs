@@ -34,15 +34,18 @@ namespace AdministrationTest
 			Connection.CleanDatabase();
 			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
 
-			Config config = new Config()
+			if (Config.Exists(Connection) == false)
 			{
-				EmailPassword = "testPassword",
-				Email = "testEmail",
-				EmailSmtpPort = 0,
-				EmailSmtpHost = "testHost",
-			};
+				Config config = new Config()
+				{
+					EmailPassword = "testPassword",
+					Email = "testEmail",
+					EmailSmtpPort = 0,
+					EmailSmtpHost = "testHost",
+				};
 
-			config.Insert(Connection);
+				config.Insert(Connection);
+			}
 
 			UrlLogin urlLogin = UrlLogin.GetUrlLogin(Connection, "test");
 			DynamicsCrmConnection = DynamicsCrmConnection.GetConnection(urlLogin.Url, urlLogin.Username, urlLogin.Password);
