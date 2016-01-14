@@ -54,7 +54,7 @@ namespace Administration.Option.Options.Logic
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId)
 		{
-			Guid externalContactId = crmContact.contactid;
+			Guid externalContactId = crmContact.Id;
 			DataLayer.SqlData.Contact.ExternalContact externalContact = DataLayer.SqlData.Contact.ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId);
 
 			DatabaseContact contact = ReadOrCreateContact(crmContact, externalContactId);

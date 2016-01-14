@@ -27,13 +27,13 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = new ContactTest().CreateTestContact(DateTime.Now);
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
 			Address addressInserted = Address.Read(_connection, contactInserted.address1_addressid);
 
 			List<string> attributeNames = Address.GetAllAttributeNames(_connection, addressInserted.AddressId);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 
 			Assert.True(attributeNames.Count > 10);
 			Assert.True(attributeNames.Any(name => name == "Guid customeraddressid"));
@@ -47,7 +47,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = new ContactTest().CreateTestContact(DateTime.Now);
 			contactInserted.address1_line1 = "test";
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
 			Address addressInserted = Address.Read(_connection, contactInserted.address1_addressid);
 			addressInserted.line1 = "test2";
@@ -55,7 +55,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			addressInserted.Update(_connection);
 
 			Address addressRead = Address.Read(_connection, addressInserted.AddressId);
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 
 			Assert.AreEqual(addressInserted.line1, addressRead.line1);
 		}

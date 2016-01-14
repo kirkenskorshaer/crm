@@ -56,7 +56,7 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseExternalContact externalContact = DatabaseExternalContact.Read(_sqlConnection, _changeProvider.Id).Single();
 			Contact contact = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
 
-			contact.Delete(_dynamicsCrmConnection);
+			contact.Delete();
 			Assert.AreEqual(databaseContact.Firstname, contact.firstname);
 		}
 
@@ -71,7 +71,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureContactIsNextInProgressQueue(databaseContact);
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(_sqlConnection, contact.contactid, _changeProvider.Id);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(_sqlConnection, contact.Id, _changeProvider.Id);
 			externalContact.Insert();
 
 			DatabaseContactChange contactChange = new DatabaseContactChange(_sqlConnection, databaseContact.Id, externalContact.ExternalContactId, _changeProvider.Id)
@@ -86,14 +86,14 @@ namespace AdministrationTest.Option.Options.Logic
 			synchronizeToCrm.Execute();
 
 			Contact contactRead = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
-			contact.Delete(_dynamicsCrmConnection);
+			contact.Delete();
 
 			Assert.AreEqual(contactChange.Firstname, contactRead.firstname);
 		}
 
 		private Contact InsertCrmContact()
 		{
-			Contact contact = new Contact()
+			Contact contact = new Contact(_dynamicsCrmConnection)
 			{
 				firstname = "firstName1",
 				lastname = "lastname1",
@@ -101,7 +101,7 @@ namespace AdministrationTest.Option.Options.Logic
 				createdon = DateTime.Now,
 			};
 
-			contact.Insert(_dynamicsCrmConnection);
+			contact.Insert();
 
 			return contact;
 		}

@@ -26,14 +26,14 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted1 = CreateTestContact(testDate);
-			contactInserted1.Insert(_connection);
+			contactInserted1.Insert();
 			Contact contactInserted2 = CreateTestContact(testDate);
-			contactInserted2.Insert(_connection);
+			contactInserted2.Insert();
 
 			List<Contact> contacts = Contact.ReadLatest(_connection, testDate);
 
-			contactInserted1.Delete(_connection);
-			contactInserted2.Delete(_connection);
+			contactInserted1.Delete();
+			contactInserted2.Delete();
 
 			Assert.AreEqual(2, contacts.Count);
 		}
@@ -44,11 +44,11 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = CreateTestContact(testDate);
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
-			List<string> attributeNames = Contact.GetAllAttributeNames(_connection, contactInserted.contactid);
+			List<string> attributeNames = Contact.GetAllAttributeNames(_connection, contactInserted.Id);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 
 			Assert.True(attributeNames.Count > 10);
 			Assert.True(attributeNames.Any(name => name == "Guid contactid"));
@@ -62,12 +62,12 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = CreateTestContact(testDate);
 
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 			List<Contact> contacts = Contact.ReadLatest(_connection, testDate);
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 
-			Assert.True(contacts.Any(contact => contact.contactid == contactInserted.contactid));
-			Assert.AreNotEqual(Guid.Empty, contactInserted.contactid);
+			Assert.True(contacts.Any(contact => contact.Id == contactInserted.Id));
+			Assert.AreNotEqual(Guid.Empty, contactInserted.Id);
 		}
 
 		[Test]
@@ -76,12 +76,12 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = CreateTestContact(testDate);
 
-			contactInserted.Insert(_connection);
-			contactInserted.Delete(_connection);
+			contactInserted.Insert();
+			contactInserted.Delete();
 			List<Contact> contacts = Contact.ReadLatest(_connection, testDate);
 
-			Assert.False(contacts.Any(contact => contact.contactid == contactInserted.contactid));
-			Assert.AreNotEqual(Guid.Empty, contactInserted.contactid);
+			Assert.False(contacts.Any(contact => contact.Id == contactInserted.Id));
+			Assert.AreNotEqual(Guid.Empty, contactInserted.Id);
 		}
 
 		[Test]
@@ -91,13 +91,13 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Contact contactInserted = CreateTestContact(testDate);
 			string firstnameTest = "firstnameTest";
 
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 			contactInserted.firstname = firstnameTest;
 
-			contactInserted.Update(_connection);
+			contactInserted.Update();
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
-			contactInserted.Delete(_connection);
+			Contact contactRead = Contact.Read(_connection, contactInserted.Id);
+			contactInserted.Delete();
 
 			Assert.AreEqual(firstnameTest, contactRead.firstname);
 		}
@@ -107,11 +107,11 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = CreateTestContact(testDate);
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+			Contact contactRead = Contact.Read(_connection, contactInserted.Id);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 
 			Assert.AreEqual(Contact.StateEnum.Active, contactRead.State);
 		}
@@ -121,13 +121,13 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			DateTime testDate = DateTime.Now;
 			Contact contactInserted = CreateTestContact(testDate);
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
-			contactInserted.SetActive(_connection, false);
+			contactInserted.SetActive(false);
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+			Contact contactRead = Contact.Read(_connection, contactInserted.Id);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 			Assert.AreEqual(Contact.StateEnum.Inactive, contactRead.State);
 		}
 
@@ -144,11 +144,11 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			contactInserted.Groups.Add(group1);
 			contactInserted.Groups.Add(group2);
 
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+			Contact contactRead = Contact.Read(_connection, contactInserted.Id);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group1.Name));
 			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group2.Name));
 			Assert.IsFalse(contactRead.Groups.Any(group => group.Name == group3.Name));
@@ -167,16 +167,16 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			contactInserted.Groups.Add(group1);
 			contactInserted.Groups.Add(group2);
 
-			contactInserted.Insert(_connection);
+			contactInserted.Insert();
 
 			contactInserted.Groups.Remove(group2);
 			contactInserted.Groups.Add(group3);
 
-			contactInserted.Update(_connection);
+			contactInserted.Update();
 
-			Contact contactRead = Contact.Read(_connection, contactInserted.contactid);
+			Contact contactRead = Contact.Read(_connection, contactInserted.Id);
 
-			contactInserted.Delete(_connection);
+			contactInserted.Delete();
 			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group1.Name));
 			Assert.IsFalse(contactRead.Groups.Any(group => group.Name == group2.Name));
 			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group3.Name));
@@ -185,7 +185,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		internal Contact CreateTestContact(DateTime testDate)
 		{
 			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");
-			Contact contactCreated = new Contact
+			Contact contactCreated = new Contact(_connection)
 			{
 				firstname = $"firstname_{dateString}",
 				lastname = $"lastname_{dateString}",

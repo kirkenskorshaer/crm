@@ -66,10 +66,10 @@ namespace Administration.Option.Options.Logic
 
 		private void InsertContactAndCreateExternalContact(Guid changeProviderId, DatabaseContact databaseContact)
 		{
-			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(databaseContact);
-			systemInterfaceContact.Insert(_dynamicsCrmConnection);
+			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
+			systemInterfaceContact.Insert();
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.contactid, changeProviderId);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId);
 			externalContact.Insert();
 		}
 
@@ -77,14 +77,14 @@ namespace Administration.Option.Options.Logic
 		{
 			SystemInterfaceContact systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
-			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(databaseContact, databaseExternalContact.ExternalContactId);
+			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
 
 			if (systemInterfaceContactInCrm.Equals(systemInterfaceContact))
 			{
 				return;
 			}
 
-			systemInterfaceContact.SetActive(_dynamicsCrmConnection, false);
+			systemInterfaceContact.SetActive(false);
 
 			systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
@@ -94,11 +94,11 @@ namespace Administration.Option.Options.Logic
 
 			_squash.SquashContact(databaseContact);
 
-			systemInterfaceContact = Conversion.Contact.Convert(databaseContact, databaseExternalContact.ExternalContactId, systemInterfaceContact);
+			systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact, systemInterfaceContact);
 
-			systemInterfaceContact.Update(_dynamicsCrmConnection);
+			systemInterfaceContact.Update();
 
-			systemInterfaceContact.SetActive(_dynamicsCrmConnection, true);
+			systemInterfaceContact.SetActive(true);
 		}
 
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)

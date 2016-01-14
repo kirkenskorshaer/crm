@@ -8,14 +8,13 @@ using Microsoft.Crm.Sdk.Messages;
 
 namespace SystemInterface.Dynamics.Crm
 {
-	public class Contact
+	public class Contact : AbstractCrm
 	{
 		public StateEnum State { get; private set; }
 
 		public Guid address1_addressid;
 		public DateTime createdon;
 		public DateTime modifiedon;
-		public Guid contactid;
 		public Guid address3_addressid;
 		public string lastname;
 		public string firstname;
@@ -80,115 +79,33 @@ namespace SystemInterface.Dynamics.Crm
 			"lastname",
 			"statecode");
 
-		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "contactid", "address3_addressid", "address2_addressid", "statecode");
+		protected override string entityName { get { return "contact"; } }
+		protected override string idName { get { return "contactid"; } }
 
-		private static Contact EntityToContact(Entity entity)
+		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "address3_addressid", "address2_addressid", "statecode");
+		protected override ColumnSet ColumnSetCrmGenerated { get { return ColumnSetContactCrmGenerated; } }
+
+		public Contact(DynamicsCrmConnection connection) : base(connection)
 		{
-			Contact contact = new Contact();
-
-			contact.State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value;
-
-			foreach (string key in entity.Attributes.Keys)
-			{
-				Utilities.ReflectionHelper.SetValue(contact, key, entity.Attributes[key]);
-			}
-
-			return contact;
 		}
 
-		private void ReadGroups(DynamicsCrmConnection connection, Entity contactEntity)
+		public Contact(DynamicsCrmConnection connection, Entity contactEntity) : base(connection, contactEntity)
 		{
-			Relationship relationShip = new Relationship(_groupRelationshipName);
-			IEnumerable<Entity> relatedEntities = contactEntity.GetRelatedEntities(connection.Context, relationShip);
-
-			Groups = new List<Group>();
-
-			foreach (Entity relatedEntity in relatedEntities)
-			{
-				Group group = new Group(relatedEntity);
-				Groups.Add(group);
-			}
+			State = (StateEnum)((OptionSetValue)contactEntity.Attributes["statecode"]).Value;
 		}
 
-		private void SynchronizeGroupsInCrm(DynamicsCrmConnection connection, Entity contactEntity)
+		private void ReadGroups(Entity contactEntity)
 		{
-			Relationship relationShip = new Relationship(_groupRelationshipName);
-			IEnumerable<Entity> relatedEntities = contactEntity.GetRelatedEntities(connection.Context, relationShip);
-
-			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.ToDictionary(entity => entity.GetAttributeValue<Guid>("new_groupid"));
-
-			List<Group> groupsLocalButNotInCrm = Groups.Where(group => entitiesByKey.ContainsKey(group.GroupId) == false).ToList();
-
-			List<Entity> groupInCrmButNotLocal = entitiesByKey.
-				Where(entityAndKey => Groups.
-					Any(group => group.GroupId == entityAndKey.Key) == false).
-				Select(entityAndKey => entityAndKey.Value).ToList();
-
-			AddGroupRelationShip(connection, groupsLocalButNotInCrm);
-
-			RemoveGroupRelationShip(connection, groupInCrmButNotLocal);
+			Groups = ReadNNRelationship(_groupRelationshipName, contactEntity, entity => new Group(entity));
 		}
 
-		private void AddGroupRelationShip(DynamicsCrmConnection connection, List<Group> groupsToAdd)
-		{
-			if (groupsToAdd.Any() == false)
-			{
-				return;
-			}
-
-			Relationship relationShip = new Relationship(_groupRelationshipName);
-			EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
-
-			foreach (Group group in groupsToAdd)
-			{
-				EntityReference entityReference = new EntityReference("new_group", group.GroupId);
-				entityReferenceCollection.Add(entityReference);
-			}
-
-			connection.Service.Associate("contact", contactid, relationShip, entityReferenceCollection);
-		}
-
-		private void RemoveGroupRelationShip(DynamicsCrmConnection connection, List<Entity> groupsToRemove)
-		{
-			if (groupsToRemove.Any() == false)
-			{
-				return;
-			}
-
-			Relationship relationShip = new Relationship(_groupRelationshipName);
-			EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
-
-			foreach (Entity groupEntity in groupsToRemove)
-			{
-				Guid groupId = groupEntity.GetAttributeValue<Guid>("new_groupid");
-
-				EntityReference entityReference = new EntityReference("new_group", groupId);
-				entityReferenceCollection.Add(entityReference);
-			}
-
-			connection.Service.Disassociate("contact", contactid, relationShip, entityReferenceCollection);
-		}
-
-		private void ReadCrmGeneratedFields(Entity entity)
-		{
-			contactid = (Guid)entity.Attributes["contactid"];
-
-			createdon = (DateTime)entity.Attributes["createdon"];
-
-			modifiedon = (DateTime)entity.Attributes["modifiedon"];
-
-			address1_addressid = (Guid)entity.Attributes["address1_addressid"];
-			address2_addressid = (Guid)entity.Attributes["address2_addressid"];
-			address3_addressid = (Guid)entity.Attributes["address3_addressid"];
-		}
-
-		private CrmEntity GetContactAsEntity(bool includeContactId)
+		protected override CrmEntity GetAsEntity(bool includeContactId)
 		{
 			CrmEntity crmEntity = new CrmEntity("contact");
 
 			if (includeContactId)
 			{
-				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", contactid));
+				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", Id));
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", firstname));
@@ -241,7 +158,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			EntityCollection entityCollection = connection.Service.RetrieveMultiple(query);
 
-			List<Contact> contacts = entityCollection.Entities.Select(EntityToContact).ToList();
+			List<Contact> contacts = entityCollection.Entities.Select(entity => new Contact(connection, entity)).ToList();
 
 			return contacts;
 		}
@@ -263,39 +180,25 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContact);
 
-			Contact contact = EntityToContact(contactEntity);
-			contact.ReadGroups(connection, contactEntity);
+			Contact contact = new Contact(connection, contactEntity);
+			contact.ReadGroups(contactEntity);
 
 			return contact;
 		}
 
-		public void Delete(DynamicsCrmConnection connection)
+		protected override void AfterInsert(Entity generatedEntity)
 		{
-			connection.Service.Delete("contact", contactid);
+			SynchronizeGroupsInCrm(generatedEntity);
 		}
 
-		public void Insert(DynamicsCrmConnection connection)
+		protected override void AfterUpdate(Entity generatedEntity)
 		{
-			CrmEntity crmEntity = GetContactAsEntity(false);
-
-			contactid = connection.Service.Create(crmEntity);
-
-			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContactCrmGenerated);
-			ReadCrmGeneratedFields(contactEntity);
-
-			SynchronizeGroupsInCrm(connection, contactEntity);
+			SynchronizeGroupsInCrm(generatedEntity);
 		}
 
-		public void Update(DynamicsCrmConnection connection)
+		private void SynchronizeGroupsInCrm(Entity contactEntity)
 		{
-			CrmEntity crmEntity = GetContactAsEntity(true);
-
-			connection.Service.Update(crmEntity);
-
-			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContactCrmGenerated);
-			ReadCrmGeneratedFields(contactEntity);
-
-			SynchronizeGroupsInCrm(connection, contactEntity);
+			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
 		}
 
 		public enum StateEnum
@@ -310,14 +213,14 @@ namespace SystemInterface.Dynamics.Crm
 			Inactive = 2,
 		}
 
-		public void SetActive(DynamicsCrmConnection connection, bool isActive)
+		public void SetActive(bool isActive)
 		{
 			SetStateRequest setStateRequest = new SetStateRequest()
 			{
 				EntityMoniker = new EntityReference
 				{
-					Id = contactid,
-					LogicalName = "contact",
+					Id = Id,
+					LogicalName = entityName,
 				},
 				//State = new OptionSetValue(1),
 				//Status = new OptionSetValue(2),
@@ -334,7 +237,7 @@ namespace SystemInterface.Dynamics.Crm
 				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Inactive);
 			}
 
-			connection.Service.Execute(setStateRequest);
+			Connection.Service.Execute(setStateRequest);
 		}
 	}
 }
