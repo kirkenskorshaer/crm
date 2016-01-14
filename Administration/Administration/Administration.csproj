@@ -44,9 +44,14 @@
     <Compile Include="Conversion\Contact.cs" />
     <Compile Include="Heart.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Mapping\RandomData\AbstractRandom.cs" />
+    <Compile Include="Mapping\RandomData\RandomAccount.cs" />
+    <Compile Include="Mapping\RandomData\RandomAddress.cs" />
+    <Compile Include="Mapping\RandomData\RandomEmail.cs" />
+    <Compile Include="Mapping\RandomData\RandomGroup.cs" />
     <Compile Include="Mapping\Contact\ContactCrmMapping.cs" />
     <Compile Include="Mapping\Contact\ContactCsvMapping.cs" />
-    <Compile Include="Mapping\Contact\ContactAnonymousMapping.cs" />
+    <Compile Include="Mapping\RandomData\RandomContact.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Csv\CsvDelete.cs" />
     <Compile Include="Option\Options\Csv\CsvRead.cs" />
