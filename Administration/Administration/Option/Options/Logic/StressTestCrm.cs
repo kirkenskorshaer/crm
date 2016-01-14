@@ -29,13 +29,13 @@ namespace Administration.Option.Options.Logic
 
 		public SystemInterfaceContact CreateContact()
 		{
-			SystemInterfaceContact contact = new SystemInterfaceContact();
+			SystemInterfaceContact contact = new SystemInterfaceContact(_dynamicsCrmConnection);
 
 			ContactAnonymousMapping.GetInstance().AnonymizeContact(contact);
 
 			contact.Groups = contact.Groups.Select(group => Group.ReadOrCreate(_dynamicsCrmConnection, group.Name)).ToList();
 
-			contact.Insert(_dynamicsCrmConnection);
+			contact.Insert();
 
 			return contact;
 		}
@@ -113,7 +113,7 @@ namespace Administration.Option.Options.Logic
 
 			foreach (SystemInterfaceContact contact in contacts)
 			{
-				contact.Delete(_dynamicsCrmConnection);
+				contact.Delete();
 			}
 
 			Log.Write(Connection, "contacts deleted", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);

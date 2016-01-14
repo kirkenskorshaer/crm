@@ -53,7 +53,7 @@ namespace AdministrationTest.Option.Options.Logic
 			string firstname1 = "firstname1";
 			string firstname2 = "firstname2";
 
-			Contact crmContact = new Contact
+			Contact crmContact = new Contact(_dynamicsCrmConnection)
 			{
 				createdon = DateTime.Now,
 				firstname = firstname1,
@@ -61,16 +61,16 @@ namespace AdministrationTest.Option.Options.Logic
 				modifiedon = DateTime.Now,
 			};
 
-			crmContact.Insert(_dynamicsCrmConnection);
+			crmContact.Insert();
 			synchronizeFromCrm.Execute();
 
 			crmContact.firstname = firstname2;
-			crmContact.Update(_dynamicsCrmConnection);
+			crmContact.Update();
 			synchronizeFromCrm.Execute();
 
-			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.contactid, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
+			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.Id, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
 
-			crmContact.Delete(_dynamicsCrmConnection);
+			crmContact.Delete();
 
 			Assert.AreEqual(2, contactChanges.Count);
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname1));

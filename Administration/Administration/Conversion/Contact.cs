@@ -5,33 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using SystemInterface.Dynamics.Crm;
 
 namespace Administration.Conversion
 {
 	public static class Contact
 	{
-		public static SystemInterfaceContact Convert(DatabaseContact fromContact, Guid ExternalContactIdFrom)
+		public static SystemInterfaceContact Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact)
 		{
-			SystemInterfaceContact toContact = new SystemInterfaceContact();
-			return Convert(fromContact, ExternalContactIdFrom, toContact);
+			SystemInterfaceContact toContact = new SystemInterfaceContact(dynamicsCrmConnection);
+			return Convert(dynamicsCrmConnection, fromContact, toContact);
 		}
 
-		public static SystemInterfaceContact Convert(DatabaseContact fromContact)
+		public static SystemInterfaceContact Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact, SystemInterfaceContact toContact)
 		{
-			SystemInterfaceContact toContact = new SystemInterfaceContact();
-			return Convert(fromContact, toContact);
-		}
-
-		public static SystemInterfaceContact Convert(DatabaseContact fromContact, Guid ExternalContactIdFrom, SystemInterfaceContact toContact)
-		{
-			SystemInterfaceContact systemInterfaceContact = Convert(fromContact, toContact);
-			systemInterfaceContact.contactid = ExternalContactIdFrom;
-			return systemInterfaceContact;
-		}
-
-		public static SystemInterfaceContact Convert(DatabaseContact fromContact, SystemInterfaceContact toContact)
-		{
-			SystemInterfaceContact systemInterfaceContact = new SystemInterfaceContact()
+			SystemInterfaceContact systemInterfaceContact = new SystemInterfaceContact(dynamicsCrmConnection)
 			{
 				createdon = fromContact.CreatedOn,
 				firstname = fromContact.Firstname,
