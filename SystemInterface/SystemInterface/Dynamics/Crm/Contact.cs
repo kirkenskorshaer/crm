@@ -175,7 +175,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		private void SynchronizeGroupsInCrm(Entity contactEntity)
 		{
-			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_groupid", Groups.Select(group => group.GroupId).ToList());
+			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
 		}
 
 		public enum StateEnum

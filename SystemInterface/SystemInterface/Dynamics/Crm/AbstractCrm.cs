@@ -133,7 +133,7 @@ namespace SystemInterface.Dynamics.Crm
 			return entityReferenceCollection;
 		}
 
-		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedKeyName, List<Guid> localIds)
+		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds)
 		{
 			Relationship relationShip = new Relationship(relationshipName);
 			IEnumerable<Entity> relatedEntities = currentEntity.GetRelatedEntities(Connection.Context, relationShip);
@@ -145,9 +145,9 @@ namespace SystemInterface.Dynamics.Crm
 
 			List<Guid> remoteButNotLocal = remoteIds.Where(remoteId => localIds.Any(localId => localId == remoteId) == false).ToList();
 
-			AddRelated(relationshipName, "new_group", localButNotInCrm);
+			AddRelated(relationshipName, relatedEntityName, localButNotInCrm);
 
-			RemoveRelated(relationshipName, "new_group", remoteButNotLocal);
+			RemoveRelated(relationshipName, relatedEntityName, remoteButNotLocal);
 		}
 	}
 }
