@@ -40,8 +40,14 @@ namespace DataLayer
 
 		public void CleanDatabase()
 		{
-			List<string> CollectionsToPreserve = new List<string> { "system.indexes", typeof(MongoData.Server).Name, typeof(MongoData.SqlConnectionString).Name, typeof(MongoData.UrlLogin).Name };
-			//List<string> CollectionsToPreserve = new List<string> { "system.indexes" };
+			List<string> CollectionsToPreserve = new List<string>
+			{
+				"system.indexes",
+				typeof(MongoData.Server).Name,
+				typeof(MongoData.SqlConnectionString).Name,
+				typeof(MongoData.UrlLogin).Name,
+				typeof(MongoData.Config).Name,
+			};
 
 			ListCollectionsOptions options = new ListCollectionsOptions()
 			{
