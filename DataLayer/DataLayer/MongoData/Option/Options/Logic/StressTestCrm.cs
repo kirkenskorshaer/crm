@@ -11,13 +11,15 @@ namespace DataLayer.MongoData.Option.Options.Logic
 	{
 		public string urlLoginName { get; set; }
 		public int contactsToCreate { get; set; }
+		public int accountsToCreate { get; set; }
 
-		public static StressTestCrm Create(MongoConnection connection, string name, Schedule schedule, string urlLoginName, int contactsToCreate)
+		public static StressTestCrm Create(MongoConnection connection, string name, Schedule schedule, string urlLoginName, int contactsToCreate, int accountsToCreate)
 		{
 			StressTestCrm stressTestCrm = new StressTestCrm
 			{
 				urlLoginName = urlLoginName,
-				contactsToCreate = contactsToCreate
+				contactsToCreate = contactsToCreate,
+				accountsToCreate = accountsToCreate,
 			};
 
 			Create(connection, stressTestCrm, name, schedule);
