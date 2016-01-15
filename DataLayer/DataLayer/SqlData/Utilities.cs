@@ -1,4 +1,5 @@
-﻿using DataLayer.SqlData.Contact;
+﻿using DataLayer.SqlData.Account;
+using DataLayer.SqlData.Contact;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -124,6 +125,9 @@ namespace DataLayer.SqlData
 			ExternalContact.MaintainTable(sqlConnection);
 			Contact.Contact.MaintainTable(sqlConnection);
 			ContactChange.MaintainTable(sqlConnection);
+			ExternalAccount.MaintainTable(sqlConnection);
+			Account.Account.MaintainTable(sqlConnection);
+			AccountChange.MaintainTable(sqlConnection);
 			Group.Group.MaintainTable(sqlConnection);
 			Group.ContactGroup.MaintainTable(sqlConnection);
 			Group.ContactChangeGroup.MaintainTable(sqlConnection);
@@ -137,6 +141,11 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 			DropTable(sqlConnection, typeof(Group.Group).Name);
 			DropTable(sqlConnection, typeof(ExternalContact).Name);
+
+			DropTable(sqlConnection, typeof(AccountChange).Name);
+			DropTable(sqlConnection, typeof(Account.Account).Name);
+			DropTable(sqlConnection, typeof(ExternalAccount).Name);
+
 			DropTable(sqlConnection, typeof(ChangeProvider).Name);
 		}
 
