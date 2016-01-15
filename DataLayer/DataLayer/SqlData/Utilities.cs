@@ -131,6 +131,8 @@ namespace DataLayer.SqlData
 			Group.Group.MaintainTable(sqlConnection);
 			Group.ContactGroup.MaintainTable(sqlConnection);
 			Group.ContactChangeGroup.MaintainTable(sqlConnection);
+			Group.AccountGroup.MaintainTable(sqlConnection);
+			Group.AccountChangeGroup.MaintainTable(sqlConnection);
 		}
 
 		public static void DeleteAllTables(SqlConnection sqlConnection)
@@ -139,12 +141,15 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(ContactChange).Name);
 			DropTable(sqlConnection, typeof(Group.ContactGroup).Name);
 			DropTable(sqlConnection, typeof(Contact.Contact).Name);
-			DropTable(sqlConnection, typeof(Group.Group).Name);
 			DropTable(sqlConnection, typeof(ExternalContact).Name);
 
+			DropTable(sqlConnection, typeof(Group.AccountChangeGroup).Name);
 			DropTable(sqlConnection, typeof(AccountChange).Name);
+			DropTable(sqlConnection, typeof(Group.AccountGroup).Name);
 			DropTable(sqlConnection, typeof(Account.Account).Name);
 			DropTable(sqlConnection, typeof(ExternalAccount).Name);
+
+			DropTable(sqlConnection, typeof(Group.Group).Name);
 
 			DropTable(sqlConnection, typeof(ChangeProvider).Name);
 		}
