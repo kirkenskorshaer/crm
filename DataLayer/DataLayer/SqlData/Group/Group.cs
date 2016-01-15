@@ -91,34 +91,17 @@ namespace DataLayer.SqlData.Group
 
 		public static List<Group> ReadGroupsFromContact(SqlConnection sqlConnection, Guid contactId)
 		{
-			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.AppendLine("SELECT");
-			sqlStringBuilder.AppendLine("	id");
-			sqlStringBuilder.AppendLine("	,Name");
-			sqlStringBuilder.AppendLine("FROM");
-			sqlStringBuilder.AppendLine($"	[{typeof(Group).Name}]");
-			sqlStringBuilder.AppendLine("JOIN");
-			sqlStringBuilder.AppendLine("	ContactGroup");
-			sqlStringBuilder.AppendLine("ON");
-			sqlStringBuilder.AppendLine("	ContactGroup.GroupId = [Group].id");
-			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	ContactGroup.ContactId = @contactId");
-
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("contactId", contactId));
-
-			List<Group> groups = new List<Group>();
-
-			foreach (DataRow row in dataTable.Rows)
-			{
-				Group group = CreateFromRow(row);
-
-				groups.Add(group);
-			}
-
-			return groups;
+			return ReadGroups(sqlConnection, contactId, "ContactId", typeof(ContactGroup));
 		}
 
+
 		public static List<Group> ReadGroupsFromContactChange(SqlConnection sqlConnection, Guid contactChangeId)
+		{
+			return ReadGroups(sqlConnection, contactChangeId, "ContactChangeId", typeof(ContactChangeGroup));
+
+		}
+
+		private static List<Group> ReadGroups(SqlConnection sqlConnection, Guid foreignKeyId, string foreignKeyName, Type NNTable)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
@@ -127,14 +110,21 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine($"	[{typeof(Group).Name}]");
 			sqlStringBuilder.AppendLine("JOIN");
-			sqlStringBuilder.AppendLine("	ContactChangeGroup");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}");
 			sqlStringBuilder.AppendLine("ON");
-			sqlStringBuilder.AppendLine("	ContactChangeGroup.GroupId = [Group].id");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}.GroupId = [Group].id");
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	ContactChangeGroup.ContactChangeId = @contactChangeId");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}.{foreignKeyName} = @{foreignKeyName}");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("contactChangeId", contactChangeId));
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
 
+			List<Group> groups = ReadGroupsFromDataTable(dataTable);
+
+			return groups;
+		}
+
+		private static List<Group> ReadGroupsFromDataTable(DataTable dataTable)
+		{
 			List<Group> groups = new List<Group>();
 
 			foreach (DataRow row in dataTable.Rows)
