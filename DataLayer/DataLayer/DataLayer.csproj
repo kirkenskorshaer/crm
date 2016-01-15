@@ -102,6 +102,8 @@
     <Compile Include="SqlData\AbstractIdData.cs" />
     <Compile Include="SqlData\Account\Account.cs" />
     <Compile Include="SqlData\Account\AccountChange.cs" />
+    <Compile Include="SqlData\Account\AccountChangeContact.cs" />
+    <Compile Include="SqlData\Account\AccountContact.cs" />
     <Compile Include="SqlData\Account\ExternalAccount.cs" />
     <Compile Include="SqlData\ChangeProvider.cs" />
     <Compile Include="SqlData\Contact\ContactChange.cs" />
