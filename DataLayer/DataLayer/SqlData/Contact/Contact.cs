@@ -87,7 +87,7 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", Utilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", Utilities.DataType.INT, SqlBoolean.True);
