@@ -94,11 +94,19 @@ namespace DataLayer.SqlData.Group
 			return ReadGroups(sqlConnection, contactId, "ContactId", typeof(ContactGroup));
 		}
 
+		public static List<Group> ReadGroupsFromAccount(SqlConnection sqlConnection, Guid accountId)
+		{
+			return ReadGroups(sqlConnection, accountId, "AccountId", typeof(AccountGroup));
+		}
 
 		public static List<Group> ReadGroupsFromContactChange(SqlConnection sqlConnection, Guid contactChangeId)
 		{
 			return ReadGroups(sqlConnection, contactChangeId, "ContactChangeId", typeof(ContactChangeGroup));
+		}
 
+		public static List<Group> ReadGroupsFromAccountChange(SqlConnection sqlConnection, Guid accountChangeId)
+		{
+			return ReadGroups(sqlConnection, accountChangeId, "AccountChangeId", typeof(AccountChangeGroup));
 		}
 
 		private static List<Group> ReadGroups(SqlConnection sqlConnection, Guid foreignKeyId, string foreignKeyName, Type NNTable)
