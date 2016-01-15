@@ -1,14 +1,17 @@
 ﻿using DataLayer;
 using DataLayer.MongoData;
-using System.Collections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Administration
 {
 	public static class Log
 	{
 		public static Config.LogLevelEnum LogLevel = Config.LogLevelEnum.HeartError | Config.LogLevelEnum.OptionError;
-		private static Queue _logCache = new Queue();
+		private static List<DataLayer.MongoData.Log> _logCache = new List<DataLayer.MongoData.Log>();
 		public static int MaxLookbackCacheSize = 20;
+		public static int MaxSecondsToDiscardIdenticalLogMessages = 60 * 5;
 
 		public static void Write(MongoConnection connection, string message, Config.LogLevelEnum logLevel)
 		{
@@ -19,34 +22,45 @@ namespace Administration
 		{
 			if (LogLevel.HasFlag(logLevel))
 			{
-				if (IsRepeatedMessage(message, stackTrace) == false)
+				DataLayer.MongoData.Log log = new DataLayer.MongoData.Log()
 				{
-					DataLayer.MongoData.Log.Write(connection, message, stackTrace, logLevel);
+					CreatedTime = DateTime.Now,
+					Message = message,
+					StackTrace = stackTrace,
+					LogLevel = logLevel,
+				};
+
+				if (IsRepeatedMessage(log) == false)
+				{
+					log.Insert(connection);
 				}
 			}
 		}
 
-		private static bool IsRepeatedMessage(string message, string stackTrace)
+		private static bool IsRepeatedMessage(DataLayer.MongoData.Log log)
 		{
-			string messageAndStackTrace = message;
-			if(string.IsNullOrWhiteSpace(stackTrace) == false)
-			{
-				messageAndStackTrace += stackTrace;
-			}
-
-			if(_logCache.Contains(messageAndStackTrace))
+			if (_logCache.Any(cachedLog => IsSameAndNew(cachedLog, log)))
 			{
 				return true;
 			}
 
 			if (_logCache.Count >= MaxLookbackCacheSize)
 			{
-				_logCache.Dequeue();
+				_logCache.RemoveAt(0);
 			}
 
-			_logCache.Enqueue(messageAndStackTrace);
+			_logCache.Add(log);
 
 			return false;
-        }
+		}
+
+		private static bool IsSameAndNew(DataLayer.MongoData.Log cachedLog, DataLayer.MongoData.Log log)
+		{
+			return
+				cachedLog.LogLevel == log.LogLevel &&
+				cachedLog.Message == log.Message &&
+				cachedLog.StackTrace == log.StackTrace &&
+				cachedLog.CreatedTime > (log.CreatedTime - TimeSpan.FromSeconds(MaxSecondsToDiscardIdenticalLogMessages));
+		}
 	}
 }
