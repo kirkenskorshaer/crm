@@ -19,14 +19,14 @@ namespace Administration
 		{
 			if (LogLevel.HasFlag(logLevel))
 			{
-				if (IsRepeatedError(message, stackTrace) == false)
+				if (IsRepeatedMessage(message, stackTrace) == false)
 				{
 					DataLayer.MongoData.Log.Write(connection, message, stackTrace, logLevel);
 				}
 			}
 		}
 
-		private static bool IsRepeatedError(string message, string stackTrace)
+		private static bool IsRepeatedMessage(string message, string stackTrace)
 		{
 			string messageAndStackTrace = message;
 			if(string.IsNullOrWhiteSpace(stackTrace) == false)
