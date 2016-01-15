@@ -100,6 +100,9 @@
     <Compile Include="SqlConnectionHolder.cs" />
     <Compile Include="SqlData\AbstractData.cs" />
     <Compile Include="SqlData\AbstractIdData.cs" />
+    <Compile Include="SqlData\Account\Account.cs" />
+    <Compile Include="SqlData\Account\AccountChange.cs" />
+    <Compile Include="SqlData\Account\ExternalAccount.cs" />
     <Compile Include="SqlData\ChangeProvider.cs" />
     <Compile Include="SqlData\Contact\ContactChange.cs" />
     <Compile Include="SqlData\Contact\ExternalContact.cs" />
