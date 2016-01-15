@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=2.0.1.27, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\Administration\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HeartTest.cs" />
+    <Compile Include="LogTest.cs" />
     <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
     <Compile Include="Option\Options\Logic\SquashTest.cs" />
     <Compile Include="Option\Options\Logic\StressTestCrmTest.cs" />
