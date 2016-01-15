@@ -25,8 +25,13 @@ namespace DataLayer.MongoData
 				LogLevel = logLevel,
 			};
 
+			log.Insert(connection);
+		}
+
+		public void Insert(MongoConnection connection)
+		{
 			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(typeof(Log).Name);
-			Task insertTask = logs.InsertOneAsync(log);
+			Task insertTask = logs.InsertOneAsync(this);
 			insertTask.Wait();
 		}
 
