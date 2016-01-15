@@ -31,7 +31,7 @@ namespace Administration
 		public void Run()
 		{
 			_startTime = DateTime.Now;
-			Log.Write(_connection, $"starting at {_startTime.ToString("yyyyMMdd HH:mm:ss")}", Config.LogLevelEnum.HeartMessage);
+			Log.Write(_connection, $"starting", Config.LogLevelEnum.HeartMessage);
 
 			while (_run)
 			{
@@ -68,7 +68,7 @@ namespace Administration
 
 		public void HeartBeat()
 		{
-			Log.Write(_connection, $"heartbeat at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}", Config.LogLevelEnum.HeartMessage);
+			Log.Write(_connection, "heartbeat", Config.LogLevelEnum.HeartMessage);
 			List<OptionBase> options = _optionFinder.Find();
 
 			if (options.Any() == false)
