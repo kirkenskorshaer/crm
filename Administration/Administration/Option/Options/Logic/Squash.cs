@@ -121,7 +121,13 @@ namespace Administration.Option.Options.Logic
 				object newValue = latestChange.Value;
 				object existingValue = ReflectionHelper.GetValue(contact, columnName);
 
-				if (newValue.Equals(existingValue) == false)
+				if
+				(
+					(newValue == null && existingValue != null) ||
+					(newValue != null && existingValue == null) ||
+					(newValue != null && existingValue != null && newValue.Equals(existingValue) == false)
+
+				)
 				{
 					ReflectionHelper.SetValue(contact, columnName, newValue);
 					contactChanged = true;
@@ -155,7 +161,12 @@ namespace Administration.Option.Options.Logic
 				object lastValue = ReflectionHelper.GetValue(contactChangeLast, columnName);
 				object currentValue = ReflectionHelper.GetValue(contactChange, columnName);
 
-				if (lastValue.Equals(currentValue) == false)
+				if
+				(
+					(lastValue == null && currentValue != null) ||
+					(lastValue != null && currentValue == null) ||
+					(lastValue != null && currentValue != null && lastValue.Equals(currentValue) == false)
+				)
 				{
 					ModifiedField modifiedField = new ModifiedField()
 					{
