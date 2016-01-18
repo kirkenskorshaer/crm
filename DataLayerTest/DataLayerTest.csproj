@@ -61,6 +61,10 @@
     <Compile Include="MongoDataTest\StatisticsTest\StringStatisticsTest\StringIntStatisticsTest.cs" />
     <Compile Include="MongoDataTest\UrlLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlDataTest\AccountTest\AccountChangeIndsamlerTest.cs" />
+    <Compile Include="SqlDataTest\AccountTest\AccountChangeContactTest.cs" />
+    <Compile Include="SqlDataTest\AccountTest\AccountIndsamlerTest.cs" />
+    <Compile Include="SqlDataTest\AccountTest\AccountContactTest.cs" />
     <Compile Include="SqlDataTest\ChangeProviderTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountChangeTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountTest.cs" />
