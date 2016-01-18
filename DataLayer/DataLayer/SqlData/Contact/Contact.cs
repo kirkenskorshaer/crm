@@ -201,7 +201,7 @@ namespace DataLayer.SqlData.Contact
 
 		private static void AddFieldsToStringBuilder(StringBuilder sqlStringBuilder)
 		{
-			_fields.ForEach(field => sqlStringBuilder.AppendLine($"	,{field}"));
+			_fields.ForEach(field => sqlStringBuilder.AppendLine($"	,[Contact].{field}"));
 		}
 
 		public static Contact ReadNextById(SqlConnection sqlConnection, Guid id)
