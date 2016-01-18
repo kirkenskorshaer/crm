@@ -6,7 +6,9 @@ using System.Linq;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseSquash = DataLayer.MongoData.Option.Options.Logic.Squash;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using Utilities;
 using Administration.Option.Options.Logic.SquashData;
 
@@ -30,6 +32,14 @@ namespace Administration.Option.Options.Logic
 
 		protected override bool ExecuteOption()
 		{
+			bool contactSquashed = SquashContact();
+			bool accountSquashed = SquashAccount();
+
+			return contactSquashed && accountSquashed;
+		}
+
+		private bool SquashContact()
+		{
 			DataLayer.MongoData.Progress progress;
 			DatabaseContact contact = GetContactToSquash(out progress);
 
@@ -43,6 +53,27 @@ namespace Administration.Option.Options.Logic
 			if (contactChanged == true)
 			{
 				contact.Update(SqlConnection);
+				progress.UpdateAndSetLastProgressDateToNow(Connection);
+			}
+
+			return true;
+		}
+
+		private bool SquashAccount()
+		{
+			DataLayer.MongoData.Progress progress;
+			DatabaseAccount account = GetAccountToSquash(out progress);
+
+			if (account == null)
+			{
+				return false;
+			}
+
+			bool accountChanged = SquashAccount(account);
+
+			if (accountChanged == true)
+			{
+				account.Update(SqlConnection);
 				progress.UpdateAndSetLastProgressDateToNow(Connection);
 			}
 
@@ -67,41 +98,70 @@ namespace Administration.Option.Options.Logic
 
 			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseContactChange), exclusionList);
 
-			Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId = GetChangesByProviderId(contactChanges);
+			Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId = GetContactChangesByProviderId(contactChanges);
 
 			List<ModifiedField> changedFields = new List<ModifiedField>();
 
-			CollectModifiedFieldsForAllProviders(contactChanges, columnNames, changesByProviderId, changedFields);
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields, databaseContactChange => databaseContactChange.ModifiedOn);
 
-			bool contactChanged = UpdateContactFieldsIfNeeded(contact, columnNames, changedFields);
+			bool contactChanged = UpdateFieldsIfNeeded(contact, columnNames, changedFields);
 
 			return contactChanged;
 		}
 
-		private static void CollectModifiedFieldsForAllProviders(List<DatabaseContactChange> contactChanges, List<string> columnNames, Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId, List<ModifiedField> modifiedFields)
+		public bool SquashAccount(DatabaseAccount account)
+		{
+			List<DatabaseAccountChange> accountChanges = DatabaseAccountChange.Read(SqlConnection, account.Id, DatabaseAccountChange.IdType.AccountId);
+
+			accountChanges = accountChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
+
+			List<string> exclusionList = new List<string>()
+			{
+				"Id",
+				"ModifiedOn",
+				"CreatedOn",
+				"ExternalAccountId",
+				"ChangeProviderId",
+				"AccountId"
+			};
+
+			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccountChange), exclusionList);
+
+			Dictionary<Guid, List<DatabaseAccountChange>> changesByProviderId = GetAccountChangesByProviderId(accountChanges);
+
+			List<ModifiedField> changedFields = new List<ModifiedField>();
+
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields, databaseContactChange => databaseContactChange.ModifiedOn);
+
+			bool contactChanged = UpdateFieldsIfNeeded(account, columnNames, changedFields);
+
+			return contactChanged;
+		}
+
+		private static void CollectModifiedFieldsForAllProviders<DatabaseType>(List<string> columnNames, Dictionary<Guid, List<DatabaseType>> changesByProviderId, List<ModifiedField> modifiedFields, Func<DatabaseType, DateTime> GetModifiedOn)
 		{
 			foreach (Guid providerId in changesByProviderId.Keys)
 			{
-				DatabaseContactChange contactChangeLast = null;
-				foreach (DatabaseContactChange contactChange in changesByProviderId[providerId])
+				DatabaseType databaseChangeLast = default(DatabaseType);
+				foreach (DatabaseType databaseChange in changesByProviderId[providerId])
 				{
-					DateTime modifiedOn = contactChange.ModifiedOn;
+					DateTime modifiedOn = GetModifiedOn(databaseChange);
 
-					if (contactChangeLast == null)
+					if (databaseChangeLast == null)
 					{
-						CollectAllFieldsAsModifiedField(columnNames, modifiedFields, contactChange, modifiedOn);
+						CollectAllFieldsAsModifiedField(columnNames, modifiedFields, databaseChange, modifiedOn);
 					}
 					else
 					{
-						CollectActualChangesFromContactChanges(columnNames, modifiedFields, contactChangeLast, contactChange, modifiedOn);
+						CollectActualChangesFromDatabaseChanges(columnNames, modifiedFields, databaseChangeLast, databaseChange, modifiedOn);
 					}
 
-					contactChangeLast = contactChange;
+					databaseChangeLast = databaseChange;
 				}
 			}
 		}
 
-		private static bool UpdateContactFieldsIfNeeded(DatabaseContact contact, List<string> columnNames, List<ModifiedField> changedFields)
+		private static bool UpdateFieldsIfNeeded(object databaseObject, List<string> columnNames, List<ModifiedField> changedFields)
 		{
 			bool contactChanged = false;
 
@@ -119,7 +179,7 @@ namespace Administration.Option.Options.Logic
 				ModifiedField latestChange = changesToCurrentColumn.First();
 
 				object newValue = latestChange.Value;
-				object existingValue = ReflectionHelper.GetValue(contact, columnName);
+				object existingValue = ReflectionHelper.GetValue(databaseObject, columnName);
 
 				if
 				(
@@ -129,7 +189,7 @@ namespace Administration.Option.Options.Logic
 
 				)
 				{
-					ReflectionHelper.SetValue(contact, columnName, newValue);
+					ReflectionHelper.SetValue(databaseObject, columnName, newValue);
 					contactChanged = true;
 				}
 			}
@@ -137,11 +197,11 @@ namespace Administration.Option.Options.Logic
 			return contactChanged;
 		}
 
-		private static void CollectAllFieldsAsModifiedField(List<string> columnNames, List<ModifiedField> modifiedFields, DatabaseContactChange contactChange, DateTime modifiedOn)
+		private static void CollectAllFieldsAsModifiedField(List<string> columnNames, List<ModifiedField> modifiedFields, object databaseChange, DateTime modifiedOn)
 		{
 			foreach (string columnName in columnNames)
 			{
-				object value = ReflectionHelper.GetValue(contactChange, columnName);
+				object value = ReflectionHelper.GetValue(databaseChange, columnName);
 
 				ModifiedField modifiedField = new ModifiedField()
 				{
@@ -154,12 +214,12 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private static void CollectActualChangesFromContactChanges(List<string> columnNames, List<ModifiedField> modifiedFields, DatabaseContactChange contactChangeLast, DatabaseContactChange contactChange, DateTime modifiedOn)
+		private static void CollectActualChangesFromDatabaseChanges(List<string> columnNames, List<ModifiedField> modifiedFields, object databaseChangeLast, object databaseChange, DateTime modifiedOn)
 		{
 			foreach (string columnName in columnNames)
 			{
-				object lastValue = ReflectionHelper.GetValue(contactChangeLast, columnName);
-				object currentValue = ReflectionHelper.GetValue(contactChange, columnName);
+				object lastValue = ReflectionHelper.GetValue(databaseChangeLast, columnName);
+				object currentValue = ReflectionHelper.GetValue(databaseChange, columnName);
 
 				if
 				(
@@ -180,7 +240,7 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private static Dictionary<Guid, List<DatabaseContactChange>> GetChangesByProviderId(List<DatabaseContactChange> contactChanges)
+		private static Dictionary<Guid, List<DatabaseContactChange>> GetContactChangesByProviderId(List<DatabaseContactChange> contactChanges)
 		{
 			Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId = new Dictionary<Guid, List<DatabaseContactChange>>();
 
@@ -194,6 +254,25 @@ namespace Administration.Option.Options.Logic
 				}
 
 				changesByProviderId[providerId].Add(contactChange);
+			}
+
+			return changesByProviderId;
+		}
+
+		private static Dictionary<Guid, List<DatabaseAccountChange>> GetAccountChangesByProviderId(List<DatabaseAccountChange> accountChanges)
+		{
+			Dictionary<Guid, List<DatabaseAccountChange>> changesByProviderId = new Dictionary<Guid, List<DatabaseAccountChange>>();
+
+			foreach (DatabaseAccountChange accountChange in accountChanges)
+			{
+				Guid providerId = accountChange.ChangeProviderId;
+
+				if (changesByProviderId.ContainsKey(providerId) == false)
+				{
+					changesByProviderId.Add(providerId, new List<DatabaseAccountChange>());
+				}
+
+				changesByProviderId[providerId].Add(accountChange);
 			}
 
 			return changesByProviderId;
@@ -213,6 +292,22 @@ namespace Administration.Option.Options.Logic
 			DatabaseContact contact = DatabaseContact.Read(SqlConnection, contactId);
 
 			return contact;
+		}
+
+		private DatabaseAccount GetAccountToSquash(out DataLayer.MongoData.Progress progress)
+		{
+			progress = DataLayer.MongoData.Progress.ReadNext(Connection, MaintainProgress.ProgressAccount);
+
+			if (progress == null)
+			{
+				return null;
+			}
+
+			Guid accountId = progress.TargetId;
+
+			DatabaseAccount account = DatabaseAccount.Read(SqlConnection, accountId);
+
+			return account;
 		}
 	}
 }
