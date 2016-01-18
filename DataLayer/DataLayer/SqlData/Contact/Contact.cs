@@ -1,4 +1,5 @@
 ﻿using DataLayer.MongoData;
+using DataLayer.SqlData.Group;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -340,6 +341,67 @@ namespace DataLayer.SqlData.Contact
 			Contact contact = CreateFromRow(row);
 
 			return contact;
+		}
+
+		public static List<Contact> ReadContactsFromAccountContact(SqlConnection sqlConnection, Guid accountId)
+		{
+			return ReadContacts(sqlConnection, accountId, "AccountId", typeof(AccountContact));
+		}
+
+		public static List<Contact> ReadContactsFromAccountChangeContact(SqlConnection sqlConnection, Guid accountChangeId)
+		{
+			return ReadContacts(sqlConnection, accountChangeId, "AccountChangeId", typeof(AccountChangeContact));
+		}
+
+		public static List<Contact> ReadContactsFromContactGroup(SqlConnection sqlConnection, Guid groupId)
+		{
+			return ReadContacts(sqlConnection, groupId, "GroupId", typeof(ContactGroup));
+		}
+
+		public static List<Contact> ReadContactsFromAccountIndsamler(SqlConnection sqlConnection, Guid accountId)
+		{
+			return ReadContacts(sqlConnection, accountId, "AccountId", typeof(AccountIndsamler));
+		}
+
+		public static List<Contact> ReadContactsFromAccountChangeIndsamler(SqlConnection sqlConnection, Guid accountChangeId)
+		{
+			return ReadContacts(sqlConnection, accountChangeId, "AccountChangeId", typeof(AccountChangeIndsamler));
+		}
+
+		private static List<Contact> ReadContacts(SqlConnection sqlConnection, Guid foreignKeyId, string foreignKeyName, Type NNTable)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			AddFieldsToStringBuilder(sqlStringBuilder);
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine($"	[{typeof(Contact).Name}]");
+			sqlStringBuilder.AppendLine("JOIN");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}");
+			sqlStringBuilder.AppendLine("ON");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}.ContactId = [{typeof(Contact).Name}].id");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{NNTable.Name}.{foreignKeyName} = @{foreignKeyName}");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
+
+			List<Contact> contacts = ReadContactsFromDataTable(dataTable);
+
+			return contacts;
+		}
+
+		private static List<Contact> ReadContactsFromDataTable(DataTable dataTable)
+		{
+			List<Contact> contacts = new List<Contact>();
+
+			foreach (DataRow row in dataTable.Rows)
+			{
+				Contact contact = CreateFromRow(row);
+
+				contacts.Add(contact);
+			}
+
+			return contacts;
 		}
 
 		public static List<Contact> Read(SqlConnection sqlConnection, string firstName)
