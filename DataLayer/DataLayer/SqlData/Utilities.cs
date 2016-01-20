@@ -36,7 +36,7 @@ namespace DataLayer.SqlData
 			{
 				object value = parameters[parameterIndex].Value;
 
-				if(value == null)
+				if (value == null)
 				{
 					value = DBNull.Value;
 				}
@@ -317,6 +317,32 @@ namespace DataLayer.SqlData
 			}
 
 			return ReadNextById(sqlConnection, Guid.Empty, columns, CreateFromRow);
+		}
+
+		internal static List<Guid> ReadNNTable(SqlConnection sqlConnection, Type NNTableDataType, string NNTableSearchId, string NNTableRelationId, Guid searchIdValue)
+		{
+			string tableName = NNTableDataType.Name;
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine($"	[{tableName}].{NNTableRelationId}");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine($"	[{tableName}]");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{tableName}.{NNTableSearchId} = @{NNTableSearchId}");
+
+			DataTable dataTable = ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(NNTableSearchId, searchIdValue));
+
+			List<Guid> relatedIds = new List<Guid>();
+
+			foreach (DataRow row in dataTable.Rows)
+			{
+				Guid id = (Guid)row[NNTableRelationId];
+
+				relatedIds.Add(id);
+			}
+
+			return relatedIds;
 		}
 	}
 }

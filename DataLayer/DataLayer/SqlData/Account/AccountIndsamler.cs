@@ -5,17 +5,17 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace DataLayer.SqlData.Contact
+namespace DataLayer.SqlData.Account
 {
 	public class AccountIndsamler : AbstractData
 	{
-		private Guid _accountId;
-		private Guid _contactId;
+		public Guid AccountId { get; private set; }
+		public Guid ContactId { get; private set; }
 
 		public AccountIndsamler(Guid AccountId, Guid ContactId)
 		{
-			_accountId = AccountId;
-			_contactId = ContactId;
+			this.AccountId = AccountId;
+			this.ContactId = ContactId;
 		}
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -29,8 +29,8 @@ namespace DataLayer.SqlData.Contact
 				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountId", "ContactId");
 			}
 
-			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account.Account).Name, "id");
-			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact.Contact).Name, "id");
 		}
 
 		public void Insert(SqlConnection sqlConnection)
@@ -38,8 +38,8 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddInsertParameterIfNotNull(_accountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(_contactId, "ContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(AccountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(ContactId, "ContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -66,8 +66,8 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	ContactId = @contactId");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
-				new KeyValuePair<string, object>("AccountId", _accountId),
-				new KeyValuePair<string, object>("contactId", _contactId));
+				new KeyValuePair<string, object>("AccountId", AccountId),
+				new KeyValuePair<string, object>("contactId", ContactId));
 		}
 	}
 }

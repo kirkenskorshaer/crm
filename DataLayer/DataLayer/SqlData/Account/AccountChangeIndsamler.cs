@@ -5,17 +5,17 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace DataLayer.SqlData.Contact
+namespace DataLayer.SqlData.Account
 {
 	public class AccountChangeIndsamler : AbstractData
 	{
-		private Guid _accountChangeId;
-		private Guid _contactId;
+		public Guid AccountChangeId { get; private set; }
+		public Guid ContactId { get; private set; }
 
-		public AccountChangeIndsamler(Guid AccountChangeId, Guid ContactId)
+		public AccountChangeIndsamler(Guid accountChangeId, Guid contactId)
 		{
-			_accountChangeId = AccountChangeId;
-			_contactId = ContactId;
+			AccountChangeId = accountChangeId;
+			ContactId = contactId;
 		}
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -29,8 +29,8 @@ namespace DataLayer.SqlData.Contact
 				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountChangeId", "ContactId");
 			}
 
-			CreateKeyIfMissing(sqlConnection, tableName, "AccountChangeId", typeof(Account.AccountChange).Name, "id");
-			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "AccountChangeId", typeof(AccountChange).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact.Contact).Name, "id");
 		}
 
 		public void Insert(SqlConnection sqlConnection)
@@ -38,8 +38,8 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddInsertParameterIfNotNull(_accountChangeId, "AccountChangeId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(_contactId, "ContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(AccountChangeId, "AccountChangeId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(ContactId, "ContactId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -66,8 +66,45 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	ContactId = @contactId");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
-				new KeyValuePair<string, object>("accountChangeId", _accountChangeId),
-				new KeyValuePair<string, object>("contactId", _contactId));
+				new KeyValuePair<string, object>("accountChangeId", AccountChangeId),
+				new KeyValuePair<string, object>("contactId", ContactId));
+		}
+
+		public static List<AccountChangeIndsamler> ReadFromAccountChangeId(SqlConnection sqlConnection, Guid accountChangeId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeIndsamler), "AccountChangeId", "ContactId", accountChangeId);
+
+			List<AccountChangeIndsamler> accountChangeIndsamlere = relatedIds.Select(contactId => new AccountChangeIndsamler(accountChangeId, contactId)).ToList();
+
+			return accountChangeIndsamlere;
+		}
+
+		public static List<AccountChangeIndsamler> ReadFromContactId(SqlConnection sqlConnection, Guid contactId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeIndsamler), "ContactId", "AccountChangeId", contactId);
+
+			List<AccountChangeIndsamler> accountChangeIndsamlere = relatedIds.Select(accountChangeId => new AccountChangeIndsamler(accountChangeId, contactId)).ToList();
+
+			return accountChangeIndsamlere;
+		}
+
+		public override bool Equals(object obj)
+		{
+			AccountChangeIndsamler objAsAccountChangeIndsamler = obj as AccountChangeIndsamler;
+
+			if (objAsAccountChangeIndsamler == null)
+			{
+				return false;
+			}
+
+			return
+				AccountChangeId == objAsAccountChangeIndsamler.AccountChangeId &&
+				ContactId == objAsAccountChangeIndsamler.ContactId;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 	}
 }

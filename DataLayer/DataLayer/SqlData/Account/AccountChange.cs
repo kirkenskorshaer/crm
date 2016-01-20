@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace DataLayer.SqlData.Account
 {
-	public class AccountChange : AbstractIdData
+	public class AccountChange : AbstractIdData, IModifiedIdData
 	{
 		public DateTime CreatedOn;
-		public DateTime ModifiedOn;
+		public DateTime ModifiedOn { get; set; }
 
 		public string name;
 

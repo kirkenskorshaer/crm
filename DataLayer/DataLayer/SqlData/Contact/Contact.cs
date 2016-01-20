@@ -1,4 +1,5 @@
 ﻿using DataLayer.MongoData;
+using DataLayer.SqlData.Account;
 using DataLayer.SqlData.Group;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ using System.Text;
 
 namespace DataLayer.SqlData.Contact
 {
-	public class Contact : AbstractIdData
+	public class Contact : AbstractIdData, IModifiedIdData
 	{
 		public DateTime CreatedOn;
-		public DateTime ModifiedOn;
+		public DateTime ModifiedOn { get; set; }
 		public string Firstname;
 		public string Lastname;
 
@@ -430,5 +431,20 @@ namespace DataLayer.SqlData.Contact
 
 			return contacts;
 		}
-	}
+
+		public void SynchronizeGroups(SqlConnection sqlConnection, List<Guid> groupIds)
+		{
+			List<ContactGroup> contactGroups = ContactGroup.ReadFromContactId(sqlConnection, Id);
+
+			foreach(ContactGroup contactGroup in contactGroups)
+			{
+				if(groupIds.Contains(contactGroup.GroupId) == false)
+				{
+					contactGroup.Delete(sqlConnection);
+                }
+			}
+
+			foreach(Guid groupId in groupIds)
+		}
+    }
 }

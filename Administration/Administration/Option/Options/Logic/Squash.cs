@@ -6,11 +6,17 @@ using System.Linq;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseSquash = DataLayer.MongoData.Option.Options.Logic.Squash;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
+using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
+using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
+using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
+using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using Utilities;
 using Administration.Option.Options.Logic.SquashData;
+using DataLayer.SqlData;
 
 namespace Administration.Option.Options.Logic
 {
@@ -82,7 +88,7 @@ namespace Administration.Option.Options.Logic
 
 		public bool SquashContact(DatabaseContact contact)
 		{
-			List<DatabaseContactChange> contactChanges = DatabaseContactChange.Read(SqlConnection, contact.Id, DatabaseContactChange.IdType.ContactId);
+			List<IModifiedIdData> contactChanges = DatabaseContactChange.Read(SqlConnection, contact.Id, DatabaseContactChange.IdType.ContactId).Select(data => (IModifiedIdData)data).ToList();
 
 			contactChanges = contactChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
 
@@ -98,20 +104,30 @@ namespace Administration.Option.Options.Logic
 
 			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseContactChange), exclusionList);
 
-			Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId = GetContactChangesByProviderId(contactChanges);
-
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = GetContactChangesByProviderId(contactChanges);
 			List<ModifiedField> changedFields = new List<ModifiedField>();
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
 
-			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields, databaseContactChange => databaseContactChange.ModifiedOn);
+			List<ModifiedReference> changedReferences = new List<ModifiedReference>();
 
-			bool contactChanged = UpdateFieldsIfNeeded(contact, columnNames, changedFields);
+			Dictionary<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference = new Dictionary<Type, Func<Guid, List<Guid>>>() { { typeof(DatabaseContactChangeGroup), GroupFromContactChangeId }, };
+			Dictionary<Type, ReferenceGetAndSet> referenceGetAndSets = new Dictionary<Type, ReferenceGetAndSet>()
+			{
+				{ typeof(DatabaseContactChangeGroup), new ReferenceGetAndSet() {GetReferences = GroupFromContactId, SetReferences = SetGroupOnContactGroup} },
+			};
 
-			return contactChanged;
+			CollectModifiedReferencesForAllProviders(changesByProviderId, changedReferences, referenceTypeAndGetReference);
+
+			bool contactFieldChanged = UpdateFieldsIfNeeded(contact, columnNames, changedFields);
+
+			bool contactReferenceChanged = UpdateReferencesIfNeeded(contact, referenceGetAndSets, changedReferences);
+
+			return contactFieldChanged || contactReferenceChanged;
 		}
 
 		public bool SquashAccount(DatabaseAccount account)
 		{
-			List<DatabaseAccountChange> accountChanges = DatabaseAccountChange.Read(SqlConnection, account.Id, DatabaseAccountChange.IdType.AccountId);
+			List<IModifiedIdData> accountChanges = DatabaseAccountChange.Read(SqlConnection, account.Id, DatabaseAccountChange.IdType.AccountId).Select(data => (IModifiedIdData)data).ToList();
 
 			accountChanges = accountChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
 
@@ -127,25 +143,64 @@ namespace Administration.Option.Options.Logic
 
 			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccountChange), exclusionList);
 
-			Dictionary<Guid, List<DatabaseAccountChange>> changesByProviderId = GetAccountChangesByProviderId(accountChanges);
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = GetAccountChangesByProviderId(accountChanges);
 
 			List<ModifiedField> changedFields = new List<ModifiedField>();
-
-			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields, databaseContactChange => databaseContactChange.ModifiedOn);
-
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
 			bool contactChanged = UpdateFieldsIfNeeded(account, columnNames, changedFields);
+
+			List<ModifiedReference> changedReferences = new List<ModifiedReference>();
+
+			Dictionary<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference = new Dictionary<Type, Func<Guid, List<Guid>>>()
+			{
+				{ typeof(DatabaseAccountChangeGroup), GroupFromAccountChangeId },
+				{ typeof(DatabaseAccountChangeContact), ContactFromAccountChangeId },
+				{ typeof(DatabaseAccountChangeIndsamler), IndsamlerFromAccountChangeId },
+			};
+
+			CollectModifiedReferencesForAllProviders(changesByProviderId, changedReferences, referenceTypeAndGetReference);
 
 			return contactChanged;
 		}
 
-		private static void CollectModifiedFieldsForAllProviders<DatabaseType>(List<string> columnNames, Dictionary<Guid, List<DatabaseType>> changesByProviderId, List<ModifiedField> modifiedFields, Func<DatabaseType, DateTime> GetModifiedOn)
+		private List<Guid> GroupFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeGroup.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.GroupId).ToList();
+		}
+
+		private List<Guid> ContactFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeContact.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.ContactId).ToList();
+		}
+
+		private List<Guid> IndsamlerFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeIndsamler.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.ContactId).ToList();
+		}
+
+		private List<Guid> GroupFromContactChangeId(Guid id)
+		{
+			return DatabaseContactChangeGroup.ReadFromContactChangeId(SqlConnection, id).Select(contactChangeGroup => contactChangeGroup.GroupId).ToList();
+		}
+
+		private List<Guid> GroupFromContactId(Guid id)
+		{
+			return DatabaseContactGroup.ReadFromContactId(SqlConnection, id).Select(contactGroup => contactGroup.GroupId).ToList();
+		}
+
+		private void SetGroupOnContactGroup(List<Guid> groupIds)
+		{
+			DatabaseContact.SynchronizeGroups(SqlConnection, groupIds);
+		}
+
+		private void CollectModifiedFieldsForAllProviders(List<string> columnNames, Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedField> modifiedFields)
 		{
 			foreach (Guid providerId in changesByProviderId.Keys)
 			{
-				DatabaseType databaseChangeLast = default(DatabaseType);
-				foreach (DatabaseType databaseChange in changesByProviderId[providerId])
+				IModifiedIdData databaseChangeLast = default(IModifiedIdData);
+				foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
 				{
-					DateTime modifiedOn = GetModifiedOn(databaseChange);
+					DateTime modifiedOn = databaseChange.ModifiedOn;
 
 					if (databaseChangeLast == null)
 					{
@@ -159,6 +214,84 @@ namespace Administration.Option.Options.Logic
 					databaseChangeLast = databaseChange;
 				}
 			}
+		}
+
+		private void CollectModifiedReferencesForAllProviders(Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedReference> modifiedReferences, Dictionary<Type, Func<Guid, List<Guid>>> ReferenceTypeAndGetReferenceCollection)
+		{
+			foreach (Guid providerId in changesByProviderId.Keys)
+			{
+				IModifiedIdData databaseChangeLast = default(IModifiedIdData);
+				foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
+				{
+					DateTime modifiedOn = databaseChange.ModifiedOn;
+					List<Guid> databaseLastReferences = null;
+
+					foreach (KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference in ReferenceTypeAndGetReferenceCollection)
+					{
+						if (databaseChangeLast == null)
+						{
+							CollectAllReferencesAsModifiedReference(modifiedReferences, modifiedOn, databaseChange.Id, referenceTypeAndGetReference);
+						}
+						else
+						{
+							databaseLastReferences = CollectActualReferencesChangesAsModifiedReference(modifiedReferences, modifiedOn, databaseChange.Id, databaseLastReferences, referenceTypeAndGetReference);
+						}
+					}
+					databaseChangeLast = databaseChange;
+				}
+			}
+		}
+
+		private void CollectAllReferencesAsModifiedReference(List<ModifiedReference> modifiedReferences, DateTime modifiedOn, Guid databaseId, KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference)
+		{
+			ModifiedReference modifiedReference = new ModifiedReference()
+			{
+				RelationType = referenceTypeAndGetReference.Key,
+				RelationIds = referenceTypeAndGetReference.Value(databaseId),
+				ModifiedOn = modifiedOn,
+			};
+
+			modifiedReferences.Add(modifiedReference);
+		}
+
+		private List<Guid> CollectActualReferencesChangesAsModifiedReference(List<ModifiedReference> modifiedReferences, DateTime modifiedOn, Guid databaseId, List<Guid> lastValue, KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference)
+		{
+			List<Guid> currentValue = referenceTypeAndGetReference.Value(databaseId).ToList();
+
+			if (GuidListEquals(currentValue, lastValue) == false)
+			{
+				ModifiedReference modifiedReference = new ModifiedReference()
+				{
+					ModifiedOn = modifiedOn,
+					RelationType = referenceTypeAndGetReference.Key,
+					RelationIds = currentValue,
+				};
+
+				modifiedReferences.Add(modifiedReference);
+			}
+
+			return currentValue;
+		}
+
+		private bool GuidListEquals(List<Guid> list1, List<Guid> list2)
+		{
+			if (list1.Count != list2.Count)
+			{
+				return false;
+			}
+
+			list1.Sort();
+			list2.Sort();
+
+			for (int idIndex = 0; idIndex < list1.Count; idIndex++)
+			{
+				if (list1[idIndex] != list2[idIndex])
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		private static bool UpdateFieldsIfNeeded(object databaseObject, List<string> columnNames, List<ModifiedField> changedFields)
@@ -194,6 +327,32 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
+			return contactChanged;
+		}
+
+		private bool UpdateReferencesIfNeeded(IModifiedIdData databaseObject, Dictionary<Type, ReferenceGetAndSet> referenceGetAndSetDictionary, List<ModifiedReference> changedReferences)
+		{
+			bool contactChanged = false;
+
+			List<Type> referenceTypes = changedReferences.Select(reference => reference.RelationType).ToList();
+
+			foreach (Type referenceType in referenceTypes)
+			{
+				List<ModifiedReference> modifedReferences = changedReferences.Where(modifiedReference => modifiedReference.RelationType == referenceType).ToList();
+
+				modifedReferences = modifedReferences.OrderByDescending(change => change.ModifiedOn).ToList();
+
+				ModifiedReference latestChange = modifedReferences.First();
+
+				List<Guid> newValue = latestChange.RelationIds;
+				List<Guid> existingValue = referenceGetAndSetDictionary[referenceType].GetReferences(databaseObject.Id);
+
+				if (GuidListEquals(newValue, existingValue) == false)
+				{
+					referenceGetAndSetDictionary[referenceType].SetReferences(newValue);
+					contactChanged = true;
+				}
+			}
 			return contactChanged;
 		}
 
@@ -240,9 +399,9 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private static Dictionary<Guid, List<DatabaseContactChange>> GetContactChangesByProviderId(List<DatabaseContactChange> contactChanges)
+		private static Dictionary<Guid, List<IModifiedIdData>> GetContactChangesByProviderId(List<IModifiedIdData> contactChanges)
 		{
-			Dictionary<Guid, List<DatabaseContactChange>> changesByProviderId = new Dictionary<Guid, List<DatabaseContactChange>>();
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = new Dictionary<Guid, List<IModifiedIdData>>();
 
 			foreach (DatabaseContactChange contactChange in contactChanges)
 			{
@@ -250,7 +409,7 @@ namespace Administration.Option.Options.Logic
 
 				if (changesByProviderId.ContainsKey(providerId) == false)
 				{
-					changesByProviderId.Add(providerId, new List<DatabaseContactChange>());
+					changesByProviderId.Add(providerId, new List<IModifiedIdData>());
 				}
 
 				changesByProviderId[providerId].Add(contactChange);
@@ -259,9 +418,9 @@ namespace Administration.Option.Options.Logic
 			return changesByProviderId;
 		}
 
-		private static Dictionary<Guid, List<DatabaseAccountChange>> GetAccountChangesByProviderId(List<DatabaseAccountChange> accountChanges)
+		private static Dictionary<Guid, List<IModifiedIdData>> GetAccountChangesByProviderId(List<IModifiedIdData> accountChanges)
 		{
-			Dictionary<Guid, List<DatabaseAccountChange>> changesByProviderId = new Dictionary<Guid, List<DatabaseAccountChange>>();
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = new Dictionary<Guid, List<IModifiedIdData>>();
 
 			foreach (DatabaseAccountChange accountChange in accountChanges)
 			{
@@ -269,7 +428,7 @@ namespace Administration.Option.Options.Logic
 
 				if (changesByProviderId.ContainsKey(providerId) == false)
 				{
-					changesByProviderId.Add(providerId, new List<DatabaseAccountChange>());
+					changesByProviderId.Add(providerId, new List<IModifiedIdData>());
 				}
 
 				changesByProviderId[providerId].Add(accountChange);

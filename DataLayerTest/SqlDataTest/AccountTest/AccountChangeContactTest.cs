@@ -33,51 +33,68 @@ namespace DataLayerTest.SqlDataTest.ChangeContactTest
 		[Test]
 		public void Insert()
 		{
-			Account accountInserted = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
-			accountInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
 
-			AccountTest.AccountChangeTest accountChangeTest = new AccountTest.AccountChangeTest();
-			accountChangeTest.TestFixtureSetUp();
+			List<Contact> contacts = Contact.ReadContactsFromAccountChangeContact(_sqlConnection, arrangedData.AccountChange.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
 
-			ExternalAccount externalAccountCreated = accountChangeTest.InsertExternalAccount(_sqlConnection);
-
-			AccountChange accountChangeInserted = accountChangeTest.AccountChangeInsert(externalAccountCreated, accountInserted, DateTime.Now);
-			accountChangeInserted.Insert();
-
-			Contact contactInserted = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
-
-			AccountChangeContact accountChangeContact = new AccountChangeContact(accountChangeInserted.Id, contactInserted.Id);
-			accountChangeContact.Insert(_sqlConnection);
-
-			List<Contact> contacts = Contact.ReadContactsFromAccountChangeContact(_sqlConnection, accountChangeInserted.Id);
-			accountChangeContact.Delete(_sqlConnection);
-
-			Assert.AreEqual(contactInserted.Id, contacts.Single().Id);
+			Assert.AreEqual(arrangedData.Contact.Id, contacts.Single().Id);
 		}
 
 		[Test]
 		public void Delete()
 		{
-			Account accountInserted = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
-			accountInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
 
-			AccountTest.AccountChangeTest accountChangeTest = new AccountTest.AccountChangeTest();
-            accountChangeTest.TestFixtureSetUp();
-
-			ExternalAccount externalAccountCreated = accountChangeTest.InsertExternalAccount(_sqlConnection);
-
-			AccountChange accountChangeInserted = accountChangeTest.AccountChangeInsert(externalAccountCreated, accountInserted, DateTime.Now);
-			accountChangeInserted.Insert();
-
-			Contact contactInserted = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
-
-			AccountChangeContact accountChangeContact = new AccountChangeContact(accountChangeInserted.Id, contactInserted.Id);
-			accountChangeContact.Insert(_sqlConnection);
-
-			accountChangeContact.Delete(_sqlConnection);
-			List<Contact> contacts = Contact.ReadContactsFromAccountChangeContact(_sqlConnection, accountChangeInserted.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
+			List<Contact> contacts = Contact.ReadContactsFromAccountChangeContact(_sqlConnection, arrangedData.AccountChange.Id);
 
 			Assert.IsFalse(contacts.Any());
+		}
+
+		[Test]
+		public void ReadFromAccountChangeId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
+
+			List<AccountChangeContact> accountChangeContacts = AccountChangeContact.ReadFromAccountChangeId(_sqlConnection, arrangedData.AccountChange.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeContact, accountChangeContacts.Single());
+		}
+
+		[Test]
+		public void ReadFromContactChangeId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
+
+			List<AccountChangeContact> accountChangeContacts = AccountChangeContact.ReadFromContactId(_sqlConnection, arrangedData.Contact.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeContact, accountChangeContacts.Single());
+		}
+
+		private DatabaseArrangeResponse ArrangeAccountChangeContact()
+		{
+			DatabaseArrangeResponse response = new DatabaseArrangeResponse();
+
+			response.Account = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
+			response.Account.Insert(_sqlConnection);
+
+			AccountTest.AccountChangeTest accountChangeTest = new AccountTest.AccountChangeTest();
+			accountChangeTest.TestFixtureSetUp();
+
+			response.ExternalAccount = accountChangeTest.InsertExternalAccount(_sqlConnection);
+
+			response.AccountChange = accountChangeTest.AccountChangeInsert(response.ExternalAccount, response.Account, DateTime.Now);
+			response.AccountChange.Insert();
+
+			response.Contact = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
+
+			response.AccountChangeContact = new AccountChangeContact(response.AccountChange.Id, response.Contact.Id);
+			response.AccountChangeContact.Insert(_sqlConnection);
+
+			return response;
 		}
 	}
 }

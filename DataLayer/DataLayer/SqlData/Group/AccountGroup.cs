@@ -9,13 +9,13 @@ namespace DataLayer.SqlData.Group
 {
 	public class AccountGroup : AbstractData
 	{
-		private Guid _accountId;
-		private Guid _groupId;
+		public Guid AccountId { get; private set; }
+		public Guid GroupId { get; private set; }
 
-		public AccountGroup(Guid AccountId, Guid GroupId)
+		public AccountGroup(Guid accountId, Guid groupId)
 		{
-			_accountId = AccountId;
-			_groupId = GroupId;
+			AccountId = accountId;
+			GroupId = groupId;
 		}
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -38,8 +38,8 @@ namespace DataLayer.SqlData.Group
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddInsertParameterIfNotNull(_accountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(_groupId, "GroupId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(AccountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(GroupId, "GroupId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -66,8 +66,26 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("	GroupId = @groupId");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
-				new KeyValuePair<string, object>("AccountId", _accountId),
-				new KeyValuePair<string, object>("groupId", _groupId));
+				new KeyValuePair<string, object>("AccountId", AccountId),
+				new KeyValuePair<string, object>("groupId", GroupId));
+		}
+
+		public static List<AccountGroup> ReadFromGroupId(SqlConnection sqlConnection, Guid groupId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "GroupId", "ContactId", groupId);
+
+			List<AccountGroup> contactGroups = relatedIds.Select(accountId => new AccountGroup(accountId, groupId)).ToList();
+
+			return contactGroups;
+		}
+
+		public static List<AccountGroup> ReadFromAccountId(SqlConnection sqlConnection, Guid accountId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "AccountId", "GroupId", accountId);
+
+			List<AccountGroup> contactGroups = relatedIds.Select(groupId => new AccountGroup(accountId, groupId)).ToList();
+
+			return contactGroups;
 		}
 	}
 }

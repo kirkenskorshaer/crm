@@ -71,6 +71,7 @@
     <Compile Include="SqlDataTest\AccountTest\ExternalAccountTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ContactChangeTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ExternalContactTest.cs" />
+    <Compile Include="SqlDataTest\DatabaseArrangeResponse.cs" />
     <Compile Include="SqlDataTest\GroupTest\AccountChangeGroupTest.cs" />
     <Compile Include="SqlDataTest\GroupTest\ContactChangeGroupTest.cs" />
     <Compile Include="SqlDataTest\GroupTest\AccountGroupTest.cs" />
