@@ -5,8 +5,11 @@ using DatabaseSynchronizeToCrm = DataLayer.MongoData.Option.Options.Logic.Synchr
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
+using SystemInterfaceAccount = SystemInterface.Dynamics.Crm.Account;
 using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
@@ -71,6 +74,15 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId);
 			externalContact.Insert();
+		}
+
+		private void InsertAccountAndCreateExternalAccount(Guid changeProviderId, DatabaseAccount databaseAccount)
+		{
+			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
+			systemInterfaceAccount.Insert();
+
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId);
+			externalAccount.Insert();
 		}
 
 		private void UpdateExternalContactIfNeeded(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact)
