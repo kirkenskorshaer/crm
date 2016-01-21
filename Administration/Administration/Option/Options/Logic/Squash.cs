@@ -229,6 +229,73 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
+		private void CollectModifiedReferencesForAllProviders(Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedReference> modifiedReferences, Dictionary<Type, Func<Guid, List<Guid>>> ReferenceTypeAndGetReferenceCollection)
+		{
+			foreach (Guid providerId in changesByProviderId.Keys)
+			{
+				foreach (KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference in ReferenceTypeAndGetReferenceCollection)
+				{
+					IModifiedIdData databaseChangeLast = default(IModifiedIdData);
+					List<Guid> databaseLastReferences = null;
+
+					foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
+					{
+						DateTime modifiedOn = databaseChange.ModifiedOn;
+
+						if (databaseChangeLast == null)
+						{
+							databaseLastReferences = CollectAllReferencesAsModifiedReference(modifiedReferences, modifiedOn, databaseChange.Id, referenceTypeAndGetReference);
+						}
+						else
+						{
+							databaseLastReferences = CollectActualReferencesChangesAsModifiedReference(modifiedReferences, modifiedOn, databaseChange.Id, databaseLastReferences, referenceTypeAndGetReference);
+						}
+						databaseChangeLast = databaseChange;
+					}
+				}
+			}
+		}
+
+		private List<Guid> CollectAllReferencesAsModifiedReference(List<ModifiedReference> modifiedReferences, DateTime modifiedOn, Guid databaseId, KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference)
+		{
+			List<Guid> currentValue = referenceTypeAndGetReference.Value(databaseId).ToList();
+
+			if (currentValue.Any())
+			{
+				ModifiedReference modifiedReference = new ModifiedReference()
+				{
+					RelationType = referenceTypeAndGetReference.Key,
+					RelationIdsAdded = currentValue,
+					RelationIdsRemoved = new List<Guid>(),
+					ModifiedOn = modifiedOn,
+				};
+
+				modifiedReferences.Add(modifiedReference);
+			}
+
+			return currentValue;
+		}
+
+		private List<Guid> CollectActualReferencesChangesAsModifiedReference(List<ModifiedReference> modifiedReferences, DateTime modifiedOn, Guid databaseId, List<Guid> lastValue, KeyValuePair<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference)
+		{
+			List<Guid> currentValue = referenceTypeAndGetReference.Value(databaseId).ToList();
+
+			if (GuidListEquals(currentValue, lastValue) == false)
+			{
+				ModifiedReference modifiedReference = new ModifiedReference()
+				{
+					ModifiedOn = modifiedOn,
+					RelationType = referenceTypeAndGetReference.Key,
+					RelationIdsAdded = currentValue.Except(lastValue).ToList(),
+					RelationIdsRemoved = lastValue.Except(currentValue).ToList(),
+				};
+
+				modifiedReferences.Add(modifiedReference);
+			}
+
+			return currentValue;
+		}
+
 		private bool GuidListEquals(List<Guid> list1, List<Guid> list2)
 		{
 			if (list1 == null && list2 == null)
@@ -293,6 +360,57 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
+			return contactChanged;
+		}
+
+		private bool UpdateReferencesIfNeeded(IModifiedIdData databaseObject, Dictionary<Type, ReferenceGetAndSet> referenceGetAndSetDictionary, List<ModifiedReference> changedReferences)
+		{
+			bool contactChanged = false;
+
+			List<Type> referenceTypes = changedReferences.Select(reference => reference.RelationType).ToList();
+
+			foreach (Type referenceType in referenceTypes)
+			{
+				List<ModifiedReference> modifedReferences = changedReferences.Where(modifiedReference => modifiedReference.RelationType == referenceType).ToList();
+
+				modifedReferences = modifedReferences.OrderBy(change => change.ModifiedOn).ToList();
+
+				ModifiedReference finalChange = null;
+
+				foreach (ModifiedReference currentModifiedReference in modifedReferences)
+				{
+					if (finalChange == null)
+					{
+						finalChange = new ModifiedReference()
+						{
+							RelationIdsAdded = currentModifiedReference.RelationIdsAdded,
+							RelationIdsRemoved = currentModifiedReference.RelationIdsRemoved,
+							RelationType = referenceType,
+							ModifiedOn = currentModifiedReference.ModifiedOn,
+						};
+					}
+					else
+					{
+						finalChange.RelationIdsAdded.AddRange(currentModifiedReference.RelationIdsAdded.Where(relationIdToAdd => finalChange.RelationIdsAdded.Contains(relationIdToAdd) == false));
+						finalChange.RelationIdsAdded.RemoveAll(change => currentModifiedReference.RelationIdsRemoved.Contains(change));
+
+						finalChange.RelationIdsRemoved.AddRange(currentModifiedReference.RelationIdsRemoved.Where(relationIdToAdd => finalChange.RelationIdsRemoved.Contains(relationIdToAdd) == false));
+						finalChange.RelationIdsRemoved.RemoveAll(change => currentModifiedReference.RelationIdsAdded.Contains(change));
+						finalChange.ModifiedOn = currentModifiedReference.ModifiedOn;
+					}
+				}
+
+				ModifiedReference latestChange = modifedReferences.First();
+
+				List<Guid> newValue = latestChange.RelationIdsAdded;
+				List<Guid> existingValue = referenceGetAndSetDictionary[referenceType].GetReferences(databaseObject.Id);
+
+				if (GuidListEquals(newValue, existingValue) == false)
+				{
+					referenceGetAndSetDictionary[referenceType].SetReferences(newValue);
+					contactChanged = true;
+				}
+			}
 			return contactChanged;
 		}
 
