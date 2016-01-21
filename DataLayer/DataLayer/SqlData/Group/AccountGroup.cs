@@ -69,5 +69,23 @@ namespace DataLayer.SqlData.Group
 				new KeyValuePair<string, object>("AccountId", AccountId),
 				new KeyValuePair<string, object>("groupId", GroupId));
 		}
+
+		public static List<AccountGroup> ReadFromGroupId(SqlConnection sqlConnection, Guid groupId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "GroupId", "ContactId", groupId);
+
+			List<AccountGroup> contactGroups = relatedIds.Select(accountId => new AccountGroup(accountId, groupId)).ToList();
+
+			return contactGroups;
+		}
+
+		public static List<AccountGroup> ReadFromAccountId(SqlConnection sqlConnection, Guid accountId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "AccountId", "GroupId", accountId);
+
+			List<AccountGroup> contactGroups = relatedIds.Select(groupId => new AccountGroup(accountId, groupId)).ToList();
+
+			return contactGroups;
+		}
 	}
 }

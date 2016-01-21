@@ -69,5 +69,23 @@ namespace DataLayer.SqlData.Account
 				new KeyValuePair<string, object>("accountChangeId", AccountChangeId),
 				new KeyValuePair<string, object>("contactId", ContactId));
 		}
+
+		public static List<AccountChangeContact> ReadFromAccountChangeId(SqlConnection sqlConnection, Guid accountChangeId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeContact), "AccountChangeId", "ContactId", accountChangeId);
+
+			List<AccountChangeContact> accountChangeIndsamlere = relatedIds.Select(contactId => new AccountChangeContact(accountChangeId, contactId)).ToList();
+
+			return accountChangeIndsamlere;
+		}
+
+		public static List<AccountChangeContact> ReadFromContactId(SqlConnection sqlConnection, Guid contactId)
+		{
+			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeContact), "ContactId", "AccountChangeId", contactId);
+
+			List<AccountChangeContact> accountChangeIndsamlere = relatedIds.Select(accountChangeId => new AccountChangeContact(accountChangeId, contactId)).ToList();
+
+			return accountChangeIndsamlere;
+		}
 	}
 }
