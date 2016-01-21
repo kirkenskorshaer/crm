@@ -9,13 +9,13 @@ namespace DataLayer.SqlData.Group
 {
 	public class AccountChangeGroup : AbstractData
 	{
-		private Guid _accountChangeId;
-		private Guid _groupId;
+		public Guid AccountChangeId { get; private set; }
+		public Guid GroupId { get; private set; }
 
-		public AccountChangeGroup(Guid AccountChangeId, Guid GroupId)
+		public AccountChangeGroup(Guid accountChangeId, Guid groupId)
 		{
-			_accountChangeId = AccountChangeId;
-			_groupId = GroupId;
+			AccountChangeId = accountChangeId;
+			GroupId = groupId;
 		}
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -38,8 +38,8 @@ namespace DataLayer.SqlData.Group
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddInsertParameterIfNotNull(_accountChangeId, "AccountChangeId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(_groupId, "GroupId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(AccountChangeId, "AccountChangeId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(GroupId, "GroupId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -66,8 +66,8 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("	GroupId = @groupId");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
-				new KeyValuePair<string, object>("accountChangeId", _accountChangeId),
-				new KeyValuePair<string, object>("groupId", _groupId));
+				new KeyValuePair<string, object>("accountChangeId", AccountChangeId),
+				new KeyValuePair<string, object>("groupId", GroupId));
 		}
 	}
 }
