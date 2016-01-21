@@ -52,6 +52,28 @@ namespace DataLayerTest.SqlDataTest.ChangeContactTest
 			Assert.IsFalse(contacts.Any());
 		}
 
+		[Test]
+		public void ReadFromAccountChangeId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
+
+			List<AccountChangeContact> accountChangeContacts = AccountChangeContact.ReadFromAccountChangeId(_sqlConnection, arrangedData.AccountChange.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeContact, accountChangeContacts.Single());
+		}
+
+		[Test]
+		public void ReadFromContactChangeId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeContact();
+
+			List<AccountChangeContact> accountChangeContacts = AccountChangeContact.ReadFromContactId(_sqlConnection, arrangedData.Contact.Id);
+			arrangedData.AccountChangeContact.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeContact, accountChangeContacts.Single());
+		}
+
 		private DatabaseArrangeResponse ArrangeAccountChangeContact()
 		{
 			DatabaseArrangeResponse response = new DatabaseArrangeResponse();

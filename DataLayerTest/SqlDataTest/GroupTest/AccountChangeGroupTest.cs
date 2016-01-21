@@ -55,6 +55,28 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 			Assert.IsFalse(groups.Any());
 		}
 
+		[Test]
+		public void ReadFromGroupId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeGroup();
+
+			List<AccountChangeGroup> accountChangeGroups = AccountChangeGroup.ReadFromGroupId(_sqlConnection, arrangedData.Group.Id);
+			arrangedData.AccountChangeGroup.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeGroup, accountChangeGroups.Single());
+		}
+
+		[Test]
+		public void ReadFromContactChangeId()
+		{
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeGroup();
+
+			List<AccountChangeGroup> accountChangeGroups = AccountChangeGroup.ReadFromAccountChangeId(_sqlConnection, arrangedData.AccountChange.Id);
+			arrangedData.AccountChangeGroup.Delete(_sqlConnection);
+
+			Assert.AreEqual(arrangedData.AccountChangeGroup, accountChangeGroups.Single());
+		}
+
 		private DatabaseArrangeResponse ArrangeAccountChangeGroup()
 		{
 			DatabaseArrangeResponse response = new DatabaseArrangeResponse();
