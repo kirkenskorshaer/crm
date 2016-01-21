@@ -36,63 +36,52 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 		[Test]
 		public void Insert()
 		{
-			Account accountInserted = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
-			accountInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeGroup();
 
-			ChangeProvider changeProvider = new ChangeProvider()
-			{
-				Name = "test",
-			};
-			changeProvider.Insert(_sqlConnection);
+			List<Group> groups = Group.ReadGroupsFromAccountChange(_sqlConnection, arrangedData.AccountChange.Id);
+			arrangedData.AccountChangeGroup.Delete(_sqlConnection);
 
-			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, Guid.NewGuid(), changeProvider.Id);
-			externalAccountCreated.Insert();
-
-			AccountChangeTest accountChangeTest = new AccountChangeTest();
-			accountChangeTest.TestFixtureSetUp();
-			AccountChange accountChangeInserted = accountChangeTest.AccountChangeInsert(externalAccountCreated, accountInserted, DateTime.Now);
-			accountChangeInserted.Insert();
-
-			Group groupInserted = new GroupTest().GroupInsert(_sqlConnection);
-
-			AccountChangeGroup accountChangeGroup = new AccountChangeGroup(accountChangeInserted.Id, groupInserted.Id);
-			accountChangeGroup.Insert(_sqlConnection);
-
-			List<Group> groups = Group.ReadGroupsFromAccountChange(_sqlConnection, accountChangeInserted.Id);
-			accountChangeGroup.Delete(_sqlConnection);
-
-			Assert.AreEqual(groupInserted.Id, groups.Single().Id);
+			Assert.AreEqual(arrangedData.Group.Id, groups.Single().Id);
 		}
 
 		[Test]
 		public void Delete()
 		{
-			Account accountInserted = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
-			accountInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeAccountChangeGroup();
 
-			ChangeProvider changeProvider = new ChangeProvider()
-			{
-				Name = "test",
-			};
-			changeProvider.Insert(_sqlConnection);
-
-			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, Guid.NewGuid(), changeProvider.Id);
-			externalAccountCreated.Insert();
-
-			AccountChangeTest accountChangeTest = new AccountChangeTest();
-			accountChangeTest.TestFixtureSetUp();
-			AccountChange accountChangeInserted = accountChangeTest.AccountChangeInsert(externalAccountCreated, accountInserted, DateTime.Now);
-			accountChangeInserted.Insert();
-
-			Group groupInserted = new GroupTest().GroupInsert(_sqlConnection);
-
-			AccountChangeGroup accountChangeGroup = new AccountChangeGroup(accountChangeInserted.Id, groupInserted.Id);
-			accountChangeGroup.Insert(_sqlConnection);
-
-			accountChangeGroup.Delete(_sqlConnection);
-			List<Group> groups = Group.ReadGroupsFromAccountChange(_sqlConnection, accountChangeInserted.Id);
+			arrangedData.AccountChangeGroup.Delete(_sqlConnection);
+			List<Group> groups = Group.ReadGroupsFromAccountChange(_sqlConnection, arrangedData.AccountChange.Id);
 
 			Assert.IsFalse(groups.Any());
 		}
+
+		private DatabaseArrangeResponse ArrangeAccountChangeGroup()
+		{
+			DatabaseArrangeResponse response = new DatabaseArrangeResponse();
+
+			response.Account = new AccountTest.AccountTest().AccountInsert(_sqlConnection);
+			response.Account.Insert(_sqlConnection);
+
+			response.ChangeProvider = new ChangeProvider()
+			{
+				Name = "test",
+			};
+			response.ChangeProvider.Insert(_sqlConnection);
+
+			response.ExternalAccount = new ExternalAccount(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id);
+			response.ExternalAccount.Insert();
+
+			AccountChangeTest accountChangeTest = new AccountChangeTest();
+			accountChangeTest.TestFixtureSetUp();
+			response.AccountChange = accountChangeTest.AccountChangeInsert(response.ExternalAccount, response.Account, DateTime.Now);
+			response.AccountChange.Insert();
+
+			response.Group = new GroupTest().GroupInsert(_sqlConnection);
+
+			response.AccountChangeGroup = new AccountChangeGroup(response.AccountChange.Id, response.Group.Id);
+			response.AccountChangeGroup.Insert(_sqlConnection);
+
+			return response;
+        }
 	}
 }

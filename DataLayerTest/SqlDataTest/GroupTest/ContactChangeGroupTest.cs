@@ -36,63 +36,52 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 		[Test]
 		public void Insert()
 		{
-			Contact contactInserted = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
-			contactInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeContactChangeGroup();
 
-			ChangeProvider changeProvider = new ChangeProvider()
-			{
-				Name = "test",
-			};
-			changeProvider.Insert(_sqlConnection);
+			List<Group> groups = Group.ReadGroupsFromContactChange(_sqlConnection, arrangedData.ContactChange.Id);
+			arrangedData.ContactChangeGroup.Delete(_sqlConnection);
 
-			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, Guid.NewGuid(), changeProvider.Id);
-			externalContactCreated.Insert();
-
-			ContactChangeTest contactChangeTest = new ContactChangeTest();
-			contactChangeTest.TestFixtureSetUp();
-			ContactChange contactChangeInserted = contactChangeTest.ContactChangeInsert(externalContactCreated, contactInserted, DateTime.Now);
-			contactChangeInserted.Insert();
-
-			Group groupInserted = new GroupTest().GroupInsert(_sqlConnection);
-
-			ContactChangeGroup contactChangeGroup = new ContactChangeGroup(contactChangeInserted.Id, groupInserted.Id);
-			contactChangeGroup.Insert(_sqlConnection);
-
-			List<Group> groups = Group.ReadGroupsFromContactChange(_sqlConnection, contactChangeInserted.Id);
-			contactChangeGroup.Delete(_sqlConnection);
-
-			Assert.AreEqual(groupInserted.Id, groups.Single().Id);
+			Assert.AreEqual(arrangedData.Group.Id, groups.Single().Id);
 		}
 
 		[Test]
 		public void Delete()
 		{
-			Contact contactInserted = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
-			contactInserted.Insert(_sqlConnection);
+			DatabaseArrangeResponse arrangedData = ArrangeContactChangeGroup();
 
-			ChangeProvider changeProvider = new ChangeProvider()
+			arrangedData.ContactChangeGroup.Delete(_sqlConnection);
+			List<Group> groups = Group.ReadGroupsFromContactChange(_sqlConnection, arrangedData.ContactChange.Id);
+
+			Assert.IsFalse(groups.Any());
+		}
+
+		private DatabaseArrangeResponse ArrangeContactChangeGroup()
+		{
+			DatabaseArrangeResponse response = new DatabaseArrangeResponse();
+
+			response.Contact = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
+			response.Contact.Insert(_sqlConnection);
+
+			response.ChangeProvider = new ChangeProvider()
 			{
 				Name = "test",
 			};
-			changeProvider.Insert(_sqlConnection);
+			response.ChangeProvider.Insert(_sqlConnection);
 
-			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, Guid.NewGuid(), changeProvider.Id);
-			externalContactCreated.Insert();
+			response.ExternalContact = new ExternalContact(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id);
+			response.ExternalContact.Insert();
 
 			ContactChangeTest contactChangeTest = new ContactChangeTest();
 			contactChangeTest.TestFixtureSetUp();
-            ContactChange contactChangeInserted = contactChangeTest.ContactChangeInsert(externalContactCreated, contactInserted, DateTime.Now);
-            contactChangeInserted.Insert();
+			response.ContactChange = contactChangeTest.ContactChangeInsert(response.ExternalContact, response.Contact, DateTime.Now);
+			response.ContactChange.Insert();
 
-			Group groupInserted = new GroupTest().GroupInsert(_sqlConnection);
+			response.Group = new GroupTest().GroupInsert(_sqlConnection);
 
-			ContactChangeGroup contactChangeGroup = new ContactChangeGroup(contactChangeInserted.Id, groupInserted.Id);
-			contactChangeGroup.Insert(_sqlConnection);
+			response.ContactChangeGroup = new ContactChangeGroup(response.ContactChange.Id, response.Group.Id);
+			response.ContactChangeGroup.Insert(_sqlConnection);
 
-			contactChangeGroup.Delete(_sqlConnection);
-			List<Group> groups = Group.ReadGroupsFromContactChange(_sqlConnection, contactChangeInserted.Id);
-
-			Assert.IsFalse(groups.Any());
+			return response;
 		}
 	}
 }
