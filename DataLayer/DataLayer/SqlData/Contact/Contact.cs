@@ -10,10 +10,10 @@ using System.Text;
 
 namespace DataLayer.SqlData.Contact
 {
-	public class Contact : AbstractIdData
+	public class Contact : AbstractIdData, IModifiedIdData
 	{
 		public DateTime CreatedOn;
-		public DateTime ModifiedOn;
+		public DateTime ModifiedOn { get; set; }
 		public string Firstname;
 		public string Lastname;
 
