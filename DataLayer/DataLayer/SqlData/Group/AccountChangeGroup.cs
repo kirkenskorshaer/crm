@@ -87,5 +87,24 @@ namespace DataLayer.SqlData.Group
 
 			return contactChangeGroups;
 		}
+
+		public override bool Equals(object obj)
+		{
+			AccountChangeGroup objAsAccountChangeGroup = obj as AccountChangeGroup;
+
+			if (objAsAccountChangeGroup == null)
+			{
+				return false;
+			}
+
+			return
+				AccountChangeId == objAsAccountChangeGroup.AccountChangeId &&
+				GroupId == objAsAccountChangeGroup.GroupId;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 	}
 }

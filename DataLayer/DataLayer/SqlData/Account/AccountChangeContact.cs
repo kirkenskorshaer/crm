@@ -87,5 +87,24 @@ namespace DataLayer.SqlData.Account
 
 			return accountChangeIndsamlere;
 		}
+
+		public override bool Equals(object obj)
+		{
+			AccountChangeContact objAsAccountChangeContact = obj as AccountChangeContact;
+
+			if (objAsAccountChangeContact == null)
+			{
+				return false;
+			}
+
+			return
+				AccountChangeId == objAsAccountChangeContact.AccountChangeId &&
+				ContactId == objAsAccountChangeContact.ContactId;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
 	}
 }
