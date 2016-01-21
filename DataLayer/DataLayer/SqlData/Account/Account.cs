@@ -1,4 +1,5 @@
 ﻿using DataLayer.MongoData;
+using DataLayer.SqlData.Group;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -278,6 +279,72 @@ namespace DataLayer.SqlData.Account
 			}
 
 			return Accounts;
+		}
+
+		public void SynchronizeGroups(SqlConnection sqlConnection, List<Guid> groupIds)
+		{
+			List<AccountGroup> accountGroups = AccountGroup.ReadFromAccountId(sqlConnection, Id);
+
+			foreach (AccountGroup accountGroup in accountGroups)
+			{
+				if (groupIds.Contains(accountGroup.GroupId) == false)
+				{
+					accountGroup.Delete(sqlConnection);
+				}
+			}
+
+			foreach (Guid groupId in groupIds)
+			{
+				if (accountGroups.Any(accountGroup => accountGroup.GroupId == groupId) == false)
+				{
+					AccountGroup accountGroup = new AccountGroup(Id, groupId);
+					accountGroup.Insert(sqlConnection);
+				}
+			}
+		}
+
+		public void SynchronizeContacts(SqlConnection sqlConnection, List<Guid> contactIds)
+		{
+			List<AccountContact> accountContacts = AccountContact.ReadFromAccountId(sqlConnection, Id);
+
+			foreach (AccountContact accountContact in accountContacts)
+			{
+				if (contactIds.Contains(accountContact.ContactId) == false)
+				{
+					accountContact.Delete(sqlConnection);
+				}
+			}
+
+			foreach (Guid contactId in contactIds)
+			{
+				if (accountContacts.Any(accountContact => accountContact.ContactId == contactId) == false)
+				{
+					AccountContact accountContact = new AccountContact(Id, contactId);
+					accountContact.Insert(sqlConnection);
+				}
+			}
+		}
+
+		public void SynchronizeIndsamlere(SqlConnection sqlConnection, List<Guid> contactIds)
+		{
+			List<AccountIndsamler> accountIndsamlere = AccountIndsamler.ReadFromAccountId(sqlConnection, Id);
+
+			foreach (AccountIndsamler accountIndsamler in accountIndsamlere)
+			{
+				if (contactIds.Contains(accountIndsamler.ContactId) == false)
+				{
+					accountIndsamler.Delete(sqlConnection);
+				}
+			}
+
+			foreach (Guid contactId in contactIds)
+			{
+				if (accountIndsamlere.Any(accountContact => accountContact.ContactId == contactId) == false)
+				{
+					AccountIndsamler accountGroup = new AccountIndsamler(Id, contactId);
+					accountGroup.Insert(sqlConnection);
+				}
+			}
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using DataLayer.MongoData;
+using DataLayer.SqlData.Account;
 using DataLayer.SqlData.Group;
 using System;
 using System.Collections.Generic;
@@ -430,5 +431,27 @@ namespace DataLayer.SqlData.Contact
 
 			return contacts;
 		}
-	}
+
+		public void SynchronizeGroups(SqlConnection sqlConnection, List<Guid> groupIds)
+		{
+			List<ContactGroup> contactGroups = ContactGroup.ReadFromContactId(sqlConnection, Id);
+
+			foreach(ContactGroup contactGroup in contactGroups)
+			{
+				if(groupIds.Contains(contactGroup.GroupId) == false)
+				{
+					contactGroup.Delete(sqlConnection);
+                }
+			}
+
+			foreach(Guid groupId in groupIds)
+			{
+				if(contactGroups.Any(contactGroup => contactGroup.GroupId == groupId) == false)
+				{
+					ContactGroup contactGroup = new ContactGroup(Id, groupId);
+					contactGroup.Insert(sqlConnection);
+				}
+			}
+		}
+    }
 }
