@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace DataLayer.SqlData.Contact
+namespace DataLayer.SqlData.Account
 {
 	public class AccountChangeContact : AbstractData
 	{
@@ -29,8 +29,8 @@ namespace DataLayer.SqlData.Contact
 				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountChangeId", "ContactId");
 			}
 
-			CreateKeyIfMissing(sqlConnection, tableName, "AccountChangeId", typeof(Account.AccountChange).Name, "id");
-			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "AccountChangeId", typeof(AccountChange).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact.Contact).Name, "id");
 		}
 
 		public void Insert(SqlConnection sqlConnection)
