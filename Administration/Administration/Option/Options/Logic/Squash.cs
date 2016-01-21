@@ -6,6 +6,14 @@ using System.Linq;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseSquash = DataLayer.MongoData.Option.Options.Logic.Squash;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
+using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
+using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
+using DatabaseAccountContact = DataLayer.SqlData.Account.AccountContact;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
+using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
+using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
+using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
@@ -136,6 +144,66 @@ namespace Administration.Option.Options.Logic
 			bool contactChanged = UpdateFieldsIfNeeded(account, columnNames, changedFields);
 
 			return contactChanged;
+		}
+
+		private List<Guid> GroupFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeGroup.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.GroupId).ToList();
+		}
+
+		private List<Guid> ContactFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeContact.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.ContactId).ToList();
+		}
+
+		private List<Guid> IndsamlerFromAccountChangeId(Guid id)
+		{
+			return DatabaseAccountChangeIndsamler.ReadFromAccountChangeId(SqlConnection, id).Select(accountChangeGroup => accountChangeGroup.ContactId).ToList();
+		}
+
+		private List<Guid> GroupFromContactChangeId(Guid id)
+		{
+			return DatabaseContactChangeGroup.ReadFromContactChangeId(SqlConnection, id).Select(contactChangeGroup => contactChangeGroup.GroupId).ToList();
+		}
+
+		private List<Guid> GroupFromContactId(Guid id)
+		{
+			return DatabaseContactGroup.ReadFromContactId(SqlConnection, id).Select(contactGroup => contactGroup.GroupId).ToList();
+		}
+
+		private List<Guid> GroupFromAccountId(Guid id)
+		{
+			return DatabaseAccountGroup.ReadFromAccountId(SqlConnection, id).Select(accountGroup => accountGroup.GroupId).ToList();
+		}
+
+		private List<Guid> ContactFromAccountId(Guid id)
+		{
+			return DatabaseAccountContact.ReadFromAccountId(SqlConnection, id).Select(accountContact => accountContact.ContactId).ToList();
+		}
+
+		private List<Guid> IndsamlerFromAccountId(Guid id)
+		{
+			return DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, id).Select(accountContact => accountContact.ContactId).ToList();
+		}
+
+		private void SetGroupsOnContact(DatabaseContact databaseContact, List<Guid> groupIds)
+		{
+			databaseContact.SynchronizeGroups(SqlConnection, groupIds);
+		}
+
+		private void SetGroupsOnAccount(DatabaseAccount databaseAccount, List<Guid> groupIds)
+		{
+			databaseAccount.SynchronizeGroups(SqlConnection, groupIds);
+		}
+
+		private void SetContactsOnAccount(DatabaseAccount databaseAccount, List<Guid> contactIds)
+		{
+			databaseAccount.SynchronizeContacts(SqlConnection, contactIds);
+		}
+
+		private void SetIndsamlereOnAccount(DatabaseAccount databaseAccount, List<Guid> indsamlerIds)
+		{
+			databaseAccount.SynchronizeIndsamlere(SqlConnection, indsamlerIds);
 		}
 
 		private void CollectModifiedFieldsForAllProviders(List<string> columnNames, Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedField> modifiedFields)
