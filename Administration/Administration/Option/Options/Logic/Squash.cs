@@ -111,10 +111,21 @@ namespace Administration.Option.Options.Logic
 			List<ModifiedField> changedFields = new List<ModifiedField>();
 			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
 
+			List<ModifiedReference> changedReferences = new List<ModifiedReference>();
 
-			bool contactChanged = UpdateFieldsIfNeeded(contact, columnNames, changedFields);
+			Dictionary<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference = new Dictionary<Type, Func<Guid, List<Guid>>>() { { typeof(DatabaseContactChangeGroup), GroupFromContactChangeId }, };
+			Dictionary<Type, ReferenceGetAndSet> referenceGetAndSets = new Dictionary<Type, ReferenceGetAndSet>()
+			{
+				{ typeof(DatabaseContactChangeGroup), new ReferenceGetAndSet() {GetReferences = GroupFromContactId, SetReferences = (guids) => SetGroupsOnContact(contact, guids)} },
+			};
 
-			return contactChanged;
+			CollectModifiedReferencesForAllProviders(changesByProviderId, changedReferences, referenceTypeAndGetReference);
+
+			bool contactFieldChanged = UpdateFieldsIfNeeded(contact, columnNames, changedFields);
+
+			bool contactReferenceChanged = UpdateReferencesIfNeeded(contact, referenceGetAndSets, changedReferences);
+
+			return contactFieldChanged;
 		}
 
 		public bool SquashAccount(DatabaseAccount account)
@@ -139,11 +150,28 @@ namespace Administration.Option.Options.Logic
 
 			List<ModifiedField> changedFields = new List<ModifiedField>();
 			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
+			bool accountChanged = UpdateFieldsIfNeeded(account, columnNames, changedFields);
 
+			List<ModifiedReference> changedReferences = new List<ModifiedReference>();
 
-			bool contactChanged = UpdateFieldsIfNeeded(account, columnNames, changedFields);
+			Dictionary<Type, Func<Guid, List<Guid>>> referenceTypeAndGetReference = new Dictionary<Type, Func<Guid, List<Guid>>>()
+			{
+				{ typeof(DatabaseAccountChangeGroup), GroupFromAccountChangeId },
+				{ typeof(DatabaseAccountChangeContact), ContactFromAccountChangeId },
+				{ typeof(DatabaseAccountChangeIndsamler), IndsamlerFromAccountChangeId },
+			};
 
-			return contactChanged;
+			CollectModifiedReferencesForAllProviders(changesByProviderId, changedReferences, referenceTypeAndGetReference);
+
+			Dictionary<Type, ReferenceGetAndSet> referenceGetAndSets = new Dictionary<Type, ReferenceGetAndSet>()
+			{
+				{ typeof(DatabaseAccountChangeGroup), new ReferenceGetAndSet() {GetReferences = GroupFromAccountId, SetReferences = (guids) => SetGroupsOnAccount(account, guids)} },
+				{ typeof(DatabaseAccountChangeContact), new ReferenceGetAndSet() {GetReferences = ContactFromAccountId, SetReferences = (guids) => SetContactsOnAccount(account, guids)} },
+				{ typeof(DatabaseAccountChangeIndsamler), new ReferenceGetAndSet() {GetReferences = IndsamlerFromAccountId, SetReferences = (guids) => SetIndsamlereOnAccount(account, guids)} },
+			};
+			bool accountReferenceChanged = UpdateReferencesIfNeeded(account, referenceGetAndSets, changedReferences);
+
+			return accountChanged;
 		}
 
 		private List<Guid> GroupFromAccountChangeId(Guid id)
