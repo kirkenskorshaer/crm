@@ -48,6 +48,13 @@ namespace Administration.Option.Options.Logic
 		{
 			Guid changeProviderId = _databaseSynchronizeToCrm.changeProviderId;
 
+			SynchronizeContacts(changeProviderId);
+
+			return true;
+		}
+
+		private void SynchronizeContacts(Guid changeProviderId)
+		{
 			DataLayer.MongoData.Progress progress;
 			DatabaseContact databaseContact = GetContactToSynchronize(out progress);
 
@@ -63,8 +70,6 @@ namespace Administration.Option.Options.Logic
 			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
-
-			return true;
 		}
 
 		private void InsertContactAndCreateExternalContact(Guid changeProviderId, DatabaseContact databaseContact)
