@@ -38,6 +38,13 @@ namespace Administration.Option.Options.Logic
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection connection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
 
+			SynchronizeContacts(changeProviderId, connection);
+
+			return true;
+		}
+
+		private void SynchronizeContacts(Guid changeProviderId, DynamicsCrmConnection connection)
+		{
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateContact(out progress);
 
@@ -46,8 +53,6 @@ namespace Administration.Option.Options.Logic
 			contacts.ForEach(contact => StoreInContactChangesIfNeeded(contact, changeProviderId));
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
-
-			return true;
 		}
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId)
