@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Client;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -170,6 +171,31 @@ namespace SystemInterface.Dynamics.Crm
 			List<Guid> groupIds = groups.Select(group => group.GroupId).ToList();
 
 			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
+		}
+
+		public void SetActive(bool isActive)
+		{
+			SetStateRequest setStateRequest = new SetStateRequest()
+			{
+				EntityMoniker = new EntityReference
+				{
+					Id = Id,
+					LogicalName = entityName,
+				},
+			};
+
+			if (isActive == true)
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Active);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Active);
+			}
+			else
+			{
+				setStateRequest.State = new OptionSetValue((int)StateEnum.Inactive);
+				setStateRequest.Status = new OptionSetValue((int)StatusEnum.Inactive);
+			}
+
+			Connection.Service.Execute(setStateRequest);
 		}
 	}
 }
