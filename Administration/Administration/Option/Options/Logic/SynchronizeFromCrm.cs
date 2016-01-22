@@ -41,7 +41,7 @@ namespace Administration.Option.Options.Logic
 			DateTime currentSearchDate = DateTime.Now;
 
 			DataLayer.MongoData.Progress progress;
-			DateTime searchDate = GetSearchDate(out progress);
+			DateTime searchDate = GetSearchDateContact(out progress);
 
 			List<Contact> contacts = Contact.ReadLatest(connection, searchDate);
 
@@ -116,9 +116,9 @@ namespace Administration.Option.Options.Logic
 			contactChange.Insert();
 		}
 
-		private DateTime GetSearchDate(out DataLayer.MongoData.Progress progress)
+		private DateTime GetSearchDateContact(out DataLayer.MongoData.Progress progress)
 		{
-			string progressName = "DynamicsCrmFrom";
+			string progressName = "DynamicsCrmContactFrom";
 
 			progress = DataLayer.MongoData.Progress.ReadNext(Connection, progressName);
 
