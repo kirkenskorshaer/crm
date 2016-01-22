@@ -15,6 +15,7 @@ using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
 using System.Data.SqlClient;
 using System.Linq;
+using Administration.Mapping.Account;
 
 namespace Administration.Option.Options.Logic
 {
@@ -50,6 +51,8 @@ namespace Administration.Option.Options.Logic
 
 			SynchronizeContacts(changeProviderId);
 
+			SynchronizeAccounts(changeProviderId);
+
 			return true;
 		}
 
@@ -67,6 +70,25 @@ namespace Administration.Option.Options.Logic
 			else
 			{
 				externalContacts.ForEach(contact => UpdateExternalContactIfNeeded(changeProviderId, contact, databaseContact));
+			}
+
+			progress.UpdateAndSetLastProgressDateToNow(Connection);
+		}
+
+		private void SynchronizeAccounts(Guid changeProviderId)
+		{
+			DataLayer.MongoData.Progress progress;
+			DatabaseAccount databaseAccount = GetAccountToSynchronize(out progress);
+
+			List<DatabaseExternalAccount> externalAccounts = AccountCrmMapping.FindAccounts(Connection, SqlConnection, databaseAccount, changeProviderId);
+
+			if (externalAccounts.Count == 0)
+			{
+				InsertAccountAndCreateExternalAccount(changeProviderId, databaseAccount);
+			}
+			else
+			{
+				externalAccounts.ForEach(account => UpdateExternalAccountIfNeeded(changeProviderId, account, databaseAccount));
 			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
@@ -118,6 +140,34 @@ namespace Administration.Option.Options.Logic
 			systemInterfaceContact.SetActive(true);
 		}
 
+		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount)
+		{
+			SystemInterfaceAccount systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
+
+			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
+
+			if (systemInterfaceAccountInCrm.Equals(systemInterfaceAccount))
+			{
+				return;
+			}
+
+			systemInterfaceAccount.SetActive(false);
+
+			systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
+
+			_synchronizeFromCrm.StoreInAccountChangesIfNeeded(systemInterfaceAccountInCrm, changeProviderId, databaseExternalAccount.ExternalAccountId, databaseAccount);
+
+			databaseAccount = DatabaseAccount.Read(SqlConnection, databaseAccount.Id);
+
+			_squash.SquashAccount(databaseAccount);
+
+			systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount, systemInterfaceAccount);
+
+			systemInterfaceAccount.Update();
+
+			systemInterfaceAccount.SetActive(true);
+		}
+
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)
 		{
 			progress = DataLayer.MongoData.Progress.ReadNext(Connection, MaintainProgress.ProgressContactToCrm);
@@ -132,6 +182,22 @@ namespace Administration.Option.Options.Logic
 			DatabaseContact contact = DatabaseContact.Read(SqlConnection, contactId);
 
 			return contact;
+		}
+
+		private DatabaseAccount GetAccountToSynchronize(out DataLayer.MongoData.Progress progress)
+		{
+			progress = DataLayer.MongoData.Progress.ReadNext(Connection, MaintainProgress.ProgressAccountToCrm);
+
+			if (progress == null)
+			{
+				return null;
+			}
+
+			Guid accountId = progress.TargetId;
+
+			DatabaseAccount account = DatabaseAccount.Read(SqlConnection, accountId);
+
+			return account;
 		}
 	}
 }

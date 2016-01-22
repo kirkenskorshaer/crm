@@ -16,6 +16,7 @@ namespace Administration.Option.Options.Logic
 		public const string ProgressContact = "Contact";
 		public const string ProgressAccount = "Account";
 		public const string ProgressContactToCrm = "ContactToCrm";
+		public const string ProgressAccountToCrm = "AccountToCrm";
 
 		private DatabaseMaintainProgress _databaseMaintainProgress;
 
