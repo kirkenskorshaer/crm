@@ -4,13 +4,16 @@ using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.Sync
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
 using System.Data.SqlClient;
+using Administration.Mapping.Account;
 
 namespace Administration.Option.Options.Logic
 {
@@ -65,6 +68,16 @@ namespace Administration.Option.Options.Logic
 			StoreInContactChangesIfNeeded(crmContact, changeProviderId, externalContactId, contact);
 		}
 
+		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId)
+		{
+			Guid externalAccountId = crmAccount.Id;
+			DataLayer.SqlData.Account.ExternalAccount externalAccount = DataLayer.SqlData.Account.ExternalAccount.ReadOrCreate(SqlConnection, externalAccountId, changeProviderId);
+
+			DatabaseAccount account = ReadOrCreateAccount(crmAccount, externalAccountId);
+
+			StoreInAccountChangesIfNeeded(crmAccount, changeProviderId, externalAccountId, account);
+		}
+
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId, Guid externalContactId, DatabaseContact contact)
 		{
 			Guid contactId = contact.Id;
@@ -80,6 +93,21 @@ namespace Administration.Option.Options.Logic
 			CreateContactChange(changeProviderId, crmContact, externalContactId, contactId, modifiedOn);
 		}
 
+		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId, Guid externalAccountId, DatabaseAccount account)
+		{
+			Guid accountId = account.Id;
+			DateTime modifiedOn = crmAccount.modifiedon;
+
+			bool AccountChangeExists = DatabaseAccountChange.AccountChangeExists(SqlConnection, accountId, externalAccountId, changeProviderId, modifiedOn);
+
+			if (AccountChangeExists == true)
+			{
+				return;
+			}
+
+			CreateAccountChange(changeProviderId, crmAccount, externalAccountId, accountId, modifiedOn);
+		}
+
 		private DatabaseContact ReadOrCreateContact(Contact crmContact, Guid externalContactId)
 		{
 			DatabaseContact contact = ContactCrmMapping.FindContact(Connection, SqlConnection, externalContactId, crmContact);
@@ -90,6 +118,18 @@ namespace Administration.Option.Options.Logic
 			}
 
 			return contact;
+		}
+
+		private DatabaseAccount ReadOrCreateAccount(Account crmAccount, Guid externalAccountId)
+		{
+			DatabaseAccount account = AccountCrmMapping.FindAccount(Connection, SqlConnection, externalAccountId, crmAccount);
+
+			if (account == null)
+			{
+				account = CreateAccount(SqlConnection, crmAccount);
+			}
+
+			return account;
 		}
 
 		private DatabaseContact CreateContact(SqlConnection sqlConnection, Contact crmContact)
@@ -107,6 +147,20 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
+		private DatabaseAccount CreateAccount(SqlConnection sqlConnection, Account crmAccount)
+		{
+			DatabaseAccount account = new DatabaseAccount()
+			{
+				CreatedOn = DateTime.Now,
+				ModifiedOn = crmAccount.modifiedon,
+				name = crmAccount.name,
+			};
+
+			account.Insert(sqlConnection);
+
+			return account;
+		}
+
 		private void CreateContactChange(Guid changeProviderId, Contact crmContact, Guid externalContactId, Guid contactId, DateTime modifiedOn)
 		{
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
@@ -119,9 +173,48 @@ namespace Administration.Option.Options.Logic
 			contactChange.Insert();
 		}
 
+		private void CreateAccountChange(Guid changeProviderId, Account crmAccount, Guid externalAccountId, Guid accountId, DateTime modifiedOn)
+		{
+			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
+
+			accountChange.CreatedOn = crmAccount.createdon;
+			accountChange.ModifiedOn = crmAccount.modifiedon;
+			accountChange.name = crmAccount.name;
+
+			accountChange.Insert();
+		}
+
 		private DateTime GetSearchDateContact(out DataLayer.MongoData.Progress progress)
 		{
 			string progressName = "DynamicsCrmContactFrom";
+
+			progress = DataLayer.MongoData.Progress.ReadNext(Connection, progressName);
+
+			if (progress == null)
+			{
+				progress = new DataLayer.MongoData.Progress()
+				{
+					LastProgressDate = DateTime.MinValue,
+					TargetId = Guid.Empty,
+					TargetName = progressName,
+				};
+
+				progress.Insert(Connection);
+			}
+
+			DateTime searchDate = progress.LastProgressDate;
+
+			if (searchDate <= DateTime.MinValue.AddHours(1))
+			{
+				return DateTime.MinValue;
+			}
+
+			return progress.LastProgressDate.AddHours(-1);
+		}
+
+		private DateTime GetSearchDateAccount(out DataLayer.MongoData.Progress progress)
+		{
+			string progressName = "DynamicsCrmAccountFrom";
 
 			progress = DataLayer.MongoData.Progress.ReadNext(Connection, progressName);
 
