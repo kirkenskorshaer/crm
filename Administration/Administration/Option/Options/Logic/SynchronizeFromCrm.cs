@@ -38,8 +38,6 @@ namespace Administration.Option.Options.Logic
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection connection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
 
-			DateTime currentSearchDate = DateTime.Now;
-
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateContact(out progress);
 
