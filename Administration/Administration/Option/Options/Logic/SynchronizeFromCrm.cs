@@ -43,6 +43,8 @@ namespace Administration.Option.Options.Logic
 
 			SynchronizeContacts(changeProviderId, connection);
 
+			SynchronizeAccounts(changeProviderId, connection);
+
 			return true;
 		}
 
@@ -54,6 +56,18 @@ namespace Administration.Option.Options.Logic
 			List<Contact> contacts = Contact.ReadLatest(connection, searchDate);
 
 			contacts.ForEach(contact => StoreInContactChangesIfNeeded(contact, changeProviderId));
+
+			progress.UpdateAndSetLastProgressDateToNow(Connection);
+		}
+
+		private void SynchronizeAccounts(Guid changeProviderId, DynamicsCrmConnection connection)
+		{
+			DataLayer.MongoData.Progress progress;
+			DateTime searchDate = GetSearchDateAccount(out progress);
+
+			List<Account> accounts = Account.ReadLatest(connection, searchDate);
+
+			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId));
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 		}
