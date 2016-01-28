@@ -6,8 +6,11 @@ using SystemInterface.Dynamics.Crm;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseSynchronizeToCrm = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 
 namespace AdministrationTest.Option.Options.Logic
 {
@@ -61,6 +64,25 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void ExecuteOptionInsertsAccountInCrm()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseAccount databaseAccount = CreateAccount();
+
+			MakeSureAccountIsNextInProgressQueue(databaseAccount);
+
+			synchronizeToCrm.Execute();
+
+			DatabaseExternalAccount externalAccount = DatabaseExternalAccount.Read(_sqlConnection, _changeProvider.Id).Single();
+			Account account = Account.Read(_dynamicsCrmConnection, externalAccount.ExternalAccountId);
+
+			account.Delete();
+			Assert.AreEqual(databaseAccount.name, account.name);
+		}
+
+		[Test]
 		public void ExecuteOptionUpdatesExistingContactInCrm()
 		{
 			Contact contact = InsertCrmContact();
@@ -91,6 +113,36 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(contactChange.Firstname, contactRead.firstname);
 		}
 
+		[Test]
+		public void ExecuteOptionUpdatesExistingAccountInCrm()
+		{
+			Account account = InsertCrmAccount();
+			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
+
+			DatabaseAccount databaseAccount = CreateAccount();
+
+			MakeSureAccountIsNextInProgressQueue(databaseAccount);
+
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(_sqlConnection, account.Id, _changeProvider.Id);
+			externalAccount.Insert();
+
+			DatabaseAccountChange accountChange = new DatabaseAccountChange(_sqlConnection, databaseAccount.Id, externalAccount.ExternalAccountId, _changeProvider.Id)
+			{
+				name = "name2",
+				ModifiedOn = DateTime.Now,
+				CreatedOn = DateTime.Now,
+			};
+			accountChange.Insert();
+
+			synchronizeToCrm.Execute();
+
+			Account accountRead = Account.Read(_dynamicsCrmConnection, externalAccount.ExternalAccountId);
+			account.Delete();
+
+			Assert.AreEqual(accountChange.name, accountRead.name);
+		}
+
 		private Contact InsertCrmContact()
 		{
 			Contact contact = new Contact(_dynamicsCrmConnection)
@@ -104,6 +156,18 @@ namespace AdministrationTest.Option.Options.Logic
 			contact.Insert();
 
 			return contact;
+		}
+
+		private Account InsertCrmAccount()
+		{
+			Account account = new Account(_dynamicsCrmConnection)
+			{
+				name = "firstName1",
+			};
+
+			account.Insert();
+
+			return account;
 		}
 
 		private void MakeSureContactIsNextInProgressQueue(DatabaseContact databaseContact)
@@ -122,6 +186,22 @@ namespace AdministrationTest.Option.Options.Logic
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 		}
 
+		private void MakeSureAccountIsNextInProgressQueue(DatabaseAccount databaseAccount)
+		{
+			DataLayer.MongoData.Progress progress = DataLayer.MongoData.Progress.ReadNext(Connection, MaintainProgress.ProgressAccountToCrm);
+			if (progress == null)
+			{
+				progress = new DataLayer.MongoData.Progress()
+				{
+					LastProgressDate = DateTime.Now,
+					TargetName = MaintainProgress.ProgressAccountToCrm,
+				};
+				progress.Insert(Connection);
+			}
+			progress.TargetId = databaseAccount.Id;
+			progress.UpdateAndSetLastProgressDateToNow(Connection);
+		}
+
 		private DatabaseContact CreateContact()
 		{
 			DatabaseContact contact = new DatabaseContact
@@ -135,6 +215,20 @@ namespace AdministrationTest.Option.Options.Logic
 			contact.Insert(_sqlConnection);
 
 			return contact;
+		}
+
+		private DatabaseAccount CreateAccount()
+		{
+			DatabaseAccount account = new DatabaseAccount
+			{
+				name = "name1",
+				ModifiedOn = DateTime.Now,
+				CreatedOn = DateTime.Now,
+			};
+
+			account.Insert(_sqlConnection);
+
+			return account;
 		}
 	}
 }
