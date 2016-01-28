@@ -61,6 +61,11 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DatabaseContact databaseContact = GetContactToSynchronize(out progress);
 
+			if(databaseContact == null)
+			{
+				return;
+			}
+
 			List<DatabaseExternalContact> externalContacts = ContactCrmMapping.FindContacts(Connection, SqlConnection, databaseContact, changeProviderId);
 
 			if (externalContacts.Count == 0)
@@ -79,6 +84,11 @@ namespace Administration.Option.Options.Logic
 		{
 			DataLayer.MongoData.Progress progress;
 			DatabaseAccount databaseAccount = GetAccountToSynchronize(out progress);
+
+			if(databaseAccount == null)
+			{
+				return;
+			}
 
 			List<DatabaseExternalAccount> externalAccounts = AccountCrmMapping.FindAccounts(Connection, SqlConnection, databaseAccount, changeProviderId);
 
