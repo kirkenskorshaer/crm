@@ -14,20 +14,17 @@ namespace Administration.Conversion
 		public static SystemInterfaceContact Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact)
 		{
 			SystemInterfaceContact toContact = new SystemInterfaceContact(dynamicsCrmConnection);
-			return Convert(dynamicsCrmConnection, fromContact, toContact);
+			Convert(dynamicsCrmConnection, fromContact, toContact);
+
+			return toContact;
 		}
 
-		public static SystemInterfaceContact Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact, SystemInterfaceContact toContact)
+		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact, SystemInterfaceContact toContact)
 		{
-			SystemInterfaceContact systemInterfaceContact = new SystemInterfaceContact(dynamicsCrmConnection)
-			{
-				createdon = fromContact.CreatedOn,
-				firstname = fromContact.Firstname,
-				lastname = fromContact.Lastname,
-				modifiedon = fromContact.ModifiedOn,
-			};
-
-			return systemInterfaceContact;
+			toContact.createdon = fromContact.CreatedOn;
+			toContact.firstname = fromContact.Firstname;
+			toContact.lastname = fromContact.Lastname;
+			toContact.modifiedon = fromContact.ModifiedOn;
 		}
 	}
 }

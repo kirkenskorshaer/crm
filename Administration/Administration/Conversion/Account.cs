@@ -9,17 +9,14 @@ namespace Administration.Conversion
 		public static SystemInterfaceAccount Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseAccount fromAccount)
 		{
 			SystemInterfaceAccount toAccount = new SystemInterfaceAccount(dynamicsCrmConnection);
-			return Convert(dynamicsCrmConnection, fromAccount, toAccount);
+			Convert(dynamicsCrmConnection, fromAccount, toAccount);
+
+			return toAccount;
 		}
 
-		public static SystemInterfaceAccount Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
+		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			SystemInterfaceAccount systemInterfaceAccount = new SystemInterfaceAccount(dynamicsCrmConnection)
-			{
-				name = fromAccount.name,
-			};
-
-			return systemInterfaceAccount;
+			toAccount.name = fromAccount.name;
 		}
-    }
+	}
 }
