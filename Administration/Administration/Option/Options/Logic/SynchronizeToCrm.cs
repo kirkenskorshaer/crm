@@ -123,7 +123,7 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			systemInterfaceContact.SetActive(false);
+			systemInterfaceContactInCrm.SetActive(false);
 
 			systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
@@ -135,9 +135,9 @@ namespace Administration.Option.Options.Logic
 
 			Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact, systemInterfaceContactInCrm);
 
-			systemInterfaceContact.Update();
+			systemInterfaceContactInCrm.Update();
 
-			systemInterfaceContact.SetActive(true);
+			systemInterfaceContactInCrm.SetActive(true);
 		}
 
 		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount)
@@ -151,7 +151,7 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			systemInterfaceAccount.SetActive(false);
+			systemInterfaceAccountInCrm.SetActive(false);
 
 			systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
@@ -163,9 +163,9 @@ namespace Administration.Option.Options.Logic
 
 			Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount, systemInterfaceAccountInCrm);
 
-			systemInterfaceAccount.Update();
+			systemInterfaceAccountInCrm.Update();
 
-			systemInterfaceAccount.SetActive(true);
+			systemInterfaceAccountInCrm.SetActive(true);
 		}
 
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)
