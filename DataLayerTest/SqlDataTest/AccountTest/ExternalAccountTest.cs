@@ -56,7 +56,9 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			ChangeProvider changeProvider = InsertChangeProvider();
 			Guid externalAccountId = Guid.NewGuid();
 
-			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, externalAccountId, changeProvider.Id);
+			Account account = new AccountTest().AccountInsert(_sqlConnection);
+
+			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, externalAccountId, changeProvider.Id, account.Id);
 			externalAccountCreated.Insert();
 
 			ExternalAccount externalAccountRead = ExternalAccount.Read(_sqlConnection, externalAccountId, changeProvider.Id);
@@ -70,12 +72,14 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		{
 			ChangeProvider changeProvider = InsertChangeProvider();
 
+			Account account = new AccountTest().AccountInsert(_sqlConnection);
+
 			Guid externalAccount1Id = Guid.NewGuid();
-			ExternalAccount externalAccount1Created = new ExternalAccount(_sqlConnection, externalAccount1Id, changeProvider.Id);
+			ExternalAccount externalAccount1Created = new ExternalAccount(_sqlConnection, externalAccount1Id, changeProvider.Id, account.Id);
 			externalAccount1Created.Insert();
 
 			Guid externalAccount2Id = Guid.NewGuid();
-			ExternalAccount externalAccount2Created = new ExternalAccount(_sqlConnection, externalAccount2Id, changeProvider.Id);
+			ExternalAccount externalAccount2Created = new ExternalAccount(_sqlConnection, externalAccount2Id, changeProvider.Id, account.Id);
 			externalAccount2Created.Insert();
 
 			List<ExternalAccount> externalAccountReadList = ExternalAccount.Read(_sqlConnection, changeProvider.Id);
@@ -90,16 +94,16 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		{
 			ChangeProvider changeProvider = InsertChangeProvider();
 
+			Account account = new AccountTest().AccountInsert(_sqlConnection);
+
 			Guid externalAccountId = Guid.NewGuid();
-			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, externalAccountId, changeProvider.Id);
+			ExternalAccount externalAccountCreated = new ExternalAccount(_sqlConnection, externalAccountId, changeProvider.Id, account.Id);
 			externalAccountCreated.Insert();
 
-			Account Account = InsertAccount(_sqlConnection);
+			InsertAccountChange(_sqlConnection, account.Id, externalAccountId, changeProvider.Id, DateTime.Now);
+			InsertAccountChange(_sqlConnection, account.Id, externalAccountId, changeProvider.Id, DateTime.Now);
 
-			InsertAccountChange(_sqlConnection, Account.Id, externalAccountId, changeProvider.Id, DateTime.Now);
-			InsertAccountChange(_sqlConnection, Account.Id, externalAccountId, changeProvider.Id, DateTime.Now);
-
-			List<ExternalAccount> externalAccountRead = ExternalAccount.ReadFromChangeProviderAndAccount(_sqlConnection, changeProvider.Id, Account.Id);
+			List<ExternalAccount> externalAccountRead = ExternalAccount.ReadFromChangeProviderAndAccount(_sqlConnection, changeProvider.Id, account.Id);
 
 			Assert.AreEqual(externalAccountCreated.ChangeProviderId, externalAccountRead.Single().ChangeProviderId);
 			Assert.AreEqual(externalAccountCreated.ExternalAccountId, externalAccountRead.Single().ExternalAccountId);

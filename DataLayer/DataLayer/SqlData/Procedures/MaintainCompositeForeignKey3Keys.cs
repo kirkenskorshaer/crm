@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Data.SqlClient;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DataLayer.SqlData.Procedures
 {
-	internal static class MaintainForeignKey
+	internal static class MaintainCompositeForeignKey3Keys
 	{
 		internal static void MakeSureProcedureExists(SqlConnection sqlConnection)
 		{
@@ -31,11 +27,11 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("		WHERE");
 			sqlStringBuilder.AppendLine("			objects.type = 'P'");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			objects.name = 'MaintainForeignKey'");
+			sqlStringBuilder.AppendLine("			objects.name = 'MaintainCompositeForeignKey3Keys'");
 			sqlStringBuilder.AppendLine("	)");
 			sqlStringBuilder.AppendLine(")");
 			sqlStringBuilder.AppendLine("BEGIN");
-			sqlStringBuilder.AppendLine("	DROP PROCEDURE MaintainForeignKey");
+			sqlStringBuilder.AppendLine("	DROP PROCEDURE MaintainCompositeForeignKey3Keys");
 			sqlStringBuilder.AppendLine("END");
 
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
@@ -47,16 +43,22 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder = new StringBuilder();
 
 			sqlStringBuilder.AppendLine("CREATE PROCEDURE");
-			sqlStringBuilder.AppendLine("	MaintainForeignKey");
+			sqlStringBuilder.AppendLine("	MaintainCompositeForeignKey3Keys");
 			sqlStringBuilder.AppendLine("	@tablename NVARCHAR(128)");
-			sqlStringBuilder.AppendLine("	,@foreignKeyName NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@foreignKey1Name NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@foreignKey2Name NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@foreignKey3Name NVARCHAR(128)");
 			sqlStringBuilder.AppendLine("	,@primaryTablename NVARCHAR(128)");
-			sqlStringBuilder.AppendLine("	,@primaryKeyName NVARCHAR(128)");
-			sqlStringBuilder.AppendLine("	,@cascade BIT = 1");
+			sqlStringBuilder.AppendLine("	,@primaryKey1Name NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@primaryKey2Name NVARCHAR(128)");
+			sqlStringBuilder.AppendLine("	,@primaryKey3Name NVARCHAR(128)");
 			sqlStringBuilder.AppendLine("	,@debug BIT = 1");
 			sqlStringBuilder.AppendLine("AS");
 			sqlStringBuilder.AppendLine("BEGIN");
-			sqlStringBuilder.AppendLine("	IF(NOT EXISTS");
+			sqlStringBuilder.AppendLine("IF(");
+			sqlStringBuilder.AppendLine("	SELECT");
+			sqlStringBuilder.AppendLine("		COUNT(*)");
+			sqlStringBuilder.AppendLine("	FROM");
 			sqlStringBuilder.AppendLine("	(");
 			sqlStringBuilder.AppendLine("		SELECT");
 			sqlStringBuilder.AppendLine("			objects.name [ForeignKeyTable]");
@@ -89,14 +91,14 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("			AND");
 			sqlStringBuilder.AppendLine("			objects.name = @tablename");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			foreign_keys.delete_referential_action = @cascade");
+			sqlStringBuilder.AppendLine("			foreign_keys.delete_referential_action = 1");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			foreign_keys.update_referential_action = @cascade");
+			sqlStringBuilder.AppendLine("			foreign_keys.update_referential_action = 1");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			columns.name = @foreignKeyName");
+			sqlStringBuilder.AppendLine("			columns.name IN (@foreignKey1Name,@foreignKey2Name,@foreignKey3Name)");
 			sqlStringBuilder.AppendLine("			AND");
-			sqlStringBuilder.AppendLine("			childColumns.name = @primaryKeyName");
-			sqlStringBuilder.AppendLine("	))");
+			sqlStringBuilder.AppendLine("			childColumns.name IN (@primaryKey1Name,@primaryKey2Name,@primaryKey3Name)");
+			sqlStringBuilder.AppendLine("		) foreignKeys ) != 3");
 			sqlStringBuilder.AppendLine("	BEGIN");
 			sqlStringBuilder.AppendLine("");
 			sqlStringBuilder.AppendLine("		DECLARE @sql nvarchar(4000)");
@@ -105,19 +107,22 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("		ALTER TABLE");
 			sqlStringBuilder.AppendLine("			' + QUOTENAME(@tablename) + '");
 			sqlStringBuilder.AppendLine("		ADD FOREIGN KEY");
-			sqlStringBuilder.AppendLine("		(' + QUOTENAME(@foreignKeyName) + ')");
+			sqlStringBuilder.AppendLine("		(");
+			sqlStringBuilder.AppendLine("			' + QUOTENAME(@foreignKey1Name) + '");
+			sqlStringBuilder.AppendLine("			,' + QUOTENAME(@foreignKey2Name) + '");
+			sqlStringBuilder.AppendLine("			,' + QUOTENAME(@foreignKey3Name) + '");
+			sqlStringBuilder.AppendLine("		)");
 			sqlStringBuilder.AppendLine("		REFERENCES'+");
 			sqlStringBuilder.AppendLine("			QUOTENAME(@primaryTablename) + '");
-			sqlStringBuilder.AppendLine("		(' + QUOTENAME(@primaryKeyName) + ')'");
-			sqlStringBuilder.AppendLine("");
-			sqlStringBuilder.AppendLine("		IF(@cascade = 1)");
-			sqlStringBuilder.AppendLine("		BEGIN");
-			sqlStringBuilder.AppendLine("			SET @sql = @sql + '");
-			sqlStringBuilder.AppendLine("			ON DELETE");
-			sqlStringBuilder.AppendLine("				CASCADE");
-			sqlStringBuilder.AppendLine("			ON UPDATE");
-			sqlStringBuilder.AppendLine("				CASCADE'");
-			sqlStringBuilder.AppendLine("		END");
+			sqlStringBuilder.AppendLine("		(");
+			sqlStringBuilder.AppendLine("			' + QUOTENAME(@primaryKey1Name) + '");
+			sqlStringBuilder.AppendLine("			,' + QUOTENAME(@primaryKey2Name) + '");
+			sqlStringBuilder.AppendLine("			,' + QUOTENAME(@primaryKey3Name) + '");
+			sqlStringBuilder.AppendLine("		)");
+			sqlStringBuilder.AppendLine("		ON DELETE");
+			sqlStringBuilder.AppendLine("			CASCADE");
+			sqlStringBuilder.AppendLine("		ON UPDATE");
+			sqlStringBuilder.AppendLine("			CASCADE'");
 			sqlStringBuilder.AppendLine("");
 			sqlStringBuilder.AppendLine("		IF(@debug = 1)");
 			sqlStringBuilder.AppendLine("		BEGIN");
@@ -125,7 +130,7 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("		END");
 			sqlStringBuilder.AppendLine("		ELSE");
 			sqlStringBuilder.AppendLine("		BEGIN");
-			sqlStringBuilder.AppendLine("			EXEC SP_EXECUTESQL @sql, N'@tablename NVARCHAR(128), @foreignKeyName NVARCHAR(128), @primaryTablename NVARCHAR(128), @primaryKeyName NVARCHAR(128)', @tablename = @tablename, @foreignKeyName = @foreignKeyName, @primaryTablename = @primaryTablename, @primaryKeyName = @primaryKeyName");
+			sqlStringBuilder.AppendLine("			EXEC SP_EXECUTESQL @sql, N'@tablename NVARCHAR(128), @foreignKey1Name NVARCHAR(128), @foreignKey2Name NVARCHAR(128), @foreignKey3Name NVARCHAR(128), @primaryTablename NVARCHAR(128), @primaryKey1Name NVARCHAR(128), @primaryKey2Name NVARCHAR(128), @primaryKey3Name NVARCHAR(128)', @tablename = @tablename, @foreignKey1Name = @foreignKey1Name, @foreignKey2Name = @foreignKey2Name, @foreignKey3Name = @foreignKey3Name, @primaryTablename = @primaryTablename, @primaryKey1Name = @primaryKey1Name, @primaryKey2Name = @primaryKey2Name, @primaryKey3Name = @primaryKey3Name");
 			sqlStringBuilder.AppendLine("		END");
 			sqlStringBuilder.AppendLine("	END");
 			sqlStringBuilder.AppendLine("	ELSE");

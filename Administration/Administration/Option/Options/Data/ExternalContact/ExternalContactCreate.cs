@@ -29,8 +29,9 @@ namespace Administration.Option.Options.Data.ExternalContact
 		{
 			Guid externalContactId = _databaseExternalContactCreate.ExternalContactId;
 			Guid changeProviderId = _databaseExternalContactCreate.ChangeProviderId;
+			Guid contactId = _databaseExternalContactCreate.ContactId;
 
-			DataLayer.SqlData.Contact.ExternalContact externalContact = new DataLayer.SqlData.Contact.ExternalContact(SqlConnection, externalContactId, changeProviderId);
+			DataLayer.SqlData.Contact.ExternalContact externalContact = new DataLayer.SqlData.Contact.ExternalContact(SqlConnection, externalContactId, changeProviderId, contactId);
 			externalContact.Insert();
 
 			return true;

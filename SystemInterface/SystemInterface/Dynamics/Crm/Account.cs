@@ -125,8 +125,10 @@ namespace SystemInterface.Dynamics.Crm
 			return account;
 		}
 
-		public List<Group> ReadGroups(Entity accountEntity)
+		public List<Group> ReadGroups()
 		{
+			Entity accountEntity = GetAsEntity(true);
+
 			List<Group> groups = ReadNNRelationship(_groupRelationshipName, accountEntity, entity => new Group(entity));
 
 			return groups;
@@ -148,27 +150,43 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void SynchronizeContacts(List<Contact> contacts)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> contactIds = contacts.Select(contact => contact.Id).ToList();
+
+			SynchronizeContacts(contactIds);
+		}
+
+		public void SynchronizeContacts(List<Guid> contactIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _contactRelationshipName, "contact", "contactid", contactIds);
 		}
 
 		public void SynchronizeIndsamlere(List<Contact> indsamlere)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> indsamlerIds = indsamlere.Select(contact => contact.Id).ToList();
+
+			SynchronizeIndsamlere(indsamlerIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Guid> indsamlerIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds);
 		}
 
+
 		public void SynchronizeGroups(List<Group> groups)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> groupIds = groups.Select(group => group.GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<Guid> groupIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
 		}
@@ -196,6 +214,39 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			Connection.Service.Execute(setStateRequest);
+		}
+
+		public List<Guid> GetExternalContactIdsFromAccountContact()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _contactRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Guid> GetExternalContactIdsFromAccountIndsamler()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Guid> GetExternalContactIdsFromAccountGroup()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("new_groupid")).ToList();
+
+			return externalIds;
 		}
 	}
 }

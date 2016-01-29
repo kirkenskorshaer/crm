@@ -122,11 +122,11 @@ namespace DataLayer.SqlData
 		public static void MaintainAllTables(SqlConnection sqlConnection)
 		{
 			ChangeProvider.MaintainTable(sqlConnection);
-			ExternalContact.MaintainTable(sqlConnection);
 			Contact.Contact.MaintainTable(sqlConnection);
+			ExternalContact.MaintainTable(sqlConnection);
 			ContactChange.MaintainTable(sqlConnection);
-			ExternalAccount.MaintainTable(sqlConnection);
 			Account.Account.MaintainTable(sqlConnection);
+			ExternalAccount.MaintainTable(sqlConnection);
 			AccountChange.MaintainTable(sqlConnection);
 			AccountContact.MaintainTable(sqlConnection);
 			AccountChangeContact.MaintainTable(sqlConnection);
@@ -148,14 +148,14 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(AccountIndsamler).Name);
 			DropTable(sqlConnection, typeof(AccountChangeIndsamler).Name);
 			DropTable(sqlConnection, typeof(AccountChangeContact).Name);
-			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 			DropTable(sqlConnection, typeof(ExternalContact).Name);
+			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 
 			DropTable(sqlConnection, typeof(Group.AccountChangeGroup).Name);
 			DropTable(sqlConnection, typeof(AccountChange).Name);
 			DropTable(sqlConnection, typeof(Group.AccountGroup).Name);
-			DropTable(sqlConnection, typeof(Account.Account).Name);
 			DropTable(sqlConnection, typeof(ExternalAccount).Name);
+			DropTable(sqlConnection, typeof(Account.Account).Name);
 
 			DropTable(sqlConnection, typeof(Group.Group).Name);
 
@@ -223,7 +223,7 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
-		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName)
+		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName, bool cascade = true)
 		{
 			Procedures.MaintainForeignKey.MakeSureProcedureExists(sqlConnection);
 
@@ -235,6 +235,7 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("foreignKeyName", foreignKeyName),
 				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
 				new KeyValuePair<string, object>("primaryKeyName", primaryKeyName),
+				new KeyValuePair<string, object>("cascade", cascade ? 1 : 0),
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
@@ -252,6 +253,25 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
 				new KeyValuePair<string, object>("primaryKey1Name", primaryKey1Name),
 				new KeyValuePair<string, object>("primaryKey2Name", primaryKey2Name),
+				new KeyValuePair<string, object>("debug", 0));
+		}
+
+		public static void MaintainCompositeForeignKey3Keys(SqlConnection sqlConnection, string tableName, string foreignKey1Name, string foreignKey2Name, string foreignKey3Name, string primaryTablename, string primaryKey1Name, string primaryKey2Name, string primaryKey3Name)
+		{
+			Procedures.MaintainCompositeForeignKey3Keys.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("MaintainCompositeForeignKey3Keys");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("foreignKey1Name", foreignKey1Name),
+				new KeyValuePair<string, object>("foreignKey2Name", foreignKey2Name),
+				new KeyValuePair<string, object>("foreignKey3Name", foreignKey3Name),
+				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
+				new KeyValuePair<string, object>("primaryKey1Name", primaryKey1Name),
+				new KeyValuePair<string, object>("primaryKey2Name", primaryKey2Name),
+				new KeyValuePair<string, object>("primaryKey3Name", primaryKey3Name),
 				new KeyValuePair<string, object>("debug", 0));
 		}
 

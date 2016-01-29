@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparer\ListCompare.cs" />
     <Compile Include="Converter\DateTimeConverter.cs" />
     <Compile Include="Converter\GuidConverter.cs" />
     <Compile Include="Converter\MathHelper.cs" />

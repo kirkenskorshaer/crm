@@ -6,16 +6,23 @@ using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
+using DatabaseAccountContact = DataLayer.SqlData.Account.AccountContact;
+using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
+using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
+using DatabaseGroup = DataLayer.SqlData.Group.Group;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using SystemInterfaceAccount = SystemInterface.Dynamics.Crm.Account;
+using SystemInterfaceGroup = SystemInterface.Dynamics.Crm.Group;
 using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
-using System.Data.SqlClient;
 using System.Linq;
 using Administration.Mapping.Account;
+using Utilities.Comparer;
+using DataLayer.SqlData.Account;
 
 namespace Administration.Option.Options.Logic
 {
@@ -61,12 +68,12 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DatabaseContact databaseContact = GetContactToSynchronize(out progress);
 
-			if(databaseContact == null)
+			if (databaseContact == null)
 			{
 				return;
 			}
 
-			List<DatabaseExternalContact> externalContacts = ContactCrmMapping.FindContacts(Connection, SqlConnection, databaseContact, changeProviderId);
+			List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(SqlConnection, changeProviderId, databaseContact.Id);
 
 			if (externalContacts.Count == 0)
 			{
@@ -78,6 +85,8 @@ namespace Administration.Option.Options.Logic
 			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
+
+			return;
 		}
 
 		private void SynchronizeAccounts(Guid changeProviderId)
@@ -85,12 +94,12 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DatabaseAccount databaseAccount = GetAccountToSynchronize(out progress);
 
-			if(databaseAccount == null)
+			if (databaseAccount == null)
 			{
 				return;
 			}
 
-			List<DatabaseExternalAccount> externalAccounts = AccountCrmMapping.FindAccounts(Connection, SqlConnection, databaseAccount, changeProviderId);
+			List<DatabaseExternalAccount> externalAccounts = DatabaseExternalAccount.ReadFromChangeProviderAndAccount(SqlConnection, changeProviderId, databaseAccount.Id);
 
 			if (externalAccounts.Count == 0)
 			{
@@ -102,6 +111,8 @@ namespace Administration.Option.Options.Logic
 			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
+
+			return;
 		}
 
 		private void InsertContactAndCreateExternalContact(Guid changeProviderId, DatabaseContact databaseContact)
@@ -109,8 +120,17 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
 			systemInterfaceContact.Insert();
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId, databaseContact.Id);
 			externalContact.Insert();
+
+			InsertContactRelations(databaseContact, systemInterfaceContact, changeProviderId);
+		}
+
+		private void InsertContactRelations(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
+		{
+			InsertAccountContact(databaseContact, systemInterfaceContact, changeProviderId);
+			InsertContactGroup(databaseContact, systemInterfaceContact);
+			InsertAccountIndsamler(databaseContact, systemInterfaceContact, changeProviderId);
 		}
 
 		private void InsertAccountAndCreateExternalAccount(Guid changeProviderId, DatabaseAccount databaseAccount)
@@ -118,19 +138,44 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
 			systemInterfaceAccount.Insert();
 
-			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId);
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId, databaseAccount.Id);
 			externalAccount.Insert();
+
+			InsertAccountRelations(databaseAccount, systemInterfaceAccount, changeProviderId);
+		}
+
+		private void InsertAccountRelations(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			InsertAccountContact(databaseAccount, systemInterfaceAccount, changeProviderId);
+			InsertAccountIndsamler(databaseAccount, systemInterfaceAccount, changeProviderId);
+			InsertAccountGroup(databaseAccount, systemInterfaceAccount);
 		}
 
 		private void UpdateExternalContactIfNeeded(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact)
 		{
+			bool isDeactivated = false;
+
 			SystemInterfaceContact systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
+			isDeactivated = UpdateExternalContactData(changeProviderId, databaseExternalContact, databaseContact, systemInterfaceContactInCrm);
+
+			isDeactivated = SynchronizeContactGroup(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountContact(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountIndsamler(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+
+			if (isDeactivated)
+			{
+				systemInterfaceContactInCrm.SetActive(true);
+			}
+		}
+
+		private bool UpdateExternalContactData(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContactInCrm)
+		{
 			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
 
 			if (systemInterfaceContactInCrm.Equals(systemInterfaceContact))
 			{
-				return;
+				return false;
 			}
 
 			systemInterfaceContactInCrm.SetActive(false);
@@ -147,18 +192,34 @@ namespace Administration.Option.Options.Logic
 
 			systemInterfaceContactInCrm.Update();
 
-			systemInterfaceContactInCrm.SetActive(true);
+			return true;
 		}
 
 		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount)
 		{
+			bool isDeactivated = false;
+
 			SystemInterfaceAccount systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
+			isDeactivated = UpdateExternalAccountData(changeProviderId, databaseExternalAccount, databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+
+			isDeactivated = SynchronizeAccountContact(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountIndsamler(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountGroup(databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+
+			if (isDeactivated)
+			{
+				systemInterfaceAccountInCrm.SetActive(true);
+			}
+		}
+
+		private bool UpdateExternalAccountData(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccountInCrm, bool isDeactivated)
+		{
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
 
 			if (systemInterfaceAccountInCrm.Equals(systemInterfaceAccount))
 			{
-				return;
+				return isDeactivated;
 			}
 
 			systemInterfaceAccountInCrm.SetActive(false);
@@ -175,7 +236,7 @@ namespace Administration.Option.Options.Logic
 
 			systemInterfaceAccountInCrm.Update();
 
-			systemInterfaceAccountInCrm.SetActive(true);
+			return true;
 		}
 
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)
@@ -208,6 +269,249 @@ namespace Administration.Option.Options.Logic
 			DatabaseAccount account = DatabaseAccount.Read(SqlConnection, accountId);
 
 			return account;
+		}
+
+		private bool SynchronizeAccountContact(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceAccountsAlreadyAssociated = systemInterfaceContact.GetExternalAccountIdsFromAccountContact();
+
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountContacts.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			if (ListCompare.ListEquals(systemInterfaceAccountsAlreadyAssociated, accountIds))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeAccounts(accountIds);
+
+			return true;
+		}
+
+		private bool InsertAccountContact(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
+		{
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountContacts.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			systemInterfaceContact.SynchronizeAccounts(accountIds);
+
+			return true;
+		}
+
+		private bool SynchronizeContactGroup(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<SystemInterfaceGroup> systemInterfaceGroupsAlreadyAssociated = systemInterfaceContact.GetExternalGroupsFromContactGroup();
+
+			List<DatabaseContactGroup> contactGroups = DatabaseContactGroup.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseGroup> databaseGroups = contactGroups.Select(contactGroup => DatabaseGroup.Read(SqlConnection, contactGroup.GroupId)).ToList();
+
+			List<string> groupNames = databaseGroups.Select(group => group.Name).ToList();
+
+			if (ListCompare.ListEquals(systemInterfaceGroupsAlreadyAssociated, groupNames, (interfaceGroup, groupName) => interfaceGroup.Name == groupName))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeGroups(groupNames);
+
+			return true;
+		}
+
+		private void InsertContactGroup(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact)
+		{
+			List<DatabaseContactGroup> contactGroups = DatabaseContactGroup.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseGroup> databaseGroups = contactGroups.Select(contactGroup => DatabaseGroup.Read(SqlConnection, contactGroup.GroupId)).ToList();
+
+			List<string> groupNames = databaseGroups.Select(group => group.Name).ToList();
+			systemInterfaceContact.SynchronizeGroups(groupNames);
+		}
+
+		private bool SynchronizeAccountIndsamler(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceAccountsAlreadyAssociated = systemInterfaceContact.GetExternalAccountIdsFromAccountIndsamlere();
+
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountIndsamlere.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			if (ListCompare.ListEquals(systemInterfaceAccountsAlreadyAssociated, accountIds))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeIndsamlere(accountIds);
+
+			return true;
+		}
+
+		private void InsertAccountIndsamler(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
+		{
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountIndsamlere.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			systemInterfaceContact.SynchronizeIndsamlere(accountIds);
+		}
+
+		private List<Guid> GetExternalAccountIdsFromDatabaseAccounts(Guid changeProviderId, List<DatabaseAccount> databaseAccounts)
+		{
+			List<DatabaseExternalAccount> databaseExternalAccounts = databaseAccounts.SelectMany(databaseAccount => AccountCrmMapping.FindAccounts(Connection, SqlConnection, databaseAccount, changeProviderId)).ToList();
+
+			List<Guid> accountIds = databaseExternalAccounts.Select(databaseExternalAccount => databaseExternalAccount.ExternalAccountId).ToList();
+			return accountIds;
+		}
+
+		private bool SynchronizeAccountContact(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountContact();
+
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountContacts.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			if (ListCompare.ListEquals(contactIds, systemInterfaceContactsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeContacts(contactIds);
+
+			return true;
+		}
+
+		private void InsertAccountContact(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountContacts.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			systemInterfaceAccount.SynchronizeContacts(contactIds);
+		}
+
+		private bool SynchronizeAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountIndsamlere.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			if (ListCompare.ListEquals(contactIds, systemInterfaceContactsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+
+			return true;
+		}
+
+		private void InsertAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountIndsamlere.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+		}
+
+		private bool SynchronizeAccountGroup(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceGroupsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+
+			List<DatabaseAccountGroup> accountGroups = DatabaseAccountGroup.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseGroup> databaseGroups = accountGroups.Select(accountGroup => DatabaseGroup.Read(SqlConnection, accountGroup.GroupId)).ToList();
+
+			List<SystemInterfaceGroup> systemInterfaceGroups = databaseGroups.Select(databaseGroup => SystemInterfaceGroup.ReadOrCreate(_dynamicsCrmConnection, databaseGroup.Name)).ToList();
+
+			List<Guid> groupIds = systemInterfaceGroups.Select(group => group.GroupId).ToList();
+
+			if (ListCompare.ListEquals(groupIds, systemInterfaceGroupsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeGroups(groupIds);
+
+			return true;
+		}
+
+		private void InsertAccountGroup(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount)
+		{
+			List<DatabaseAccountGroup> accountGroups = DatabaseAccountGroup.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseGroup> databaseGroups = accountGroups.Select(accountGroup => DatabaseGroup.Read(SqlConnection, accountGroup.GroupId)).ToList();
+
+			List<SystemInterfaceGroup> systemInterfaceGroups = databaseGroups.Select(databaseGroup => SystemInterfaceGroup.ReadOrCreate(_dynamicsCrmConnection, databaseGroup.Name)).ToList();
+
+			List<Guid> groupIds = systemInterfaceGroups.Select(group => group.GroupId).ToList();
+
+			systemInterfaceAccount.SynchronizeGroups(groupIds);
+		}
+
+		private List<Guid> GetExternalContactIdsFromDatabaseContacts(Guid changeProviderId, List<DatabaseContact> databaseContacts)
+		{
+			List<DatabaseExternalContact> databaseExternalContacts = databaseContacts.SelectMany(databaseContact => ContactCrmMapping.FindContacts(Connection, SqlConnection, databaseContact, changeProviderId)).ToList();
+
+			List<Guid> contactIds = databaseExternalContacts.Select(databaseExternalContact => databaseExternalContact.ExternalContactId).ToList();
+			return contactIds;
 		}
 	}
 }

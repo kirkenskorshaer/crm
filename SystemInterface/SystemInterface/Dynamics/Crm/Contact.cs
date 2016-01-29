@@ -44,6 +44,8 @@ namespace SystemInterface.Dynamics.Crm
 
 		public List<Group> Groups = new List<Group>();
 		private static string _groupRelationshipName = "new_group_contact";
+		private string _accountRelationshipName = "new_account_contact";
+		private string _indsamlerAccountRelationshipName = "new_account_contact_indsamlere";
 
 		private static readonly ColumnSet ColumnSetContact = new ColumnSet(
 			"contactid",
@@ -106,6 +108,7 @@ namespace SystemInterface.Dynamics.Crm
 			if (includeContactId)
 			{
 				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", Id));
+				crmEntity.Id = Id;
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", firstname));
@@ -176,6 +179,86 @@ namespace SystemInterface.Dynamics.Crm
 		private void SynchronizeGroupsInCrm(Entity contactEntity)
 		{
 			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
+		}
+
+		public void SynchronizeGroups()
+		{
+			List<Guid> groupIds = Groups.Select(group => group.GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<string> groupNames)
+		{
+			List<Guid> groupIds = groupNames.Select(groupName => Group.ReadOrCreate(Connection, groupName).GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<Guid> groupIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
+		}
+
+		public void SynchronizeAccounts(List<Account> accounts)
+		{
+			List<Guid> accountIds = accounts.Select(account => account.Id).ToList();
+			SynchronizeAccounts(accountIds);
+		}
+
+		public void SynchronizeAccounts(List<Guid> accountIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _accountRelationshipName, "account", "accountid", accountIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Account> indsamlerAccounts)
+		{
+			List<Guid> indsamlerAccountIds = indsamlerAccounts.Select(account => account.Id).ToList();
+			SynchronizeIndsamlere(indsamlerAccountIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Guid> indsamlerAccountIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _indsamlerAccountRelationshipName, "account", "accountid", indsamlerAccountIds);
+		}
+
+		public List<Guid> GetExternalAccountIdsFromAccountContact()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _accountRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Group> GetExternalGroupsFromContactGroup()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+
+			List<Group> externalGroups = relatedEntities.Select(entity => new Group(entity)).ToList();
+
+			return externalGroups;
+		}
+
+		public List<Guid> GetExternalAccountIdsFromAccountIndsamlere()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerAccountRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+
+			return externalIds;
 		}
 
 		public enum StateEnum

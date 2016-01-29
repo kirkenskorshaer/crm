@@ -90,7 +90,7 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 			};
 			response.ChangeProvider.Insert(_sqlConnection);
 
-			response.ExternalAccount = new ExternalAccount(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id);
+			response.ExternalAccount = new ExternalAccount(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id, response.Account.Id);
 			response.ExternalAccount.Insert();
 
 			AccountChangeTest accountChangeTest = new AccountChangeTest();

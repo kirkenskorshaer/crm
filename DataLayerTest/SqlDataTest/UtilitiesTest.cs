@@ -186,9 +186,10 @@ namespace DataLayerTest.SqlDataTest
 		}
 
 		[Test]
-		[Ignore]
+		//[Ignore]
 		public void MaintainTables()
 		{
+			//Utilities.DeleteAllTables(_sqlConnection);
 			Utilities.MaintainAllTables(_sqlConnection);
 		}
 

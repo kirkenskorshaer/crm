@@ -29,10 +29,8 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
-		internal ExternalAccount InsertExternalAccount(SqlConnection sqlConnection)
+		internal ExternalAccount InsertExternalAccount(SqlConnection sqlConnection, Guid accountId)
 		{
-			DateTime creationDate = DateTime.Now;
-
 			ChangeProvider changeProvider = new ChangeProvider();
 			changeProvider.Name = $"name_{Guid.NewGuid()}";
 
@@ -40,7 +38,12 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 
 			Guid changeProviderId = changeProvider.Id;
 
-			ExternalAccount createdExternalAccount = new ExternalAccount(sqlConnection, Guid.NewGuid(), changeProviderId);
+			return InsertExternalAccount(sqlConnection, accountId, Guid.NewGuid(), changeProviderId);
+        }
+
+		internal ExternalAccount InsertExternalAccount(SqlConnection sqlConnection, Guid accountId, Guid ExternalAccountId, Guid changeProviderId)
+		{
+			ExternalAccount createdExternalAccount = new ExternalAccount(sqlConnection, ExternalAccountId, changeProviderId, accountId);
 
 			createdExternalAccount.Insert();
 
@@ -53,8 +56,8 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		[TestCase(AccountChange.IdType.ExternalAccountId)]
 		public void ReadReadsInserted(AccountChange.IdType idType)
 		{
-			ExternalAccount externalAccountCreated = InsertExternalAccount(_sqlConnection);
 			Account AccountCreated = InsertAccount(_sqlConnection);
+			ExternalAccount externalAccountCreated = InsertExternalAccount(_sqlConnection, AccountCreated.Id);
 			DateTime createdTime = DateTime.Now;
 
 			AccountChange AccountChangeCreated = AccountChangeInsert(externalAccountCreated, AccountCreated, createdTime);
@@ -100,11 +103,12 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		[Test]
 		public void GetAccountsReturnsAccounts()
 		{
-			ExternalAccount externalAccount1Created = InsertExternalAccount(_sqlConnection);
-			ExternalAccount externalAccount2Created = InsertExternalAccount(_sqlConnection);
-
 			Account Account1Created = InsertAccount(_sqlConnection);
 			Account Account2Created = InsertAccount(_sqlConnection);
+
+			ExternalAccount externalAccount1Created = InsertExternalAccount(_sqlConnection, Account1Created.Id);
+			ExternalAccount externalAccount2Created = InsertExternalAccount(_sqlConnection, Account2Created.Id);
+			ExternalAccount externalAccount2_1Created = InsertExternalAccount(_sqlConnection, Account1Created.Id, externalAccount2Created.ExternalAccountId, externalAccount1Created.ChangeProviderId);
 
 			DateTime creationDate = DateTime.Now;
 
@@ -116,7 +120,7 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			};
 			AccountChange1_1Created.Insert();
 
-			AccountChange AccountChange1_2Created = new AccountChange(_sqlConnection, Account1Created.Id, externalAccount2Created.ExternalAccountId, externalAccount2Created.ChangeProviderId)
+			AccountChange AccountChange1_2Created = new AccountChange(_sqlConnection, Account1Created.Id, externalAccount2Created.ExternalAccountId, externalAccount1Created.ChangeProviderId)
 			{
 				CreatedOn = creationDate,
 				ModifiedOn = creationDate,
@@ -143,11 +147,12 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		[Test]
 		public void GetExternalAccounts()
 		{
-			ExternalAccount externalAccount1Created = InsertExternalAccount(_sqlConnection);
-			ExternalAccount externalAccount2Created = InsertExternalAccount(_sqlConnection);
-
 			Account Account1Created = InsertAccount(_sqlConnection);
 			Account Account2Created = InsertAccount(_sqlConnection);
+
+			ExternalAccount externalAccount1Created = InsertExternalAccount(_sqlConnection, Account1Created.Id);
+			ExternalAccount externalAccount2Created = InsertExternalAccount(_sqlConnection, Account1Created.Id);
+			ExternalAccount externalAccount1_2Created = InsertExternalAccount(_sqlConnection, Account2Created.Id);
 
 			DateTime creationDate = DateTime.Now;
 
@@ -166,7 +171,7 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			};
 			AccountChange1_2Created.Insert();
 
-			AccountChange AccountChange2Created = new AccountChange(_sqlConnection, Account2Created.Id, externalAccount2Created.ExternalAccountId, externalAccount2Created.ChangeProviderId)
+			AccountChange AccountChange2Created = new AccountChange(_sqlConnection, Account2Created.Id, externalAccount1_2Created.ExternalAccountId, externalAccount1_2Created.ChangeProviderId)
 			{
 				CreatedOn = creationDate,
 				ModifiedOn = creationDate,

@@ -118,6 +118,7 @@
     <Compile Include="SqlData\IModifiedIdData.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable2Tables.cs" />
     <Compile Include="SqlData\Procedures\CreateCompositeTable3Tables.cs" />
+    <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey3Keys.cs" />
     <Compile Include="SqlData\Procedures\MaintainCompositeForeignKey2Keys.cs" />
     <Compile Include="SqlData\Procedures\MaintainForeignKey.cs" />
     <Compile Include="SqlData\Procedures\MaintainUniqueConstraint1Column.cs" />
