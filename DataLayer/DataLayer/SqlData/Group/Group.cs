@@ -71,6 +71,25 @@ namespace DataLayer.SqlData.Group
 			return group;
 		}
 
+		public static Group Read(SqlConnection sqlConnection, Guid id)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("	,Name");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine($"	[{typeof(Group).Name}]");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	id = @id");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+
+			DataRow row = dataTable.Rows[0];
+			Group group = CreateFromRow(row);
+
+			return group;
+		}
+
 		public static bool ExistsByName(SqlConnection sqlConnection, string name)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
