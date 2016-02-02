@@ -256,6 +256,25 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
+		public static void MaintainCompositeForeignKey3Keys(SqlConnection sqlConnection, string tableName, string foreignKey1Name, string foreignKey2Name, string foreignKey3Name, string primaryTablename, string primaryKey1Name, string primaryKey2Name, string primaryKey3Name)
+		{
+			Procedures.MaintainCompositeForeignKey3Keys.MakeSureProcedureExists(sqlConnection);
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.Append("MaintainCompositeForeignKey3Keys");
+
+			ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.StoredProcedure,
+				new KeyValuePair<string, object>("tableName", tableName),
+				new KeyValuePair<string, object>("foreignKey1Name", foreignKey1Name),
+				new KeyValuePair<string, object>("foreignKey2Name", foreignKey2Name),
+				new KeyValuePair<string, object>("foreignKey3Name", foreignKey3Name),
+				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
+				new KeyValuePair<string, object>("primaryKey1Name", primaryKey1Name),
+				new KeyValuePair<string, object>("primaryKey2Name", primaryKey2Name),
+				new KeyValuePair<string, object>("primaryKey3Name", primaryKey3Name),
+				new KeyValuePair<string, object>("debug", 0));
+		}
+
 		public static void MaintainUniqueConstraint(SqlConnection sqlConnection, string tableName, string constraintName, string constraintColumn1, string constraintColumn2)
 		{
 			Procedures.MaintainUniqueConstraint2Columns.MakeSureProcedureExists(sqlConnection);
