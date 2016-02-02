@@ -20,6 +20,7 @@ using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using Utilities;
 using Administration.Option.Options.Logic.SquashData;
 using DataLayer.SqlData;
+using Utilities.Comparer;
 
 namespace Administration.Option.Options.Logic
 {
@@ -308,7 +309,7 @@ namespace Administration.Option.Options.Logic
 		{
 			List<Guid> currentValue = referenceTypeAndGetReference.Value(databaseId).ToList();
 
-			if (GuidListEquals(currentValue, lastValue) == false)
+			if (ListCompare.ListEquals(currentValue, lastValue) == false)
 			{
 				ModifiedReference modifiedReference = new ModifiedReference()
 				{
@@ -322,37 +323,6 @@ namespace Administration.Option.Options.Logic
 			}
 
 			return currentValue;
-		}
-
-		private bool GuidListEquals(List<Guid> list1, List<Guid> list2)
-		{
-			if (list1 == null && list2 == null)
-			{
-				return true;
-			}
-
-			if (list1 == null || list2 == null)
-			{
-				return false;
-			}
-
-			if (list1.Count != list2.Count)
-			{
-				return false;
-			}
-
-			list1.Sort();
-			list2.Sort();
-
-			for (int idIndex = 0; idIndex < list1.Count; idIndex++)
-			{
-				if (list1[idIndex] != list2[idIndex])
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		private static bool UpdateFieldsIfNeeded(object databaseObject, List<string> columnNames, List<ModifiedField> changedFields)
@@ -433,7 +403,7 @@ namespace Administration.Option.Options.Logic
 				List<Guid> newValue = latestChange.RelationIdsAdded;
 				List<Guid> existingValue = referenceGetAndSetDictionary[referenceType].GetReferences(databaseObject.Id);
 
-				if (GuidListEquals(newValue, existingValue) == false)
+				if (ListCompare.ListEquals(newValue, existingValue) == false)
 				{
 					referenceGetAndSetDictionary[referenceType].SetReferences(newValue);
 					contactChanged = true;
