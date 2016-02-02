@@ -223,7 +223,7 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("debug", 0));
 		}
 
-		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName)
+		public static void MaintainForeignKey(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName, bool cascade = true)
 		{
 			Procedures.MaintainForeignKey.MakeSureProcedureExists(sqlConnection);
 
@@ -235,6 +235,7 @@ namespace DataLayer.SqlData
 				new KeyValuePair<string, object>("foreignKeyName", foreignKeyName),
 				new KeyValuePair<string, object>("primaryTablename", primaryTablename),
 				new KeyValuePair<string, object>("primaryKeyName", primaryKeyName),
+				new KeyValuePair<string, object>("cascade", cascade ? 1 : 0),
 				new KeyValuePair<string, object>("debug", 0));
 		}
 

@@ -24,9 +24,9 @@ namespace DataLayer.SqlData
 			}
 		}
 
-		protected static void CreateKeyIfMissing(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName)
+		protected static void CreateKeyIfMissing(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName, bool cascade = true)
 		{
-			Utilities.MaintainForeignKey(sqlConnection, tableName, foreignKeyName, primaryTablename, primaryKeyName);
+			Utilities.MaintainForeignKey(sqlConnection, tableName, foreignKeyName, primaryTablename, primaryKeyName, cascade);
 		}
 
 		protected void AddInsertParameterIfNotNull(object databaseObject, string databaseObjectName, StringBuilder sqlStringBuilderColumns, StringBuilder sqlStringBuilderParameters, List<KeyValuePair<string, object>> parameters)
