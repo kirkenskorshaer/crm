@@ -413,7 +413,7 @@ namespace AdministrationTest.Option.Options.Logic
 			databaseAccountChange.Insert();
 
 			return databaseAccountChange;
-        }
+		}
 
 		private DatabaseSquash GetDatabaseSquash()
 		{
