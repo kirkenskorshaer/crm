@@ -90,7 +90,7 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 			};
 			response.ChangeProvider.Insert(_sqlConnection);
 
-			response.ExternalContact = new ExternalContact(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id);
+			response.ExternalContact = new ExternalContact(_sqlConnection, Guid.NewGuid(), response.ChangeProvider.Id, response.Contact.Id);
 			response.ExternalContact.Insert();
 
 			ContactChangeTest contactChangeTest = new ContactChangeTest();

@@ -56,7 +56,9 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			ChangeProvider changeProvider = InsertChangeProvider();
 			Guid externalContactId = Guid.NewGuid();
 
-			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, externalContactId, changeProvider.Id);
+			Contact contact = InsertContact(_sqlConnection);
+
+			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, externalContactId, changeProvider.Id, contact.Id);
 			externalContactCreated.Insert();
 
 			ExternalContact externalContactRead = ExternalContact.Read(_sqlConnection, externalContactId, changeProvider.Id);
@@ -70,12 +72,14 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		{
 			ChangeProvider changeProvider = InsertChangeProvider();
 
+			Contact contact = InsertContact(_sqlConnection);
+
 			Guid externalContact1Id = Guid.NewGuid();
-			ExternalContact externalContact1Created = new ExternalContact(_sqlConnection, externalContact1Id, changeProvider.Id);
+			ExternalContact externalContact1Created = new ExternalContact(_sqlConnection, externalContact1Id, changeProvider.Id, contact.Id);
 			externalContact1Created.Insert();
 
 			Guid externalContact2Id = Guid.NewGuid();
-			ExternalContact externalContact2Created = new ExternalContact(_sqlConnection, externalContact2Id, changeProvider.Id);
+			ExternalContact externalContact2Created = new ExternalContact(_sqlConnection, externalContact2Id, changeProvider.Id, contact.Id);
 			externalContact2Created.Insert();
 
 			List<ExternalContact> externalContactReadList = ExternalContact.Read(_sqlConnection, changeProvider.Id);
@@ -90,11 +94,11 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		{
 			ChangeProvider changeProvider = InsertChangeProvider();
 
-			Guid externalContactId = Guid.NewGuid();
-			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, externalContactId, changeProvider.Id);
-			externalContactCreated.Insert();
-
 			Contact contact = InsertContact(_sqlConnection);
+
+			Guid externalContactId = Guid.NewGuid();
+			ExternalContact externalContactCreated = new ExternalContact(_sqlConnection, externalContactId, changeProvider.Id, contact.Id);
+			externalContactCreated.Insert();
 
 			InsertContactChange(_sqlConnection, contact.Id, externalContactId, changeProvider.Id, DateTime.Now);
 			InsertContactChange(_sqlConnection, contact.Id, externalContactId, changeProvider.Id, DateTime.Now);

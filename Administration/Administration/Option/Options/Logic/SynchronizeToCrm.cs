@@ -67,7 +67,7 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			List<DatabaseExternalContact> externalContacts = ContactCrmMapping.FindContacts(Connection, SqlConnection, databaseContact, changeProviderId);
+			List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(SqlConnection, changeProviderId, databaseContact.Id);
 
 			if (externalContacts.Count == 0)
 			{
@@ -91,7 +91,7 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			List<DatabaseExternalAccount> externalAccounts = AccountCrmMapping.FindAccounts(Connection, SqlConnection, databaseAccount, changeProviderId);
+			List<DatabaseExternalAccount> externalAccounts = DatabaseExternalAccount.ReadFromChangeProviderAndAccount(SqlConnection, changeProviderId, databaseAccount.Id);
 
 			if (externalAccounts.Count == 0)
 			{
@@ -110,7 +110,7 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
 			systemInterfaceContact.Insert();
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId, databaseContact.Id);
 			externalContact.Insert();
 		}
 
@@ -119,7 +119,7 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
 			systemInterfaceAccount.Insert();
 
-			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId);
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId, databaseAccount.Id);
 			externalAccount.Insert();
 		}
 

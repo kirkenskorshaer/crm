@@ -6,6 +6,7 @@ namespace DataLayer.MongoData.Option.Options.Data.ExternalContact
 	{
 		public Guid ExternalContactId { get; set; }
 		public Guid ChangeProviderId { get; set; }
+		public Guid ContactId { get; set; }
 
 		protected override void Execute(MongoConnection connection, bool recurring)
 		{

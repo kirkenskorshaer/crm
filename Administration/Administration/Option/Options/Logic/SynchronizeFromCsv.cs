@@ -65,11 +65,11 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid externalContactId = GetIdFromRow(csvRow);
 
-				ExternalContact externalContact = ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId);
-
 				Contact contact = ReadOrCreateContact(csvRow, externalContactId, dateName);
 
 				Guid contactId = contact.Id;
+
+				ExternalContact externalContact = ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId, contactId);
 
 				DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName]);
 

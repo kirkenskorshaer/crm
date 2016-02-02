@@ -93,7 +93,7 @@ namespace DataLayer.SqlData.Account
 
 			CreateKeyIfMissing(sqlConnection, _tableName, "AccountId", typeof(Account).Name, "id");
 
-			Utilities.MaintainCompositeForeignKey2Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", typeof(ExternalAccount).Name, "ChangeProviderId", "ExternalAccountId");
+			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId", typeof(ExternalAccount).Name, "ChangeProviderId", "ExternalAccountId", "AccountId");
 		}
 
 		public void Insert()

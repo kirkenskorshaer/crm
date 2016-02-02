@@ -29,10 +29,8 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			Utilities.RecreateAllTables(_sqlConnection);
 		}
 
-		internal ExternalContact InsertExternalContact(SqlConnection sqlConnection)
+		internal ExternalContact InsertExternalContact(SqlConnection sqlConnection, Guid contactId)
 		{
-			DateTime creationDate = DateTime.Now;
-
 			ChangeProvider changeProvider = new ChangeProvider();
 			changeProvider.Name = $"name_{Guid.NewGuid()}";
 
@@ -40,7 +38,12 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Guid changeProviderId = changeProvider.Id;
 
-			ExternalContact createdExternalContact = new ExternalContact(sqlConnection, Guid.NewGuid(), changeProviderId);
+			return InsertExternalContact(sqlConnection, contactId, Guid.NewGuid(), changeProviderId);
+		}
+
+		internal ExternalContact InsertExternalContact(SqlConnection sqlConnection, Guid contactId, Guid externalContactId, Guid changeProviderId)
+		{
+			ExternalContact createdExternalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId, contactId);
 
 			createdExternalContact.Insert();
 
@@ -53,8 +56,8 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		[TestCase(ContactChange.IdType.ExternalContactId)]
 		public void ReadReadsInserted(ContactChange.IdType idType)
 		{
-			ExternalContact externalContactCreated = InsertExternalContact(_sqlConnection);
 			Contact contactCreated = InsertContact(_sqlConnection);
+			ExternalContact externalContactCreated = InsertExternalContact(_sqlConnection, contactCreated.Id);
 			DateTime createdTime = DateTime.Now;
 
 			ContactChange contactChangeCreated = ContactChangeInsert(externalContactCreated, contactCreated, createdTime);
@@ -101,11 +104,12 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		[Test]
 		public void GetContactsReturnsContacts()
 		{
-			ExternalContact externalContact1Created = InsertExternalContact(_sqlConnection);
-			ExternalContact externalContact2Created = InsertExternalContact(_sqlConnection);
-
 			Contact contact1Created = InsertContact(_sqlConnection);
 			Contact contact2Created = InsertContact(_sqlConnection);
+
+			ExternalContact externalContact1Created = InsertExternalContact(_sqlConnection, contact1Created.Id);
+			ExternalContact externalContact2Created = InsertExternalContact(_sqlConnection, contact2Created.Id);
+			ExternalContact externalContact2_1Created = InsertExternalContact(_sqlConnection, contact1Created.Id, externalContact2Created.ExternalContactId, externalContact1Created.ChangeProviderId);
 
 			DateTime creationDate = DateTime.Now;
 
@@ -117,7 +121,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			};
 			contactChange1_1Created.Insert();
 
-			ContactChange contactChange1_2Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact2Created.ExternalContactId, externalContact2Created.ChangeProviderId)
+			ContactChange contactChange1_2Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact2Created.ExternalContactId, externalContact1Created.ChangeProviderId)
 			{
 				CreatedOn = creationDate,
 				ModifiedOn = creationDate,
@@ -144,11 +148,12 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		[Test]
 		public void GetExternalContacts()
 		{
-			ExternalContact externalContact1Created = InsertExternalContact(_sqlConnection);
-			ExternalContact externalContact2Created = InsertExternalContact(_sqlConnection);
-
 			Contact contact1Created = InsertContact(_sqlConnection);
 			Contact contact2Created = InsertContact(_sqlConnection);
+
+			ExternalContact externalContact1Created = InsertExternalContact(_sqlConnection, contact1Created.Id);
+			ExternalContact externalContact2Created = InsertExternalContact(_sqlConnection, contact1Created.Id);
+			ExternalContact externalContact1_2Created = InsertExternalContact(_sqlConnection, contact2Created.Id);
 
 			DateTime creationDate = DateTime.Now;
 
@@ -167,7 +172,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			};
 			contactChange1_2Created.Insert();
 
-			ContactChange contactChange2Created = new ContactChange(_sqlConnection, contact2Created.Id, externalContact2Created.ExternalContactId, externalContact2Created.ChangeProviderId)
+			ContactChange contactChange2Created = new ContactChange(_sqlConnection, contact2Created.Id, externalContact1_2Created.ExternalContactId, externalContact1_2Created.ChangeProviderId)
 			{
 				CreatedOn = creationDate,
 				ModifiedOn = creationDate,

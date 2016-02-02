@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 
@@ -10,14 +11,16 @@ namespace DataLayer.SqlData.Contact
 	public class ExternalContact : AbstractData
 	{
 		public Guid ExternalContactId { get; private set; }
+		public Guid ContactId { get; private set; }
 		public Guid ChangeProviderId { get; private set; }
 
 		private SqlConnection _sqlConnection;
 
-		public ExternalContact(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
+		public ExternalContact(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId, Guid contactId)
 		{
 			ExternalContactId = externalContactId;
 			ChangeProviderId = changeProviderId;
+			ContactId = contactId;
 
 			_sqlConnection = sqlConnection;
 		}
@@ -32,10 +35,13 @@ namespace DataLayer.SqlData.Contact
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId");
+				Utilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "ChangeProviderId", typeof(ChangeProvider).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact).Name, "id", false);
+
+			Utilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalContactId");
 		}
 
 		public static ExternalContact Read(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
@@ -43,6 +49,7 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	ExternalContactId");
+			sqlStringBuilder.AppendLine("	,ContactId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
@@ -66,6 +73,7 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	ExternalContactId");
+			sqlStringBuilder.AppendLine("	,ContactId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
@@ -90,19 +98,14 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT DISTINCT");
 			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ExternalContactId");
+			sqlStringBuilder.AppendLine($"	,{typeof(ExternalContact).Name}.ContactId");
 			sqlStringBuilder.AppendLine($"	,{typeof(ExternalContact).Name}.ChangeProviderId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
-			sqlStringBuilder.AppendLine("JOIN");
-			sqlStringBuilder.AppendLine("	" + typeof(ContactChange).Name);
-			sqlStringBuilder.AppendLine("ON");
-			sqlStringBuilder.AppendLine("	ExternalContact.ExternalContactId = ContactChange.ExternalContactId");
-			sqlStringBuilder.AppendLine("	AND");
-			sqlStringBuilder.AppendLine("	ExternalContact.ChangeProviderId = ContactChange.ChangeProviderId");
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	ExternalContact.ChangeProviderId = @ChangeProviderId");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ChangeProviderId = @ChangeProviderId");
 			sqlStringBuilder.AppendLine("	AND");
-			sqlStringBuilder.AppendLine("	ContactChange.ContactId = @ContactId");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ContactId = @ContactId");
 
 			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ContactId", contactId)
@@ -118,7 +121,7 @@ namespace DataLayer.SqlData.Contact
 			return externalContacts;
 		}
 
-		public static ExternalContact ReadOrCreate(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
+		public static ExternalContact ReadOrCreate(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId, Guid contactId)
 		{
 			bool externalContactExists = Exists(sqlConnection, externalContactId, changeProviderId);
 
@@ -130,7 +133,7 @@ namespace DataLayer.SqlData.Contact
 			}
 			else
 			{
-				externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId);
+				externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId, contactId);
 				externalContact.Insert();
 			}
 
@@ -161,9 +164,10 @@ namespace DataLayer.SqlData.Contact
 		private static ExternalContact CreateFromDataRow(SqlConnection sqlConnection, DataRow row)
 		{
 			Guid externalContactId = (Guid)row["ExternalContactId"];
+			Guid contactId = (Guid)row["ContactId"];
 			Guid changeProviderId = (Guid)row["ChangeProviderId"];
 
-			ExternalContact externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId);
+			ExternalContact externalContact = new ExternalContact(sqlConnection, externalContactId, changeProviderId, contactId);
 
 			return externalContact;
 		}
@@ -175,16 +179,19 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	" + TableName);
 			sqlStringBuilder.AppendLine("(");
 			sqlStringBuilder.AppendLine("	ExternalContactId");
+			sqlStringBuilder.AppendLine("	,ContactId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
 			sqlStringBuilder.AppendLine(")");
 			sqlStringBuilder.AppendLine("VALUES");
 			sqlStringBuilder.AppendLine("(");
 			sqlStringBuilder.AppendLine("	@ExternalContactId");
+			sqlStringBuilder.AppendLine("	,@ContactId");
 			sqlStringBuilder.AppendLine("	,@ChangeProviderId");
 			sqlStringBuilder.AppendLine(")");
 
 			Utilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("ExternalContactId", ExternalContactId)
+				, new KeyValuePair<string, object>("ContactId", ContactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", ChangeProviderId));
 		}
 	}

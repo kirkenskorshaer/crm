@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 
@@ -10,14 +11,16 @@ namespace DataLayer.SqlData.Account
 	public class ExternalAccount : AbstractData
 	{
 		public Guid ExternalAccountId { get; private set; }
+		public Guid AccountId { get; private set; }
 		public Guid ChangeProviderId { get; private set; }
 
 		private SqlConnection _sqlConnection;
 
-		public ExternalAccount(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId)
+		public ExternalAccount(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId, Guid accountId)
 		{
 			ExternalAccountId = externalAccountId;
 			ChangeProviderId = changeProviderId;
+			AccountId = accountId;
 
 			_sqlConnection = sqlConnection;
 		}
@@ -32,10 +35,13 @@ namespace DataLayer.SqlData.Account
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId");
+				Utilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "ChangeProviderId", typeof(ChangeProvider).Name, "id");
+			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account).Name, "id", false);
+
+			Utilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalAccountId");
 		}
 
 		public static ExternalAccount Read(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId)
@@ -44,6 +50,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	ExternalAccountId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
+			sqlStringBuilder.AppendLine("	,AccountId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalAccount).Name);
 			sqlStringBuilder.AppendLine("WHERE");
@@ -67,6 +74,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("SELECT");
 			sqlStringBuilder.AppendLine("	ExternalAccountId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
+			sqlStringBuilder.AppendLine("	,AccountId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalAccount).Name);
 			sqlStringBuilder.AppendLine("WHERE");
@@ -90,19 +98,14 @@ namespace DataLayer.SqlData.Account
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("SELECT DISTINCT");
 			sqlStringBuilder.AppendLine($"	{typeof(ExternalAccount).Name}.ExternalAccountId");
+			sqlStringBuilder.AppendLine($"	,{typeof(ExternalAccount).Name}.AccountId");
 			sqlStringBuilder.AppendLine($"	,{typeof(ExternalAccount).Name}.ChangeProviderId");
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ExternalAccount).Name);
-			sqlStringBuilder.AppendLine("JOIN");
-			sqlStringBuilder.AppendLine("	" + typeof(AccountChange).Name);
-			sqlStringBuilder.AppendLine("ON");
-			sqlStringBuilder.AppendLine("	ExternalAccount.ExternalAccountId = AccountChange.ExternalAccountId");
-			sqlStringBuilder.AppendLine("	AND");
-			sqlStringBuilder.AppendLine("	ExternalAccount.ChangeProviderId = AccountChange.ChangeProviderId");
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	ExternalAccount.ChangeProviderId = @ChangeProviderId");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalAccount).Name}.ChangeProviderId = @ChangeProviderId");
 			sqlStringBuilder.AppendLine("	AND");
-			sqlStringBuilder.AppendLine("	AccountChange.AccountId = @AccountId");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalAccount).Name}.AccountId = @AccountId");
 
 			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("AccountId", accountId)
@@ -118,7 +121,7 @@ namespace DataLayer.SqlData.Account
 			return externalAccounts;
 		}
 
-		public static ExternalAccount ReadOrCreate(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId)
+		public static ExternalAccount ReadOrCreate(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId, Guid accountId)
 		{
 			bool externalAccountExists = Exists(sqlConnection, externalAccountId, changeProviderId);
 
@@ -130,7 +133,7 @@ namespace DataLayer.SqlData.Account
 			}
 			else
 			{
-				externalAccount = new ExternalAccount(sqlConnection, externalAccountId, changeProviderId);
+				externalAccount = new ExternalAccount(sqlConnection, externalAccountId, changeProviderId, accountId);
 				externalAccount.Insert();
 			}
 
@@ -162,8 +165,9 @@ namespace DataLayer.SqlData.Account
 		{
 			Guid externalAccountId = (Guid)row["ExternalAccountId"];
 			Guid changeProviderId = (Guid)row["ChangeProviderId"];
+			Guid accountId = (Guid)row["AccountId"];
 
-			ExternalAccount externalAccount = new ExternalAccount(sqlConnection, externalAccountId, changeProviderId);
+			ExternalAccount externalAccount = new ExternalAccount(sqlConnection, externalAccountId, changeProviderId, accountId);
 
 			return externalAccount;
 		}
@@ -176,16 +180,19 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("(");
 			sqlStringBuilder.AppendLine("	ExternalAccountId");
 			sqlStringBuilder.AppendLine("	,ChangeProviderId");
+			sqlStringBuilder.AppendLine("	,AccountId");
 			sqlStringBuilder.AppendLine(")");
 			sqlStringBuilder.AppendLine("VALUES");
 			sqlStringBuilder.AppendLine("(");
 			sqlStringBuilder.AppendLine("	@ExternalAccountId");
 			sqlStringBuilder.AppendLine("	,@ChangeProviderId");
+			sqlStringBuilder.AppendLine("	,@AccountId");
 			sqlStringBuilder.AppendLine(")");
 
 			Utilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("ExternalAccountId", ExternalAccountId)
-				, new KeyValuePair<string, object>("ChangeProviderId", ChangeProviderId));
+				, new KeyValuePair<string, object>("ChangeProviderId", ChangeProviderId)
+				, new KeyValuePair<string, object>("AccountId", AccountId));
 		}
 	}
 }

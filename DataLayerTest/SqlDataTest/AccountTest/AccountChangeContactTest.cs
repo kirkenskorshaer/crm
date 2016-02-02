@@ -84,7 +84,7 @@ namespace DataLayerTest.SqlDataTest.ChangeContactTest
 			AccountTest.AccountChangeTest accountChangeTest = new AccountTest.AccountChangeTest();
 			accountChangeTest.TestFixtureSetUp();
 
-			response.ExternalAccount = accountChangeTest.InsertExternalAccount(_sqlConnection);
+			response.ExternalAccount = accountChangeTest.InsertExternalAccount(_sqlConnection, response.Account.Id);
 
 			response.AccountChange = accountChangeTest.AccountChangeInsert(response.ExternalAccount, response.Account, DateTime.Now);
 			response.AccountChange.Insert();

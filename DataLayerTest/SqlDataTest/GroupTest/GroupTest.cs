@@ -80,10 +80,10 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 		{
 			ContactTest.ContactChangeTest contactChangeTest = new ContactTest.ContactChangeTest();
 			contactChangeTest.TestFixtureSetUp();
-            ContactTest.ContactTest contactTest = new ContactTest.ContactTest();
+			ContactTest.ContactTest contactTest = new ContactTest.ContactTest();
 
-			ExternalContact externalContact = contactChangeTest.InsertExternalContact(_sqlConnection);
 			Contact contactInserted = contactTest.ContactInsert(_sqlConnection);
+			ExternalContact externalContact = contactChangeTest.InsertExternalContact(_sqlConnection, contactInserted.Id);
 			ContactChange contactChangeInserted = contactChangeTest.ContactChangeInsert(externalContact, contactInserted, DateTime.Now);
 			contactChangeInserted.Insert();
 

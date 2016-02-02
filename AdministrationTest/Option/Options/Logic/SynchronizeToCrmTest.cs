@@ -93,7 +93,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureContactIsNextInProgressQueue(databaseContact);
 
-			DatabaseExternalContact externalContact = new DatabaseExternalContact(_sqlConnection, contact.Id, _changeProvider.Id);
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(_sqlConnection, contact.Id, _changeProvider.Id, databaseContact.Id);
 			externalContact.Insert();
 
 			DatabaseContactChange contactChange = new DatabaseContactChange(_sqlConnection, databaseContact.Id, externalContact.ExternalContactId, _changeProvider.Id)
@@ -124,7 +124,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureAccountIsNextInProgressQueue(databaseAccount);
 
-			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(_sqlConnection, account.Id, _changeProvider.Id);
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(_sqlConnection, account.Id, _changeProvider.Id, databaseAccount.Id);
 			externalAccount.Insert();
 
 			DatabaseAccountChange accountChange = new DatabaseAccountChange(_sqlConnection, databaseAccount.Id, externalAccount.ExternalAccountId, _changeProvider.Id)
