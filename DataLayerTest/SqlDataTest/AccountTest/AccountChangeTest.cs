@@ -31,8 +31,6 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 
 		internal ExternalAccount InsertExternalAccount(SqlConnection sqlConnection, Guid accountId)
 		{
-			DateTime creationDate = DateTime.Now;
-
 			ChangeProvider changeProvider = new ChangeProvider();
 			changeProvider.Name = $"name_{Guid.NewGuid()}";
 
