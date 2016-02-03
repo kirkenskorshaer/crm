@@ -131,13 +131,24 @@ namespace Administration.Option.Options.Logic
 
 		private void UpdateExternalContactIfNeeded(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact)
 		{
+			bool isDeactivated = false;
+
 			SystemInterfaceContact systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
+			isDeactivated = UpdateExternalContactData(changeProviderId, databaseExternalContact, databaseContact, systemInterfaceContactInCrm);
+			if (isDeactivated)
+			{
+				systemInterfaceContactInCrm.SetActive(true);
+			}
+		}
+
+		private bool UpdateExternalContactData(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContactInCrm)
+		{
 			SystemInterfaceContact systemInterfaceContact = Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact);
 
 			if (systemInterfaceContactInCrm.Equals(systemInterfaceContact))
 			{
-				return;
+				return false;
 			}
 
 			systemInterfaceContactInCrm.SetActive(false);
@@ -154,18 +165,29 @@ namespace Administration.Option.Options.Logic
 
 			systemInterfaceContactInCrm.Update();
 
-			systemInterfaceContactInCrm.SetActive(true);
+			return true;
 		}
 
 		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount)
 		{
+			bool isDeactivated = false;
+
 			SystemInterfaceAccount systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
+			isDeactivated = UpdateExternalAccountData(changeProviderId, databaseExternalAccount, databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+			if (isDeactivated)
+			{
+				systemInterfaceAccountInCrm.SetActive(true);
+			}
+		}
+
+		private bool UpdateExternalAccountData(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccountInCrm, bool isDeactivated)
+		{
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
 
 			if (systemInterfaceAccountInCrm.Equals(systemInterfaceAccount))
 			{
-				return;
+				return isDeactivated;
 			}
 
 			systemInterfaceAccountInCrm.SetActive(false);
@@ -182,7 +204,7 @@ namespace Administration.Option.Options.Logic
 
 			systemInterfaceAccountInCrm.Update();
 
-			systemInterfaceAccountInCrm.SetActive(true);
+			return true;
 		}
 
 		private DatabaseContact GetContactToSynchronize(out DataLayer.MongoData.Progress progress)
