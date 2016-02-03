@@ -125,22 +125,28 @@ namespace SystemInterface.Dynamics.Crm
 			return account;
 		}
 
-		public List<Group> ReadGroups(Entity accountEntity)
+		public List<Group> ReadGroups()
 		{
+			Entity accountEntity = GetAsEntity(true);
+
 			List<Group> groups = ReadNNRelationship(_groupRelationshipName, accountEntity, entity => new Group(entity));
 
 			return groups;
 		}
 
-		public List<Contact> ReadContacts(Entity accountEntity)
+		public List<Contact> ReadContacts()
 		{
+			Entity accountEntity = GetAsEntity(true);
+
 			List<Contact> contacts = ReadNNRelationship(_contactRelationshipName, accountEntity, entity => new Contact(Connection, entity));
 
 			return contacts;
 		}
 
-		public List<Contact> ReadIndsamlere(Entity accountEntity)
+		public List<Contact> ReadIndsamlere()
 		{
+			Entity accountEntity = GetAsEntity(true);
+
 			List<Contact> indsamlere = ReadNNRelationship(_indsamlerRelationshipName, accountEntity, entity => new Contact(Connection, entity));
 
 			return indsamlere;
