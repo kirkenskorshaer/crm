@@ -217,6 +217,32 @@ namespace Administration.Option.Options.Logic
 			return account;
 		}
 
+		private bool SynchronizeAccountContact(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceAccountsAlreadyAssociated = systemInterfaceContact.GetExternalAccountIdsFromAccountContact();
+
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountContacts.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			if (ListCompare.ListEquals(systemInterfaceAccountsAlreadyAssociated, accountIds))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeAccounts(accountIds);
+
+			return true;
+		}
+
 		private bool InsertAccountContact(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
 		{
 			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromContactId(SqlConnection, databaseContact.Id);
@@ -230,6 +256,32 @@ namespace Administration.Option.Options.Logic
 			return true;
 		}
 
+		private bool SynchronizeContactGroup(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<SystemInterfaceGroup> systemInterfaceGroupsAlreadyAssociated = systemInterfaceContact.GetExternalGroupsFromContactGroup();
+
+			List<DatabaseContactGroup> contactGroups = DatabaseContactGroup.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseGroup> databaseGroups = contactGroups.Select(contactGroup => DatabaseGroup.Read(SqlConnection, contactGroup.GroupId)).ToList();
+
+			List<string> groupNames = databaseGroups.Select(group => group.Name).ToList();
+
+			if (ListCompare.ListEquals(systemInterfaceGroupsAlreadyAssociated, groupNames, (interfaceGroup, groupName) => interfaceGroup.Name == groupName))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeGroups(groupNames);
+
+			return true;
+		}
+
 		private void InsertContactGroup(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact)
 		{
 			List<DatabaseContactGroup> contactGroups = DatabaseContactGroup.ReadFromContactId(SqlConnection, databaseContact.Id);
@@ -238,6 +290,32 @@ namespace Administration.Option.Options.Logic
 
 			List<string> groupNames = databaseGroups.Select(group => group.Name).ToList();
 			systemInterfaceContact.SynchronizeGroups(groupNames);
+		}
+
+		private bool SynchronizeAccountIndsamler(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceAccountsAlreadyAssociated = systemInterfaceContact.GetExternalAccountIdsFromAccountIndsamlere();
+
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromContactId(SqlConnection, databaseContact.Id);
+
+			List<DatabaseAccount> databaseAccounts = accountIndsamlere.Select(accountContact => DatabaseAccount.Read(SqlConnection, accountContact.AccountId)).ToList();
+
+			List<Guid> accountIds = GetExternalAccountIdsFromDatabaseAccounts(changeProviderId, databaseAccounts);
+
+			if (ListCompare.ListEquals(systemInterfaceAccountsAlreadyAssociated, accountIds))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			systemInterfaceContact.SynchronizeIndsamlere(accountIds);
+
+			return true;
 		}
 
 		private void InsertAccountIndsamler(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
@@ -259,6 +337,32 @@ namespace Administration.Option.Options.Logic
 			return accountIds;
 		}
 
+		private bool SynchronizeAccountContact(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountContact();
+
+			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountContacts.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			if (ListCompare.ListEquals(contactIds, systemInterfaceContactsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeContacts(contactIds);
+
+			return true;
+		}
+
 		private void InsertAccountContact(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
 		{
 			List<DatabaseAccountContact> accountContacts = DatabaseAccountContact.ReadFromAccountId(SqlConnection, databaseAccount.Id);
@@ -270,6 +374,32 @@ namespace Administration.Option.Options.Logic
 			systemInterfaceAccount.SynchronizeContacts(contactIds);
 		}
 
+		private bool SynchronizeAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+
+			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseContact> databaseContacts = accountIndsamlere.Select(accountContact => DatabaseContact.Read(SqlConnection, accountContact.ContactId)).ToList();
+
+			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
+
+			if (ListCompare.ListEquals(contactIds, systemInterfaceContactsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+
+			return true;
+		}
+
 		private void InsertAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
 		{
 			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
@@ -279,6 +409,34 @@ namespace Administration.Option.Options.Logic
 			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
 
 			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+		}
+
+		private bool SynchronizeAccountGroup(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, bool isDeactivated)
+		{
+			List<Guid> systemInterfaceGroupsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+
+			List<DatabaseAccountGroup> accountGroups = DatabaseAccountGroup.ReadFromAccountId(SqlConnection, databaseAccount.Id);
+
+			List<DatabaseGroup> databaseGroups = accountGroups.Select(accountGroup => DatabaseGroup.Read(SqlConnection, accountGroup.GroupId)).ToList();
+
+			List<SystemInterfaceGroup> systemInterfaceGroups = databaseGroups.Select(databaseGroup => SystemInterfaceGroup.ReadOrCreate(_dynamicsCrmConnection, databaseGroup.Name)).ToList();
+
+			List<Guid> groupIds = systemInterfaceGroups.Select(group => group.GroupId).ToList();
+
+			if (ListCompare.ListEquals(groupIds, systemInterfaceGroupsAlreadyAssociated))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			systemInterfaceAccount.SynchronizeGroups(groupIds);
+
+			return true;
 		}
 
 		private void InsertAccountGroup(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount)
