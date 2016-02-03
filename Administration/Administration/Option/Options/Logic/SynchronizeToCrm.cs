@@ -136,6 +136,11 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceContact systemInterfaceContactInCrm = SystemInterfaceContact.Read(_dynamicsCrmConnection, databaseExternalContact.ExternalContactId);
 
 			isDeactivated = UpdateExternalContactData(changeProviderId, databaseExternalContact, databaseContact, systemInterfaceContactInCrm);
+
+			isDeactivated = SynchronizeContactGroup(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountContact(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountIndsamler(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+
 			if (isDeactivated)
 			{
 				systemInterfaceContactInCrm.SetActive(true);
@@ -175,6 +180,11 @@ namespace Administration.Option.Options.Logic
 			SystemInterfaceAccount systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
 			isDeactivated = UpdateExternalAccountData(changeProviderId, databaseExternalAccount, databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+
+			isDeactivated = SynchronizeAccountContact(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountIndsamler(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeAccountGroup(databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+
 			if (isDeactivated)
 			{
 				systemInterfaceAccountInCrm.SetActive(true);
