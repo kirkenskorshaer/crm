@@ -181,6 +181,53 @@ namespace SystemInterface.Dynamics.Crm
 			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
 		}
 
+		public void SynchronizeGroups()
+		{
+			List<Guid> groupIds = Groups.Select(group => group.GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<string> groupNames)
+		{
+			List<Guid> groupIds = groupNames.Select(groupName => Group.ReadOrCreate(Connection, groupName).GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<Guid> groupIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
+		}
+
+		public void SynchronizeAccounts(List<Account> accounts)
+		{
+			List<Guid> accountIds = accounts.Select(account => account.Id).ToList();
+			SynchronizeAccounts(accountIds);
+		}
+
+		public void SynchronizeAccounts(List<Guid> accountIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _accountRelationshipName, "account", "accountid", accountIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Account> indsamlerAccounts)
+		{
+			List<Guid> indsamlerAccountIds = indsamlerAccounts.Select(account => account.Id).ToList();
+			SynchronizeIndsamlere(indsamlerAccountIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Guid> indsamlerAccountIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			SynchronizeNNRelationship(currentEntity, _indsamlerAccountRelationshipName, "account", "accountid", indsamlerAccountIds);
+		}
+
 		public List<Guid> GetExternalAccountIdsFromAccountContact()
 		{
 			Entity currentEntity = GetAsEntity(true);
