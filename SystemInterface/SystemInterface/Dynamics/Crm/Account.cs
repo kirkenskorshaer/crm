@@ -154,27 +154,43 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void SynchronizeContacts(List<Contact> contacts)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> contactIds = contacts.Select(contact => contact.Id).ToList();
+
+			SynchronizeContacts(contactIds);
+		}
+
+		public void SynchronizeContacts(List<Guid> contactIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _contactRelationshipName, "contact", "contactid", contactIds);
 		}
 
 		public void SynchronizeIndsamlere(List<Contact> indsamlere)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> indsamlerIds = indsamlere.Select(contact => contact.Id).ToList();
+
+			SynchronizeIndsamlere(indsamlerIds);
+		}
+
+		public void SynchronizeIndsamlere(List<Guid> indsamlerIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds);
 		}
 
+
 		public void SynchronizeGroups(List<Group> groups)
 		{
-			Entity currentEntity = GetAsEntity(true);
-
 			List<Guid> groupIds = groups.Select(group => group.GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
+
+		public void SynchronizeGroups(List<Guid> groupIds)
+		{
+			Entity currentEntity = GetAsEntity(true);
 
 			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
 		}
