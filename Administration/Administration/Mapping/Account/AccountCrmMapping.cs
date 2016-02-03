@@ -12,9 +12,9 @@ namespace Administration.Mapping.Account
 {
 	public static class AccountCrmMapping
 	{
-		public static DataBaseAccount FindAccount(MongoConnection mongoConnection, SqlConnection sqlConnection, Guid externalAccountId, SystemInterfaceAccount crmAccount)
+		public static DataBaseAccount FindAccount(MongoConnection mongoConnection, SqlConnection sqlConnection, SystemInterfaceAccount crmAccount)
 		{
-			List<DataBaseAccount> accountsPreviouslyChanged = DataBaseAccountChange.GetAccounts(sqlConnection, externalAccountId);
+			List<DataBaseAccount> accountsPreviouslyChanged = new List<DataBaseAccount>();
 
 			if (accountsPreviouslyChanged.Count == 0)
 			{
@@ -26,7 +26,7 @@ namespace Administration.Mapping.Account
 				return accountsPreviouslyChanged[0];
 			}
 
-			Log.Write(mongoConnection, $"multible account match for {externalAccountId}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+			Log.Write(mongoConnection, $"multible account match for {crmAccount.Id}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 
 			return accountsPreviouslyChanged.OrderByDescending(account => account.CreatedOn).First();
 		}

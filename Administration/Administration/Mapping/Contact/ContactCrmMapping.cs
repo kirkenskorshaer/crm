@@ -13,9 +13,9 @@ namespace Administration.Mapping.Contact
 {
 	public static class ContactCrmMapping
 	{
-		public static DataBaseContact FindContact(MongoConnection mongoConnection, SqlConnection sqlConnection, Guid externalContactId, SystemInterfaceContact crmContact)
+		public static DataBaseContact FindContact(MongoConnection mongoConnection, SqlConnection sqlConnection, SystemInterfaceContact crmContact)
 		{
-			List<DataBaseContact> contactsPreviouslyChanged = DataBaseContactChange.GetContacts(sqlConnection, externalContactId);
+			List<DataBaseContact> contactsPreviouslyChanged = new List<DataBaseContact>();
 
 			if (contactsPreviouslyChanged.Count == 0)
 			{
@@ -27,7 +27,7 @@ namespace Administration.Mapping.Contact
 				return contactsPreviouslyChanged[0];
 			}
 
-			Log.Write(mongoConnection, $"multible contact match for {externalContactId}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+			Log.Write(mongoConnection, $"multible contact match for {crmContact.Id}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 
 			return contactsPreviouslyChanged.OrderByDescending(contact => contact.CreatedOn).First();
 		}

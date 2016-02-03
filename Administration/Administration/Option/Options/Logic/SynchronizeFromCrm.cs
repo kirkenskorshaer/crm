@@ -6,6 +6,8 @@ using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DataLayer;
 using System.Collections.Generic;
@@ -75,9 +77,24 @@ namespace Administration.Option.Options.Logic
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId)
 		{
 			Guid externalContactId = crmContact.Id;
-			DatabaseContact contact = ReadOrCreateContact(crmContact, externalContactId);
 
-			DataLayer.SqlData.Contact.ExternalContact externalContact = DataLayer.SqlData.Contact.ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId, contact.Id);
+			bool externalContactExists = DatabaseExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
+
+			DatabaseExternalContact externalContact = null;
+			DatabaseContact contact = null;
+
+			if (externalContactExists)
+			{
+				externalContact = DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
+				contact = DatabaseContact.Read(SqlConnection, externalContact.ContactId);
+			}
+			else
+			{
+				contact = ReadOrCreateContact(crmContact);
+
+				externalContact = new DatabaseExternalContact(SqlConnection, externalContactId, changeProviderId, contact.Id);
+				externalContact.Insert();
+			}
 
 			StoreInContactChangesIfNeeded(crmContact, changeProviderId, externalContactId, contact);
 		}
@@ -85,9 +102,24 @@ namespace Administration.Option.Options.Logic
 		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId)
 		{
 			Guid externalAccountId = crmAccount.Id;
-			DatabaseAccount account = ReadOrCreateAccount(crmAccount, externalAccountId);
 
-			DataLayer.SqlData.Account.ExternalAccount externalAccount = DataLayer.SqlData.Account.ExternalAccount.ReadOrCreate(SqlConnection, externalAccountId, changeProviderId, account.Id);
+			bool externalAccountExists = DatabaseExternalAccount.Exists(SqlConnection, externalAccountId, changeProviderId);
+
+			DatabaseAccount account = null;
+			DatabaseExternalAccount externalAccount = null;
+
+			if (externalAccountExists)
+			{
+				externalAccount = DatabaseExternalAccount.Read(SqlConnection, externalAccountId, changeProviderId);
+				account = DatabaseAccount.Read(SqlConnection, externalAccount.AccountId);
+			}
+			else
+			{
+				account = ReadOrCreateAccount(crmAccount);
+
+				externalAccount = new DatabaseExternalAccount(SqlConnection, externalAccountId, changeProviderId, account.Id);
+				externalAccount.Insert();
+			}
 
 			StoreInAccountChangesIfNeeded(crmAccount, changeProviderId, externalAccountId, account);
 		}
@@ -122,9 +154,9 @@ namespace Administration.Option.Options.Logic
 			CreateAccountChange(changeProviderId, crmAccount, externalAccountId, accountId, modifiedOn);
 		}
 
-		private DatabaseContact ReadOrCreateContact(Contact crmContact, Guid externalContactId)
+		private DatabaseContact ReadOrCreateContact(Contact crmContact)
 		{
-			DatabaseContact contact = ContactCrmMapping.FindContact(Connection, SqlConnection, externalContactId, crmContact);
+			DatabaseContact contact = ContactCrmMapping.FindContact(Connection, SqlConnection, crmContact);
 
 			if (contact == null)
 			{
@@ -134,9 +166,9 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private DatabaseAccount ReadOrCreateAccount(Account crmAccount, Guid externalAccountId)
+		private DatabaseAccount ReadOrCreateAccount(Account crmAccount)
 		{
-			DatabaseAccount account = AccountCrmMapping.FindAccount(Connection, SqlConnection, externalAccountId, crmAccount);
+			DatabaseAccount account = AccountCrmMapping.FindAccount(Connection, SqlConnection, crmAccount);
 
 			if (account == null)
 			{
