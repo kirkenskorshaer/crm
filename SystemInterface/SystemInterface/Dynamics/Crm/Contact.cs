@@ -44,6 +44,8 @@ namespace SystemInterface.Dynamics.Crm
 
 		public List<Group> Groups = new List<Group>();
 		private static string _groupRelationshipName = "new_group_contact";
+		private string _accountRelationshipName = "new_account_contact";
+		private string _indsamlerAccountRelationshipName = "new_account_contact_indsamlere";
 
 		private static readonly ColumnSet ColumnSetContact = new ColumnSet(
 			"contactid",
@@ -177,6 +179,39 @@ namespace SystemInterface.Dynamics.Crm
 		private void SynchronizeGroupsInCrm(Entity contactEntity)
 		{
 			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
+		}
+
+		public List<Guid> GetExternalAccountIdsFromAccountContact()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _accountRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Group> GetExternalGroupsFromContactGroup()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+
+			List<Group> externalGroups = relatedEntities.Select(entity => new Group(entity)).ToList();
+
+			return externalGroups;
+		}
+
+		public List<Guid> GetExternalAccountIdsFromAccountIndsamlere()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerAccountRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+
+			return externalIds;
 		}
 
 		public enum StateEnum
