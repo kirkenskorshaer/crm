@@ -62,7 +62,7 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DatabaseContact databaseContact = GetContactToSynchronize(out progress);
 
-			if(databaseContact == null)
+			if (databaseContact == null)
 			{
 				return;
 			}
@@ -86,7 +86,7 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DatabaseAccount databaseAccount = GetAccountToSynchronize(out progress);
 
-			if(databaseAccount == null)
+			if (databaseAccount == null)
 			{
 				return;
 			}
