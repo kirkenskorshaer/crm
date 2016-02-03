@@ -219,5 +219,38 @@ namespace SystemInterface.Dynamics.Crm
 
 			Connection.Service.Execute(setStateRequest);
 		}
+
+		public List<Guid> GetExternalContactIdsFromAccountContact()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _contactRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Guid> GetExternalContactIdsFromAccountIndsamler()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+
+			return externalIds;
+		}
+
+		public List<Guid> GetExternalContactIdsFromAccountGroup()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+
+			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("new_groupid")).ToList();
+
+			return externalIds;
+		}
 	}
 }
