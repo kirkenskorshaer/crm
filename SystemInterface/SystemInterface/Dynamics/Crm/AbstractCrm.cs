@@ -135,8 +135,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds)
 		{
-			Relationship relationShip = new Relationship(relationshipName);
-			IEnumerable<Entity> relatedEntities = currentEntity.GetRelatedEntities(Connection.Context, relationShip);
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, relationshipName);
 
 			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.ToDictionary(entity => entity.GetAttributeValue<Guid>(relatedKeyName));
 			List<Guid> remoteIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>(relatedKeyName)).ToList();
@@ -148,6 +147,14 @@ namespace SystemInterface.Dynamics.Crm
 			AddRelated(relationshipName, relatedEntityName, localButNotInCrm);
 
 			RemoveRelated(relationshipName, relatedEntityName, remoteButNotLocal);
+		}
+
+		protected IEnumerable<Entity> GetRelatedEntities(Entity currentEntity, string relationshipName)
+		{
+			Relationship relationShip = new Relationship(relationshipName);
+			IEnumerable<Entity> relatedEntities = currentEntity.GetRelatedEntities(Connection.Context, relationShip);
+
+			return relatedEntities;
 		}
 	}
 }
