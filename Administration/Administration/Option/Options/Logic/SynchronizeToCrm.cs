@@ -19,7 +19,6 @@ using SystemInterfaceGroup = SystemInterface.Dynamics.Crm.Group;
 using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
-using System.Data.SqlClient;
 using System.Linq;
 using Administration.Mapping.Account;
 using Utilities.Comparer;
