@@ -118,6 +118,15 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseExternalContact externalContact = new DatabaseExternalContact(SqlConnection, systemInterfaceContact.Id, changeProviderId, databaseContact.Id);
 			externalContact.Insert();
+
+			InsertContactRelations(databaseContact, systemInterfaceContact, changeProviderId);
+		}
+
+		private void InsertContactRelations(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
+		{
+			InsertAccountContact(databaseContact, systemInterfaceContact, changeProviderId);
+			InsertContactGroup(databaseContact, systemInterfaceContact);
+			InsertAccountIndsamler(databaseContact, systemInterfaceContact, changeProviderId);
 		}
 
 		private void InsertAccountAndCreateExternalAccount(Guid changeProviderId, DatabaseAccount databaseAccount)
@@ -127,6 +136,15 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId, databaseAccount.Id);
 			externalAccount.Insert();
+
+			InsertAccountRelations(databaseAccount, systemInterfaceAccount, changeProviderId);
+		}
+
+		private void InsertAccountRelations(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			InsertAccountContact(databaseAccount, systemInterfaceAccount, changeProviderId);
+			InsertAccountIndsamler(databaseAccount, systemInterfaceAccount, changeProviderId);
+			InsertAccountGroup(databaseAccount, systemInterfaceAccount);
 		}
 
 		private void UpdateExternalContactIfNeeded(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact)
