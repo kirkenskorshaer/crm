@@ -106,6 +106,7 @@ namespace SystemInterface.Dynamics.Crm
 			if (includeContactId)
 			{
 				crmEntity.Attributes.Add(new KeyValuePair<string, object>("contactid", Id));
+				crmEntity.Id = Id;
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", firstname));
