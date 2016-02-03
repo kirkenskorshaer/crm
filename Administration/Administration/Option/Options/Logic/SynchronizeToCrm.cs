@@ -6,10 +6,16 @@ using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
+using DatabaseAccountContact = DataLayer.SqlData.Account.AccountContact;
+using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
+using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
+using DatabaseGroup = DataLayer.SqlData.Group.Group;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using SystemInterfaceAccount = SystemInterface.Dynamics.Crm.Account;
+using SystemInterfaceGroup = SystemInterface.Dynamics.Crm.Group;
 using DataLayer;
 using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
@@ -17,6 +23,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Administration.Mapping.Account;
 using Utilities.Comparer;
+using DataLayer.SqlData.Account;
 
 namespace Administration.Option.Options.Logic
 {
