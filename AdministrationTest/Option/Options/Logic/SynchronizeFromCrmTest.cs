@@ -16,6 +16,7 @@ namespace AdministrationTest.Option.Options.Logic
 		private DataLayer.MongoData.UrlLogin _urlLogin;
 		private DynamicsCrmConnection _dynamicsCrmConnection;
 		private DatabaseChangeProvider _changeProvider;
+		private SynchronizeFromCrm _synchronizeFromCrm;
 
 		[SetUp]
 		new public void SetUp()
@@ -26,6 +27,10 @@ namespace AdministrationTest.Option.Options.Logic
 			_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(_urlLogin.Url, _urlLogin.Username, _urlLogin.Password);
 
 			_changeProvider = FindOrCreateChangeProvider(_sqlConnection, "testCrmProvider");
+
+			DatabaseSynchronizeFromCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeFromCrm();
+			_synchronizeFromCrm = new SynchronizeFromCrm(Connection, databaseSynchronizeFromCrm);
+			_synchronizeFromCrm.Execute();
 		}
 
 		private DatabaseSynchronizeFromCrm GetDatabaseSynchronizeFromCrm()
@@ -44,21 +49,17 @@ namespace AdministrationTest.Option.Options.Logic
 		[Test]
 		public void ExecuteOptionGetsChangesets()
 		{
-			DatabaseSynchronizeFromCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeFromCrm();
-			SynchronizeFromCrm synchronizeFromCrm = new SynchronizeFromCrm(Connection, databaseSynchronizeFromCrm);
-			synchronizeFromCrm.Execute();
-
 			string firstname1 = "firstname1";
 			string firstname2 = "firstname2";
 
 			Contact crmContact = CreateCrmContact(firstname1);
 
 			crmContact.Insert();
-			synchronizeFromCrm.Execute();
+			_synchronizeFromCrm.Execute();
 
 			crmContact.firstname = firstname2;
 			crmContact.Update();
-			synchronizeFromCrm.Execute();
+			_synchronizeFromCrm.Execute();
 
 			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.Id, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
 
