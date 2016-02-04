@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Data.SqlClient;
 using SystemInterface.Dynamics.Crm;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCrm;
@@ -13,7 +12,6 @@ namespace AdministrationTest.Option.Options.Logic
 	[TestFixture]
 	public class SynchronizeFromCrmTest : TestBase
 	{
-		private SqlConnection _sqlConnection;
 		private DataLayer.MongoData.UrlLogin _urlLogin;
 		private DynamicsCrmConnection _dynamicsCrmConnection;
 		private DatabaseChangeProvider _changeProvider;
@@ -23,7 +21,6 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			base.SetUp();
 
-			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
 			_urlLogin = DataLayer.MongoData.UrlLogin.GetUrlLogin(Connection, "test");
 			_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(_urlLogin.Url, _urlLogin.Username, _urlLogin.Password);
 
