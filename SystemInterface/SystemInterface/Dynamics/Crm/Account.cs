@@ -242,15 +242,15 @@ namespace SystemInterface.Dynamics.Crm
 			return externalIds;
 		}
 
-		public List<Guid> GetExternalContactIdsFromAccountGroup()
+		public List<Group> GetExternalGroupsFromAccountGroup()
 		{
 			Entity currentEntity = GetAsEntity(true);
 
 			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
 
-			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("new_groupid")).ToList();
+			List<Group> externalGroups = relatedEntities.Select(entity => new Group(entity)).ToList();
 
-			return externalIds;
+			return externalGroups;
 		}
 	}
 }
