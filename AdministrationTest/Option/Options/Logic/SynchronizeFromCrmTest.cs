@@ -53,13 +53,7 @@ namespace AdministrationTest.Option.Options.Logic
 			string firstname1 = "firstname1";
 			string firstname2 = "firstname2";
 
-			Contact crmContact = new Contact(_dynamicsCrmConnection)
-			{
-				createdon = DateTime.Now,
-				firstname = firstname1,
-				lastname = "lastname1",
-				modifiedon = DateTime.Now,
-			};
+			Contact crmContact = CreateCrmContact(firstname1);
 
 			crmContact.Insert();
 			synchronizeFromCrm.Execute();
@@ -75,6 +69,17 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(2, contactChanges.Count);
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname1));
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname2));
+		}
+
+		private Contact CreateCrmContact(string firstname1)
+		{
+			return new Contact(_dynamicsCrmConnection)
+			{
+				createdon = DateTime.Now,
+				firstname = firstname1,
+				lastname = "lastname1",
+				modifiedon = DateTime.Now,
+			};
 		}
 	}
 }
