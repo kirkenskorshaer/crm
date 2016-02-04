@@ -70,6 +70,19 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname2));
 		}
 
+		[Test]
+		public void AccountContactsCanBeAdded()
+		{
+			string firstname1 = "firstname1";
+			string name2 = "name2";
+
+			Contact crmContact = CreateCrmContact(firstname1);
+			Account crmAccount = CreateCrmAccount(name2);
+
+			crmContact.Insert();
+			crmAccount.Insert();
+		}
+
 		private Contact CreateCrmContact(string firstname1)
 		{
 			return new Contact(_dynamicsCrmConnection)
@@ -78,6 +91,14 @@ namespace AdministrationTest.Option.Options.Logic
 				firstname = firstname1,
 				lastname = "lastname1",
 				modifiedon = DateTime.Now,
+			};
+		}
+
+		private Account CreateCrmAccount(string name)
+		{
+			return new Account(_dynamicsCrmConnection)
+			{
+				name = name,
 			};
 		}
 	}
