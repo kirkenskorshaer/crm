@@ -71,6 +71,23 @@ namespace DataLayer.SqlData.Group
 			return group;
 		}
 
+		public static Group ReadByNameOrCreate(SqlConnection sqlConnection, string name)
+		{
+			if (ExistsByName(sqlConnection, name))
+			{
+				return ReadByName(sqlConnection, name);
+			}
+
+			Group group = new Group()
+			{
+				Name = name,
+			};
+
+			group.Insert(sqlConnection);
+
+			return group;
+		}
+
 		public static Group Read(SqlConnection sqlConnection, Guid id)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
