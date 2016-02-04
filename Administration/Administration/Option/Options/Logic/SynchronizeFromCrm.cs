@@ -9,6 +9,11 @@ using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
+using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
+using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
+using DatabaseGroup = DataLayer.SqlData.Group.Group;
+using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
+using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DataLayer;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,7 +141,9 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			CreateContactChange(changeProviderId, crmContact, externalContactId, contactId, modifiedOn);
+			DatabaseContactChange contactChange = CreateContactChange(changeProviderId, crmContact, externalContactId, contactId, modifiedOn);
+
+			StoreContactRelations(crmContact, contactChange, changeProviderId);
 		}
 
 		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId, Guid externalAccountId, DatabaseAccount account)
@@ -151,7 +158,9 @@ namespace Administration.Option.Options.Logic
 				return;
 			}
 
-			CreateAccountChange(changeProviderId, crmAccount, externalAccountId, accountId, modifiedOn);
+			DatabaseAccountChange accountChange = CreateAccountChange(changeProviderId, crmAccount, externalAccountId, accountId, modifiedOn);
+
+			StoreAccountRelations(crmAccount, accountChange, changeProviderId);
 		}
 
 		private DatabaseContact ReadOrCreateContact(Contact crmContact)
@@ -207,7 +216,7 @@ namespace Administration.Option.Options.Logic
 			return account;
 		}
 
-		private void CreateContactChange(Guid changeProviderId, Contact crmContact, Guid externalContactId, Guid contactId, DateTime modifiedOn)
+		private DatabaseContactChange CreateContactChange(Guid changeProviderId, Contact crmContact, Guid externalContactId, Guid contactId, DateTime modifiedOn)
 		{
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
@@ -217,9 +226,29 @@ namespace Administration.Option.Options.Logic
 			contactChange.Lastname = crmContact.lastname;
 
 			contactChange.Insert();
+
+			return contactChange;
 		}
 
-		private void CreateAccountChange(Guid changeProviderId, Account crmAccount, Guid externalAccountId, Guid accountId, DateTime modifiedOn)
+		private void StoreContactRelations(Contact crmContact, DatabaseContactChange contactChange, Guid changeProviderId)
+		{
+			StoreContactRelationContactChangeGroup(crmContact, contactChange, changeProviderId);
+		}
+
+		private void StoreContactRelationContactChangeGroup(Contact crmContact, DatabaseContactChange contactChange, Guid changeProviderId)
+		{
+			List<Group> externalGroupsFromContactGroup = crmContact.GetExternalGroupsFromContactGroup();
+			List<DatabaseGroup> DatabaseGroups = externalGroupsFromContactGroup.Select(group => DatabaseGroup.ReadByNameOrCreate(SqlConnection, group.Name)).ToList();
+			List<Guid> groupIds = DatabaseGroups.Select(group => group.Id).ToList();
+
+			foreach (Guid groupId in groupIds)
+			{
+				DatabaseContactChangeGroup contactChangeGroup = new DatabaseContactChangeGroup(contactChange.Id, groupId);
+				contactChangeGroup.Insert(SqlConnection);
+			}
+		}
+
+		private DatabaseAccountChange CreateAccountChange(Guid changeProviderId, Account crmAccount, Guid externalAccountId, Guid accountId, DateTime modifiedOn)
 		{
 			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
 
@@ -228,6 +257,54 @@ namespace Administration.Option.Options.Logic
 			accountChange.name = crmAccount.name;
 
 			accountChange.Insert();
+
+			return accountChange;
+		}
+
+		private void StoreAccountRelations(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		{
+			StoreAccountRelationAccountChangeContact(crmAccount, accountChange, changeProviderId);
+			StoreAccountRelationAccountChangeIndsamler(crmAccount, accountChange, changeProviderId);
+			StoreAccountRelationAccountChangeGroup(crmAccount, accountChange, changeProviderId);
+		}
+
+		private void StoreAccountRelationAccountChangeContact(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		{
+			List<Guid> externalContactIdsFromAccountContact = crmAccount.GetExternalContactIdsFromAccountContact();
+			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountContact.Select(externalContactId => DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId)).ToList();
+			List<Guid> contactIds = externalContacts.Select(externalContact => externalContact.ContactId).ToList();
+
+			foreach (Guid contactId in contactIds)
+			{
+				DatabaseAccountChangeContact accountChangeContact = new DatabaseAccountChangeContact(accountChange.Id, contactId);
+				accountChangeContact.Insert(SqlConnection);
+			}
+		}
+
+		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		{
+			List<Guid> externalContactIdsFromAccountIndsamler = crmAccount.GetExternalContactIdsFromAccountIndsamler();
+			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountIndsamler.Select(externalContactId => DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId)).ToList();
+			List<Guid> contactIds = externalContacts.Select(externalContact => externalContact.ContactId).ToList();
+
+			foreach (Guid contactId in contactIds)
+			{
+				DatabaseAccountChangeIndsamler accountChangeIndsamler = new DatabaseAccountChangeIndsamler(accountChange.Id, contactId);
+				accountChangeIndsamler.Insert(SqlConnection);
+			}
+		}
+
+		private void StoreAccountRelationAccountChangeGroup(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		{
+			List<Group> externalGroupsFromAccountGroup = crmAccount.GetExternalGroupsFromAccountGroup();
+			List<DatabaseGroup> DatabaseGroups = externalGroupsFromAccountGroup.Select(group => DatabaseGroup.ReadByNameOrCreate(SqlConnection, group.Name)).ToList();
+			List<Guid> groupIds = DatabaseGroups.Select(group => group.Id).ToList();
+
+			foreach (Guid groupId in groupIds)
+			{
+				DatabaseAccountChangeGroup contactChangeGroup = new DatabaseAccountChangeGroup(accountChange.Id, groupId);
+				contactChangeGroup.Insert(SqlConnection);
+			}
 		}
 
 		private DateTime GetSearchDateContact(out DataLayer.MongoData.Progress progress)
