@@ -5,6 +5,8 @@ using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.Sync
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
+using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using System.Linq;
 using System.Collections.Generic;
 using Administration.Option.Options.Logic;
@@ -70,6 +72,32 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(2, contactChanges.Count);
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname1));
 			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname2));
+		}
+
+		[Test]
+		public void ContactGroupsCanBeAdded()
+		{
+			string firstname = "firstname";
+			string groupName = "groupName";
+
+			Contact crmContact = CreateCrmContact(firstname);
+
+			crmContact.Insert();
+
+			crmContact.SynchronizeGroups(new List<string>() { groupName });
+
+			_synchronizeFromCrm.Execute();
+
+			DatabaseExternalContact databaseExternalContact = DatabaseExternalContact.Read(_sqlConnection, crmContact.Id, _changeProvider.Id);
+			DatabaseContactChange databaseContactchange = DatabaseContactChange.Read(_sqlConnection, databaseExternalContact.ContactId, DatabaseContactChange.IdType.ContactId).
+				Where(contactChange => contactChange.ChangeProviderId == _changeProvider.Id && contactChange.ExternalContactId == databaseExternalContact.ExternalContactId).Single();
+
+			List<DatabaseContactChangeGroup> databaseContactGroups = DatabaseContactChangeGroup.ReadFromContactChangeId(_sqlConnection, databaseContactchange.Id);
+			List<DatabaseGroup> databaseGroups = databaseContactGroups.Select(contactGroup => DatabaseGroup.Read(_sqlConnection, contactGroup.GroupId)).ToList();
+
+			crmContact.Delete();
+
+			Assert.AreEqual(groupName, databaseGroups.Single().Name);
 		}
 
 		[Test]
