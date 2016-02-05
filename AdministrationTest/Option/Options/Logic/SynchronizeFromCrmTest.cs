@@ -5,8 +5,11 @@ using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.Sync
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
+using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using System.Linq;
 using System.Collections.Generic;
@@ -149,6 +152,34 @@ namespace AdministrationTest.Option.Options.Logic
 			crmAccount.Delete();
 
 			Assert.AreEqual(1, accountChangeIndsamlere.Count);
+		}
+
+		[Test]
+		public void AccountGroupsCanBeAdded()
+		{
+			string firstname = "firstname";
+			string groupName = "groupName";
+
+			Account crmAccount = CreateCrmAccount(firstname);
+			Group crmGroup = Group.ReadOrCreate(_dynamicsCrmConnection, groupName);
+
+			crmAccount.Insert();
+
+			crmAccount.SynchronizeGroups(new List<Group>() { crmGroup });
+
+			_synchronizeFromCrm.Execute();
+
+			DatabaseExternalAccount databaseExternalAccount = DatabaseExternalAccount.Read(_sqlConnection, crmAccount.Id, _changeProvider.Id);
+			DatabaseAccountChange databaseAccountchange = DatabaseAccountChange.Read(_sqlConnection, databaseExternalAccount.AccountId, DatabaseAccountChange.IdType.AccountId).
+				Where(contactChange => contactChange.ChangeProviderId == _changeProvider.Id && contactChange.ExternalAccountId == databaseExternalAccount.ExternalAccountId).Single();
+
+			List<DatabaseAccountChangeGroup> databaseAccountGroups = DatabaseAccountChangeGroup.ReadFromAccountChangeId(_sqlConnection, databaseAccountchange.Id);
+			List<DatabaseGroup> databaseGroups = databaseAccountGroups.Select(contactGroup => DatabaseGroup.Read(_sqlConnection, contactGroup.GroupId)).ToList();
+
+			crmAccount.Delete();
+			crmGroup.Delete(_dynamicsCrmConnection);
+
+			Assert.AreEqual(groupName, databaseGroups.Single().Name);
 		}
 
 		private Contact CreateCrmContact(string firstname1)
