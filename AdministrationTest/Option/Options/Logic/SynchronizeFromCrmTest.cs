@@ -3,6 +3,7 @@ using SystemInterface.Dynamics.Crm;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCrm;
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
+using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
@@ -123,6 +124,31 @@ namespace AdministrationTest.Option.Options.Logic
 			crmAccount.Delete();
 
 			Assert.AreEqual(1, accountChangeContacts.Count);
+		}
+
+		[Test]
+		public void AccountIndsamlereCanBeAdded()
+		{
+			string firstname1 = "firstname1";
+			string name2 = "name2";
+
+			Contact crmContact = CreateCrmContact(firstname1);
+			Account crmAccount = CreateCrmAccount(name2);
+
+			crmContact.Insert();
+			crmAccount.Insert();
+
+			crmAccount.SynchronizeIndsamlere(new List<Contact>() { crmContact });
+
+			_synchronizeFromCrm.Execute();
+
+			DatabaseExternalContact databaseExternalContact = DatabaseExternalContact.Read(_sqlConnection, crmContact.Id, _changeProvider.Id);
+			List<DatabaseAccountChangeIndsamler> accountChangeIndsamlere = DatabaseAccountChangeIndsamler.ReadFromContactId(_sqlConnection, databaseExternalContact.ContactId);
+
+			crmContact.Delete();
+			crmAccount.Delete();
+
+			Assert.AreEqual(1, accountChangeIndsamlere.Count);
 		}
 
 		private Contact CreateCrmContact(string firstname1)
