@@ -4,6 +4,7 @@ using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseSynchronizeFromCrm = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCrm;
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using System.Linq;
 using System.Collections.Generic;
 using Administration.Option.Options.Logic;
@@ -62,7 +63,7 @@ namespace AdministrationTest.Option.Options.Logic
 			crmContact.Update();
 			_synchronizeFromCrm.Execute();
 
-			List<DataLayer.SqlData.Contact.ContactChange> contactChanges = DataLayer.SqlData.Contact.ContactChange.Read(_sqlConnection, crmContact.Id, DataLayer.SqlData.Contact.ContactChange.IdType.ExternalContactId);
+			List<DatabaseContactChange> contactChanges = DatabaseContactChange.Read(_sqlConnection, crmContact.Id, DatabaseContactChange.IdType.ExternalContactId);
 
 			crmContact.Delete();
 
