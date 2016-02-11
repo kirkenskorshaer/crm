@@ -23,6 +23,8 @@ namespace DataLayer.SqlData.Account
 		public string telephone1;
 
 		public bool new_erindsamlingssted;
+		public int new_kkadminmedlemsnr;
+		public string new_region;
 
 		public Guid ExternalAccountId { get; private set; }
 		public Guid ChangeProviderId { get; private set; }
@@ -42,7 +44,9 @@ namespace DataLayer.SqlData.Account
 			"emailaddress1",
 			"telephone1",
 
-			"new_erindsamlingssted"
+			"new_erindsamlingssted",
+			"new_kkadminmedlemsnr",
+			"new_region",
 		};
 
 		private static string _tableName = typeof(AccountChange).Name;
@@ -89,6 +93,8 @@ namespace DataLayer.SqlData.Account
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_erindsamlingssted", Utilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_region", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 
 			CreateKeyIfMissing(sqlConnection, _tableName, "AccountId", typeof(Account).Name, "id");
 
@@ -111,7 +117,10 @@ namespace DataLayer.SqlData.Account
 			AddInsertParameterIfNotNull(address1_postalcode, "address1_postalcode", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(emailaddress1, "emailaddress1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
 			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(AccountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ExternalAccountId, "ExternalAccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -266,7 +275,10 @@ namespace DataLayer.SqlData.Account
 				address1_postalcode = ConvertFromDatabaseValue<string>(row["address1_postalcode"]),
 				emailaddress1 = ConvertFromDatabaseValue<string>(row["emailaddress1"]),
 				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
+
 				new_erindsamlingssted = ConvertFromDatabaseValue<bool>(row["new_erindsamlingssted"]),
+				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
+				new_region = ConvertFromDatabaseValue<string>(row["new_region"]),
 			};
 
 			return accountChange;
