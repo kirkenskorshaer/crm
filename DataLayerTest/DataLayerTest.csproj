@@ -52,6 +52,7 @@
     <Compile Include="MongoDataTest\Option\Options\CsvTest\CsvWriteLineTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\EmailTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\LogicTest\StressTestCrmTest.cs" />
+    <Compile Include="MongoDataTest\Option\Options\LogicTest\SynchronizeFromCsvTest.cs" />
     <Compile Include="MongoDataTest\Option\ScheduleTest.cs" />
     <Compile Include="MongoDataTest\ProgressTest.cs" />
     <Compile Include="MongoDataTest\ServerTest.cs" />
