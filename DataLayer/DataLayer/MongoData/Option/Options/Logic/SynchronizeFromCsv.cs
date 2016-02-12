@@ -14,6 +14,25 @@ namespace DataLayer.MongoData.Option.Options.Logic
 
 		public Guid changeProviderId { get; set; }
 
+		public static SynchronizeFromCsv Create(MongoConnection connection, string name, Schedule schedule, Guid changeProviderId, string fileName, string fileNameTmp, char delimeter, string keyName,string dateName, string mappingField, string[] fields)
+		{
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv
+			{
+				fileName = fileName,
+				changeProviderId = changeProviderId,
+				dateName = dateName,
+				delimeter = delimeter,
+				fields = fields,
+				fileNameTmp = fileNameTmp,
+				keyName = keyName,
+				mappingField = mappingField,
+			};
+
+			Create(connection, synchronizeFromCsv, name, schedule);
+
+			return synchronizeFromCsv;
+		}
+
 		protected override void Execute(MongoConnection connection, bool recurring)
 		{
 			if (recurring)
