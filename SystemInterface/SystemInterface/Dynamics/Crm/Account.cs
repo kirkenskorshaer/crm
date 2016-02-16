@@ -29,6 +29,7 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime modifiedon { get; private set; }
 
 		public bool new_erindsamlingssted;
+		public int new_kkadminmedlemsnr;
 
 		private string _contactRelationshipName = "new_account_contact";
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
@@ -55,7 +56,8 @@ namespace SystemInterface.Dynamics.Crm
 			"createdon",
 			"modifiedon",
 
-			"new_erindsamlingssted"
+			"new_erindsamlingssted",
+			"new_kkadminmedlemsnr"
 		);
 
 		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "address2_addressid", "statecode");
@@ -112,6 +114,7 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("telephone1", telephone1));
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_erindsamlingssted", new_erindsamlingssted));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
 
 			return crmEntity;
 		}
