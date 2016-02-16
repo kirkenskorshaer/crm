@@ -165,7 +165,7 @@ namespace SystemInterface.Csv
 
 		public void Update(string keyName, string keyValue, params string[] values)
 		{
-			int keyIndex = keyNameToKeyIndex(keyName);
+			int keyIndex = columnNameToColumnIndex(keyName);
 
 			if (values.Count() != Columns.Count)
 			{
@@ -247,7 +247,7 @@ namespace SystemInterface.Csv
 
 		public List<Dictionary<string, object>> ReadCompared<CompareType>(string keyName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
 		{
-			int keyIndex = keyNameToKeyIndex(keyName);
+			int dateIndex = columnNameToColumnIndex(dateName);
 
 			if (keyIndex > Columns.Count)
 			{
@@ -293,7 +293,7 @@ namespace SystemInterface.Csv
 
 		public void Delete(string keyName, string keyValue)
 		{
-			int keyIndex = keyNameToKeyIndex(keyName);
+			int keyIndex = columnNameToColumnIndex(keyName);
 
 			if (keyIndex > Columns.Count)
 			{
@@ -336,15 +336,15 @@ namespace SystemInterface.Csv
 			File.Move(_fileNameTmp, _fileName);
 		}
 
-		private int keyNameToKeyIndex(string keyName)
+		private int columnNameToColumnIndex(string columnName)
 		{
-			if (Columns.Select(definition => definition.Name).Contains(keyName))
+			if (Columns.Select(definition => definition.Name).Contains(columnName))
 			{
-				ColumnDefinition columnDefinition = Columns.First(definition => definition.Name == keyName);
+				ColumnDefinition columnDefinition = Columns.First(definition => definition.Name == columnName);
 				return Columns.IndexOf(columnDefinition);
 			}
 
-			throw new ArgumentException($"keyName {keyName} not found");
+			throw new ArgumentException($"column name {columnName} not found");
 		}
 	}
 }
