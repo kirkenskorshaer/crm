@@ -3,7 +3,9 @@ using NUnit.Framework;
 using DatabaseSynchronizeFromCsv = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCsv;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using System.Data.SqlClient;
 using System.IO;
@@ -249,6 +251,67 @@ namespace AdministrationTest.Option.Options.Logic
 			}
 		}
 
+		[Test]
+		[Ignore]
+		public void ImportAccounts()
+		{
+			DataLayer.MongoData.Option.Schedule schedule = new DataLayer.MongoData.Option.Schedule()
+			{
+				NextAllowedExecution = DateTime.Now,
+				Recurring = false,
+			};
+
+			Guid changeProviderId = Guid.Parse("8D4CE329-EC67-4F9A-A4A7-65F273E86E09");
+
+			string filename = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv";
+			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv.tmp";
+			char delimeter = '\t';
+			string keyName = "new_kkadminmedlemsnr";
+			string dateName = "importDate";
+			string mappingField = "emailaddress1";
+			string[] fields = new string[]
+			{
+				"bool:new_erindsamlingssted",
+				"int:new_kkadminmedlemsnr",
+				"TilknytningsNavn",
+				"name",
+				"address1_line1",
+				"address1_line2",
+				"address1_postalcode",
+				"address1_city",
+				"BykoordinatorNavn",
+				"BykoordinatorEmail",
+				"BykoordinatorTel",
+				"BykoordinatorTitel",
+				"comment",
+				"SubRegion",
+				"importDate",
+			};
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
+
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+			synchronizeFromCsv.Execute();
+
+			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
+			{
+				changeProviderId = Guid.Parse("A1025645-9811-44AE-9708-9AADC03E33DD"),
+				Name = "test",
+				Schedule = schedule,
+				urlLoginName = "test",
+			};
+
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			MakeSureThereAreProgressOnAllAccounts();
+
+			for (int contactCount = 0; contactCount < 132; contactCount++)
+			//for (int contactCount = 0; contactCount < 1; contactCount++)
+			{
+				synchronizeToCrm.Execute();
+			}
+		}
+
 		private void MakeSureThereAreProgressOnAllContacts()
 		{
 			Guid contactIdCurrent = DatabaseContact.ReadNextById(_sqlConnection, Guid.Empty).Id;
@@ -272,6 +335,32 @@ namespace AdministrationTest.Option.Options.Logic
 
 				contactIdCurrent = DatabaseContact.ReadNextById(_sqlConnection, contactIdCurrent).Id;
 				contactIdLast = contactIdCurrent;
+			}
+		}
+
+		private void MakeSureThereAreProgressOnAllAccounts()
+		{
+			Guid accountIdCurrent = DatabaseAccount.ReadNextById(_sqlConnection, Guid.Empty).Id;
+			Guid accountIdFirst = accountIdCurrent;
+			Guid accountIdLast = Guid.Empty;
+			DataLayer.MongoData.Progress progress = null;
+
+			while (accountIdLast != accountIdFirst)
+			{
+				bool progressExists = DataLayer.MongoData.Progress.Exists(Connection, MaintainProgress.ProgressAccountToCrm, accountIdCurrent);
+				if (progressExists == false)
+				{
+					progress = new DataLayer.MongoData.Progress()
+					{
+						LastProgressDate = DateTime.Now,
+						TargetName = MaintainProgress.ProgressAccountToCrm,
+						TargetId = accountIdCurrent,
+					};
+					progress.Insert(Connection);
+				}
+
+				accountIdCurrent = DatabaseAccount.ReadNextById(_sqlConnection, accountIdCurrent).Id;
+				accountIdLast = accountIdCurrent;
 			}
 		}
 	}
