@@ -38,6 +38,8 @@ namespace DataLayer.SqlData.Contact
 		public string titel;
 		public bool hargavebrev;
 		public bool kkadminstatus;
+		public bool new_bykoordinator;
+		public bool new_omraadekoordinator;
 
 		private static readonly List<string> _fields = new List<string>()
 		{
@@ -63,6 +65,8 @@ namespace DataLayer.SqlData.Contact
 			"titel",
 			"hargavebrev",
 			"kkadminstatus",
+			"new_bykoordinator",
+			"new_omraadekoordinator",
 		};
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -98,6 +102,8 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", Utilities.DataType.BIT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", Utilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_bykoordinator", Utilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_omraadekoordinator", Utilities.DataType.BIT, SqlBoolean.True);
 		}
 
 		public void Insert(SqlConnection sqlConnection, MongoConnection mongoConnection = null)
@@ -128,6 +134,8 @@ namespace DataLayer.SqlData.Contact
 			AddInsertParameterIfNotNull(titel, "titel", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(hargavebrev, "hargavebrev", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(kkadminstatus, "kkadminstatus", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_bykoordinator, "new_bykoordinator", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_omraadekoordinator, "new_omraadekoordinator", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -266,6 +274,8 @@ namespace DataLayer.SqlData.Contact
 			AddUpdateParameter(titel, "titel", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(hargavebrev, "hargavebrev", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(kkadminstatus, "kkadminstatus", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(new_bykoordinator, "new_bykoordinator", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(new_omraadekoordinator, "new_omraadekoordinator", sqlStringBuilderSets, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("Update");
@@ -307,6 +317,8 @@ namespace DataLayer.SqlData.Contact
 				titel = ConvertFromDatabaseValue<string>(row["titel"]),
 				hargavebrev = ConvertFromDatabaseValue<bool>(row["hargavebrev"]),
 				kkadminstatus = ConvertFromDatabaseValue<bool>(row["kkadminstatus"]),
+				new_bykoordinator = ConvertFromDatabaseValue<bool>(row["new_bykoordinator"]),
+				new_omraadekoordinator = ConvertFromDatabaseValue<bool>(row["new_omraadekoordinator"]),
 			};
 		}
 
