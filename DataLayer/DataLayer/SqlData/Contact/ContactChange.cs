@@ -10,10 +10,10 @@ namespace DataLayer.SqlData.Contact
 {
 	public class ContactChange : AbstractIdData, IModifiedIdData
 	{
-		public DateTime CreatedOn;
-		public DateTime ModifiedOn { get; set; }
-		public string Firstname;
-		public string Lastname;
+		public DateTime createdon;
+		public DateTime modifiedon { get; set; }
+		public string firstname;
+		public string lastname;
 
 		public DateTime? birthdate;
 
@@ -42,10 +42,10 @@ namespace DataLayer.SqlData.Contact
 
 		private static readonly List<string> _fields = new List<string>()
 		{
-			"FirstName",
-			"LastName",
-			"CreatedOn",
-			"ModifiedOn",
+			"firstname",
+			"lastname",
+			"createdon",
+			"modifiedon",
 
 			"birthdate",
 			"address1_line1",
@@ -97,10 +97,10 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "FirstName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "LastName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "CreatedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", Utilities.DataType.DATETIME, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
@@ -130,10 +130,10 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddInsertParameterIfNotNull(Firstname, "Firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(Lastname, "Lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(firstname, "firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(lastname, "lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(birthdate, "birthdate", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -295,10 +295,10 @@ namespace DataLayer.SqlData.Contact
 
 			ContactChange contactChange = new ContactChange(sqlConnection, contactId, externalContactId, changeProviderId)
 			{
-				Firstname = ConvertFromDatabaseValue<string>(row["Firstname"]),
-				Lastname = ConvertFromDatabaseValue<string>(row["LastName"]),
-				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
-				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
+				firstname = ConvertFromDatabaseValue<string>(row["firstname"]),
+				lastname = ConvertFromDatabaseValue<string>(row["lastName"]),
+				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
+				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
 
 				birthdate = ConvertFromDatabaseValue<DateTime?>(row["birthdate"]),

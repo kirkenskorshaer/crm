@@ -24,10 +24,10 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_contact = new DatabaseContact()
 			{
-				Firstname = "test",
-				Lastname = "test",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				firstname = "test",
+				lastname = "test",
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 
 			_contact.Insert(_sqlConnection);

@@ -13,10 +13,10 @@ namespace DataLayerTest.SqlDataTest
 
 			Contact createdContact = new Contact
 			{
-				Firstname = $"FirstnameTest_{Guid.NewGuid()}",
-				Lastname = $"LastNameTest_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				firstname = $"FirstnameTest_{Guid.NewGuid()}",
+				lastname = $"LastNameTest_{Guid.NewGuid()}",
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			createdContact.Insert(sqlConnection);
@@ -31,8 +31,8 @@ namespace DataLayerTest.SqlDataTest
 			Account createdContact = new Account
 			{
 				name = $"nameTest_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			createdContact.Insert(sqlConnection);
@@ -44,9 +44,9 @@ namespace DataLayerTest.SqlDataTest
 		{
 			ContactChange contactChangeCreated = new ContactChange(sqlConnection, contactId, externalContactId, changeProviderId)
 			{
-				Firstname = $"name_{Guid.NewGuid()}",
-				CreatedOn = createdTime,
-				ModifiedOn = createdTime,
+				firstname = $"name_{Guid.NewGuid()}",
+				createdon = createdTime,
+				modifiedon = createdTime,
 			};
 
 			contactChangeCreated.Insert();
@@ -59,8 +59,8 @@ namespace DataLayerTest.SqlDataTest
 			AccountChange accountChangeCreated = new AccountChange(sqlConnection, accountId, externalAccountId, changeProviderId)
 			{
 				name = $"name_{Guid.NewGuid()}",
-				CreatedOn = createdTime,
-				ModifiedOn = createdTime,
+				createdon = createdTime,
+				modifiedon = createdTime,
 			};
 
 			accountChangeCreated.Insert();

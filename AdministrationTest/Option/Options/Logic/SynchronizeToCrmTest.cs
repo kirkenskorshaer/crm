@@ -66,7 +66,7 @@ namespace AdministrationTest.Option.Options.Logic
 			Contact contact = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
 
 			contact.Delete();
-			Assert.AreEqual(databaseContact.Firstname, contact.firstname);
+			Assert.AreEqual(databaseContact.firstname, contact.firstname);
 		}
 
 		[Test]
@@ -104,10 +104,10 @@ namespace AdministrationTest.Option.Options.Logic
 
 			DatabaseContactChange contactChange = new DatabaseContactChange(_sqlConnection, databaseContact.Id, externalContact.ExternalContactId, _changeProvider.Id)
 			{
-				Firstname = "firstName2",
-				Lastname = "lastname2",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				firstname = "firstName2",
+				lastname = "lastname2",
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 			contactChange.Insert();
 
@@ -116,7 +116,7 @@ namespace AdministrationTest.Option.Options.Logic
 			Contact contactRead = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
 			contact.Delete();
 
-			Assert.AreEqual(contactChange.Firstname, contactRead.firstname);
+			Assert.AreEqual(contactChange.firstname, contactRead.firstname);
 		}
 
 		[Test]
@@ -136,8 +136,8 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseAccountChange accountChange = new DatabaseAccountChange(_sqlConnection, databaseAccount.Id, externalAccount.ExternalAccountId, _changeProvider.Id)
 			{
 				name = "name2",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 			accountChange.Insert();
 
@@ -384,10 +384,10 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			DatabaseContact contact = new DatabaseContact
 			{
-				Firstname = "firstName1",
-				Lastname = "lastname1",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				firstname = "firstName1",
+				lastname = "lastname1",
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 
 			contact.Insert(_sqlConnection);
@@ -400,8 +400,8 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseAccount account = new DatabaseAccount
 			{
 				name = "name1",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 
 			account.Insert(_sqlConnection);

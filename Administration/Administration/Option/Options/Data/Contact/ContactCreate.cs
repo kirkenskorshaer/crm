@@ -37,10 +37,10 @@ namespace Administration.Option.Options.Data.Contact
 
 			DataLayer.SqlData.Contact.Contact contact = new DataLayer.SqlData.Contact.Contact();
 
-			contact.CreatedOn = CreatedOn;
-			contact.ModifiedOn = ModifiedOn;
-			contact.Firstname = Firstname;
-			contact.Lastname = Lastname;
+			contact.createdon = CreatedOn;
+			contact.modifiedon = ModifiedOn;
+			contact.firstname = Firstname;
+			contact.lastname = Lastname;
 
 			contact.Insert(SqlConnection);
 

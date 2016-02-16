@@ -13,10 +13,10 @@ namespace DataLayer.SqlData.Contact
 {
 	public class Contact : AbstractIdData, IModifiedIdData
 	{
-		public DateTime CreatedOn;
-		public DateTime ModifiedOn { get; set; }
-		public string Firstname;
-		public string Lastname;
+		public DateTime createdon;
+		public DateTime modifiedon { get; set; }
+		public string firstname;
+		public string lastname;
 
 		public DateTime? birthdate;
 
@@ -41,10 +41,10 @@ namespace DataLayer.SqlData.Contact
 
 		private static readonly List<string> _fields = new List<string>()
 		{
-			"FirstName",
-			"LastName",
-			"CreatedOn",
-			"ModifiedOn",
+			"firstname",
+			"lastname",
+			"createdon",
+			"modifiedon",
 
 			"birthdate",
 			"address1_line1",
@@ -76,10 +76,10 @@ namespace DataLayer.SqlData.Contact
 				Utilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "FirstName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "LastName", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "CreatedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", Utilities.DataType.DATETIME, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
@@ -106,10 +106,10 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 
-			AddInsertParameterIfNotNull(Firstname, "Firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(Lastname, "Lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(firstname, "firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(lastname, "lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(birthdate, "birthdate", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -244,10 +244,10 @@ namespace DataLayer.SqlData.Contact
 		{
 			StringBuilder sqlStringBuilderSets = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-			AddUpdateParameter(Firstname, "Firstname", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(Lastname, "Lastname", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(ModifiedOn, "ModifiedOn", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(CreatedOn, "CreatedOn", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(firstname, "firstname", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(lastname, "lastname", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(modifiedon, "modifiedon", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(createdon, "createdon", sqlStringBuilderSets, parameters);
 
 			AddUpdateParameter(birthdate, "birthdate", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(address1_line1, "address1_line1", sqlStringBuilderSets, parameters);
@@ -284,10 +284,10 @@ namespace DataLayer.SqlData.Contact
 		{
 			return new Contact
 			{
-				Firstname = ConvertFromDatabaseValue<string>(row["Firstname"]),
-				Lastname = ConvertFromDatabaseValue<string>(row["LastName"]),
-				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
-				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
+				firstname = ConvertFromDatabaseValue<string>(row["firstname"]),
+				lastname = ConvertFromDatabaseValue<string>(row["lastname"]),
+				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
+				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
 
 				birthdate = ConvertFromDatabaseValue<DateTime?>(row["birthdate"]),
@@ -416,9 +416,9 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	Firstname = @Firstname");
+			sqlStringBuilder.AppendLine("	firstname = @firstname");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("Firstname", firstName));
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("firstname", firstName));
 
 			List<Contact> contacts = new List<Contact>();
 

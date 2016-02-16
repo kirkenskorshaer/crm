@@ -38,7 +38,7 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 
 			createdAccount.Delete(_sqlConnection);
 
-			List<Account> Accounts = Account.ReadLatest(_sqlConnection, createdAccount.CreatedOn.AddSeconds(-1));
+			List<Account> Accounts = Account.ReadLatest(_sqlConnection, createdAccount.createdon.AddSeconds(-1));
 			Assert.AreEqual(0, Accounts.Count);
 		}
 
@@ -47,7 +47,7 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		{
 			Account createdAccount = AccountInsert(_sqlConnection);
 
-			List<Account> Accounts = Account.ReadLatest(_sqlConnection, createdAccount.CreatedOn.AddSeconds(-1));
+			List<Account> Accounts = Account.ReadLatest(_sqlConnection, createdAccount.createdon.AddSeconds(-1));
 
 			Assert.AreEqual(1, Accounts.Count);
 		}
@@ -147,8 +147,8 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			Account createdAccount = new Account
 			{
 				name = $"name_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			createdAccount.Insert(sqlConnection);
@@ -162,8 +162,8 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 			Account createdAccount = new Account
 			{
 				name = $"name_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			if (useMongoConnection)

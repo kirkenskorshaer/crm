@@ -94,7 +94,7 @@ namespace Administration.Option.Options.Logic
 		{
 			List<IModifiedIdData> contactChanges = DatabaseContactChange.Read(SqlConnection, contact.Id, DatabaseContactChange.IdType.ContactId).Select(data => (IModifiedIdData)data).ToList();
 
-			contactChanges = contactChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
+			contactChanges = contactChanges.OrderBy(contactChange => contactChange.modifiedon).ToList();
 
 			List<string> exclusionList = new List<string>()
 			{
@@ -133,7 +133,7 @@ namespace Administration.Option.Options.Logic
 		{
 			List<IModifiedIdData> accountChanges = DatabaseAccountChange.Read(SqlConnection, account.Id, DatabaseAccountChange.IdType.AccountId).Select(data => (IModifiedIdData)data).ToList();
 
-			accountChanges = accountChanges.OrderBy(contactChange => contactChange.ModifiedOn).ToList();
+			accountChanges = accountChanges.OrderBy(contactChange => contactChange.modifiedon).ToList();
 
 			List<string> exclusionList = new List<string>()
 			{
@@ -242,7 +242,7 @@ namespace Administration.Option.Options.Logic
 				IModifiedIdData databaseChangeLast = default(IModifiedIdData);
 				foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
 				{
-					DateTime modifiedOn = databaseChange.ModifiedOn;
+					DateTime modifiedOn = databaseChange.modifiedon;
 
 					if (databaseChangeLast == null)
 					{
@@ -269,7 +269,7 @@ namespace Administration.Option.Options.Logic
 
 					foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
 					{
-						DateTime modifiedOn = databaseChange.ModifiedOn;
+						DateTime modifiedOn = databaseChange.modifiedon;
 
 						if (databaseChangeLast == null)
 						{

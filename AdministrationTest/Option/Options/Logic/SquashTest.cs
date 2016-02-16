@@ -47,17 +47,17 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_contact = new DatabaseContact()
 			{
-				Firstname = "test",
-				Lastname = "test",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				firstname = "test",
+				lastname = "test",
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 
 			_account = new DatabaseAccount()
 			{
 				name = "test",
-				ModifiedOn = DateTime.Now,
-				CreatedOn = DateTime.Now,
+				modifiedon = DateTime.Now,
+				createdon = DateTime.Now,
 			};
 
 			_contact.Insert(_sqlConnection);
@@ -128,8 +128,8 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_contact = DatabaseContact.Read(_sqlConnection, _contact.Id);
 
-			Assert.AreEqual("firstname2", _contact.Firstname);
-			Assert.AreEqual("lastname1", _contact.Lastname);
+			Assert.AreEqual("firstname2", _contact.firstname);
+			Assert.AreEqual("lastname1", _contact.lastname);
 		}
 
 		[Test]
@@ -232,7 +232,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			squash.Execute();
 
-			List<string> contactsRead = DatabaseContact.ReadContactsFromAccountContact(_sqlConnection, _account.Id).Select(contact => contact.Firstname).ToList();
+			List<string> contactsRead = DatabaseContact.ReadContactsFromAccountContact(_sqlConnection, _account.Id).Select(contact => contact.firstname).ToList();
 			contactsRead.Sort();
 			List<string> expectedNames = new List<string>() { "firstnameA", "firstnameB", "firstnameD", "firstnameE" };
 
@@ -264,7 +264,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			squash.Execute();
 
-			List<string> contactsRead = DatabaseContact.ReadContactsFromAccountIndsamler(_sqlConnection, _account.Id).Select(contact => contact.Firstname).ToList();
+			List<string> contactsRead = DatabaseContact.ReadContactsFromAccountIndsamler(_sqlConnection, _account.Id).Select(contact => contact.firstname).ToList();
 			contactsRead.Sort();
 			List<string> expectedNames = new List<string>() { "firstnameA", "firstnameB", "firstnameD", "firstnameE" };
 
@@ -321,10 +321,10 @@ namespace AdministrationTest.Option.Options.Logic
 			{
 				contact = new DatabaseContact()
 				{
-					Firstname = contactFirstname,
-					Lastname = "test",
-					ModifiedOn = DateTime.Now,
-					CreatedOn = DateTime.Now,
+					firstname = contactFirstname,
+					lastname = "test",
+					modifiedon = DateTime.Now,
+					createdon = DateTime.Now,
 				};
 
 				contact.Insert(_sqlConnection);
@@ -351,10 +351,10 @@ namespace AdministrationTest.Option.Options.Logic
 
 			DatabaseContactChange databaseContactChange = new DatabaseContactChange(_sqlConnection, _contact.Id, externalContactId, changeProviderId)
 			{
-				Firstname = firstName,
-				Lastname = lastName,
-				ModifiedOn = modifiedOn,
-				CreatedOn = DateTime.Now,
+				firstname = firstName,
+				lastname = lastName,
+				modifiedon = modifiedOn,
+				createdon = DateTime.Now,
 			};
 
 			databaseContactChange.Insert();
@@ -406,8 +406,8 @@ namespace AdministrationTest.Option.Options.Logic
 			{
 				name = name,
 				emailaddress1 = emailaddress1,
-				ModifiedOn = modifiedOn,
-				CreatedOn = DateTime.Now,
+				modifiedon = modifiedOn,
+				createdon = DateTime.Now,
 			};
 
 			databaseAccountChange.Insert();

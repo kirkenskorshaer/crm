@@ -38,7 +38,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			createdContact.Delete(_sqlConnection);
 
-			List<Contact> contacts = Contact.ReadLatest(_sqlConnection, createdContact.CreatedOn.AddSeconds(-1));
+			List<Contact> contacts = Contact.ReadLatest(_sqlConnection, createdContact.createdon.AddSeconds(-1));
 			Assert.AreEqual(0, contacts.Count);
 		}
 
@@ -47,7 +47,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 		{
 			Contact createdContact = ContactInsert(_sqlConnection);
 
-			List<Contact> contacts = Contact.ReadLatest(_sqlConnection, createdContact.CreatedOn.AddSeconds(-1));
+			List<Contact> contacts = Contact.ReadLatest(_sqlConnection, createdContact.createdon.AddSeconds(-1));
 
 			Assert.AreEqual(1, contacts.Count);
 		}
@@ -69,7 +69,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 			createdContact4.Delete(_sqlConnection);
 			createdContact5.Delete(_sqlConnection);
 
-			Assert.AreEqual(createdContact3.Firstname, contact3Read.Firstname);
+			Assert.AreEqual(createdContact3.firstname, contact3Read.firstname);
 		}
 
 		[Test]
@@ -81,14 +81,14 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			createdContact.Delete(_sqlConnection);
 
-			Assert.AreEqual(createdContact.Firstname, contactRead.Firstname);
+			Assert.AreEqual(createdContact.firstname, contactRead.firstname);
 		}
 
 		[Test]
 		public void ContactCanBeUpdated()
 		{
 			Contact createdContact = ContactInsert(_sqlConnection);
-			createdContact.Firstname = "newFirstName";
+			createdContact.firstname = "newFirstName";
 
 			createdContact.Update(_sqlConnection);
 
@@ -96,7 +96,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			createdContact.Delete(_sqlConnection);
 
-			Assert.AreEqual(createdContact.Firstname, contactRead.Firstname);
+			Assert.AreEqual(createdContact.firstname, contactRead.firstname);
 		}
 
 		[Test]
@@ -146,9 +146,9 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Contact createdContact = new Contact
 			{
-				Firstname = $"Firstname_{Guid.NewGuid()}",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				firstname = $"Firstname_{Guid.NewGuid()}",
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			createdContact.Insert(sqlConnection);
@@ -161,10 +161,10 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Contact createdContact = new Contact
 			{
-				Firstname = $"Firstname_{Guid.NewGuid()}",
-				Lastname = "LastNameTest",
-				ModifiedOn = creationDate,
-				CreatedOn = creationDate,
+				firstname = $"Firstname_{Guid.NewGuid()}",
+				lastname = "LastNameTest",
+				modifiedon = creationDate,
+				createdon = creationDate,
 			};
 
 			if (useMongoConnection)

@@ -87,17 +87,17 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			contactChangeCreated.Delete(_sqlConnection);
 
-			Assert.AreEqual(contactChangeCreated.Firstname, contactChangesRead.Single().Firstname);
-			Assert.AreEqual(contactChangeCreated.Lastname, contactChangesRead.Single().Lastname);
+			Assert.AreEqual(contactChangeCreated.firstname, contactChangesRead.Single().firstname);
+			Assert.AreEqual(contactChangeCreated.lastname, contactChangesRead.Single().lastname);
 		}
 
 		internal ContactChange ContactChangeInsert(ExternalContact externalContactCreated, Contact contactCreated, DateTime createdTime)
 		{
 			return new ContactChange(_sqlConnection, contactCreated.Id, externalContactCreated.ExternalContactId, externalContactCreated.ChangeProviderId)
 			{
-				Firstname = $"name_{Guid.NewGuid()}",
-				CreatedOn = createdTime,
-				ModifiedOn = createdTime,
+				firstname = $"name_{Guid.NewGuid()}",
+				createdon = createdTime,
+				modifiedon = createdTime,
 			};
 		}
 
@@ -115,23 +115,23 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			ContactChange contactChange1_1Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact1Created.ExternalContactId, externalContact1Created.ChangeProviderId)
 			{
-				Firstname = "test",
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				firstname = "test",
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange1_1Created.Insert();
 
 			ContactChange contactChange1_2Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact2Created.ExternalContactId, externalContact1Created.ChangeProviderId)
 			{
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange1_2Created.Insert();
 
 			ContactChange contactChange2Created = new ContactChange(_sqlConnection, contact2Created.Id, externalContact2Created.ExternalContactId, externalContact2Created.ChangeProviderId)
 			{
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange2Created.Insert();
 
@@ -159,23 +159,23 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			ContactChange contactChange1_1Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact1Created.ExternalContactId, externalContact1Created.ChangeProviderId)
 			{
-				Firstname = "test",
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				firstname = "test",
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange1_1Created.Insert();
 
 			ContactChange contactChange1_2Created = new ContactChange(_sqlConnection, contact1Created.Id, externalContact2Created.ExternalContactId, externalContact2Created.ChangeProviderId)
 			{
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange1_2Created.Insert();
 
 			ContactChange contactChange2Created = new ContactChange(_sqlConnection, contact2Created.Id, externalContact1_2Created.ExternalContactId, externalContact1_2Created.ChangeProviderId)
 			{
-				CreatedOn = creationDate,
-				ModifiedOn = creationDate,
+				createdon = creationDate,
+				modifiedon = creationDate,
 			};
 			contactChange2Created.Insert();
 

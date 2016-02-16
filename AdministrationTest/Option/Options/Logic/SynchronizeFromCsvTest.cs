@@ -91,7 +91,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			List<DatabaseContactChange> databaseChanges = DatabaseContactChange.Read(_sqlConnection, _changeProvider1.Id, DatabaseContactChange.IdType.ChangeProviderId);
 
-			DatabaseContactChange contactChange = databaseChanges.FirstOrDefault(change => change.Firstname == "name1");
+			DatabaseContactChange contactChange = databaseChanges.FirstOrDefault(change => change.firstname == "name1");
 
 			Assert.NotNull(contactChange);
 		}

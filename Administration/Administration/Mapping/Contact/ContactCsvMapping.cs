@@ -40,7 +40,7 @@ namespace Administration.Mapping.Contact
 				}
 			}
 
-			return contacts.OrderByDescending(contact => contact.ModifiedOn).First();
+			return contacts.OrderByDescending(contact => contact.modifiedon).First();
 		}
 	}
 }

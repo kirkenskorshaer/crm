@@ -10,8 +10,8 @@ namespace DataLayer.SqlData.Account
 {
 	public class AccountChange : AbstractIdData, IModifiedIdData
 	{
-		public DateTime CreatedOn;
-		public DateTime ModifiedOn { get; set; }
+		public DateTime createdon;
+		public DateTime modifiedon { get; set; }
 
 		public string name;
 
@@ -81,8 +81,8 @@ namespace DataLayer.SqlData.Account
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "AccountId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "name", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "CreatedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
@@ -108,8 +108,8 @@ namespace DataLayer.SqlData.Account
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 
 			AddInsertParameterIfNotNull(name, "name", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(address1_line2, "address1_line2", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -265,8 +265,8 @@ namespace DataLayer.SqlData.Account
 			AccountChange accountChange = new AccountChange(sqlConnection, accountId, externalAccountId, changeProviderId)
 			{
 				name = ConvertFromDatabaseValue<string>(row["name"]),
-				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
-				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
+				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
+				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
 
 				address1_line1 = ConvertFromDatabaseValue<string>(row["address1_line1"]),

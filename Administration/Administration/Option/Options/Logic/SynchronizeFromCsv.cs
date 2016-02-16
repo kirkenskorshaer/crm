@@ -100,8 +100,8 @@ namespace Administration.Option.Options.Logic
 		{
 			ContactChange contactChange = new ContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
-			contactChange.CreatedOn = collectedDate;
-			contactChange.ModifiedOn = collectedDate;
+			contactChange.createdon = collectedDate;
+			contactChange.modifiedon = collectedDate;
 
 			foreach (string key in csvRow.Keys)
 			{
@@ -117,8 +117,8 @@ namespace Administration.Option.Options.Logic
 
 			Contact contact = new Contact()
 			{
-				CreatedOn = DateTime.Now,
-				ModifiedOn = collectedDate,
+				createdon = DateTime.Now,
+				modifiedon = collectedDate,
 			};
 
 			foreach(string key in csvRow.Keys)

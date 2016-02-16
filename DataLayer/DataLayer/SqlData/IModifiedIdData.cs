@@ -5,6 +5,6 @@ namespace DataLayer.SqlData
 	public interface IModifiedIdData
 	{
 		Guid Id { get; }
-		DateTime ModifiedOn { get; }
+		DateTime modifiedon { get; }
 	}
 }

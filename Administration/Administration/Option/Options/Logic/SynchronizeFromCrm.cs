@@ -191,10 +191,10 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseContact contact = new DatabaseContact()
 			{
-				CreatedOn = DateTime.Now,
-				ModifiedOn = crmContact.modifiedon,
-				Firstname = crmContact.firstname,
-				Lastname = crmContact.lastname,
+				createdon = DateTime.Now,
+				modifiedon = crmContact.modifiedon,
+				firstname = crmContact.firstname,
+				lastname = crmContact.lastname,
 			};
 
 			contact.Insert(sqlConnection);
@@ -206,8 +206,8 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseAccount account = new DatabaseAccount()
 			{
-				CreatedOn = DateTime.Now,
-				ModifiedOn = crmAccount.modifiedon,
+				createdon = DateTime.Now,
+				modifiedon = crmAccount.modifiedon,
 				name = crmAccount.name,
 			};
 
@@ -220,10 +220,10 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
-			contactChange.CreatedOn = crmContact.createdon;
-			contactChange.ModifiedOn = crmContact.modifiedon;
-			contactChange.Firstname = crmContact.firstname;
-			contactChange.Lastname = crmContact.lastname;
+			contactChange.createdon = crmContact.createdon;
+			contactChange.modifiedon = crmContact.modifiedon;
+			contactChange.firstname = crmContact.firstname;
+			contactChange.lastname = crmContact.lastname;
 
 			contactChange.Insert();
 
@@ -252,8 +252,8 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
 
-			accountChange.CreatedOn = crmAccount.createdon;
-			accountChange.ModifiedOn = crmAccount.modifiedon;
+			accountChange.createdon = crmAccount.createdon;
+			accountChange.modifiedon = crmAccount.modifiedon;
 			accountChange.name = crmAccount.name;
 
 			accountChange.Insert();

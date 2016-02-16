@@ -74,8 +74,8 @@ namespace AdministrationTest.Option.Options.Logic
 			crmContact.Delete();
 
 			Assert.AreEqual(2, contactChanges.Count);
-			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname1));
-			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.Firstname == firstname2));
+			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.firstname == firstname1));
+			Assert.IsTrue(contactChanges.Any(contactChange => contactChange.firstname == firstname2));
 		}
 
 		[Test]

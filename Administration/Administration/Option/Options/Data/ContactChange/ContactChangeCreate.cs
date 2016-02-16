@@ -39,10 +39,10 @@ namespace Administration.Option.Options.Data.ContactChange
 
 			DataLayer.SqlData.Contact.ContactChange contactChange = new DataLayer.SqlData.Contact.ContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
-			contactChange.CreatedOn = CreatedOn;
-			contactChange.ModifiedOn = ModifiedOn;
-			contactChange.Firstname = Firstname;
-			contactChange.Lastname = Lastname;
+			contactChange.createdon = CreatedOn;
+			contactChange.modifiedon = ModifiedOn;
+			contactChange.firstname = Firstname;
+			contactChange.lastname = Lastname;
 
 			return true;
 		}

@@ -12,8 +12,8 @@ namespace DataLayer.SqlData.Account
 {
 	public class Account : AbstractIdData, IModifiedIdData
 	{
-		public DateTime CreatedOn;
-		public DateTime ModifiedOn { get; set; }
+		public DateTime createdon;
+		public DateTime modifiedon { get; set; }
 
 		public string name;
 
@@ -59,8 +59,8 @@ namespace DataLayer.SqlData.Account
 			}
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "name", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "CreatedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ModifiedOn", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
@@ -82,8 +82,8 @@ namespace DataLayer.SqlData.Account
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 
 			AddInsertParameterIfNotNull(name, "name", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ModifiedOn, "ModifiedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(CreatedOn, "CreatedOn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(address1_line2, "address1_line2", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -93,8 +93,8 @@ namespace DataLayer.SqlData.Account
 			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(new_region, "new_region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -185,8 +185,8 @@ namespace DataLayer.SqlData.Account
 			StringBuilder sqlStringBuilderSets = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 			AddUpdateParameter(name, "name", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(ModifiedOn, "ModifiedOn", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(CreatedOn, "CreatedOn", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(modifiedon, "modifiedon", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(createdon, "createdon", sqlStringBuilderSets, parameters);
 
 			AddUpdateParameter(address1_line1, "address1_line1", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(address1_line2, "address1_line2", sqlStringBuilderSets, parameters);
@@ -196,8 +196,8 @@ namespace DataLayer.SqlData.Account
 			AddUpdateParameter(telephone1, "telephone1", sqlStringBuilderSets, parameters);
 
 			AddUpdateParameter(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_erindsamlingssted, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_erindsamlingssted, "new_region", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(new_region, "new_region", sqlStringBuilderSets, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("Update");
@@ -217,8 +217,8 @@ namespace DataLayer.SqlData.Account
 			return new Account
 			{
 				name = ConvertFromDatabaseValue<string>(row["name"]),
-				ModifiedOn = ConvertFromDatabaseValue<DateTime>(row["ModifiedOn"]),
-				CreatedOn = ConvertFromDatabaseValue<DateTime>(row["CreatedOn"]),
+				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
+				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
 				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
 
 				address1_line1 = ConvertFromDatabaseValue<string>(row["address1_line1"]),

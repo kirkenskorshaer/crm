@@ -29,7 +29,7 @@ namespace Administration.Mapping.Contact
 
 			Log.Write(mongoConnection, $"multible contact match for {crmContact.Id}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 
-			return contactsPreviouslyChanged.OrderByDescending(contact => contact.CreatedOn).First();
+			return contactsPreviouslyChanged.OrderByDescending(contact => contact.createdon).First();
 		}
 
 		public static List<DataBaseExternalContact> FindContacts(MongoConnection connection, SqlConnection sqlConnection, DataBaseContact contact, Guid changeProviderId)
