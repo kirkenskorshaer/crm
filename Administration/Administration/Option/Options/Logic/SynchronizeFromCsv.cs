@@ -82,13 +82,23 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private Contact ReadOrCreateContact(Dictionary<string, string> csvRow, Guid externalContactId, string dateName)
+		private Contact ReadOrCreateContact(Dictionary<string, object> csvRow, Guid externalContactId, Guid changeProviderId, string dateName)
 		{
-			Contact contact = ContactCsvMapping.FindContact(SqlConnection, externalContactId, csvRow["firstName"]);
+			bool externalContactExists = ExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
 
-			if (contact == null)
+			ExternalContact externalContact = null;
+			Contact contact = null;
+
+			if (externalContactExists)
+			{
+				externalContact = ExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
+				contact = Contact.Read(SqlConnection, externalContact.ContactId);
+			}
+			else
 			{
 				contact = CreateContact(SqlConnection, csvRow, dateName);
+				externalContact = new ExternalContact(SqlConnection, externalContactId, changeProviderId, contact.Id);
+				externalContact.Insert();
 			}
 
 			return contact;
