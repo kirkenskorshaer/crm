@@ -103,8 +103,10 @@ namespace Administration.Option.Options.Logic
 			contactChange.CreatedOn = collectedDate;
 			contactChange.ModifiedOn = collectedDate;
 
-			contactChange.Firstname = csvRow["firstName"];
-			//contactChange.Lastname = Lastname;
+			foreach (string key in csvRow.Keys)
+			{
+				Utilities.ReflectionHelper.SetValue(contactChange, key, csvRow[key]);
+			}
 
 			contactChange.Insert();
 		}
@@ -117,8 +119,12 @@ namespace Administration.Option.Options.Logic
 			{
 				CreatedOn = DateTime.Now,
 				ModifiedOn = collectedDate,
-				Firstname = csvRow["firstName"],
 			};
+
+			foreach(string key in csvRow.Keys)
+			{
+				Utilities.ReflectionHelper.SetValue(contact, key, csvRow[key]);
+			}
 
 			contact.Insert(SqlConnection);
 

@@ -21,10 +21,14 @@ namespace Administration.Conversion
 
 		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact, SystemInterfaceContact toContact)
 		{
-			toContact.createdon = fromContact.CreatedOn;
-			toContact.firstname = fromContact.Firstname;
-			toContact.lastname = fromContact.Lastname;
-			toContact.modifiedon = fromContact.ModifiedOn;
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseContact), exclusionList);
+
+			foreach (string key in keys)
+			{
+				object value = Utilities.ReflectionHelper.GetValue(fromContact, key);
+				Utilities.ReflectionHelper.SetValue(toContact, key, value);
+			}
 		}
 	}
 }
