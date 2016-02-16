@@ -8,6 +8,7 @@ using System.Linq;
 using System.Data.SqlClient;
 using DatabaseSynchronizeFromCsv = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCsv;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
+using DataLayer.SqlData.Account;
 
 namespace Administration.Option.Options.Logic
 {
@@ -47,7 +48,17 @@ namespace Administration.Option.Options.Logic
 				return false;
 			}
 
-			DateTime LatestModifiedDateTime = ContactChange.GetLatestModifiedOn(SqlConnection, changeProviderId);
+			DateTime LatestModifiedDateTime;
+			DateTime LatestModifiedDateTimeContact = ContactChange.GetLatestModifiedOn(SqlConnection, changeProviderId);
+			DateTime LatestModifiedDateTimeAccount = AccountChange.GetLatestModifiedOn(SqlConnection, changeProviderId);
+			if (LatestModifiedDateTimeAccount >= LatestModifiedDateTimeContact)
+			{
+				LatestModifiedDateTime = LatestModifiedDateTimeAccount;
+			}
+			else
+			{
+				LatestModifiedDateTime = LatestModifiedDateTimeContact;
+			}
 
 			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
 
@@ -55,12 +66,27 @@ namespace Administration.Option.Options.Logic
 
 			DataLayer.SqlData.ChangeProvider changeProvider = DataLayer.SqlData.ChangeProvider.Read(SqlConnection, changeProviderId);
 
-			ProcessCsvData(changeProviderId, csvData, dateName);
+			ProcessCsvData(changeProviderId, csvData, dateName, importType, keyName);
 
 			return true;
 		}
 
-		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName)
+		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, DatabaseSynchronizeFromCsv.ImportTypeEnum importType, string keyName)
+		{
+			switch (importType)
+			{
+				case DatabaseSynchronizeFromCsv.ImportTypeEnum.Contact:
+					ProcessCsvDataOnContact(changeProviderId, csvData, dateName, keyName);
+					break;
+				case DatabaseSynchronizeFromCsv.ImportTypeEnum.Account:
+					ProcessCsvDataOnAccount(changeProviderId, csvData, dateName, keyName);
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void ProcessCsvDataOnContact(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, string keyName)
 		{
 			foreach (Dictionary<string, object> csvRow in csvData)
 			{
@@ -80,6 +106,29 @@ namespace Administration.Option.Options.Logic
 				}
 
 				CreateContactChange(changeProviderId, csvRow, externalContactId, contactId, collectedDate);
+			}
+		}
+
+		private void ProcessCsvDataOnAccount(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, string keyName)
+		{
+			foreach (Dictionary<string, object> csvRow in csvData)
+			{
+				Guid externalAccountId = GetIdFromRow(csvRow, keyName);
+
+				Account account = ReadOrCreateAccount(csvRow, externalAccountId, changeProviderId, dateName);
+
+				Guid accountId = account.Id;
+
+				DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
+
+				bool AccountChangeExists = AccountChange.AccountChangeExists(SqlConnection, accountId, externalAccountId, changeProviderId, collectedDate);
+
+				if (AccountChangeExists == true)
+				{
+					continue;
+				}
+
+				CreateAccountChange(changeProviderId, csvRow, externalAccountId, accountId, collectedDate);
 			}
 		}
 
@@ -105,6 +154,28 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
+		private Account ReadOrCreateAccount(Dictionary<string, object> csvRow, Guid externalAccountId, Guid changeProviderId, string dateName)
+		{
+			bool externalAccountExists = ExternalAccount.Exists(SqlConnection, externalAccountId, changeProviderId);
+
+			ExternalAccount externalAccount = null;
+			Account account = null;
+
+			if (externalAccountExists)
+			{
+				externalAccount = ExternalAccount.Read(SqlConnection, externalAccountId, changeProviderId);
+				account = Account.Read(SqlConnection, externalAccount.AccountId);
+			}
+			else
+			{
+				account = CreateAccount(SqlConnection, csvRow, dateName);
+				externalAccount = new ExternalAccount(SqlConnection, externalAccountId, changeProviderId, account.Id);
+				externalAccount.Insert();
+			}
+
+			return account;
+		}
+
 		private void CreateContactChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate)
 		{
 			ContactChange contactChange = new ContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
@@ -120,6 +191,21 @@ namespace Administration.Option.Options.Logic
 			contactChange.Insert();
 		}
 
+		private void CreateAccountChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalAccountId, Guid accountId, DateTime collectedDate)
+		{
+			AccountChange accountChange = new AccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
+
+			accountChange.createdon = collectedDate;
+			accountChange.modifiedon = collectedDate;
+
+			foreach (string key in csvRow.Keys)
+			{
+				Utilities.ReflectionHelper.SetValue(accountChange, key, csvRow[key]);
+			}
+
+			accountChange.Insert();
+		}
+
 		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
 		{
 			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
@@ -130,7 +216,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			foreach(string key in csvRow.Keys)
+			foreach (string key in csvRow.Keys)
 			{
 				Utilities.ReflectionHelper.SetValue(contact, key, csvRow[key]);
 			}
@@ -138,6 +224,26 @@ namespace Administration.Option.Options.Logic
 			contact.Insert(SqlConnection);
 
 			return contact;
+		}
+
+		private Account CreateAccount(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
+		{
+			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
+
+			Account account = new Account()
+			{
+				createdon = DateTime.Now,
+				modifiedon = collectedDate,
+			};
+
+			foreach (string key in csvRow.Keys)
+			{
+				Utilities.ReflectionHelper.SetValue(account, key, csvRow[key]);
+			}
+
+			account.Insert(SqlConnection);
+
+			return account;
 		}
 
 		private Guid GetIdFromRow(Dictionary<string, object> csvRow, string keyName)
