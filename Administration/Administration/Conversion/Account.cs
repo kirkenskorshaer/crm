@@ -1,6 +1,7 @@
 ﻿using SystemInterfaceAccount = SystemInterface.Dynamics.Crm.Account;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using SystemInterface.Dynamics.Crm;
+using System.Collections.Generic;
 
 namespace Administration.Conversion
 {
@@ -16,7 +17,14 @@ namespace Administration.Conversion
 
 		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			toAccount.name = fromAccount.name;
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
+
+			foreach (string key in keys)
+			{
+				object value = Utilities.ReflectionHelper.GetValue(fromAccount, key);
+				Utilities.ReflectionHelper.SetValue(toAccount, key, value);
+			}
 		}
 	}
 }
