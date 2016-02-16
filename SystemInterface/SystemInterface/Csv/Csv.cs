@@ -41,6 +41,11 @@ namespace SystemInterface.Csv
 			StreamWriter streamWriter = GetWriter();
 
 			string firstLine = streamReader.ReadLine();
+			string firstLineShouldBe = Columns.Select(definition => definition.Name).Aggregate((current, next) => current + _delimeter + next);
+			if (firstLine == firstLineShouldBe)
+			{
+				return;
+			}
 
 			bool isFirst = true;
 			foreach (ColumnDefinition column in Columns)
