@@ -113,7 +113,7 @@ namespace SystemInterfaceTest.CsvTest
 			csv.WriteLine("3", testDate.AddDays(3).ToString(dateFormat));
 			csv.WriteLine("4", testDate.AddDays(4).ToString(dateFormat));
 
-			List<Dictionary<string, object>> recoverdValues = csv.ReadLatest("changeDate", testDate.AddDays(2));
+			List<Dictionary<string, object>> recoverdValues = csv.ReadLatest("id", "changeDate", testDate.AddDays(2));
 
 			Assert.AreEqual(3, recoverdValues.Count);
 			Assert.AreEqual(testDate.AddDays(2).ToString(dateFormat), recoverdValues[0]["changeDate"]);

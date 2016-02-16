@@ -50,7 +50,7 @@ namespace Administration.Option.Options.Logic
 
 			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
 
-			List<Dictionary<string, object>> csvData = csv.ReadLatest(dateName, LatestModifiedDateTime);
+			List<Dictionary<string, object>> csvData = csv.ReadLatest(keyName, dateName, LatestModifiedDateTime);
 
 			DataLayer.SqlData.ChangeProvider changeProvider = DataLayer.SqlData.ChangeProvider.Read(SqlConnection, changeProviderId);
 

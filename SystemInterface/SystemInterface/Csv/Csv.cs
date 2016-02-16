@@ -227,7 +227,7 @@ namespace SystemInterface.Csv
 			return ReadCompared(keyName, keyValue, compareFunc, convertFunc);
 		}
 
-		public List<Dictionary<string, object>> ReadLatest(string keyName, DateTime minimumDateToReturn)
+		public List<Dictionary<string, object>> ReadLatest(string keyName, string dateName, DateTime minimumDateToReturn)
 		{
 			Func<DateTime, DateTime, bool> compareFunc = (DateTime dateInCsv, DateTime minimumDate) =>
 			{
@@ -242,16 +242,16 @@ namespace SystemInterface.Csv
 				return convertedDateTime;
 			};
 
-			return ReadCompared(keyName, minimumDateToReturn, compareFunc, convertFunc);
+			return ReadCompared(dateName, minimumDateToReturn, compareFunc, convertFunc);
 		}
 
-		public List<Dictionary<string, object>> ReadCompared<CompareType>(string keyName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
+		public List<Dictionary<string, object>> ReadCompared<CompareType>(string dateName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
 		{
 			int dateIndex = columnNameToColumnIndex(dateName);
 
-			if (keyIndex > Columns.Count)
+			if (dateIndex > Columns.Count)
 			{
-				throw new ArgumentException($"keyIndex {keyIndex} out of range, there are only {Columns.Count} columns");
+				throw new ArgumentException($"dateIndex {dateIndex} out of range, there are only {Columns.Count} columns");
 			}
 
 			StreamReader streamReader = GetReader();
@@ -263,7 +263,7 @@ namespace SystemInterface.Csv
 				string line = streamReader.ReadLine();
 				string[] parts = line.Split(_delimeter);
 
-				CompareType objectInCsv = convertFunc(parts[keyIndex]);
+				CompareType objectInCsv = convertFunc(parts[dateIndex]);
 
 				if (compareFunc(objectInCsv, compareObject))
 				{
