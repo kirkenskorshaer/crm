@@ -17,6 +17,7 @@ namespace SystemInterface.Csv
 		{
 			stringType = 1,
 			boolType = 2,
+			intType = 3,
 		}
 
 		public ColumnDefinition(DataTypeEnum dataType, string name)
@@ -47,6 +48,8 @@ namespace SystemInterface.Csv
 			{
 				case "bool":
 					return DataTypeEnum.boolType;
+				case "int":
+					return DataTypeEnum.intType;
 				default:
 					return DataTypeEnum.stringType;
 			}
@@ -60,6 +63,8 @@ namespace SystemInterface.Csv
 				{
 					case DataTypeEnum.boolType:
 						return "bool:" + field.Name;
+					case DataTypeEnum.intType:
+						return "int:" + field.Name;
 					default:
 						return field.Name;
 				}
@@ -74,6 +79,8 @@ namespace SystemInterface.Csv
 					return parts[columnIndex];
 				case DataTypeEnum.boolType:
 					return positive.Contains(parts[columnIndex].ToLower());
+				case DataTypeEnum.intType:
+					return int.Parse(parts[columnIndex]);
 				default:
 					break;
 			}
