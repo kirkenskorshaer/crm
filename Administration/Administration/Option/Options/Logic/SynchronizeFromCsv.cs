@@ -64,7 +64,7 @@ namespace Administration.Option.Options.Logic
 		{
 			foreach (Dictionary<string, object> csvRow in csvData)
 			{
-				Guid externalContactId = GetIdFromRow(csvRow);
+				Guid externalContactId = GetIdFromRow(csvRow, keyName);
 
 				Contact contact = ReadOrCreateContact(csvRow, externalContactId, changeProviderId, dateName);
 
@@ -140,10 +140,10 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private Guid GetIdFromRow(Dictionary<string, object> csvRow)
+		private Guid GetIdFromRow(Dictionary<string, object> csvRow, string keyName)
 		{
 			int idInt;
-			int.TryParse(csvRow["id"].ToString(), out idInt);
+			int.TryParse(csvRow[keyName].ToString(), out idInt);
 			Guid id = Utilities.Converter.GuidConverter.Convert(0, 0, 0, idInt);
 
 			return id;
