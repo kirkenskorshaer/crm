@@ -194,5 +194,85 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Assert.AreEqual(4, databaseChanges1.Union(databaseChanges2).Count());
 		}
+
+		[Test]
+		[Ignore]
+		public void ImportContacts()
+		{
+			DataLayer.MongoData.Option.Schedule schedule = new DataLayer.MongoData.Option.Schedule()
+			{
+				NextAllowedExecution = DateTime.Now,
+				Recurring = false,
+			};
+
+			Guid changeProviderId = Guid.Parse("87A9202D-ECFE-408C-A867-6A0F08A25D58");
+
+			string filename = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv";
+			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv.tmp";
+			char delimeter = '\t';
+			string keyName = "id";
+			string dateName = "importDate";
+			string mappingField = "emailaddress1";
+			string[] fields = new string[]
+			{
+				"id",
+				"firstname",
+				"lastname",
+				"emailaddress1",
+				"telephone1",
+				"titel",
+				"importDate",
+				"comment",
+				"bool:new_bykoordinator",
+			};
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields);
+
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+			synchronizeFromCsv.Execute();
+
+			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
+			{
+				changeProviderId = Guid.Parse("A1025645-9811-44AE-9708-9AADC03E33DD"),
+				Name = "test",
+				Schedule = schedule,
+				urlLoginName = "test",
+			};
+
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			MakeSureThereAreProgressOnAllContacts();
+
+			for (int contactCount = 0; contactCount < 12; contactCount++)
+			{
+				synchronizeToCrm.Execute();
+			}
+		}
+
+		private void MakeSureThereAreProgressOnAllContacts()
+		{
+			Guid contactIdCurrent = DatabaseContact.ReadNextById(_sqlConnection, Guid.Empty).Id;
+			Guid contactIdFirst = contactIdCurrent;
+			Guid contactIdLast = Guid.Empty;
+			DataLayer.MongoData.Progress progress = null;
+
+			while (contactIdLast != contactIdFirst)
+			{
+				bool progressExists = DataLayer.MongoData.Progress.Exists(Connection, MaintainProgress.ProgressContactToCrm, contactIdCurrent);
+				if (progressExists == false)
+				{
+					progress = new DataLayer.MongoData.Progress()
+					{
+						LastProgressDate = DateTime.Now,
+						TargetName = MaintainProgress.ProgressContactToCrm,
+						TargetId = contactIdCurrent,
+					};
+					progress.Insert(Connection);
+				}
+
+				contactIdCurrent = DatabaseContact.ReadNextById(_sqlConnection, contactIdCurrent).Id;
+				contactIdLast = contactIdCurrent;
+			}
+		}
 	}
 }
