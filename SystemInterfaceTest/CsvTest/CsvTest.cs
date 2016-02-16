@@ -35,7 +35,7 @@ namespace SystemInterfaceTest.CsvTest
 		[Test]
 		public void WriteLineWritesALine()
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, "id", "name");
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 
@@ -48,7 +48,7 @@ namespace SystemInterfaceTest.CsvTest
 		[Test]
 		public void UpdateUpdates()
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, "id", "name");
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name2");
@@ -67,14 +67,14 @@ namespace SystemInterfaceTest.CsvTest
 		[Test]
 		public void ReadReadsMultipleLines()
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, "id", "name");
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name21");
 			csv.WriteLine("2", "name22");
 			csv.WriteLine("3", "name3");
 
-			List<Dictionary<string, string>> recoveredValues = csv.ReadFields("id", "2");
+			List<Dictionary<string, object>> recoveredValues = csv.ReadFields("id", "2");
 
 			Assert.AreEqual("name21", recoveredValues[0]["name"]);
 			Assert.AreEqual("name22", recoveredValues[1]["name"]);
@@ -83,7 +83,7 @@ namespace SystemInterfaceTest.CsvTest
 		[Test]
 		public void DeleteRemovesLines()
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, "id", "name");
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name21");
@@ -103,7 +103,7 @@ namespace SystemInterfaceTest.CsvTest
 		[Test]
 		public void ReadLatestReturnsOnlyLatestRows()
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, "id", "changeDate");
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "changeDate"));
 
 			DateTime testDate = new DateTime(2000, 1, 13, 1, 2, 3);
 			string dateFormat = "yyyyMMdd HH:mm:ss";
@@ -113,7 +113,7 @@ namespace SystemInterfaceTest.CsvTest
 			csv.WriteLine("3", testDate.AddDays(3).ToString(dateFormat));
 			csv.WriteLine("4", testDate.AddDays(4).ToString(dateFormat));
 
-			List<Dictionary<string, string>> recoverdValues = csv.ReadLatest("changeDate", testDate.AddDays(2));
+			List<Dictionary<string, object>> recoverdValues = csv.ReadLatest("changeDate", testDate.AddDays(2));
 
 			Assert.AreEqual(3, recoverdValues.Count);
 			Assert.AreEqual(testDate.AddDays(2).ToString(dateFormat), recoverdValues[0]["changeDate"]);

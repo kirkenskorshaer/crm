@@ -34,13 +34,13 @@ namespace Administration.Option.Options.Logic
 			char delimeter = _databaseSynchronizeFromCsv.delimeter;
 			string keyName = _databaseSynchronizeFromCsv.keyName;
 			string dateName = _databaseSynchronizeFromCsv.dateName;
-			string[] fields = _databaseSynchronizeFromCsv.fields;
+			SystemInterface.Csv.ColumnDefinition[] fields = SystemInterface.Csv.ColumnDefinition.Read(_databaseSynchronizeFromCsv.fields);
 			Guid changeProviderId = _databaseSynchronizeFromCsv.changeProviderId;
 
 			if
 			(
-				fields.Contains(keyName) == false ||
-				fields.Contains(dateName) == false
+				fields.Any(definition => definition.Name == keyName) == false ||
+				fields.Any(definition => definition.Name == dateName) == false
 			)
 			{
 				return false;
@@ -50,7 +50,7 @@ namespace Administration.Option.Options.Logic
 
 			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(delimeter, fileName, fileNameTmp, fields);
 
-			List<Dictionary<string, string>> csvData = csv.ReadLatest(dateName, LatestModifiedDateTime);
+			List<Dictionary<string, object>> csvData = csv.ReadLatest(dateName, LatestModifiedDateTime);
 
 			DataLayer.SqlData.ChangeProvider changeProvider = DataLayer.SqlData.ChangeProvider.Read(SqlConnection, changeProviderId);
 
@@ -59,19 +59,17 @@ namespace Administration.Option.Options.Logic
 			return true;
 		}
 
-		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, string>> csvData, string dateName)
+		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName)
 		{
-			foreach (Dictionary<string, string> csvRow in csvData)
+			foreach (Dictionary<string, object> csvRow in csvData)
 			{
 				Guid externalContactId = GetIdFromRow(csvRow);
 
-				Contact contact = ReadOrCreateContact(csvRow, externalContactId, dateName);
+				Contact contact = ReadOrCreateContact(csvRow, externalContactId, changeProviderId, dateName);
 
 				Guid contactId = contact.Id;
 
-				ExternalContact externalContact = ExternalContact.ReadOrCreate(SqlConnection, externalContactId, changeProviderId, contactId);
-
-				DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName]);
+				DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
 
 				bool ContactChangeExists = ContactChange.ContactChangeExists(SqlConnection, contactId, externalContactId, changeProviderId, collectedDate);
 
@@ -96,7 +94,7 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private void CreateContactChange(Guid changeProviderId, Dictionary<string, string> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate)
+		private void CreateContactChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate)
 		{
 			ContactChange contactChange = new ContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
@@ -111,9 +109,9 @@ namespace Administration.Option.Options.Logic
 			contactChange.Insert();
 		}
 
-		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, string> csvRow, string dateName)
+		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
 		{
-			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName]);
+			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
 
 			Contact contact = new Contact()
 			{
@@ -131,10 +129,10 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private Guid GetIdFromRow(Dictionary<string, string> csvRow)
+		private Guid GetIdFromRow(Dictionary<string, object> csvRow)
 		{
 			int idInt;
-			int.TryParse(csvRow["id"], out idInt);
+			int.TryParse(csvRow["id"].ToString(), out idInt);
 			Guid id = Utilities.Converter.GuidConverter.Convert(0, 0, 0, idInt);
 
 			return id;

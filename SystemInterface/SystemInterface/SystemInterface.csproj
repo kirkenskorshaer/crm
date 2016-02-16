@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Csv\ColumnDefinition.cs" />
     <Compile Include="Csv\Csv.cs" />
     <Compile Include="DsiNext\Contact.cs" />
     <Compile Include="DsiNext\Group.cs" />

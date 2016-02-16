@@ -10,6 +10,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using SystemInterface.Csv;
 
 namespace AdministrationTest.Option.Options.Logic
 {
@@ -19,7 +20,7 @@ namespace AdministrationTest.Option.Options.Logic
 		private DatabaseChangeProvider _changeProvider1;
 		private DatabaseChangeProvider _changeProvider2;
 
-		private string[] fields = new string[] { "id", "collectedDate", "firstName", "test" };
+		private ColumnDefinition[] fields = new ColumnDefinition[] { new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "collectedDate"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "firstName"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "test") };
 		private string fileName1 = @"C:\test\csv\test1.csv";
 		private string fileName2 = @"C:\test\csv\test2.csv";
 		private string fileNameTmp = @"C:\test\csv\test_tmp.csv";
@@ -54,7 +55,7 @@ namespace AdministrationTest.Option.Options.Logic
 				fileNameTmp = fileNameTmp,
 				Name = "importTestCsv",
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
-				fields = fields,
+				fields = ColumnDefinition.ToDefinitionString(fields),
 			};
 		}
 

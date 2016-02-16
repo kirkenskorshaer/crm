@@ -10,13 +10,13 @@ namespace SystemInterface.Csv
 {
 	public class Csv
 	{
-		public readonly ReadOnlyCollection<string> Columns;
+		public readonly ReadOnlyCollection<ColumnDefinition> Columns;
 
 		private string _fileName;
 		private string _fileNameTmp;
 		private char _delimeter;
 
-		public Csv(char delimeter, string filename, string fileNameTmp, params string[] columns)
+		public Csv(char delimeter, string filename, string fileNameTmp, params ColumnDefinition[] columns)
 		{
 			_fileName = filename;
 			_fileNameTmp = fileNameTmp;
@@ -43,14 +43,14 @@ namespace SystemInterface.Csv
 			string firstLine = streamReader.ReadLine();
 
 			bool isFirst = true;
-			foreach (string column in Columns)
+			foreach (ColumnDefinition column in Columns)
 			{
 				if (isFirst == false)
 				{
 					streamWriter.Write(_delimeter);
 				}
 
-				streamWriter.Write(column);
+				streamWriter.Write(column.Name);
 
 				isFirst = false;
 			}
@@ -82,7 +82,7 @@ namespace SystemInterface.Csv
 			return streamReader;
 		}
 
-		private ReadOnlyCollection<string> ReadColumnsFromFile()
+		private ReadOnlyCollection<ColumnDefinition> ReadColumnsFromFile()
 		{
 			StreamReader streamReader = GetReader();
 			string firstLine = streamReader.ReadLine();
@@ -95,7 +95,7 @@ namespace SystemInterface.Csv
 
 			string[] parts = firstLine.Split(_delimeter);
 
-			return parts.ToList().AsReadOnly();
+			return parts.Select(part => new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, part)).ToList().AsReadOnly();
 		}
 
 		private void VerifyFileFormat()
@@ -119,7 +119,7 @@ namespace SystemInterface.Csv
 			for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
 			{
 				string partsName = parts[columnIndex];
-				string columnsName = Columns[columnIndex];
+				string columnsName = Columns[columnIndex].Name;
 
 				if (partsName != columnsName)
 				{
@@ -210,7 +210,7 @@ namespace SystemInterface.Csv
 			File.Move(_fileNameTmp, _fileName);
 		}
 
-		public List<Dictionary<string, string>> ReadFields(string keyName, string keyValue)
+		public List<Dictionary<string, object>> ReadFields(string keyName, string keyValue)
 		{
 			Func<string, string, bool> compareFunc = (stringInCsv, stringInputValue) =>
 			{
@@ -222,7 +222,7 @@ namespace SystemInterface.Csv
 			return ReadCompared(keyName, keyValue, compareFunc, convertFunc);
 		}
 
-		public List<Dictionary<string, string>> ReadLatest(string keyName, DateTime minimumDateToReturn)
+		public List<Dictionary<string, object>> ReadLatest(string keyName, DateTime minimumDateToReturn)
 		{
 			Func<DateTime, DateTime, bool> compareFunc = (DateTime dateInCsv, DateTime minimumDate) =>
 			{
@@ -240,7 +240,7 @@ namespace SystemInterface.Csv
 			return ReadCompared(keyName, minimumDateToReturn, compareFunc, convertFunc);
 		}
 
-		public List<Dictionary<string, string>> ReadCompared<CompareType>(string keyName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
+		public List<Dictionary<string, object>> ReadCompared<CompareType>(string keyName, CompareType compareObject, Func<CompareType, CompareType, bool> compareFunc, Func<string, CompareType> convertFunc)
 		{
 			int keyIndex = keyNameToKeyIndex(keyName);
 
@@ -251,7 +251,7 @@ namespace SystemInterface.Csv
 
 			StreamReader streamReader = GetReader();
 
-			List<Dictionary<string, string>> collectedValues = new List<Dictionary<string, string>>();
+			List<Dictionary<string, object>> collectedValues = new List<Dictionary<string, object>>();
 
 			while (streamReader.EndOfStream == false)
 			{
@@ -262,11 +262,11 @@ namespace SystemInterface.Csv
 
 				if (compareFunc(objectInCsv, compareObject))
 				{
-					Dictionary<string, string> rowValues = new Dictionary<string, string>();
+					Dictionary<string, object> rowValues = new Dictionary<string, object>();
 					for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
 					{
-						string key = Columns[columnIndex];
-						string value = parts[columnIndex];
+						string key = Columns[columnIndex].Name;
+						object value = GetValue(parts, columnIndex);
 
 						rowValues.Add(key, value);
 					}
@@ -277,6 +277,13 @@ namespace SystemInterface.Csv
 			streamReader.Close();
 
 			return collectedValues;
+		}
+
+		private object GetValue(string[] parts, int columnIndex)
+		{
+			ColumnDefinition definition = Columns[columnIndex];
+
+			return definition.GetValue(parts, columnIndex);
 		}
 
 		public void Delete(string keyName, string keyValue)
@@ -326,9 +333,10 @@ namespace SystemInterface.Csv
 
 		private int keyNameToKeyIndex(string keyName)
 		{
-			if (Columns.Contains(keyName))
+			if (Columns.Select(definition => definition.Name).Contains(keyName))
 			{
-				return Columns.IndexOf(keyName);
+				ColumnDefinition columnDefinition = Columns.First(definition => definition.Name == keyName);
+				return Columns.IndexOf(columnDefinition);
 			}
 
 			throw new ArgumentException($"keyName {keyName} not found");

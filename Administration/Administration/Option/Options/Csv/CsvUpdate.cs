@@ -26,7 +26,7 @@ namespace Administration.Option.Options.Csv
 
 		protected override bool ExecuteOption()
 		{
-			string[] columns = _databaseCsvUpdate.CsvElements.Select(csvElement => csvElement.Key).ToArray();
+			SystemInterface.Csv.ColumnDefinition[] columns = _databaseCsvUpdate.CsvElements.Select(csvElement => new SystemInterface.Csv.ColumnDefinition(SystemInterface.Csv.ColumnDefinition.DataTypeEnum.stringType, csvElement.Key)).ToArray();
 			string[] values = _databaseCsvUpdate.CsvElements.Select(csvElement => csvElement.Value).ToArray();
 
 			SystemInterface.Csv.Csv csv = new SystemInterface.Csv.Csv(_databaseCsvUpdate.Delimeter, _databaseCsvUpdate.FileName, _databaseCsvUpdate.FileNameTmp, columns);
