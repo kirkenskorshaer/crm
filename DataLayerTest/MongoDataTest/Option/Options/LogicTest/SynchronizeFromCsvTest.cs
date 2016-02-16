@@ -44,7 +44,7 @@ namespace DataLayerTest.MongoDataTest.Option.Options.LogicTest
 				"importDate"
 			};
 
-			SynchronizeFromCsv synchronizeFromCsv = SynchronizeFromCsv.Create(_connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields);
+			SynchronizeFromCsv synchronizeFromCsv = SynchronizeFromCsv.Create(_connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, SynchronizeFromCsv.ImportTypeEnum.Contact);
 		}
 	}
 }

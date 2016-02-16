@@ -36,6 +36,7 @@ namespace Administration.Option.Options.Logic
 			string dateName = _databaseSynchronizeFromCsv.dateName;
 			SystemInterface.Csv.ColumnDefinition[] fields = SystemInterface.Csv.ColumnDefinition.Read(_databaseSynchronizeFromCsv.fields);
 			Guid changeProviderId = _databaseSynchronizeFromCsv.changeProviderId;
+			DatabaseSynchronizeFromCsv.ImportTypeEnum importType = _databaseSynchronizeFromCsv.importType;
 
 			if
 			(

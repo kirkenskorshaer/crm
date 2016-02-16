@@ -11,10 +11,17 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		public string dateName { get; set; }
 		public string mappingField { get; set; }
 		public string[] fields { get; set; }
+		public ImportTypeEnum importType { get; set; }
+
+		public enum ImportTypeEnum
+		{
+			Contact = 1,
+			Account = 2,
+		}
 
 		public Guid changeProviderId { get; set; }
 
-		public static SynchronizeFromCsv Create(MongoConnection connection, string name, Schedule schedule, Guid changeProviderId, string fileName, string fileNameTmp, char delimeter, string keyName,string dateName, string mappingField, string[] fields)
+		public static SynchronizeFromCsv Create(MongoConnection connection, string name, Schedule schedule, Guid changeProviderId, string fileName, string fileNameTmp, char delimeter, string keyName, string dateName, string mappingField, string[] fields, ImportTypeEnum importType)
 		{
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv
 			{
@@ -26,6 +33,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 				fileNameTmp = fileNameTmp,
 				keyName = keyName,
 				mappingField = mappingField,
+				importType = importType,
 			};
 
 			Create(connection, synchronizeFromCsv, name, schedule);
