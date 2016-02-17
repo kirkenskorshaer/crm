@@ -273,7 +273,7 @@ namespace AdministrationTest.Option.Options.Logic
 			{
 				"bool:new_erindsamlingssted",
 				"int:new_kkadminmedlemsnr",
-				"TilknytningsNavn",
+				"group",
 				"name",
 				"address1_line1",
 				"address1_line2",

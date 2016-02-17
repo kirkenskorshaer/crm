@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using DatabaseSynchronizeFromCsv = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromCsv;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DataLayer.SqlData.Account;
+using DataLayer.SqlData.Group;
 
 namespace Administration.Option.Options.Logic
 {
@@ -189,6 +190,13 @@ namespace Administration.Option.Options.Logic
 			}
 
 			contactChange.Insert();
+
+			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			{
+				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
+				ContactChangeGroup contactChangeGroup = new ContactChangeGroup(contactChange.Id, group.Id);
+				contactChangeGroup.Insert(SqlConnection);
+			}
 		}
 
 		private void CreateAccountChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalAccountId, Guid accountId, DateTime collectedDate)
@@ -204,6 +212,13 @@ namespace Administration.Option.Options.Logic
 			}
 
 			accountChange.Insert();
+
+			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			{
+				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
+				AccountChangeGroup accountChangeGroup = new AccountChangeGroup(accountChange.Id, group.Id);
+				accountChangeGroup.Insert(SqlConnection);
+			}
 		}
 
 		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
@@ -222,6 +237,13 @@ namespace Administration.Option.Options.Logic
 			}
 
 			contact.Insert(SqlConnection);
+
+			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			{
+				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
+				ContactGroup contactGroup = new ContactGroup(contact.Id, group.Id);
+				contactGroup.Insert(SqlConnection);
+			}
 
 			return contact;
 		}
@@ -242,6 +264,13 @@ namespace Administration.Option.Options.Logic
 			}
 
 			account.Insert(SqlConnection);
+
+			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			{
+				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
+				AccountGroup accountGroup = new AccountGroup(account.Id, group.Id);
+				accountGroup.Insert(SqlConnection);
+			}
 
 			return account;
 		}
