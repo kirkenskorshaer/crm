@@ -476,22 +476,22 @@ namespace DataLayer.SqlData.Contact
 		{
 			List<ContactGroup> contactGroups = ContactGroup.ReadFromContactId(sqlConnection, Id);
 
-			foreach(ContactGroup contactGroup in contactGroups)
+			foreach (ContactGroup contactGroup in contactGroups)
 			{
-				if(groupIds.Contains(contactGroup.GroupId) == false)
+				if (groupIds.Contains(contactGroup.GroupId) == false)
 				{
 					contactGroup.Delete(sqlConnection);
-                }
+				}
 			}
 
-			foreach(Guid groupId in groupIds)
+			foreach (Guid groupId in groupIds)
 			{
-				if(contactGroups.Any(contactGroup => contactGroup.GroupId == groupId) == false)
+				if (contactGroups.Any(contactGroup => contactGroup.GroupId == groupId) == false)
 				{
 					ContactGroup contactGroup = new ContactGroup(Id, groupId);
 					contactGroup.Insert(sqlConnection);
 				}
 			}
 		}
-    }
+	}
 }
