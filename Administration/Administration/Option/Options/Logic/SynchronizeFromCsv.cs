@@ -206,9 +206,36 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			foreach (string key in csvRow.Keys)
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "bykoordinatoremail", "omraadekoordinatoremail" });
+
+			foreach (string key in keys)
 			{
 				Utilities.ReflectionHelper.SetValue(accountChange, key, csvRow[key]);
+			}
+
+			if (csvRow.ContainsKey("bykoordinatoremail"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["bykoordinatoremail"].ToString());
+				accountChange.bykoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("omraadekoordinatoremail"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
+				accountChange.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
+			{
+				object csvObject = csvRow["kredsellerby"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					accountChange.kredsellerby = (int)csvObject;
+				}
+				else
+				{
+					accountChange.kredsellerby = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.kredsellerbyEnum), csvObject.ToString(), true);
+				}
 			}
 
 			accountChange.Insert();
@@ -258,9 +285,36 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			foreach (string key in csvRow.Keys)
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "bykoordinatoremail", "omraadekoordinatoremail" });
+
+			foreach (string key in keys)
 			{
 				Utilities.ReflectionHelper.SetValue(account, key, csvRow[key]);
+			}
+
+			if (csvRow.ContainsKey("bykoordinatoremail"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["bykoordinatoremail"].ToString());
+				account.bykoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("omraadekoordinatoremail"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
+				account.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
+			{
+				object csvObject = csvRow["kredsellerby"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					account.kredsellerby = (int)csvObject;
+				}
+				else
+				{
+					account.kredsellerby = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.kredsellerbyEnum), csvObject.ToString(), true);
+				}
 			}
 
 			account.Insert(SqlConnection);
