@@ -356,6 +356,34 @@ namespace DataLayer.SqlData.Contact
 			return contact;
 		}
 
+		public static Guid? ReadIdFromField(SqlConnection sqlConnection, string fieldName, string fieldValue)
+		{
+			if (_fields.Contains(fieldName) == false)
+			{
+				throw new Exception($"Unknown fieldName {fieldName}");
+			}
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(Contact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{fieldName} = @{fieldName}");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(fieldName, fieldValue));
+
+			if (dataTable.Rows.Count == 0)
+			{
+				return null;
+			}
+
+			DataRow row = dataTable.Rows[0];
+			Guid contactId = ConvertFromDatabaseValue<Guid>(row["id"]);
+
+			return contactId;
+		}
+
 		public static List<Contact> ReadContactsFromAccountContact(SqlConnection sqlConnection, Guid accountId)
 		{
 			return ReadContacts(sqlConnection, accountId, "AccountId", typeof(AccountContact));
