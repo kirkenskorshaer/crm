@@ -38,5 +38,27 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			Assert.AreEqual(name, accountRead.name);
 		}
-	}
+
+		[Test]
+		public void EntityReferenceIsSet()
+		{
+			Contact relatedContact = new Contact(_connection);
+			relatedContact.firstname = $"testnavn_{Guid.NewGuid()}";
+			relatedContact.Insert();
+
+			Account accountInserted = new Account(_connection);
+			string name = $"testnavn_{Guid.NewGuid()}";
+			accountInserted.name = name;
+			accountInserted.bykoordinatorid = relatedContact.Id;
+
+			accountInserted.Insert();
+
+			Account accountRead = Account.Read(_connection, accountInserted.Id);
+
+			accountInserted.Delete();
+			relatedContact.Delete();
+
+			Assert.AreEqual(relatedContact.Id, accountRead.bykoordinatorid);
+		}
+    }
 }
