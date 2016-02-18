@@ -60,5 +60,23 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			Assert.AreEqual(relatedContact.Id, accountRead.bykoordinatorid);
 		}
+
+		[Test]
+		public void kredsellerbyCanBeSet()
+		{
+			Account accountInserted = new Account(_connection);
+			string name = $"testnavn_{Guid.NewGuid()}";
+			accountInserted.name = name;
+			accountInserted.kredsellerby = Account.kredsellerbyEnum.kreds;
+
+			accountInserted.Insert();
+
+			Account accountRead = Account.Read(_connection, accountInserted.Id);
+			Account.kredsellerbyEnum? readKredsellerby = accountRead.kredsellerby;
+
+			accountInserted.Delete();
+
+			Assert.AreEqual(accountInserted.kredsellerby, readKredsellerby);
+		}
     }
 }
