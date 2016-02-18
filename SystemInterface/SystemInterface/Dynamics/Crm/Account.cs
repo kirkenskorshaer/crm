@@ -31,6 +31,10 @@ namespace SystemInterface.Dynamics.Crm
 		public bool new_erindsamlingssted;
 		public int new_kkadminmedlemsnr;
 
+		public EntityReference new_bykoordinatorid;
+		public EntityReference new_omraadekoordinatorid;
+		public OptionSetValue new_kredsellerby;
+
 		private string _contactRelationshipName = "new_account_contact";
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
 		private string _groupRelationshipName = "new_account_new_group";
@@ -57,7 +61,10 @@ namespace SystemInterface.Dynamics.Crm
 			"modifiedon",
 
 			"new_erindsamlingssted",
-			"new_kkadminmedlemsnr"
+			"new_kkadminmedlemsnr",
+			"new_bykoordinatorid",
+			"new_omraadekoordinatorid",
+			"new_kredsellerby"
 		);
 
 		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "address2_addressid", "statecode");
@@ -85,6 +92,78 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Active = 1,
 			Inactive = 2,
+		}
+
+		public Guid? bykoordinatorid
+		{
+			get
+			{
+				if (new_bykoordinatorid == null)
+				{
+					return null;
+				}
+
+				return new_bykoordinatorid.Id;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_bykoordinatorid = null;
+				}
+
+				new_bykoordinatorid = new EntityReference("contact", value.Value);
+			}
+		}
+
+		public Guid? omraadekoordinatorid
+		{
+			get
+			{
+				if (new_omraadekoordinatorid == null)
+				{
+					return null;
+				}
+
+				return new_omraadekoordinatorid.Id;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_omraadekoordinatorid = null;
+				}
+
+				new_omraadekoordinatorid = new EntityReference("contact", value.Value);
+			}
+		}
+
+		public enum kredsellerbyEnum
+		{
+			kreds = 100000000,
+			by = 100000001,
+		}
+
+		public kredsellerbyEnum? kredsellerby
+		{
+			get
+			{
+				if (new_kredsellerby == null)
+				{
+					return null;
+				}
+
+				return (kredsellerbyEnum)new_kredsellerby.Value;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_kredsellerby = null;
+				}
+
+				new_kredsellerby = new OptionSetValue((int)value.Value);
+			}
 		}
 
 		public static List<Account> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAccounts = null)
@@ -115,6 +194,9 @@ namespace SystemInterface.Dynamics.Crm
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_erindsamlingssted", new_erindsamlingssted));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_bykoordinatorid", new_bykoordinatorid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinatorid", new_omraadekoordinatorid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kredsellerby", new_kredsellerby));
 
 			return crmEntity;
 		}
