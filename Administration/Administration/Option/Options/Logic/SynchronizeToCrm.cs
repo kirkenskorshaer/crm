@@ -56,9 +56,15 @@ namespace Administration.Option.Options.Logic
 		{
 			Guid changeProviderId = _databaseSynchronizeToCrm.changeProviderId;
 
-			SynchronizeContacts(changeProviderId);
+			if (_databaseSynchronizeToCrm.synchronizeType.HasFlag(DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact))
+			{
+				SynchronizeContacts(changeProviderId);
+			}
 
-			SynchronizeAccounts(changeProviderId);
+			if (_databaseSynchronizeToCrm.synchronizeType.HasFlag(DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account))
+			{
+				SynchronizeAccounts(changeProviderId);
+			}
 
 			return true;
 		}
