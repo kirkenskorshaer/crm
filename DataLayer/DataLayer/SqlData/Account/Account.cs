@@ -28,6 +28,10 @@ namespace DataLayer.SqlData.Account
 		public int new_kkadminmedlemsnr;
 		public string new_region;
 
+		public Guid? bykoordinatorid;
+		public Guid? omraadekoordinatorid;
+		public int? kredsellerby;
+
 		private static readonly List<string> _fields = new List<string>()
 		{
 			"createdon",
@@ -45,6 +49,10 @@ namespace DataLayer.SqlData.Account
 			"new_erindsamlingssted",
 			"new_kkadminmedlemsnr",
 			"new_region",
+
+			"bykoordinatorid",
+			"omraadekoordinatorid",
+			"kredsellerby",
 		};
 
 		public static void MaintainTable(SqlConnection sqlConnection)
@@ -73,6 +81,13 @@ namespace DataLayer.SqlData.Account
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_erindsamlingssted", Utilities.DataType.BIT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_region", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kredsellerby", Utilities.DataType.INT, SqlBoolean.True);
+
+			CreateKeyIfMissing(sqlConnection, tableName, "bykoordinatorid", typeof(Contact.Contact).Name, "id", false);
+			CreateKeyIfMissing(sqlConnection, tableName, "omraadekoordinatorid", typeof(Contact.Contact).Name, "id", false);
 		}
 
 		public void Insert(SqlConnection sqlConnection, MongoConnection mongoConnection = null)
@@ -95,6 +110,10 @@ namespace DataLayer.SqlData.Account
 			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(new_region, "new_region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
+			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kredsellerby, "kredsellerby", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -199,6 +218,10 @@ namespace DataLayer.SqlData.Account
 			AddUpdateParameter(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(new_region, "new_region", sqlStringBuilderSets, parameters);
 
+			AddUpdateParameter(bykoordinatorid, "bykoordinatorid", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(kredsellerby, "kredsellerby", sqlStringBuilderSets, parameters);
+
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("Update");
 			sqlStringBuilder.AppendLine("	" + TableName);
@@ -231,6 +254,10 @@ namespace DataLayer.SqlData.Account
 				new_erindsamlingssted = ConvertFromDatabaseValue<bool>(row["new_erindsamlingssted"]),
 				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
 				new_region = ConvertFromDatabaseValue<string>(row["new_region"]),
+
+				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
+				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
+				kredsellerby = ConvertFromDatabaseValue<int?>(row["kredsellerby"]),
 			};
 		}
 

@@ -30,6 +30,10 @@ namespace DataLayer.SqlData.Account
 		public Guid ChangeProviderId { get; private set; }
 		public Guid AccountId { get; private set; }
 
+		public Guid? bykoordinatorid;
+		public Guid? omraadekoordinatorid;
+		public int? kredsellerby;
+
 		private static readonly List<string> _fields = new List<string>()
 		{
 			"createdon",
@@ -47,6 +51,10 @@ namespace DataLayer.SqlData.Account
 			"new_erindsamlingssted",
 			"new_kkadminmedlemsnr",
 			"new_region",
+
+			"bykoordinatorid",
+			"omraadekoordinatorid",
+			"kredsellerby",
 		};
 
 		private static string _tableName = typeof(AccountChange).Name;
@@ -96,7 +104,13 @@ namespace DataLayer.SqlData.Account
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_region", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kredsellerby", Utilities.DataType.INT, SqlBoolean.True);
+
 			CreateKeyIfMissing(sqlConnection, _tableName, "AccountId", typeof(Account).Name, "id");
+			CreateKeyIfMissing(sqlConnection, _tableName, "bykoordinatorid", typeof(Contact.Contact).Name, "id", false);
+			CreateKeyIfMissing(sqlConnection, _tableName, "omraadekoordinatorid", typeof(Contact.Contact).Name, "id", false);
 
 			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId", typeof(ExternalAccount).Name, "ChangeProviderId", "ExternalAccountId", "AccountId");
 		}
@@ -125,6 +139,10 @@ namespace DataLayer.SqlData.Account
 			AddInsertParameterIfNotNull(AccountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ExternalAccountId, "ExternalAccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(ChangeProviderId, "ChangeProviderId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+
+			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(kredsellerby, "kredsellerby", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
 			sqlStringBuilder.AppendLine("INSERT INTO");
@@ -279,6 +297,10 @@ namespace DataLayer.SqlData.Account
 				new_erindsamlingssted = ConvertFromDatabaseValue<bool>(row["new_erindsamlingssted"]),
 				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
 				new_region = ConvertFromDatabaseValue<string>(row["new_region"]),
+
+				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
+				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
+				kredsellerby = ConvertFromDatabaseValue<int?>(row["kredsellerby"]),
 			};
 
 			return accountChange;
