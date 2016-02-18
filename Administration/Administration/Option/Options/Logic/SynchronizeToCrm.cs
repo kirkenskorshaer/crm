@@ -137,7 +137,7 @@ namespace Administration.Option.Options.Logic
 
 		private void InsertAccountAndCreateExternalAccount(Guid changeProviderId, DatabaseAccount databaseAccount)
 		{
-			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
+			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount);
 			systemInterfaceAccount.Insert();
 
 			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(SqlConnection, systemInterfaceAccount.Id, changeProviderId, databaseAccount.Id);
@@ -217,7 +217,7 @@ namespace Administration.Option.Options.Logic
 
 		private bool UpdateExternalAccountData(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccountInCrm, bool isDeactivated)
 		{
-			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount);
+			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount);
 
 			if (systemInterfaceAccountInCrm.Equals(systemInterfaceAccount))
 			{
@@ -234,7 +234,7 @@ namespace Administration.Option.Options.Logic
 
 			_squash.SquashAccount(databaseAccount);
 
-			Conversion.Account.Convert(_dynamicsCrmConnection, databaseAccount, systemInterfaceAccountInCrm);
+			Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount, systemInterfaceAccountInCrm);
 
 			systemInterfaceAccountInCrm.Update();
 
