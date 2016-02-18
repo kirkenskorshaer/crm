@@ -239,6 +239,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Name = "test",
 				Schedule = schedule,
 				urlLoginName = "test",
+				synchronizeType = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact,
 			};
 
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
@@ -299,6 +300,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Name = "test",
 				Schedule = schedule,
 				urlLoginName = "test",
+				synchronizeType = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account,
 			};
 
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
