@@ -276,17 +276,20 @@ namespace AdministrationTest.Option.Options.Logic
 				"int:new_kkadminmedlemsnr",
 				"group",
 				"name",
+				"telephone1",
 				"address1_line1",
 				"address1_line2",
 				"address1_postalcode",
 				"address1_city",
 				"BykoordinatorNavn",
-				"BykoordinatorEmail",
+				"bykoordinatoremail",
 				"BykoordinatorTel",
 				"BykoordinatorTitel",
 				"comment",
 				"SubRegion",
 				"importDate",
+				"kredsellerby",
+				"error",
 			};
 
 			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
