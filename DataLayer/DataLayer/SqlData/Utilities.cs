@@ -149,13 +149,14 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(AccountChangeIndsamler).Name);
 			DropTable(sqlConnection, typeof(AccountChangeContact).Name);
 			DropTable(sqlConnection, typeof(ExternalContact).Name);
-			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 
 			DropTable(sqlConnection, typeof(Group.AccountChangeGroup).Name);
 			DropTable(sqlConnection, typeof(AccountChange).Name);
 			DropTable(sqlConnection, typeof(Group.AccountGroup).Name);
 			DropTable(sqlConnection, typeof(ExternalAccount).Name);
 			DropTable(sqlConnection, typeof(Account.Account).Name);
+
+			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 
 			DropTable(sqlConnection, typeof(Group.Group).Name);
 
