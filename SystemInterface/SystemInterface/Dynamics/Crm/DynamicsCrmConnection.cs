@@ -1,14 +1,20 @@
 ﻿using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Client.Services;
 using Microsoft.Xrm.Sdk.Client;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
 	public class DynamicsCrmConnection
 	{
-		private static DynamicsCrmConnection _connection;
+		private static List<DynamicsCrmConnection> _connections = new List<DynamicsCrmConnection>();
 		public OrganizationService Service;
 		public OrganizationServiceContext Context;
+
+		private string url;
+		private string username;
+		private string password;
 
 		private DynamicsCrmConnection(string url, string username, string password)
 		{
@@ -23,12 +29,18 @@ namespace SystemInterface.Dynamics.Crm
 
 		public static DynamicsCrmConnection GetConnection(string url, string username, string password)
 		{
-			if (_connection == null)
+			DynamicsCrmConnection connection = _connections.SingleOrDefault(lConnection =>
+				lConnection.url == url &&
+				lConnection.username == username &&
+				lConnection.password == password);
+
+			if (connection == null)
 			{
-				_connection = new DynamicsCrmConnection(url, username, password);
+				connection = new DynamicsCrmConnection(url, username, password);
+				_connections.Add(connection);
 			}
 
-			return _connection;
+			return connection;
 		}
 	}
 }
