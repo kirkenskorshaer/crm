@@ -207,7 +207,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Recurring = false,
 			};
 
-			Guid changeProviderId = Guid.Parse("87A9202D-ECFE-408C-A867-6A0F08A25D58");
+			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-contacts").Id;
 
 			string filename = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv";
 			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv.tmp";
@@ -235,7 +235,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
 			{
-				changeProviderId = Guid.Parse("A1025645-9811-44AE-9708-9AADC03E33DD"),
+				changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "crm").Id,
 				Name = "test",
 				Schedule = schedule,
 				urlLoginName = "test",
@@ -262,7 +262,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Recurring = false,
 			};
 
-			Guid changeProviderId = Guid.Parse("8D4CE329-EC67-4F9A-A4A7-65F273E86E09");
+			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-accounts").Id;
 
 			string filename = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv";
 			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv.tmp";
@@ -296,7 +296,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
 			{
-				changeProviderId = Guid.Parse("A1025645-9811-44AE-9708-9AADC03E33DD"),
+				changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "crm").Id,
 				Name = "test",
 				Schedule = schedule,
 				urlLoginName = "test",
@@ -307,10 +307,10 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureThereAreProgressOnAllAccounts();
 
-			for (int contactCount = 0; contactCount < 132; contactCount++)
-			//for (int contactCount = 0; contactCount < 1; contactCount++)
+			for (int contactCount = 0; contactCount < 283; contactCount++)
+			//for (int contactCount = 0; contactCount < 10; contactCount++)
 			{
-				synchronizeToCrm.Execute();
+				//synchronizeToCrm.Execute();
 			}
 		}
 
