@@ -87,7 +87,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ChangeProvider).Name);
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine("	id >= @id");
+			sqlStringBuilder.AppendLine("	id = @id");
 
 			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
 
