@@ -313,7 +313,7 @@ namespace AdministrationTest.Option.Options.Logic
 			for (int contactCount = 0; contactCount < 283; contactCount++)
 			//for (int contactCount = 0; contactCount < 10; contactCount++)
 			{
-				//synchronizeToCrm.Execute();
+				synchronizeToCrm.Execute();
 			}
 		}
 
