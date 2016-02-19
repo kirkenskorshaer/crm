@@ -96,5 +96,60 @@ namespace DataLayer.SqlData
 
 			return changeProvider;
 		}
+
+		public static ChangeProvider ReadByName(SqlConnection sqlConnection, string name)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("	,Name");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(ChangeProvider).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	Name = @name");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+
+			DataRow row = dataTable.Rows[0];
+			ChangeProvider changeProvider = CreateFromDataRow(row);
+
+			return changeProvider;
+		}
+
+		public static bool ExistsByName(SqlConnection sqlConnection, string name)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	NULL");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(ChangeProvider).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	Name = @name");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+
+			bool exists = dataTable.Rows.Count >= 1;
+
+			return exists;
+		}
+
+		public static ChangeProvider ReadByNameOrCreate(SqlConnection sqlConnection, string name)
+		{
+			bool exists = ExistsByName(sqlConnection, name);
+
+			if (exists)
+			{
+				return ReadByName(sqlConnection, name);
+			}
+
+			ChangeProvider changeProvider = new ChangeProvider()
+			{
+				Name = name,
+			};
+
+			changeProvider.Insert(sqlConnection);
+
+			return changeProvider;
+		}
 	}
 }
