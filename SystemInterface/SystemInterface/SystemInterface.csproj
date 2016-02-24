@@ -120,6 +120,7 @@
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
+    <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
