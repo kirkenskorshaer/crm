@@ -19,6 +19,7 @@ namespace SystemInterface.Dynamics.Crm
 		public string address1_line2;
 		public string address1_city;
 		public string address1_postalcode;
+		public EntityReference modifiedby;
 		public string emailaddress1;
 		public string telephone1;
 
@@ -59,6 +60,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			"createdon",
 			"modifiedon",
+			"modifiedby",
 
 			"new_erindsamlingssted",
 			"new_kkadminmedlemsnr",
@@ -67,7 +69,7 @@ namespace SystemInterface.Dynamics.Crm
 			"new_kredsellerby"
 		);
 
-		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "address2_addressid", "statecode");
+		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "modifiedby", "address2_addressid", "statecode");
 		protected override ColumnSet ColumnSetCrmGenerated { get { return ColumnSetAccountCrmGenerated; } }
 
 		protected override string entityName { get { return "account"; } }
@@ -80,6 +82,19 @@ namespace SystemInterface.Dynamics.Crm
 		public Account(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 			State = (StateEnum)((OptionSetValue)entity.Attributes["statecode"]).Value;
+		}
+
+		public Guid? modifiedbyGuid
+		{
+			get
+			{
+				if (modifiedby == null)
+				{
+					return null;
+				}
+
+				return modifiedby.Id;
+			}
 		}
 
 		public enum StateEnum
