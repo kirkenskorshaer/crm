@@ -54,5 +54,45 @@ namespace SystemInterface.Dynamics.Crm
 
 			return crmEntities;
 		}
+
+		public static List<AbstractCrmType> ReadByAttribute<AbstractCrmType>
+		(
+			DynamicsCrmConnection connection
+			, string entityName
+			, ColumnSet ColumnSetCrmType
+			, string attributeName
+			, object attributeValue
+			, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor
+			, int? maximumNumberOfEntities = null
+		)
+		where AbstractCrmType : AbstractCrm
+		{
+			ConditionExpression equalsExpression = new ConditionExpression
+			{
+				AttributeName = attributeName,
+				Operator = ConditionOperator.Equal
+			};
+			equalsExpression.Values.Add(attributeValue);
+
+			FilterExpression filterExpression = new FilterExpression();
+			filterExpression.Conditions.Add(equalsExpression);
+
+			QueryExpression query = new QueryExpression(entityName)
+			{
+				ColumnSet = ColumnSetCrmType
+			};
+			query.Criteria.AddFilter(filterExpression);
+
+			if (maximumNumberOfEntities.HasValue)
+			{
+				query.TopCount = maximumNumberOfEntities.Value;
+			}
+
+			EntityCollection entityCollection = connection.Service.RetrieveMultiple(query);
+
+			List<AbstractCrmType> crmEntities = entityCollection.Entities.Select(entity => CrmTypeConstructor(connection, entity)).ToList();
+
+			return crmEntities;
+		}
 	}
 }
