@@ -16,6 +16,7 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime createdon;
 		public DateTime modifiedon;
 		public Guid address3_addressid;
+		public EntityReference modifiedby;
 		public string lastname;
 		public string firstname;
 		public Guid address2_addressid;
@@ -80,6 +81,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			"createdon",
 			"modifiedon",
+			"modifiedby",
 
 			"firstname",
 			"lastname",
@@ -88,7 +90,7 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "contact"; } }
 		protected override string idName { get { return "contactid"; } }
 
-		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "address3_addressid", "address2_addressid", "statecode");
+		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "modifiedby", "address3_addressid", "address2_addressid", "statecode");
 		protected override ColumnSet ColumnSetCrmGenerated { get { return ColumnSetContactCrmGenerated; } }
 
 		public Contact(DynamicsCrmConnection connection) : base(connection)
@@ -98,6 +100,19 @@ namespace SystemInterface.Dynamics.Crm
 		public Contact(DynamicsCrmConnection connection, Entity contactEntity) : base(connection, contactEntity)
 		{
 			State = (StateEnum)((OptionSetValue)contactEntity.Attributes["statecode"]).Value;
+		}
+
+		public Guid? modifiedbyGuid
+		{
+			get
+			{
+				if (modifiedby == null)
+				{
+					return null;
+				}
+
+				return modifiedby.Id;
+			}
 		}
 
 		private void ReadGroups(Entity contactEntity)
