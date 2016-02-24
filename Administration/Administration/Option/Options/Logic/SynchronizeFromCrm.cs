@@ -47,27 +47,30 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection connection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
+			SystemUser systemUser = SystemUser.ReadByDomainname(connection, login.Username);
 
-			SynchronizeContacts(changeProviderId, connection);
+			SynchronizeContacts(changeProviderId, connection, systemUser);
 
-			SynchronizeAccounts(changeProviderId, connection);
+			SynchronizeAccounts(changeProviderId, connection, systemUser);
 
 			return true;
 		}
 
-		private void SynchronizeContacts(Guid changeProviderId, DynamicsCrmConnection connection)
+		private void SynchronizeContacts(Guid changeProviderId, DynamicsCrmConnection connection, SystemUser systemUser)
 		{
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateContact(out progress);
 
 			List<Contact> contacts = Contact.ReadLatest(connection, searchDate);
 
+			contacts = contacts.Where(contact => contact.modifiedbyGuid == null || contact.modifiedbyGuid.Value != systemUser.Id).ToList();
+
 			contacts.ForEach(contact => StoreInContactChangesIfNeeded(contact, changeProviderId));
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 		}
 
-		private void SynchronizeAccounts(Guid changeProviderId, DynamicsCrmConnection connection)
+		private void SynchronizeAccounts(Guid changeProviderId, DynamicsCrmConnection connection, SystemUser systemUser)
 		{
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateAccount(out progress);
@@ -75,6 +78,8 @@ namespace Administration.Option.Options.Logic
 			List<Account> accounts = Account.ReadLatest(connection, searchDate);
 
 			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId));
+
+			accounts = accounts.Where(account => account.modifiedbyGuid == null || account.modifiedbyGuid.Value != systemUser.Id).ToList();
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 		}
