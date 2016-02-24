@@ -53,6 +53,7 @@
     <Compile Include="Dynamics\Crm\ContactTest.cs" />
     <Compile Include="Dynamics\Crm\GroupTest.cs" />
     <Compile Include="Dynamics\Crm\MarketingListTest.cs" />
+    <Compile Include="Dynamics\Crm\SystemUserTest.cs" />
     <Compile Include="EmailTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministrationTest.cs" />
