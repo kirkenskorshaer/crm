@@ -91,13 +91,13 @@ namespace AdministrationTest.Option.Options.Logic
 			_externalContact1 = new DatabaseExternalContact(_sqlConnection, Guid.NewGuid(), _changeProvider1.Id, _contact.Id);
 			_externalContact1.Insert();
 
-			_externalAccount1 = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), _changeProvider1.Id, _contact.Id);
+			_externalAccount1 = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), _changeProvider1.Id, _account.Id);
 			_externalAccount1.Insert();
 
 			_externalContact2 = new DatabaseExternalContact(_sqlConnection, Guid.NewGuid(), _changeProvider2.Id, _contact.Id);
 			_externalContact2.Insert();
 
-			_externalAccount2 = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), _changeProvider2.Id, _contact.Id);
+			_externalAccount2 = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), _changeProvider2.Id, _account.Id);
 			_externalAccount2.Insert();
 		}
 
