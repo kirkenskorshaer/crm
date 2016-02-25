@@ -22,5 +22,15 @@ namespace DataLayerTest.MongoDataTest
 			};
 			return schedule;
 		}
+
+		public static Schedule CreateOneTimeSimpleSchedule()
+		{
+			Schedule schedule = new Schedule()
+			{
+				Recurring = false,
+				NextAllowedExecution = DateTime.Now,
+			};
+			return schedule;
+		}
 	}
 }
