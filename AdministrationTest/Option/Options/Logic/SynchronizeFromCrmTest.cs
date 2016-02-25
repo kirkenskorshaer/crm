@@ -43,15 +43,31 @@ namespace AdministrationTest.Option.Options.Logic
 
 		private DatabaseSynchronizeFromCrm GetDatabaseSynchronizeFromCrm()
 		{
+			return GetDatabaseSynchronizeFromCrm(_changeProvider.Id);
+        }
+
+		private DatabaseSynchronizeFromCrm GetDatabaseSynchronizeFromCrm(Guid changeProviderId)
+		{
 			DatabaseSynchronizeFromCrm databaseSynchronizeFromCrm = new DatabaseSynchronizeFromCrm
 			{
-				changeProviderId = _changeProvider.Id,
+				changeProviderId = changeProviderId,
 				Name = "SynchronizeFromCrmTest",
 				urlLoginName = "test",
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
 			};
 
 			return databaseSynchronizeFromCrm;
+		}
+
+		[Test]
+		public void ThrowsExceptionIfThereIsNoValidChangeProvider()
+		{
+			DatabaseSynchronizeFromCrm databaseSynchronizeFromCrmWithInvalidChangeProviderId = GetDatabaseSynchronizeFromCrm(Guid.NewGuid());
+			SynchronizeFromCrm synchronizeFromCrmWithInvalidChangeProviderId = new SynchronizeFromCrm(Connection, databaseSynchronizeFromCrmWithInvalidChangeProviderId);
+
+			TestDelegate synchronize = () => synchronizeFromCrmWithInvalidChangeProviderId.Execute();
+
+			Assert.Throws(typeof(ArgumentException), synchronize);
 		}
 
 		[Test]
