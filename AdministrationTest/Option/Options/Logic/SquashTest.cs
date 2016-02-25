@@ -133,6 +133,43 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void SquashDoesNotSquasNullIfItWasNeverDefined()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			CreateContactChange("firstname1", "lastname1", new DateTime(2000, 1, 1), true);
+			CreateContactChange("firstname1", null, new DateTime(2000, 1, 2), false);
+
+			squash.Execute();
+
+			_contact = DatabaseContact.Read(_sqlConnection, _contact.Id);
+
+			Assert.AreEqual("firstname1", _contact.firstname);
+			Assert.AreEqual("lastname1", _contact.lastname);
+		}
+
+		[Test]
+		public void SquashSquashesNullIfItWasDefined()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			CreateContactChange("firstname1", "lastname1", new DateTime(2000, 1, 1), true);
+			CreateContactChange("firstname1", "lastname2", new DateTime(2000, 1, 2), false);
+			CreateContactChange("firstname1", null, new DateTime(2000, 1, 3), true);
+
+			squash.Execute();
+
+			_contact = DatabaseContact.Read(_sqlConnection, _contact.Id);
+
+			Assert.AreEqual("firstname1", _contact.firstname);
+			Assert.AreEqual(null, _contact.lastname);
+		}
+
+		[Test]
 		public void ExecuteOptionSquashesToLatestSquashesContactGroup()
 		{
 			DatabaseSquash databaseSquash = GetDatabaseSquash();
