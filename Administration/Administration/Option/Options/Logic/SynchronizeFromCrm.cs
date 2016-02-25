@@ -14,6 +14,7 @@ using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
+using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DataLayer;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,12 @@ namespace Administration.Option.Options.Logic
 		protected override bool ExecuteOption()
 		{
 			Guid changeProviderId = _databaseSynchronizeFromCrm.changeProviderId;
+			bool changeProviderExists = DatabaseChangeProvider.Exists(SqlConnection, changeProviderId);
+			if (changeProviderExists == false)
+			{
+				throw new ArgumentException($"Could not find changeprovider with id {changeProviderId}");
+			}
+
 			string urlLoginName = _databaseSynchronizeFromCrm.urlLoginName;
 
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
