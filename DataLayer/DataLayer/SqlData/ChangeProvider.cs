@@ -116,6 +116,23 @@ namespace DataLayer.SqlData
 			return changeProvider;
 		}
 
+		public static bool Exists(SqlConnection sqlConnection, Guid changeProviderId)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	NULL");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(ChangeProvider).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	id = @id");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
+
+			bool exists = dataTable.Rows.Count >= 1;
+
+			return exists;
+		}
+
 		public static bool ExistsByName(SqlConnection sqlConnection, string name)
 		{
 			StringBuilder sqlStringBuilder = new StringBuilder();
