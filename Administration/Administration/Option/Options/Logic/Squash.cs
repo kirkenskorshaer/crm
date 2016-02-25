@@ -240,22 +240,47 @@ namespace Administration.Option.Options.Logic
 			foreach (Guid providerId in changesByProviderId.Keys)
 			{
 				IModifiedIdData databaseChangeLast = default(IModifiedIdData);
-				foreach (IModifiedIdData databaseChange in changesByProviderId[providerId])
+
+				List<IModifiedIdData> changeSetsForGivenProvider = changesByProviderId[providerId];
+
+				List<string> definedColumnsOnCurrentProvider = FindDefinedColumns(columnNames, providerId, changeSetsForGivenProvider);
+
+				foreach (IModifiedIdData databaseChange in changeSetsForGivenProvider)
 				{
 					DateTime modifiedOn = databaseChange.modifiedon;
 
 					if (databaseChangeLast == null)
 					{
-						CollectAllFieldsAsModifiedField(columnNames, modifiedFields, databaseChange, modifiedOn);
+						CollectAllFieldsAsModifiedField(definedColumnsOnCurrentProvider, modifiedFields, databaseChange, modifiedOn);
 					}
 					else
 					{
-						CollectActualChangesFromDatabaseChanges(columnNames, modifiedFields, databaseChangeLast, databaseChange, modifiedOn);
+						CollectActualChangesFromDatabaseChanges(definedColumnsOnCurrentProvider, modifiedFields, databaseChangeLast, databaseChange, modifiedOn);
 					}
 
 					databaseChangeLast = databaseChange;
 				}
 			}
+		}
+
+		private List<string> FindDefinedColumns(List<string> columnNames, Guid changeProviderId, List<IModifiedIdData> changeSets)
+		{
+			List<string> definedColumns = new List<string>();
+
+			foreach (string columnName in columnNames)
+			{
+				foreach (IModifiedIdData changeSet in changeSets)
+				{
+					object currentValue = ReflectionHelper.GetValue(changeSet, columnName);
+					if (currentValue != null)
+					{
+						definedColumns.Add(columnName);
+						break;
+					}
+				}
+			}
+
+			return definedColumns;
 		}
 
 		private void CollectModifiedReferencesForAllProviders(Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedReference> modifiedReferences, Dictionary<Type, Func<Guid, List<Guid>>> ReferenceTypeAndGetReferenceCollection)
