@@ -50,6 +50,7 @@
     <Compile Include="MongoDataTest\LogTest.cs" />
     <Compile Include="MongoDataTest\MongoTestUtilities.cs" />
     <Compile Include="MongoDataTest\Option\Options\CsvTest\CsvWriteLineTest.cs" />
+    <Compile Include="MongoDataTest\Option\Options\Data\Utilities\MaintainAllTablesTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\EmailTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\LogicTest\StressTestCrmTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\LogicTest\SynchronizeFromCsvTest.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="SqlDataTest\TestSqlBase.cs" />
     <Compile Include="SqlDataTest\UtilitiesTest.cs" />
     <Compile Include="SqlDataTest\ContactTest\ContactTest.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
