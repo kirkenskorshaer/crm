@@ -4,6 +4,7 @@ using Administration.Option.Options.Service;
 using DataLayer;
 using Administration.Option.Options.Csv;
 using Administration.Option.Options.Logic;
+using Administration.Option.Options.Data.Utilities;
 
 namespace Administration.Option.Finder
 {
@@ -36,6 +37,8 @@ namespace Administration.Option.Finder
 			options.AddRange(SynchronizeFromCrm.Find(_connection));
 			options.AddRange(SynchronizeFromCsv.Find(_connection));
 			options.AddRange(SynchronizeToCrm.Find(_connection));
+
+			options.AddRange(MaintainAllTables.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);
 			options.Add(sleep);
