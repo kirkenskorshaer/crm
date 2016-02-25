@@ -159,6 +159,53 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void SquashingAContactThatNeverHadGroupsDoesNotRemoveGroups()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			CreateContactChange("firstname1", "lastname1", new DateTime(2000, 1, 1), true, "groupA", "groupB", "groupC");
+			CreateContactChange("firstname1", "lastname2", new DateTime(2000, 1, 2), false);
+
+			squash.Execute();
+
+			List<string> groupsRead = DatabaseGroup.ReadGroupsFromContact(_sqlConnection, _contact.Id).Select(group => group.Name).ToList();
+			groupsRead.Sort();
+			List<string> expectedGroups = new List<string>() { "groupA", "groupB", "groupC" };
+
+			Assert.AreEqual(expectedGroups.Count, groupsRead.Count);
+			for (int listIndex = 0; listIndex < expectedGroups.Count; listIndex++)
+			{
+				Assert.AreEqual(expectedGroups[listIndex], groupsRead[listIndex]);
+			}
+		}
+
+		[Test]
+		public void SquashingAContactThatPreiviouslyHadGroupsRemovesGroups()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			CreateContactChange("firstname1", "lastname1", new DateTime(2000, 1, 1), true, "groupA", "groupB", "groupC");
+			CreateContactChange("firstname1", "lastname2", new DateTime(2000, 1, 2), false, "groupA", "groupB", "groupC");
+			CreateContactChange("firstname1", "lastname2", new DateTime(2000, 1, 3), false);
+
+			squash.Execute();
+
+			List<string> groupsRead = DatabaseGroup.ReadGroupsFromContact(_sqlConnection, _contact.Id).Select(group => group.Name).ToList();
+			groupsRead.Sort();
+			List<string> expectedGroups = new List<string>() { };
+
+			Assert.AreEqual(expectedGroups.Count, groupsRead.Count);
+			for (int listIndex = 0; listIndex < expectedGroups.Count; listIndex++)
+			{
+				Assert.AreEqual(expectedGroups[listIndex], groupsRead[listIndex]);
+			}
+		}
+
+		[Test]
 		public void ExecuteOptionSquashesToLatestSquashesAccount()
 		{
 			DatabaseSquash databaseSquash = GetDatabaseSquash();
