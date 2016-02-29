@@ -190,7 +190,7 @@ namespace Administration.Option.Options.Logic
 
 			_squash.SquashContact(databaseContact);
 
-			Conversion.Contact.Convert(_dynamicsCrmConnection, databaseContact, systemInterfaceContactInCrm);
+			Conversion.Contact.Convert(databaseContact, systemInterfaceContactInCrm);
 
 			systemInterfaceContactInCrm.Update();
 
@@ -234,7 +234,7 @@ namespace Administration.Option.Options.Logic
 
 			_squash.SquashAccount(databaseAccount);
 
-			Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount, systemInterfaceAccountInCrm);
+			Conversion.Account.Convert(SqlConnection, changeProviderId, databaseAccount, systemInterfaceAccountInCrm);
 
 			systemInterfaceAccountInCrm.Update();
 

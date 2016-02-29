@@ -14,12 +14,12 @@ namespace Administration.Conversion
 		public static SystemInterfaceAccount Convert(DynamicsCrmConnection dynamicsCrmConnection, SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount)
 		{
 			SystemInterfaceAccount toAccount = new SystemInterfaceAccount(dynamicsCrmConnection);
-			Convert(dynamicsCrmConnection, sqlConnection, changeProviderId, fromAccount, toAccount);
+			Convert(sqlConnection, changeProviderId, fromAccount, toAccount);
 
 			return toAccount;
 		}
 
-		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
+		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
 			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);

@@ -14,12 +14,12 @@ namespace Administration.Conversion
 		public static SystemInterfaceContact Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact)
 		{
 			SystemInterfaceContact toContact = new SystemInterfaceContact(dynamicsCrmConnection);
-			Convert(dynamicsCrmConnection, fromContact, toContact);
+			Convert(fromContact, toContact);
 
 			return toContact;
 		}
 
-		public static void Convert(DynamicsCrmConnection dynamicsCrmConnection, DatabaseContact fromContact, SystemInterfaceContact toContact)
+		public static void Convert(DatabaseContact fromContact, SystemInterfaceContact toContact)
 		{
 			List<string> exclusionList = new List<string>() { "Id" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseContact), exclusionList);
