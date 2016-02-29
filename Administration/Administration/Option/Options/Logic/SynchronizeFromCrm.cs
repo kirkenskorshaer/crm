@@ -293,6 +293,30 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
+		private DatabaseExternalContact ReadOrCreateContactFromExternalContactId(Guid externalContactId, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			bool externalContactExists = DatabaseExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
+
+			DatabaseExternalContact externalContact = null;
+			if (externalContactExists)
+			{
+				externalContact = DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
+				return externalContact;
+			}
+
+			Contact crmContact = Contact.Read(dynamicsCrmConnection, externalContactId);
+
+			DatabaseContact databaseContact = new DatabaseContact();
+			Conversion.Contact.Convert(crmContact, databaseContact);
+			databaseContact.Insert(SqlConnection);
+
+			externalContact = new DatabaseExternalContact(SqlConnection, externalContactId, changeProviderId, databaseContact.Id);
+
+			externalContact.Insert();
+
+			return externalContact;
+		}
+
 		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
 		{
 			List<Guid> externalContactIdsFromAccountIndsamler = crmAccount.GetExternalContactIdsFromAccountIndsamler();
