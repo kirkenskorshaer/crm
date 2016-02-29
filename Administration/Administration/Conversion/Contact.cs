@@ -30,5 +30,17 @@ namespace Administration.Conversion
 				Utilities.ReflectionHelper.SetValue(toContact, key, value);
 			}
 		}
+
+		public static void Convert(SystemInterfaceContact fromContact, DatabaseContact toContact)
+		{
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceContact), exclusionList);
+
+			foreach (string key in keys)
+			{
+				object value = Utilities.ReflectionHelper.GetValue(fromContact, key);
+				Utilities.ReflectionHelper.SetValue(toContact, key, value);
+			}
+		}
 	}
 }
