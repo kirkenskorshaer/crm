@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using SystemInterface.Dynamics.Crm;
 
 namespace Administration.Conversion
@@ -32,6 +33,18 @@ namespace Administration.Conversion
 		}
 
 		public static void Convert(SystemInterfaceContact fromContact, DatabaseContact toContact)
+		{
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceContact), exclusionList);
+
+			foreach (string key in keys)
+			{
+				object value = Utilities.ReflectionHelper.GetValue(fromContact, key);
+				Utilities.ReflectionHelper.SetValue(toContact, key, value);
+			}
+		}
+
+		public static void Convert(SystemInterfaceContact fromContact, DatabaseContactChange toContact)
 		{
 			List<string> exclusionList = new List<string>() { "Id" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceContact), exclusionList);
