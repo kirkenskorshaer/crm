@@ -84,7 +84,7 @@ namespace Administration.Option.Options.Logic
 
 			List<Account> accounts = Account.ReadLatest(connection, searchDate);
 
-			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId));
+			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId, connection));
 
 			accounts = accounts.Where(account => account.modifiedbyGuid == null || account.modifiedbyGuid.Value != systemUser.Id).ToList();
 
@@ -132,7 +132,7 @@ namespace Administration.Option.Options.Logic
 			}
 			else
 			{
-				account = ReadOrCreateAccount(crmAccount);
+				account = ReadOrCreateAccount(crmAccount, changeProviderId);
 
 				externalAccount = new DatabaseExternalAccount(SqlConnection, externalAccountId, changeProviderId, account.Id);
 				externalAccount.Insert();
@@ -187,13 +187,13 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private DatabaseAccount ReadOrCreateAccount(Account crmAccount)
+		private DatabaseAccount ReadOrCreateAccount(Account crmAccount, Guid changeProviderId)
 		{
 			DatabaseAccount account = AccountCrmMapping.FindAccount(Connection, SqlConnection, crmAccount);
 
 			if (account == null)
 			{
-				account = CreateAccount(SqlConnection, crmAccount);
+				account = CreateAccount(SqlConnection, changeProviderId, crmAccount);
 			}
 
 			return account;
@@ -201,27 +201,20 @@ namespace Administration.Option.Options.Logic
 
 		private DatabaseContact CreateContact(SqlConnection sqlConnection, Contact crmContact)
 		{
-			DatabaseContact contact = new DatabaseContact()
-			{
-				createdon = DateTime.Now,
-				modifiedon = crmContact.modifiedon,
-				firstname = crmContact.firstname,
-				lastname = crmContact.lastname,
-			};
+			DatabaseContact contact = new DatabaseContact();
+
+			Conversion.Contact.Convert(crmContact, contact);
 
 			contact.Insert(sqlConnection);
 
 			return contact;
 		}
 
-		private DatabaseAccount CreateAccount(SqlConnection sqlConnection, Account crmAccount)
+		private DatabaseAccount CreateAccount(SqlConnection sqlConnection, Guid changeProviderId, Account crmAccount)
 		{
-			DatabaseAccount account = new DatabaseAccount()
-			{
-				createdon = DateTime.Now,
-				modifiedon = crmAccount.modifiedon,
-				name = crmAccount.name,
-			};
+			DatabaseAccount account = new DatabaseAccount();
+
+			Conversion.Account.Convert(sqlConnection, changeProviderId, crmAccount, account);
 
 			account.Insert(sqlConnection);
 
@@ -232,10 +225,7 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
-			contactChange.createdon = crmContact.createdon;
-			contactChange.modifiedon = crmContact.modifiedon;
-			contactChange.firstname = crmContact.firstname;
-			contactChange.lastname = crmContact.lastname;
+			Conversion.Contact.Convert(crmContact, contactChange);
 
 			contactChange.Insert();
 
@@ -264,9 +254,7 @@ namespace Administration.Option.Options.Logic
 		{
 			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
 
-			accountChange.createdon = crmAccount.createdon;
-			accountChange.modifiedon = crmAccount.modifiedon;
-			accountChange.name = crmAccount.name;
+			Conversion.Account.Convert(SqlConnection, changeProviderId, crmAccount, accountChange);
 
 			accountChange.Insert();
 
