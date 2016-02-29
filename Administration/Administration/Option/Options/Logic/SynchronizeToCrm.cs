@@ -111,7 +111,7 @@ namespace Administration.Option.Options.Logic
 			}
 			else
 			{
-				externalAccounts.ForEach(account => UpdateExternalAccountIfNeeded(changeProviderId, account, databaseAccount));
+				externalAccounts.ForEach(account => UpdateExternalAccountIfNeeded(changeProviderId, account, databaseAccount, _dynamicsCrmConnection));
 			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
@@ -197,13 +197,13 @@ namespace Administration.Option.Options.Logic
 			return true;
 		}
 
-		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount)
+		private void UpdateExternalAccountIfNeeded(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			bool isDeactivated = false;
 
 			SystemInterfaceAccount systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
-			isDeactivated = UpdateExternalAccountData(changeProviderId, databaseExternalAccount, databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+			isDeactivated = UpdateExternalAccountData(changeProviderId, databaseExternalAccount, databaseAccount, systemInterfaceAccountInCrm, isDeactivated, dynamicsCrmConnection);
 
 			isDeactivated = SynchronizeAccountContact(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
 			isDeactivated = SynchronizeAccountIndsamler(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
@@ -215,7 +215,7 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private bool UpdateExternalAccountData(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccountInCrm, bool isDeactivated)
+		private bool UpdateExternalAccountData(Guid changeProviderId, DatabaseExternalAccount databaseExternalAccount, DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccountInCrm, bool isDeactivated, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount);
 
@@ -228,7 +228,7 @@ namespace Administration.Option.Options.Logic
 
 			systemInterfaceAccountInCrm = SystemInterfaceAccount.Read(_dynamicsCrmConnection, databaseExternalAccount.ExternalAccountId);
 
-			_synchronizeFromCrm.StoreInAccountChangesIfNeeded(systemInterfaceAccountInCrm, changeProviderId, databaseExternalAccount.ExternalAccountId, databaseAccount);
+			_synchronizeFromCrm.StoreInAccountChangesIfNeeded(systemInterfaceAccountInCrm, changeProviderId, databaseExternalAccount.ExternalAccountId, databaseAccount, dynamicsCrmConnection);
 
 			databaseAccount = DatabaseAccount.Read(SqlConnection, databaseAccount.Id);
 

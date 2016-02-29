@@ -116,7 +116,7 @@ namespace Administration.Option.Options.Logic
 			StoreInContactChangesIfNeeded(crmContact, changeProviderId, externalContactId, contact);
 		}
 
-		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId)
+		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Guid externalAccountId = crmAccount.Id;
 
@@ -138,7 +138,7 @@ namespace Administration.Option.Options.Logic
 				externalAccount.Insert();
 			}
 
-			StoreInAccountChangesIfNeeded(crmAccount, changeProviderId, externalAccountId, account);
+			StoreInAccountChangesIfNeeded(crmAccount, changeProviderId, externalAccountId, account, dynamicsCrmConnection);
 		}
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId, Guid externalContactId, DatabaseContact contact)
@@ -158,7 +158,7 @@ namespace Administration.Option.Options.Logic
 			StoreContactRelations(crmContact, contactChange, changeProviderId);
 		}
 
-		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId, Guid externalAccountId, DatabaseAccount account)
+		internal void StoreInAccountChangesIfNeeded(Account crmAccount, Guid changeProviderId, Guid externalAccountId, DatabaseAccount account, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Guid accountId = account.Id;
 			DateTime modifiedOn = crmAccount.modifiedon;
@@ -172,7 +172,7 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseAccountChange accountChange = CreateAccountChange(changeProviderId, crmAccount, externalAccountId, accountId, modifiedOn);
 
-			StoreAccountRelations(crmAccount, accountChange, changeProviderId);
+			StoreAccountRelations(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
 		}
 
 		private DatabaseContact ReadOrCreateContact(Contact crmContact)
@@ -273,17 +273,19 @@ namespace Administration.Option.Options.Logic
 			return accountChange;
 		}
 
-		private void StoreAccountRelations(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		private void StoreAccountRelations(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
 		{
-			StoreAccountRelationAccountChangeContact(crmAccount, accountChange, changeProviderId);
-			StoreAccountRelationAccountChangeIndsamler(crmAccount, accountChange, changeProviderId);
+			StoreAccountRelationAccountChangeContact(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
+			StoreAccountRelationAccountChangeIndsamler(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
 			StoreAccountRelationAccountChangeGroup(crmAccount, accountChange, changeProviderId);
 		}
 
-		private void StoreAccountRelationAccountChangeContact(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		private void StoreAccountRelationAccountChangeContact(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			List<Guid> externalContactIdsFromAccountContact = crmAccount.GetExternalContactIdsFromAccountContact();
-			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountContact.Select(externalContactId => DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId)).ToList();
+
+			externalContactIdsFromAccountContact = externalContactIdsFromAccountContact.Where(externalContactId => DatabaseExternalContact.Exists(SqlConnection, externalContactId, changeProviderId)).ToList();
+			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountContact.Select(externalContactId => ReadOrCreateContactFromExternalContactId(externalContactId, changeProviderId, dynamicsCrmConnection)).ToList();
 			List<Guid> contactIds = externalContacts.Select(externalContact => externalContact.ContactId).ToList();
 
 			foreach (Guid contactId in contactIds)
@@ -317,10 +319,10 @@ namespace Administration.Option.Options.Logic
 			return externalContact;
 		}
 
-		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId)
+		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
 		{
 			List<Guid> externalContactIdsFromAccountIndsamler = crmAccount.GetExternalContactIdsFromAccountIndsamler();
-			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountIndsamler.Select(externalContactId => DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId)).ToList();
+			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountIndsamler.Select(externalContactId => ReadOrCreateContactFromExternalContactId(externalContactId, changeProviderId, dynamicsCrmConnection)).ToList();
 			List<Guid> contactIds = externalContacts.Select(externalContact => externalContact.ContactId).ToList();
 
 			foreach (Guid contactId in contactIds)
