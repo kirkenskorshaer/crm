@@ -48,9 +48,9 @@ namespace Administration.Conversion
 				}
 			}
 
-			if(fromAccount.kredsellerby.HasValue)
+			if (fromAccount.kredsellerby.HasValue)
 			{
-				toAccount.kredsellerby = (SystemInterfaceAccount.kredsellerbyEnum) fromAccount.kredsellerby;
+				toAccount.kredsellerby = (SystemInterfaceAccount.kredsellerbyEnum)fromAccount.kredsellerby;
 			}
 		}
 	}
