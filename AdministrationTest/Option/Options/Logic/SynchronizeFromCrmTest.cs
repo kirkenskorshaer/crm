@@ -45,7 +45,7 @@ namespace AdministrationTest.Option.Options.Logic
 		private DatabaseSynchronizeFromCrm GetDatabaseSynchronizeFromCrm()
 		{
 			return GetDatabaseSynchronizeFromCrm(_changeProvider.Id);
-        }
+		}
 
 		private DatabaseSynchronizeFromCrm GetDatabaseSynchronizeFromCrm(Guid changeProviderId)
 		{
