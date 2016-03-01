@@ -25,6 +25,7 @@ namespace AdministrationTest.Option.Options.Logic
 		private DynamicsCrmConnection _dynamicsCrmConnection;
 		private DatabaseChangeProvider _changeProvider;
 		private SynchronizeFromCrm _synchronizeFromCrm;
+		private DatabaseSynchronizeFromCrm _databaseSynchronizeFromCrm;
 
 		[SetUp]
 		new public void SetUp()
@@ -36,8 +37,8 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_changeProvider = FindOrCreateChangeProvider(_sqlConnection, "testCrmProvider");
 
-			DatabaseSynchronizeFromCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeFromCrm();
-			_synchronizeFromCrm = new SynchronizeFromCrm(Connection, databaseSynchronizeFromCrm);
+			_databaseSynchronizeFromCrm = GetDatabaseSynchronizeFromCrm();
+			_synchronizeFromCrm = new SynchronizeFromCrm(Connection, _databaseSynchronizeFromCrm);
 			_synchronizeFromCrm.Execute();
 		}
 
