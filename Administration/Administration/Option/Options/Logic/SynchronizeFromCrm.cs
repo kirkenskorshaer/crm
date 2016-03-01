@@ -68,7 +68,7 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateContact(out progress);
 
-			List<Contact> contacts = Contact.ReadLatest(connection, searchDate);
+			List<Contact> contacts = Contact.ReadLatest(connection, searchDate, _databaseSynchronizeFromCrm.maxNumberOfContacts);
 
 			if (_databaseSynchronizeFromCrm.ignoreChangesMadeBySystemUser)
 			{
@@ -85,7 +85,7 @@ namespace Administration.Option.Options.Logic
 			DataLayer.MongoData.Progress progress;
 			DateTime searchDate = GetSearchDateAccount(out progress);
 
-			List<Account> accounts = Account.ReadLatest(connection, searchDate);
+			List<Account> accounts = Account.ReadLatest(connection, searchDate, _databaseSynchronizeFromCrm.maxNumberOfAccounts);
 
 			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId, connection));
 
