@@ -99,6 +99,24 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void ExecuteOptionDoesNotGetChangesetIfIgnoreChangesMadeBySystemUserIsTrue()
+		{
+			string firstname1 = "firstname1";
+
+			Contact crmContact = CreateCrmContact(firstname1);
+			_databaseSynchronizeFromCrm.ignoreChangesMadeBySystemUser = true;
+
+			crmContact.Insert();
+			_synchronizeFromCrm.Execute();
+
+			crmContact.Delete();
+
+			List<DatabaseContactChange> contactChanges = DatabaseContactChange.Read(_sqlConnection, crmContact.Id, DatabaseContactChange.IdType.ExternalContactId);
+
+			Assert.AreEqual(0, contactChanges.Count);
+		}
+
+		[Test]
 		public void ContactGroupsCanBeAdded()
 		{
 			string firstname = "firstname";
