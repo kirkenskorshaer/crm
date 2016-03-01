@@ -136,11 +136,11 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_synchronizeFromCrm.Execute();
 
-			DatabaseExternalContact databaseExternalContact = DatabaseExternalContact.Read(_sqlConnection, crmContact.Id, _changeProvider.Id);
-			List<DatabaseAccountChangeContact> accountChangeContacts = DatabaseAccountChangeContact.ReadFromContactId(_sqlConnection, databaseExternalContact.ContactId);
-
 			crmContact.Delete();
 			crmAccount.Delete();
+
+			DatabaseExternalContact databaseExternalContact = DatabaseExternalContact.Read(_sqlConnection, crmContact.Id, _changeProvider.Id);
+			List<DatabaseAccountChangeContact> accountChangeContacts = DatabaseAccountChangeContact.ReadFromContactId(_sqlConnection, databaseExternalContact.ContactId);
 
 			Assert.AreEqual(1, accountChangeContacts.Count);
 		}
