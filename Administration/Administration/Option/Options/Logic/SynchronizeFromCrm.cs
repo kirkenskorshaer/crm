@@ -70,7 +70,10 @@ namespace Administration.Option.Options.Logic
 
 			List<Contact> contacts = Contact.ReadLatest(connection, searchDate);
 
-			contacts = contacts.Where(contact => contact.modifiedbyGuid == null || contact.modifiedbyGuid.Value != systemUser.Id).ToList();
+			if (_databaseSynchronizeFromCrm.ignoreChangesMadeBySystemUser)
+			{
+				contacts = contacts.Where(contact => contact.modifiedbyGuid == null || contact.modifiedbyGuid.Value != systemUser.Id).ToList();
+			}
 
 			contacts.ForEach(contact => StoreInContactChangesIfNeeded(contact, changeProviderId));
 
@@ -86,7 +89,10 @@ namespace Administration.Option.Options.Logic
 
 			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId, connection));
 
-			accounts = accounts.Where(account => account.modifiedbyGuid == null || account.modifiedbyGuid.Value != systemUser.Id).ToList();
+			if (_databaseSynchronizeFromCrm.ignoreChangesMadeBySystemUser)
+			{
+				accounts = accounts.Where(account => account.modifiedbyGuid == null || account.modifiedbyGuid.Value != systemUser.Id).ToList();
+			}
 
 			progress.UpdateAndSetLastProgressDateToNow(Connection);
 		}

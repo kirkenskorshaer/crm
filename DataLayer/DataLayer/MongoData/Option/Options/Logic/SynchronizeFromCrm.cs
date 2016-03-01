@@ -6,6 +6,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 	{
 		public Guid changeProviderId { get; set; }
 		public string urlLoginName { get; set; }
+		public bool ignoreChangesMadeBySystemUser { get; set; }
 
 		public static SynchronizeFromCrm Create(MongoConnection connection, string name, Schedule schedule, string urlLoginName, Guid changeProviderId)
 		{
