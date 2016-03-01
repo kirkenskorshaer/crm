@@ -46,6 +46,7 @@ namespace SystemInterface.Dynamics.Crm
 			if (maximumNumberOfEntities.HasValue)
 			{
 				query.TopCount = maximumNumberOfEntities.Value;
+				query.AddOrder("modifiedon", OrderType.Descending);
 			}
 
 			EntityCollection entityCollection = connection.Service.RetrieveMultiple(query);
