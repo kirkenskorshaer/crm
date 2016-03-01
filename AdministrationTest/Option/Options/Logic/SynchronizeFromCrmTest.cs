@@ -55,6 +55,9 @@ namespace AdministrationTest.Option.Options.Logic
 				Name = "SynchronizeFromCrmTest",
 				urlLoginName = "test",
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
+				ignoreChangesMadeBySystemUser = false,
+				maxNumberOfAccounts = 10,
+				maxNumberOfContacts = 10,
 			};
 
 			return databaseSynchronizeFromCrm;
