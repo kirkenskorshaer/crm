@@ -17,6 +17,17 @@
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
     </Group>
+    <Group Id="Email" Description="Email" Title="Email" IsProfile="false">
+      <SubArea Entity="template" Id="Template" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="email" Id="Email" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="mailbox" Id="Mailbox" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+    </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
     <Group Id="Fundraising" IsProfile="false">
