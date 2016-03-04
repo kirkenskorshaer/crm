@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "bykoordinatoremail", "omraadekoordinatoremail" });
 
 			foreach (string key in keys)
 			{
@@ -235,6 +235,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					accountChange.kredsellerby = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.kredsellerbyEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("region") && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
+			{
+				object csvObject = csvRow["region"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					accountChange.region = (int)csvObject;
+				}
+				else
+				{
+					accountChange.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
 				}
 			}
 
@@ -285,7 +298,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "bykoordinatoremail", "omraadekoordinatoremail" });
 
 			foreach (string key in keys)
 			{
@@ -314,6 +327,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					account.kredsellerby = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.kredsellerbyEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("region") && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
+			{
+				object csvObject = csvRow["region"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					account.region = (int)csvObject;
+				}
+				else
+				{
+					account.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
 				}
 			}
 
