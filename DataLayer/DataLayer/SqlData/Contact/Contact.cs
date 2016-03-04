@@ -16,6 +16,7 @@ namespace DataLayer.SqlData.Contact
 		public DateTime createdon;
 		public DateTime modifiedon { get; set; }
 		public string firstname;
+		public string middlename;
 		public string lastname;
 
 		public DateTime? birthdate;
@@ -44,6 +45,7 @@ namespace DataLayer.SqlData.Contact
 		private static readonly List<string> _fields = new List<string>()
 		{
 			"firstname",
+			"middlename",
 			"lastname",
 			"createdon",
 			"modifiedon",
@@ -81,6 +83,7 @@ namespace DataLayer.SqlData.Contact
 			}
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "middlename", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
@@ -113,6 +116,7 @@ namespace DataLayer.SqlData.Contact
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 
 			AddInsertParameterIfNotNull(firstname, "firstname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(middlename, "middlename", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(lastname, "lastname", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -253,6 +257,7 @@ namespace DataLayer.SqlData.Contact
 			StringBuilder sqlStringBuilderSets = new StringBuilder();
 			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
 			AddUpdateParameter(firstname, "firstname", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(middlename, "middlename", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(lastname, "lastname", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(modifiedon, "modifiedon", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(createdon, "createdon", sqlStringBuilderSets, parameters);
@@ -295,6 +300,7 @@ namespace DataLayer.SqlData.Contact
 			return new Contact
 			{
 				firstname = ConvertFromDatabaseValue<string>(row["firstname"]),
+				middlename = ConvertFromDatabaseValue<string>(row["middlename"]),
 				lastname = ConvertFromDatabaseValue<string>(row["lastname"]),
 				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
 				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
