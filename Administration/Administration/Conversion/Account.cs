@@ -22,7 +22,7 @@ namespace Administration.Conversion
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby" };
+			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby", "region" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
 
 			foreach (string key in keys)
@@ -53,6 +53,11 @@ namespace Administration.Conversion
 			{
 				toAccount.kredsellerby = (SystemInterfaceAccount.kredsellerbyEnum)fromAccount.kredsellerby;
 			}
+
+			if (fromAccount.region.HasValue)
+			{
+				toAccount.region = (SystemInterfaceAccount.regionEnum)fromAccount.region;
+			}
 		}
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, SystemInterfaceAccount fromAccount, DatabaseAccount toAccount)
@@ -61,7 +66,8 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
-				"new_kredsellerby", "kredsellerby"
+				"new_kredsellerby", "kredsellerby",
+				"new_region", "region",
 			};
 
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceAccount), exclusionList);
@@ -93,6 +99,11 @@ namespace Administration.Conversion
 			if (fromAccount.kredsellerby.HasValue)
 			{
 				toAccount.kredsellerby = (int)fromAccount.kredsellerby;
+			}
+
+			if (fromAccount.region.HasValue)
+			{
+				toAccount.region = (int)fromAccount.region;
 			}
 		}
 
@@ -102,7 +113,8 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
-				"new_kredsellerby", "kredsellerby"
+				"new_kredsellerby", "kredsellerby",
+				"new_region", "region",
 			};
 
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceAccount), exclusionList);
@@ -134,6 +146,11 @@ namespace Administration.Conversion
 			if (fromAccount.kredsellerby.HasValue)
 			{
 				toAccount.kredsellerby = (int)fromAccount.kredsellerby;
+			}
+
+			if (fromAccount.region.HasValue)
+			{
+				toAccount.region = (int)fromAccount.region;
 			}
 		}
 	}
