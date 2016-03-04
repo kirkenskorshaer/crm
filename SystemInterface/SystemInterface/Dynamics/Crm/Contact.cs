@@ -18,6 +18,7 @@ namespace SystemInterface.Dynamics.Crm
 		public Guid address3_addressid;
 		public EntityReference modifiedby;
 		public string lastname;
+		public string middlename;
 		public string firstname;
 		public Guid address2_addressid;
 		public DateTime? birthdate;
@@ -84,6 +85,7 @@ namespace SystemInterface.Dynamics.Crm
 			"modifiedby",
 
 			"firstname",
+			"middlename",
 			"lastname",
 			"statecode");
 
@@ -131,6 +133,7 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("firstname", firstname));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("middlename", middlename));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("lastname", lastname));
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_hargavebrev", new_hargavebrev));
