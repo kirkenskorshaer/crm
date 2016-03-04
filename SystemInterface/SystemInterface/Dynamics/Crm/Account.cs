@@ -35,6 +35,7 @@ namespace SystemInterface.Dynamics.Crm
 		public EntityReference new_bykoordinatorid;
 		public EntityReference new_omraadekoordinatorid;
 		public OptionSetValue new_kredsellerby;
+		public OptionSetValue new_region;
 
 		private string _contactRelationshipName = "new_account_contact";
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
@@ -66,7 +67,8 @@ namespace SystemInterface.Dynamics.Crm
 			"new_kkadminmedlemsnr",
 			"new_bykoordinatorid",
 			"new_omraadekoordinatorid",
-			"new_kredsellerby"
+			"new_kredsellerby",
+			"new_region"
 		);
 
 		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "modifiedby", "address2_addressid", "statecode");
@@ -159,6 +161,14 @@ namespace SystemInterface.Dynamics.Crm
 			by = 100000001,
 		}
 
+		public enum regionEnum
+		{
+			nord = 100000000,
+			syd = 100000001,
+			øst = 100000002,
+			midt = 100000003,
+		}
+
 		public kredsellerbyEnum? kredsellerby
 		{
 			get
@@ -178,6 +188,28 @@ namespace SystemInterface.Dynamics.Crm
 				}
 
 				new_kredsellerby = new OptionSetValue((int)value.Value);
+			}
+		}
+
+		public regionEnum? region
+		{
+			get
+			{
+				if (new_region == null)
+				{
+					return null;
+				}
+
+				return (regionEnum)new_region.Value;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_region = null;
+				}
+
+				new_region = new OptionSetValue((int)value.Value);
 			}
 		}
 
@@ -212,6 +244,7 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_bykoordinatorid", new_bykoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinatorid", new_omraadekoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kredsellerby", new_kredsellerby));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_region", new_region));
 
 			return crmEntity;
 		}
