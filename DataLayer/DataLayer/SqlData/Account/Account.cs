@@ -26,7 +26,7 @@ namespace DataLayer.SqlData.Account
 
 		public bool new_erindsamlingssted;
 		public int new_kkadminmedlemsnr;
-		public string new_region;
+		public int? region;
 
 		public Guid? bykoordinatorid;
 		public Guid? omraadekoordinatorid;
@@ -48,7 +48,7 @@ namespace DataLayer.SqlData.Account
 
 			"new_erindsamlingssted",
 			"new_kkadminmedlemsnr",
-			"new_region",
+			"region",
 
 			"bykoordinatorid",
 			"omraadekoordinatorid",
@@ -80,7 +80,7 @@ namespace DataLayer.SqlData.Account
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_erindsamlingssted", Utilities.DataType.BIT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_region", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "region", Utilities.DataType.INT, SqlBoolean.True);
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
@@ -109,7 +109,7 @@ namespace DataLayer.SqlData.Account
 
 			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_region, "new_region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(region, "region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -216,7 +216,7 @@ namespace DataLayer.SqlData.Account
 
 			AddUpdateParameter(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_region, "new_region", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(region, "region", sqlStringBuilderSets, parameters);
 
 			AddUpdateParameter(bykoordinatorid, "bykoordinatorid", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderSets, parameters);
@@ -253,7 +253,7 @@ namespace DataLayer.SqlData.Account
 
 				new_erindsamlingssted = ConvertFromDatabaseValue<bool>(row["new_erindsamlingssted"]),
 				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
-				new_region = ConvertFromDatabaseValue<string>(row["new_region"]),
+				region = ConvertFromDatabaseValue<int?>(row["region"]),
 
 				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
 				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
