@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail" });
 
 			foreach (string key in keys)
 			{
@@ -248,6 +248,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					accountChange.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("stedtype") && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
+			{
+				object csvObject = csvRow["stedtype"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					accountChange.stedtype = (int)csvObject;
+				}
+				else
+				{
+					accountChange.stedtype = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.stedtypeEnum), csvObject.ToString(), true);
 				}
 			}
 
@@ -298,7 +311,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail" });
 
 			foreach (string key in keys)
 			{
@@ -340,6 +353,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					account.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("stedtype") && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
+			{
+				object csvObject = csvRow["stedtype"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					account.stedtype = (int)csvObject;
+				}
+				else
+				{
+					account.stedtype = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.stedtypeEnum), csvObject.ToString(), true);
 				}
 			}
 
