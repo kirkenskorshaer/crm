@@ -22,7 +22,7 @@ namespace Administration.Conversion
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby", "region" };
+			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby", "region", "stedtype" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
 
 			foreach (string key in keys)
@@ -58,6 +58,11 @@ namespace Administration.Conversion
 			{
 				toAccount.region = (SystemInterfaceAccount.regionEnum)fromAccount.region;
 			}
+
+			if (fromAccount.stedtype.HasValue)
+			{
+				toAccount.stedtype = (SystemInterfaceAccount.stedtypeEnum)fromAccount.stedtype;
+			}
 		}
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, SystemInterfaceAccount fromAccount, DatabaseAccount toAccount)
@@ -68,6 +73,7 @@ namespace Administration.Conversion
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
+				"new_stedtype", "stedtype",
 			};
 
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceAccount), exclusionList);
@@ -104,6 +110,11 @@ namespace Administration.Conversion
 			if (fromAccount.region.HasValue)
 			{
 				toAccount.region = (int)fromAccount.region;
+			}
+
+			if (fromAccount.stedtype.HasValue)
+			{
+				toAccount.stedtype = (int)fromAccount.stedtype;
 			}
 		}
 
@@ -115,6 +126,7 @@ namespace Administration.Conversion
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
+				"new_stedtype", "stedtype",
 			};
 
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(SystemInterfaceAccount), exclusionList);
@@ -151,6 +163,11 @@ namespace Administration.Conversion
 			if (fromAccount.region.HasValue)
 			{
 				toAccount.region = (int)fromAccount.region;
+			}
+
+			if (fromAccount.stedtype.HasValue)
+			{
+				toAccount.stedtype = (int)toAccount.stedtype;
 			}
 		}
 	}
