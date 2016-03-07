@@ -31,6 +31,7 @@ namespace DataLayer.SqlData.Account
 
 		public Guid? bykoordinatorid;
 		public Guid? omraadekoordinatorid;
+		public Guid? primarycontact;
 		public int? kredsellerby;
 
 		private static readonly List<string> _fields = new List<string>()
@@ -54,6 +55,7 @@ namespace DataLayer.SqlData.Account
 
 			"bykoordinatorid",
 			"omraadekoordinatorid",
+			"primarycontact",
 			"kredsellerby",
 		};
 
@@ -87,10 +89,12 @@ namespace DataLayer.SqlData.Account
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "primarycontact", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kredsellerby", Utilities.DataType.INT, SqlBoolean.True);
 
 			CreateKeyIfMissing(sqlConnection, tableName, "bykoordinatorid", typeof(Contact.Contact).Name, "id", false);
 			CreateKeyIfMissing(sqlConnection, tableName, "omraadekoordinatorid", typeof(Contact.Contact).Name, "id", false);
+			CreateKeyIfMissing(sqlConnection, tableName, "primarycontact", typeof(Contact.Contact).Name, "id", false);
 		}
 
 		public void Insert(SqlConnection sqlConnection, MongoConnection mongoConnection = null)
@@ -117,6 +121,7 @@ namespace DataLayer.SqlData.Account
 
 			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(primarycontact, "primarycontact", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(kredsellerby, "kredsellerby", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
@@ -225,6 +230,7 @@ namespace DataLayer.SqlData.Account
 
 			AddUpdateParameter(bykoordinatorid, "bykoordinatorid", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(primarycontact, "primarycontact", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(kredsellerby, "kredsellerby", sqlStringBuilderSets, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
@@ -263,6 +269,7 @@ namespace DataLayer.SqlData.Account
 
 				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
 				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
+				primarycontact = ConvertFromDatabaseValue<Guid?>(row["primarycontact"]),
 				kredsellerby = ConvertFromDatabaseValue<int?>(row["kredsellerby"]),
 			};
 		}
