@@ -209,23 +209,26 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-contacts").Id;
 
-			string filename = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv";
-			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/contacts.csv.tmp";
+			string filename = "C:/Users/Svend/Documents/produktionsimport/Contact.txt";
+			string filenameTmp = "C:/Users/Svend/Documents/produktionsimport/Contact.txt.tmp";
 			char delimeter = '\t';
-			string keyName = "id";
+			string keyName = "new_kkadminmedlemsnr";
 			string dateName = "importDate";
 			string mappingField = "emailaddress1";
 			string[] fields = new string[]
 			{
-				"id",
+				"int:new_kkadminmedlemsnr",
 				"firstname",
+				"middlename",
 				"lastname",
+				"titel",
+				"group",
 				"emailaddress1",
 				"telephone1",
-				"titel",
+				"address1_line1",
+				"address1_postalcode",
+				"address1_city",
 				"importDate",
-				"comment",
-				"bool:new_bykoordinator",
 			};
 
 			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Contact);
@@ -246,7 +249,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureThereAreProgressOnAllContacts();
 
-			for (int contactCount = 0; contactCount < 12; contactCount++)
+			for (int contactCount = 0; contactCount < 102; contactCount++)
 			{
 				synchronizeToCrm.Execute();
 			}
@@ -264,32 +267,31 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-accounts").Id;
 
-			string filename = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv";
-			string filenameTmp = "C:/Users/Svend/Documents/indsamlingssteder/indsamlingssteder.csv.tmp";
+			string filename = "C:/Users/Svend/Documents/produktionsimport/Account.txt";
+			string filenameTmp = "C:/Users/Svend/Documents/produktionsimport/Account.txt.tmp";
 			char delimeter = '\t';
 			string keyName = "new_kkadminmedlemsnr";
 			string dateName = "importDate";
 			string mappingField = "emailaddress1";
 			string[] fields = new string[]
 			{
-				"bool:new_erindsamlingssted",
+				"erindsamlingssted",
+				"name",
 				"int:new_kkadminmedlemsnr",
 				"group",
-				"name",
+				"emailaddress1",
 				"telephone1",
 				"address1_line1",
 				"address1_line2",
 				"address1_postalcode",
 				"address1_city",
-				"BykoordinatorNavn",
-				"bykoordinatoremail",
-				"BykoordinatorTel",
-				"BykoordinatorTitel",
-				"comment",
-				"SubRegion",
-				"importDate",
+				"region",
+				"korshaerslederkkadminmedlemsnr",
+				"bykoordinatorkkadminmedlemsnr",
+				"omraadekoordinatorkkadminmedlemsnr",
+				"genbrugskonsulentkkadminmedlemsnr",
 				"kredsellerby",
-				"error",
+                "importDate",
 			};
 
 			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
@@ -310,7 +312,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MakeSureThereAreProgressOnAllAccounts();
 
-			for (int contactCount = 0; contactCount < 283; contactCount++)
+			for (int contactCount = 0; contactCount < 291; contactCount++)
 			//for (int contactCount = 0; contactCount < 10; contactCount++)
 			{
 				synchronizeToCrm.Execute();
