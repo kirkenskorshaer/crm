@@ -34,6 +34,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public EntityReference new_bykoordinatorid;
 		public EntityReference new_omraadekoordinatorid;
+		public EntityReference primarycontactid;
 		public OptionSetValue new_kredsellerby;
 		public OptionSetValue new_region;
 		public OptionSetValue new_stedtype;
@@ -68,6 +69,7 @@ namespace SystemInterface.Dynamics.Crm
 			"new_kkadminmedlemsnr",
 			"new_bykoordinatorid",
 			"new_omraadekoordinatorid",
+			"primarycontactid",
 			"new_kredsellerby",
 			"new_region",
 			"new_stedtype"
@@ -154,6 +156,28 @@ namespace SystemInterface.Dynamics.Crm
 				}
 
 				new_omraadekoordinatorid = new EntityReference("contact", value.Value);
+			}
+		}
+
+		public Guid? primarycontact
+		{
+			get
+			{
+				if (primarycontactid == null)
+				{
+					return null;
+				}
+
+				return primarycontactid.Id;
+			}
+			set
+			{
+				if (value == null)
+				{
+					primarycontactid = null;
+				}
+
+				primarycontactid = new EntityReference("contact", value.Value);
 			}
 		}
 
@@ -277,6 +301,7 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_bykoordinatorid", new_bykoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinatorid", new_omraadekoordinatorid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("primarycontactid", primarycontactid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kredsellerby", new_kredsellerby));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_region", new_region));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_stedtype", new_stedtype));
