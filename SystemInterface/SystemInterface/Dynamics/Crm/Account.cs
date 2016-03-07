@@ -36,6 +36,7 @@ namespace SystemInterface.Dynamics.Crm
 		public EntityReference new_omraadekoordinatorid;
 		public OptionSetValue new_kredsellerby;
 		public OptionSetValue new_region;
+		public OptionSetValue new_stedtype;
 
 		private string _contactRelationshipName = "new_account_contact";
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
@@ -68,7 +69,8 @@ namespace SystemInterface.Dynamics.Crm
 			"new_bykoordinatorid",
 			"new_omraadekoordinatorid",
 			"new_kredsellerby",
-			"new_region"
+			"new_region",
+			"new_stedtype"
 		);
 
 		private static readonly ColumnSet ColumnSetAccountCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "modifiedby", "address2_addressid", "statecode");
@@ -169,6 +171,16 @@ namespace SystemInterface.Dynamics.Crm
 			midt = 100000003,
 		}
 
+		public enum stedtypeEnum
+		{
+			Kredsarbejde = 100000000,
+			Byarbejde = 100000001,
+			Arbejdssted = 100000002,
+			Herberg = 100000003,
+			Sognegård = 100000004,
+			Andet = 100000005,
+		}
+
 		public kredsellerbyEnum? kredsellerby
 		{
 			get
@@ -213,6 +225,28 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
+		public stedtypeEnum? stedtype
+		{
+			get
+			{
+				if (new_stedtype == null)
+				{
+					return null;
+				}
+
+				return (stedtypeEnum)new_stedtype.Value;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_stedtype = null;
+				}
+
+				new_stedtype = new OptionSetValue((int)value.Value);
+			}
+		}
+
 		public static List<Account> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAccounts = null)
 		{
 			List<Account> accounts = StaticCrm.ReadLatest(connection, "account", ColumnSetAccount, lastSearchDate, (lConnection, entity) => new Account(lConnection, entity), maximumNumberOfAccounts);
@@ -245,6 +279,7 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinatorid", new_omraadekoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kredsellerby", new_kredsellerby));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_region", new_region));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_stedtype", new_stedtype));
 
 			return crmEntity;
 		}
