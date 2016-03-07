@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -222,6 +222,18 @@ namespace Administration.Option.Options.Logic
 			if (csvRow.ContainsKey("omraadekoordinatoremail"))
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
+				accountChange.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["bykoordinatorkkadminmedlemsnr"].ToString());
+				accountChange.bykoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				accountChange.omraadekoordinatorid = contactId;
 			}
 
@@ -311,7 +323,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -327,6 +339,18 @@ namespace Administration.Option.Options.Logic
 			if (csvRow.ContainsKey("omraadekoordinatoremail"))
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
+				account.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["bykoordinatorkkadminmedlemsnr"].ToString());
+				account.bykoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				account.omraadekoordinatorid = contactId;
 			}
 
