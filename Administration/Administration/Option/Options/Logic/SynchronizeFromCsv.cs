@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -235,6 +235,12 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				accountChange.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["primarycontactkkadminmedlemsnr"].ToString());
+				accountChange.primarycontact = contactId;
 			}
 
 			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
@@ -323,7 +329,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -352,6 +358,12 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				account.omraadekoordinatorid = contactId;
+			}
+
+			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr"))
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["primarycontactkkadminmedlemsnr"].ToString());
+				account.primarycontact = contactId;
 			}
 
 			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
