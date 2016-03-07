@@ -22,7 +22,7 @@ namespace Administration.Conversion
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "kredsellerby", "region", "stedtype" };
+			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "primarycontact", "kredsellerby", "region", "stedtype" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
 
 			foreach (string key in keys)
@@ -49,6 +49,15 @@ namespace Administration.Conversion
 				}
 			}
 
+			if (fromAccount.primarycontact.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.primarycontact.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.primarycontact = externalContacts.First().ExternalContactId;
+				}
+			}
+
 			if (fromAccount.kredsellerby.HasValue)
 			{
 				toAccount.kredsellerby = (SystemInterfaceAccount.kredsellerbyEnum)fromAccount.kredsellerby;
@@ -71,6 +80,7 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
+				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
 				"new_stedtype", "stedtype",
@@ -99,6 +109,15 @@ namespace Administration.Conversion
 				if (externalContacts.Any())
 				{
 					toAccount.omraadekoordinatorid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.primarycontact.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.primarycontact.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.primarycontact = externalContacts.First().ContactId;
 				}
 			}
 
@@ -124,6 +143,7 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
+				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
 				"new_stedtype", "stedtype",
@@ -152,6 +172,15 @@ namespace Administration.Conversion
 				if (externalContacts.Any())
 				{
 					toAccount.omraadekoordinatorid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.primarycontact.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.primarycontact.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.primarycontact = externalContacts.First().ContactId;
 				}
 			}
 
