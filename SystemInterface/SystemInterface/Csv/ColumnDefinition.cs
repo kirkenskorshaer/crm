@@ -11,6 +11,22 @@ namespace SystemInterface.Csv
 		public DataTypeEnum DataType { get; private set; }
 		public string Name { get; private set; }
 
+		public string DefinedName
+		{
+			get
+			{
+				switch (DataType)
+				{
+					case DataTypeEnum.boolType:
+						return "bool:" + Name;
+					case DataTypeEnum.intType:
+						return "int:" + Name;
+					default:
+						return Name;
+				}
+			}
+		}
+
 		private static string[] positive = new string[] { "1", "true", "ja", "ok", "x" };
 
 		public enum DataTypeEnum
@@ -57,18 +73,7 @@ namespace SystemInterface.Csv
 
 		public static string[] ToDefinitionString(ColumnDefinition[] fields)
 		{
-			return fields.Select(field =>
-			{
-				switch (field.DataType)
-				{
-					case DataTypeEnum.boolType:
-						return "bool:" + field.Name;
-					case DataTypeEnum.intType:
-						return "int:" + field.Name;
-					default:
-						return field.Name;
-				}
-			}).ToArray();
+			return fields.Select(field => field.DefinedName).ToArray();
 		}
 
 		public object GetValue(string[] parts, int columnIndex)
