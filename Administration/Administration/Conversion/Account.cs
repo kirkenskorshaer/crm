@@ -22,7 +22,7 @@ namespace Administration.Conversion
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "primarycontact", "kredsellerby", "region", "stedtype" };
+			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "primarycontact", "kredsellerby", "region", "stedtype", "erindsamlingssted" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
 
 			foreach (string key in keys)
@@ -68,6 +68,11 @@ namespace Administration.Conversion
 				toAccount.region = (SystemInterfaceAccount.regionEnum)fromAccount.region;
 			}
 
+			if (fromAccount.erindsamlingssted.HasValue)
+			{
+				toAccount.erindsamlingssted = (SystemInterfaceAccount.erindsamlingsstedEnum)fromAccount.erindsamlingssted;
+			}
+
 			if (fromAccount.stedtype.HasValue)
 			{
 				toAccount.stedtype = (SystemInterfaceAccount.stedtypeEnum)fromAccount.stedtype;
@@ -83,6 +88,7 @@ namespace Administration.Conversion
 				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
+				"new_erindsamlingssted", "erindsamlingssted",
 				"new_stedtype", "stedtype",
 			};
 
@@ -129,6 +135,11 @@ namespace Administration.Conversion
 			if (fromAccount.region.HasValue)
 			{
 				toAccount.region = (int)fromAccount.region;
+			}
+
+			if (fromAccount.erindsamlingssted.HasValue)
+			{
+				toAccount.erindsamlingssted = (int)fromAccount.erindsamlingssted;
 			}
 
 			if (fromAccount.stedtype.HasValue)
@@ -146,6 +157,7 @@ namespace Administration.Conversion
 				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
+				"new_erindsamlingssted", "erindsamlingssted",
 				"new_stedtype", "stedtype",
 			};
 
@@ -192,6 +204,11 @@ namespace Administration.Conversion
 			if (fromAccount.region.HasValue)
 			{
 				toAccount.region = (int)fromAccount.region;
+			}
+
+			if (fromAccount.erindsamlingssted.HasValue)
+			{
+				toAccount.erindsamlingssted = (int)fromAccount.erindsamlingssted;
 			}
 
 			if (fromAccount.stedtype.HasValue)

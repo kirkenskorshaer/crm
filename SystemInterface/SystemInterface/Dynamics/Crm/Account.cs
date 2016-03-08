@@ -29,7 +29,7 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime createdon { get; private set; }
 		public DateTime modifiedon { get; private set; }
 
-		public bool new_erindsamlingssted;
+		public OptionSetValue new_erindsamlingssted;
 		public int new_kkadminmedlemsnr;
 
 		public EntityReference new_bykoordinatorid;
@@ -205,6 +205,13 @@ namespace SystemInterface.Dynamics.Crm
 			Andet = 100000005,
 		}
 
+		public enum erindsamlingsstedEnum
+		{
+			Ja = 100000000,
+			Nej = 100000001,
+			Ubesvaret = 100000002,
+		}
+
 		public kredsellerbyEnum? kredsellerby
 		{
 			get
@@ -246,6 +253,28 @@ namespace SystemInterface.Dynamics.Crm
 				}
 
 				new_region = new OptionSetValue((int)value.Value);
+			}
+		}
+
+		public erindsamlingsstedEnum? erindsamlingssted
+		{
+			get
+			{
+				if (new_erindsamlingssted == null)
+				{
+					return null;
+				}
+
+				return (erindsamlingsstedEnum)new_erindsamlingssted.Value;
+			}
+			set
+			{
+				if (value == null)
+				{
+					new_erindsamlingssted = null;
+				}
+
+				new_erindsamlingssted = new OptionSetValue((int)value.Value);
 			}
 		}
 

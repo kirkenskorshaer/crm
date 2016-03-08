@@ -24,7 +24,7 @@ namespace DataLayer.SqlData.Account
 		public string emailaddress1;
 		public string telephone1;
 
-		public bool new_erindsamlingssted;
+		public int? erindsamlingssted;
 		public int new_kkadminmedlemsnr;
 		public int? region;
 		public int? stedtype;
@@ -48,7 +48,7 @@ namespace DataLayer.SqlData.Account
 			"emailaddress1",
 			"telephone1",
 
-			"new_erindsamlingssted",
+			"erindsamlingssted",
 			"new_kkadminmedlemsnr",
 			"region",
 			"stedtype",
@@ -82,7 +82,7 @@ namespace DataLayer.SqlData.Account
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_erindsamlingssted", Utilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "erindsamlingssted", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "region", Utilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "stedtype", Utilities.DataType.INT, SqlBoolean.True);
@@ -114,7 +114,7 @@ namespace DataLayer.SqlData.Account
 			AddInsertParameterIfNotNull(emailaddress1, "emailaddress1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
-			AddInsertParameterIfNotNull(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(erindsamlingssted, "erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(region, "region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(stedtype, "stedtype", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -223,7 +223,7 @@ namespace DataLayer.SqlData.Account
 			AddUpdateParameter(emailaddress1, "emailaddress1", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(telephone1, "telephone1", sqlStringBuilderSets, parameters);
 
-			AddUpdateParameter(new_erindsamlingssted, "new_erindsamlingssted", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(erindsamlingssted, "erindsamlingssted", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(region, "region", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(stedtype, "stedtype", sqlStringBuilderSets, parameters);
@@ -262,7 +262,7 @@ namespace DataLayer.SqlData.Account
 				emailaddress1 = ConvertFromDatabaseValue<string>(row["emailaddress1"]),
 				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
 
-				new_erindsamlingssted = ConvertFromDatabaseValue<bool>(row["new_erindsamlingssted"]),
+				erindsamlingssted = ConvertFromDatabaseValue<int?>(row["erindsamlingssted"]),
 				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
 				region = ConvertFromDatabaseValue<int?>(row["region"]),
 				stedtype = ConvertFromDatabaseValue<int?>(row["stedtype"]),

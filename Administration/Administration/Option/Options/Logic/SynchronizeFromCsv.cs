@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted" });
 
 			foreach (string key in keys)
 			{
@@ -266,6 +266,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					accountChange.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("erindsamlingssted") && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
+			{
+				object csvObject = csvRow["erindsamlingssted"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					accountChange.erindsamlingssted = (int)csvObject;
+				}
+				else
+				{
+					accountChange.erindsamlingssted = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.erindsamlingsstedEnum), csvObject.ToString(), true);
 				}
 			}
 
@@ -329,7 +342,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted" });
 
 			foreach (string key in keys)
 			{
@@ -389,6 +402,19 @@ namespace Administration.Option.Options.Logic
 				else
 				{
 					account.region = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.regionEnum), csvObject.ToString(), true);
+				}
+			}
+
+			if (csvRow.ContainsKey("erindsamlingssted") && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
+			{
+				object csvObject = csvRow["erindsamlingssted"];
+				if (csvObject.GetType() == typeof(int))
+				{
+					account.erindsamlingssted = (int)csvObject;
+				}
+				else
+				{
+					account.erindsamlingssted = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.erindsamlingsstedEnum), csvObject.ToString(), true);
 				}
 			}
 
