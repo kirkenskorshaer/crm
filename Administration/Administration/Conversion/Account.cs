@@ -22,7 +22,7 @@ namespace Administration.Conversion
 
 		public static void Convert(SqlConnection sqlConnection, Guid changeProviderId, DatabaseAccount fromAccount, SystemInterfaceAccount toAccount)
 		{
-			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "primarycontact", "kredsellerby", "region", "stedtype", "erindsamlingssted" };
+			List<string> exclusionList = new List<string>() { "Id", "bykoordinatorid", "omraadekoordinatorid", "korshaerslederid", "genbrugskonsulentid", "primarycontact", "kredsellerby", "region", "stedtype", "erindsamlingssted" };
 			List<string> keys = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccount), exclusionList);
 
 			foreach (string key in keys)
@@ -46,6 +46,24 @@ namespace Administration.Conversion
 				if (externalContacts.Any())
 				{
 					toAccount.omraadekoordinatorid = externalContacts.First().ExternalContactId;
+				}
+			}
+
+			if (fromAccount.korshaerslederid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.korshaerslederid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.korshaerslederid = externalContacts.First().ExternalContactId;
+				}
+			}
+
+			if (fromAccount.genbrugskonsulentid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.genbrugskonsulentid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.genbrugskonsulentid = externalContacts.First().ExternalContactId;
 				}
 			}
 
@@ -85,6 +103,8 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
+				"new_korshaerslederid", "korshaerslederid",
+				"new_genbrugskonsulentid", "genbrugskonsulentid",
 				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
@@ -115,6 +135,24 @@ namespace Administration.Conversion
 				if (externalContacts.Any())
 				{
 					toAccount.omraadekoordinatorid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.korshaerslederid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.korshaerslederid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.korshaerslederid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.genbrugskonsulentid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.genbrugskonsulentid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.genbrugskonsulentid = externalContacts.First().ContactId;
 				}
 			}
 
@@ -154,6 +192,8 @@ namespace Administration.Conversion
 				"Id",
 				"new_bykoordinatorid", "bykoordinatorid",
 				"new_omraadekoordinatorid", "omraadekoordinatorid",
+				"new_korshaerslederid", "korshaerslederid",
+				"new_genbrugskonsulentid", "genbrugskonsulentid",
 				"primarycontactid", "primarycontact",
 				"new_kredsellerby", "kredsellerby",
 				"new_region", "region",
@@ -184,6 +224,24 @@ namespace Administration.Conversion
 				if (externalContacts.Any())
 				{
 					toAccount.omraadekoordinatorid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.korshaerslederid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.korshaerslederid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.korshaerslederid = externalContacts.First().ContactId;
+				}
+			}
+
+			if (fromAccount.genbrugskonsulentid.HasValue)
+			{
+				List<DatabaseExternalContact> externalContacts = DatabaseExternalContact.ReadFromChangeProviderAndContact(sqlConnection, changeProviderId, fromAccount.genbrugskonsulentid.Value);
+				if (externalContacts.Any())
+				{
+					toAccount.genbrugskonsulentid = externalContacts.First().ContactId;
 				}
 			}
 
