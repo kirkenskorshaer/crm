@@ -31,6 +31,8 @@ namespace DataLayer.SqlData.Account
 
 		public Guid? bykoordinatorid;
 		public Guid? omraadekoordinatorid;
+		public Guid? korshaerslederid;
+		public Guid? genbrugskonsulentid;
 		public Guid? primarycontact;
 		public int? kredsellerby;
 
@@ -55,6 +57,8 @@ namespace DataLayer.SqlData.Account
 
 			"bykoordinatorid",
 			"omraadekoordinatorid",
+			"korshaerslederid",
+			"genbrugskonsulentid",
 			"primarycontact",
 			"kredsellerby",
 		};
@@ -89,11 +93,15 @@ namespace DataLayer.SqlData.Account
 
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "korshaerslederid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "genbrugskonsulentid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "primarycontact", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kredsellerby", Utilities.DataType.INT, SqlBoolean.True);
 
 			CreateKeyIfMissing(sqlConnection, tableName, "bykoordinatorid", typeof(Contact.Contact).Name, "id", false);
 			CreateKeyIfMissing(sqlConnection, tableName, "omraadekoordinatorid", typeof(Contact.Contact).Name, "id", false);
+			CreateKeyIfMissing(sqlConnection, tableName, "korshaerslederid", typeof(Contact.Contact).Name, "id", false);
+			CreateKeyIfMissing(sqlConnection, tableName, "genbrugskonsulentid", typeof(Contact.Contact).Name, "id", false);
 			CreateKeyIfMissing(sqlConnection, tableName, "primarycontact", typeof(Contact.Contact).Name, "id", false);
 		}
 
@@ -121,6 +129,8 @@ namespace DataLayer.SqlData.Account
 
 			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(korshaerslederid, "korshaerslederid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			AddInsertParameterIfNotNull(genbrugskonsulentid, "genbrugskonsulentid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(primarycontact, "primarycontact", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(kredsellerby, "kredsellerby", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
@@ -230,6 +240,8 @@ namespace DataLayer.SqlData.Account
 
 			AddUpdateParameter(bykoordinatorid, "bykoordinatorid", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(korshaerslederid, "korshaerslederid", sqlStringBuilderSets, parameters);
+			AddUpdateParameter(genbrugskonsulentid, "genbrugskonsulentid", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(primarycontact, "primarycontact", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(kredsellerby, "kredsellerby", sqlStringBuilderSets, parameters);
 
@@ -269,6 +281,8 @@ namespace DataLayer.SqlData.Account
 
 				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
 				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
+				korshaerslederid = ConvertFromDatabaseValue<Guid?>(row["korshaerslederid"]),
+				genbrugskonsulentid = ConvertFromDatabaseValue<Guid?>(row["genbrugskonsulentid"]),
 				primarycontact = ConvertFromDatabaseValue<Guid?>(row["primarycontact"]),
 				kredsellerby = ConvertFromDatabaseValue<int?>(row["kredsellerby"]),
 			};
