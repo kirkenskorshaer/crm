@@ -191,7 +191,7 @@ namespace Administration.Option.Options.Logic
 
 			contactChange.Insert();
 
-			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			if (csvRow.Keys.Contains("group") && csvRow["group"] != null && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
 			{
 				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
 				ContactChangeGroup contactChangeGroup = new ContactChangeGroup(contactChange.Id, group.Id);
@@ -213,49 +213,49 @@ namespace Administration.Option.Options.Logic
 				Utilities.ReflectionHelper.SetValue(accountChange, key, csvRow[key]);
 			}
 
-			if (csvRow.ContainsKey("bykoordinatoremail"))
+			if (csvRow.ContainsKey("bykoordinatoremail") && csvRow["bykoordinatoremail"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["bykoordinatoremail"].ToString());
 				accountChange.bykoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("omraadekoordinatoremail"))
+			if (csvRow.ContainsKey("omraadekoordinatoremail") && csvRow["omraadekoordinatoremail"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
 				accountChange.omraadekoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr") && csvRow["bykoordinatorkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["bykoordinatorkkadminmedlemsnr"].ToString());
 				accountChange.bykoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr") && csvRow["omraadekoordinatorkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				accountChange.omraadekoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr") && csvRow["primarycontactkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["primarycontactkkadminmedlemsnr"].ToString());
 				accountChange.primarycontact = contactId;
 			}
 
-			if (csvRow.ContainsKey("korshaerslederkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("korshaerslederkkadminmedlemsnr") && csvRow["korshaerslederkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["korshaerslederkkadminmedlemsnr"].ToString());
 				accountChange.korshaerslederid = contactId;
 			}
 
-			if (csvRow.ContainsKey("genbrugskonsulentkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("genbrugskonsulentkkadminmedlemsnr") && csvRow["genbrugskonsulentkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["genbrugskonsulentkkadminmedlemsnr"].ToString());
 				accountChange.genbrugskonsulentid = contactId;
 			}
 
-			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
+			if (csvRow.ContainsKey("kredsellerby") && csvRow["kredsellerby"] != null && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
 			{
 				object csvObject = csvRow["kredsellerby"];
 				if (csvObject.GetType() == typeof(int))
@@ -268,7 +268,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("region") && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
+			if (csvRow.ContainsKey("region") && csvRow["region"] != null && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
 			{
 				object csvObject = csvRow["region"];
 				if (csvObject.GetType() == typeof(int))
@@ -281,7 +281,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("erindsamlingssted") && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
+			if (csvRow.ContainsKey("erindsamlingssted") && csvRow["erindsamlingssted"] != null && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
 			{
 				object csvObject = csvRow["erindsamlingssted"];
 				if (csvObject.GetType() == typeof(int))
@@ -294,7 +294,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("stedtype") && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
+			if (csvRow.ContainsKey("stedtype") && csvRow["stedtype"] != null && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
 			{
 				object csvObject = csvRow["stedtype"];
 				if (csvObject.GetType() == typeof(int))
@@ -334,7 +334,7 @@ namespace Administration.Option.Options.Logic
 
 			contact.Insert(SqlConnection);
 
-			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			if (csvRow.Keys.Contains("group") && csvRow["group"] != null && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
 			{
 				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
 				ContactGroup contactGroup = new ContactGroup(contact.Id, group.Id);
@@ -361,49 +361,49 @@ namespace Administration.Option.Options.Logic
 				Utilities.ReflectionHelper.SetValue(account, key, csvRow[key]);
 			}
 
-			if (csvRow.ContainsKey("bykoordinatoremail"))
+			if (csvRow.ContainsKey("bykoordinatoremail") && csvRow["bykoordinatoremail"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["bykoordinatoremail"].ToString());
 				account.bykoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("omraadekoordinatoremail"))
+			if (csvRow.ContainsKey("omraadekoordinatoremail") && csvRow["omraadekoordinatoremail"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "emailaddress1", csvRow["omraadekoordinatoremail"].ToString());
 				account.omraadekoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("bykoordinatorkkadminmedlemsnr") && csvRow["bykoordinatorkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["bykoordinatorkkadminmedlemsnr"].ToString());
 				account.bykoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("omraadekoordinatorkkadminmedlemsnr") && csvRow["omraadekoordinatorkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["omraadekoordinatorkkadminmedlemsnr"].ToString());
 				account.omraadekoordinatorid = contactId;
 			}
 
-			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("primarycontactkkadminmedlemsnr") && csvRow["primarycontactkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["primarycontactkkadminmedlemsnr"].ToString());
 				account.primarycontact = contactId;
 			}
 
-			if (csvRow.ContainsKey("korshaerslederkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("korshaerslederkkadminmedlemsnr") && csvRow["korshaerslederkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["korshaerslederkkadminmedlemsnr"].ToString());
 				account.korshaerslederid = contactId;
 			}
 
-			if (csvRow.ContainsKey("genbrugskonsulentkkadminmedlemsnr"))
+			if (csvRow.ContainsKey("genbrugskonsulentkkadminmedlemsnr") && csvRow["genbrugskonsulentkkadminmedlemsnr"] != null)
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["genbrugskonsulentkkadminmedlemsnr"].ToString());
 				account.genbrugskonsulentid = contactId;
 			}
 
-			if (csvRow.ContainsKey("kredsellerby") && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
+			if (csvRow.ContainsKey("kredsellerby") && csvRow["kredsellerby"] != null && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
 			{
 				object csvObject = csvRow["kredsellerby"];
 				if (csvObject.GetType() == typeof(int))
@@ -416,7 +416,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("region") && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
+			if (csvRow.ContainsKey("region") && csvRow["region"] != null && string.IsNullOrWhiteSpace(csvRow["region"].ToString()) == false)
 			{
 				object csvObject = csvRow["region"];
 				if (csvObject.GetType() == typeof(int))
@@ -429,7 +429,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("erindsamlingssted") && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
+			if (csvRow.ContainsKey("erindsamlingssted") && csvRow["erindsamlingssted"] != null && string.IsNullOrWhiteSpace(csvRow["erindsamlingssted"].ToString()) == false)
 			{
 				object csvObject = csvRow["erindsamlingssted"];
 				if (csvObject.GetType() == typeof(int))
@@ -442,7 +442,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			if (csvRow.ContainsKey("stedtype") && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
+			if (csvRow.ContainsKey("stedtype") && csvRow["stedtype"] != null && string.IsNullOrWhiteSpace(csvRow["stedtype"].ToString()) == false)
 			{
 				object csvObject = csvRow["stedtype"];
 				if (csvObject.GetType() == typeof(int))

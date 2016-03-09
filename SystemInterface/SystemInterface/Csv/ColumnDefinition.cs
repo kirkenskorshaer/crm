@@ -81,7 +81,12 @@ namespace SystemInterface.Csv
 			switch (DataType)
 			{
 				case DataTypeEnum.stringType:
-					return parts[columnIndex];
+					string value = parts[columnIndex];
+					if (string.IsNullOrWhiteSpace(value))
+					{
+						return null;
+					}
+					return value;
 				case DataTypeEnum.boolType:
 					return positive.Contains(parts[columnIndex].ToLower());
 				case DataTypeEnum.intType:
