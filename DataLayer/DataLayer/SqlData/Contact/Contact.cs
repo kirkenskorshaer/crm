@@ -41,7 +41,7 @@ namespace DataLayer.SqlData.Contact
 		public bool new_bykoordinator;
 		public bool new_omraadekoordinator;
 		public bool new_korshaersleder;
-		public int new_kkadminmedlemsnr;
+		public int? new_kkadminmedlemsnr;
 
 		private static readonly List<string> _fields = new List<string>()
 		{
@@ -330,7 +330,7 @@ namespace DataLayer.SqlData.Contact
 				new_bykoordinator = ConvertFromDatabaseValue<bool>(row["new_bykoordinator"]),
 				new_omraadekoordinator = ConvertFromDatabaseValue<bool>(row["new_omraadekoordinator"]),
 				new_korshaersleder = ConvertFromDatabaseValue<bool>(row["new_korshaersleder"]),
-				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
+				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int?>(row["new_kkadminmedlemsnr"]),
 			};
 		}
 
