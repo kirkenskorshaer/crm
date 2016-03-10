@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Csv\ColumnDefinition.cs" />
     <Compile Include="Csv\Csv.cs" />
+    <Compile Include="DnsHelper.cs" />
     <Compile Include="DsiNext\Contact.cs" />
     <Compile Include="DsiNext\Group.cs" />
     <Compile Include="Dynamics\Crm\AbstractCrm.cs" />
