@@ -37,6 +37,7 @@ namespace Administration.Option.Finder
 			options.AddRange(SynchronizeFromCrm.Find(_connection));
 			options.AddRange(SynchronizeFromCsv.Find(_connection));
 			options.AddRange(SynchronizeToCrm.Find(_connection));
+			options.AddRange(AdjustDns.Find(_connection));
 
 			options.AddRange(MaintainAllTables.Find(_connection));
 
