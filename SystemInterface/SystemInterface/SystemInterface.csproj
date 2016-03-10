@@ -144,18 +144,29 @@
     <None Include="DsiNext\wsdl\KbhKKAdminServiceXsd2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="DsiNext\wsdl\KKAdminServiceWsdl.wsdl" />
+    <None Include="DsiNext\wsdl\KKAdminServiceWsdl0.wsdl" />
+    <None Include="DsiNext\wsdl\KKAdminServiceXsd0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DsiNext\wsdl\KKAdminServiceXsd1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DsiNext\wsdl\KKAdminServiceXsd2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
-    <None Include="Service References\KKAdminService\KbhKKAdminServiceWsdl0.wsdl" />
-    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd0.xsd">
+    <None Include="Service References\KKAdminService\KKAdminService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd1.xsd">
+    <None Include="Service References\KKAdminService\KKAdminService1.wsdl" />
+    <None Include="Service References\KKAdminService\KKAdminService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\KKAdminService\KbhKKAdminServiceXsd2.xsd">
+    <None Include="Service References\KKAdminService\KKAdminService11.wsdl" />
+    <None Include="Service References\KKAdminService\KKAdminService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\KKAdminService\KKAdminService.wsdl" />
     <None Include="Service References\KKAdminService\SystemInterface.KKAdminService.Stamdata.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -183,6 +194,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\KKAdminService\KKAdminService.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

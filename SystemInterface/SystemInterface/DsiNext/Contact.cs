@@ -44,7 +44,7 @@ namespace SystemInterface.DsiNext
 		public static List<Contact> Read(DateTime lastChange, int pageNumber, int pageSize)
 		{
 			KKAdminService.KKAdminServiceClient client = new KKAdminService.KKAdminServiceClient();
-			KKAdminService.Stamdata[] stamDataArray = client.GetSomeStamdataByDateWithPaging(lastChange, pageNumber, pageSize);
+			KKAdminService.Stamdata[] stamDataArray = client.GetSomeStamdataByDateWithPaging("", lastChange, pageNumber, pageSize);
 
 			List<Contact> contacts = stamDataArray.Select(ToContact).ToList();
 

@@ -524,13 +524,19 @@ namespace SystemInterface.KKAdminService {
         [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/GetVersion", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/GetVersionResponse")]
         System.Threading.Tasks.Task<string> GetVersionAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPaging", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPagingResp" +
-            "onse")]
-        SystemInterface.KKAdminService.Stamdata[] GetSomeStamdataByDateWithPaging(System.DateTime lastChange, int pageNumber, int pageSize);
+        [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/Authenticate", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/AuthenticateResponse")]
+        string Authenticate(string userName, System.DateTime timestamp, string token);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/Authenticate", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/AuthenticateResponse")]
+        System.Threading.Tasks.Task<string> AuthenticateAsync(string userName, System.DateTime timestamp, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPaging", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPagingResp" +
             "onse")]
-        System.Threading.Tasks.Task<SystemInterface.KKAdminService.Stamdata[]> GetSomeStamdataByDateWithPagingAsync(System.DateTime lastChange, int pageNumber, int pageSize);
+        SystemInterface.KKAdminService.Stamdata[] GetSomeStamdataByDateWithPaging(string token, System.DateTime lastChange, int pageNumber, int pageSize);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPaging", ReplyAction="http://www.kirkenskorshaer.dk/IKKAdminService/GetSomeStamdataByDateWithPagingResp" +
+            "onse")]
+        System.Threading.Tasks.Task<SystemInterface.KKAdminService.Stamdata[]> GetSomeStamdataByDateWithPagingAsync(string token, System.DateTime lastChange, int pageNumber, int pageSize);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -568,12 +574,20 @@ namespace SystemInterface.KKAdminService {
             return base.Channel.GetVersionAsync();
         }
         
-        public SystemInterface.KKAdminService.Stamdata[] GetSomeStamdataByDateWithPaging(System.DateTime lastChange, int pageNumber, int pageSize) {
-            return base.Channel.GetSomeStamdataByDateWithPaging(lastChange, pageNumber, pageSize);
+        public string Authenticate(string userName, System.DateTime timestamp, string token) {
+            return base.Channel.Authenticate(userName, timestamp, token);
         }
         
-        public System.Threading.Tasks.Task<SystemInterface.KKAdminService.Stamdata[]> GetSomeStamdataByDateWithPagingAsync(System.DateTime lastChange, int pageNumber, int pageSize) {
-            return base.Channel.GetSomeStamdataByDateWithPagingAsync(lastChange, pageNumber, pageSize);
+        public System.Threading.Tasks.Task<string> AuthenticateAsync(string userName, System.DateTime timestamp, string token) {
+            return base.Channel.AuthenticateAsync(userName, timestamp, token);
+        }
+        
+        public SystemInterface.KKAdminService.Stamdata[] GetSomeStamdataByDateWithPaging(string token, System.DateTime lastChange, int pageNumber, int pageSize) {
+            return base.Channel.GetSomeStamdataByDateWithPaging(token, lastChange, pageNumber, pageSize);
+        }
+        
+        public System.Threading.Tasks.Task<SystemInterface.KKAdminService.Stamdata[]> GetSomeStamdataByDateWithPagingAsync(string token, System.DateTime lastChange, int pageNumber, int pageSize) {
+            return base.Channel.GetSomeStamdataByDateWithPagingAsync(token, lastChange, pageNumber, pageSize);
         }
     }
 }

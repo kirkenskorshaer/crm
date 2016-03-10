@@ -19,14 +19,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="C:\Users\Svend\Documents\GitHub\crm\SystemInterface\SystemInterface\DsiNext\wsdl\KbhKKAdminServiceWsdl.wsdl" Protocol="file" SourceId="1" />
+    <MetadataSource Address="https://185.66.184.58/kkadminservice.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="KKAdminService.wsdl" MetadataType="Wsdl" ID="130e2123-a9e7-449d-a3c6-ab55b8d02128" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceWsdl.wsdl" />
-    <MetadataFile FileName="KbhKKAdminServiceWsdl0.wsdl" MetadataType="Wsdl" ID="9af7582b-6dee-42e8-916a-1be776c77d61" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceWsdl0.wsdl" />
-    <MetadataFile FileName="KbhKKAdminServiceXsd2.xsd" MetadataType="Schema" ID="52e63803-414a-476e-92da-a3df69e40c82" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd2.xsd" />
-    <MetadataFile FileName="KbhKKAdminServiceXsd1.xsd" MetadataType="Schema" ID="4b1a662b-693e-4cfe-867a-d109e119f292" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd1.xsd" />
-    <MetadataFile FileName="KbhKKAdminServiceXsd0.xsd" MetadataType="Schema" ID="222f5f8a-2032-40ba-be9b-df6cb0518de3" SourceId="1" SourceUrl="file:///C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/DsiNext/wsdl/KbhKKAdminServiceXsd0.xsd" />
+    <MetadataFile FileName="KKAdminService.xsd" MetadataType="Schema" ID="13e644f3-1adf-4cd1-b25c-fd6cb90c38ec" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?xsd=xsd2" />
+    <MetadataFile FileName="KKAdminService1.xsd" MetadataType="Schema" ID="757e7c2f-704a-4627-939a-2cfcecec3fc2" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?xsd=xsd0" />
+    <MetadataFile FileName="KKAdminService2.xsd" MetadataType="Schema" ID="9a1a25f9-93cc-4c3e-a59b-16e5145a38b7" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?xsd=xsd1" />
+    <MetadataFile FileName="KKAdminService1.wsdl" MetadataType="Wsdl" ID="9fc63637-cc9e-4ce3-8198-c2eddfc01c74" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?wsdl" />
+    <MetadataFile FileName="KKAdminService.disco" MetadataType="Disco" ID="3867b3aa-cd67-47a3-bc02-e2cf2d0a0e25" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?disco" />
+    <MetadataFile FileName="KKAdminService11.wsdl" MetadataType="Wsdl" ID="ab79329c-1ed9-4edd-a421-cb6961e77b8a" SourceId="1" SourceUrl="https://185.66.184.58/KKAdminService.svc?wsdl=wsdl0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
