@@ -11,6 +11,7 @@ namespace DataLayer.MongoData
 		public string Url { get; set; }
 		public string Username { get; set; }
 		public string Password { get; set; }
+		public string CertificateThumbprint { get; set; }
 
 		public static UrlLogin GetFirst(MongoConnection connection)
 		{
