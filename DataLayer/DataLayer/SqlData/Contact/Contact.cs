@@ -38,9 +38,6 @@ namespace DataLayer.SqlData.Contact
 		public string titel;
 		public bool hargavebrev;
 		public bool kkadminstatus;
-		public bool new_bykoordinator;
-		public bool new_omraadekoordinator;
-		public bool new_korshaersleder;
 		public int? new_kkadminmedlemsnr;
 
 		private static readonly List<string> _fields = new List<string>()
@@ -67,9 +64,6 @@ namespace DataLayer.SqlData.Contact
 			"titel",
 			"hargavebrev",
 			"kkadminstatus",
-			"new_bykoordinator",
-			"new_omraadekoordinator",
-			"new_korshaersleder",
 			"new_kkadminmedlemsnr",
 		};
 
@@ -106,9 +100,6 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", Utilities.DataType.BIT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_bykoordinator", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_omraadekoordinator", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_korshaersleder", Utilities.DataType.BIT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
 		}
 
@@ -140,9 +131,6 @@ namespace DataLayer.SqlData.Contact
 			AddInsertParameterIfNotNull(titel, "titel", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(hargavebrev, "hargavebrev", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(kkadminstatus, "kkadminstatus", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_bykoordinator, "new_bykoordinator", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_omraadekoordinator, "new_omraadekoordinator", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_korshaersleder, "new_korshaersleder", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
@@ -282,9 +270,6 @@ namespace DataLayer.SqlData.Contact
 			AddUpdateParameter(titel, "titel", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(hargavebrev, "hargavebrev", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(kkadminstatus, "kkadminstatus", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_bykoordinator, "new_bykoordinator", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_omraadekoordinator, "new_omraadekoordinator", sqlStringBuilderSets, parameters);
-			AddUpdateParameter(new_korshaersleder, "new_korshaersleder", sqlStringBuilderSets, parameters);
 			AddUpdateParameter(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderSets, parameters);
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
@@ -327,9 +312,6 @@ namespace DataLayer.SqlData.Contact
 				titel = ConvertFromDatabaseValue<string>(row["titel"]),
 				hargavebrev = ConvertFromDatabaseValue<bool>(row["hargavebrev"]),
 				kkadminstatus = ConvertFromDatabaseValue<bool>(row["kkadminstatus"]),
-				new_bykoordinator = ConvertFromDatabaseValue<bool>(row["new_bykoordinator"]),
-				new_omraadekoordinator = ConvertFromDatabaseValue<bool>(row["new_omraadekoordinator"]),
-				new_korshaersleder = ConvertFromDatabaseValue<bool>(row["new_korshaersleder"]),
 				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int?>(row["new_kkadminmedlemsnr"]),
 			};
 		}

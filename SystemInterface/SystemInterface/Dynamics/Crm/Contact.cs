@@ -41,9 +41,6 @@ namespace SystemInterface.Dynamics.Crm
 		public string new_titel;
 		public bool new_hargavebrev;
 		public bool new_kkadminstatus;
-		public bool new_bykoordinator;
-		public bool new_omraadekoordinator;
-		public bool new_korshaersleder;
 
 		public string notat;
 
@@ -74,9 +71,6 @@ namespace SystemInterface.Dynamics.Crm
 			"new_titel",
 			"new_hargavebrev",
 			"new_kkadminstatus",
-			"new_bykoordinator",
-			"new_omraadekoordinator",
-			"new_korshaersleder",
 
 			"address1_addressid",
 			"address2_addressid",
@@ -146,9 +140,6 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminsoegenavn", new_kkadminsoegenavn));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_titel", new_titel));
-			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_bykoordinator", new_bykoordinator));
-			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinator", new_omraadekoordinator));
-			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_korshaersleder", new_korshaersleder));
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line1", address1_line1));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line2", address1_line2));
