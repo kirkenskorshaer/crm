@@ -16,6 +16,9 @@
       <SubArea Entity="new_group" Id="Group" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
+      <SubArea Entity="new_byarbejde" Id="ByArbejde" Title="ByArbejde" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
     </Group>
     <Group Id="Email" Description="Email" Title="Email" IsProfile="false">
       <SubArea Entity="template" Id="Template" AvailableOffline="false" PassParams="false">
