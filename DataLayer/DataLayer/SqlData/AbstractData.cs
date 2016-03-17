@@ -10,10 +10,12 @@ namespace DataLayer.SqlData
 	public abstract class AbstractData
 	{
 		protected string TableName { get; set; }
+		protected List<SqlColumnInfo> _sqlColumnsInfo;
 
 		public AbstractData()
 		{
 			TableName = GetType().Name;
+			_sqlColumnsInfo = Utilities.GetSqlColumnsInfo(GetType());
 		}
 
 		internal static void CreateIfMissing(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, string name, Utilities.DataType type, SqlBoolean allowNull)
