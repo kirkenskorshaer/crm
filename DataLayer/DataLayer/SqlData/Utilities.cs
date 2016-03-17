@@ -367,6 +367,23 @@ namespace DataLayer.SqlData
 			return relatedIds;
 		}
 
+		public static List<SqlColumnInfo> GetSqlColumnsInfo(Type holderType)
+		{
+			List<SqlColumnInfo> dataColumns = new List<SqlColumnInfo>();
+
+			IEnumerable<FieldInfo> fieldsInfo = holderType.GetFields(BindingFlags.Public | BindingFlags.Instance).
+				Where(field => field.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(SqlColumn)));
+
+			IEnumerable<PropertyInfo> propertiesInfo = holderType.GetProperties(BindingFlags.Public | BindingFlags.Instance).
+				Where(field => field.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(SqlColumn)));
+
+			dataColumns.AddRange(fieldsInfo.Select(info => GetSqlColumnInfoFromMemberInfo(info)));
+
+			dataColumns.AddRange(propertiesInfo.Select(info => GetSqlColumnInfoFromMemberInfo(info)));
+
+			return dataColumns;
+		}
+
 		private static SqlColumnInfo GetSqlColumnInfoFromMemberInfo(MemberInfo info)
 		{
 			CustomAttributeData SqlFieldAttributeData = info.CustomAttributes.Single(attribute => attribute.AttributeType == typeof(SqlColumn));
