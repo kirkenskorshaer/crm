@@ -392,5 +392,30 @@ namespace DataLayer.SqlData
 
 			return new SqlColumnInfo(info.Name, sqlColumn);
 		}
+
+		public static void MaintainTable(SqlConnection sqlConnection, Type SqlDataType)
+		{
+			string tableName = SqlDataType.Name;
+
+			List<string> columnsInDatabase = GetExistingColumns(sqlConnection, tableName);
+
+			List<SqlColumnInfo> allColumns = GetSqlColumnsInfo(SqlDataType);
+
+			bool isSingleIdTable = allColumns.Count(SqlColumnInfo.IsPrimaryKey) == 1;
+
+			if (columnsInDatabase.Any() == false && isSingleIdTable == true)
+			{
+				SqlColumnInfo primaryKeyField = allColumns.Single(SqlColumnInfo.IsPrimaryKey);
+
+				CreateTable(sqlConnection, tableName, primaryKeyField.Name.ToLower());
+			}
+
+			List<SqlColumnInfo> nonPrimaryKeyFields = allColumns.Where(SqlColumnInfo.IsNotPrimaryKey).ToList();
+
+			foreach (SqlColumnInfo sqlColumnInfo in nonPrimaryKeyFields)
+			{
+				AbstractData.CreateIfMissing(sqlConnection, tableName, columnsInDatabase, sqlColumnInfo.Name.ToLower(), sqlColumnInfo.SqlColumn.DataType, sqlColumnInfo.SqlColumn.AllowNull);
+			}
+		}
 	}
 }
