@@ -82,6 +82,19 @@ namespace DataLayer.SqlData
 			parameters.Add(new KeyValuePair<string, object>(databaseObjectName, databaseObject));
 		}
 
+		public static bool Exists<ResultType>(SqlConnection sqlConnection, string searchName, object searchValue)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT NULL WHERE EXISTS ( SELECT NULL FROM");
+			sqlStringBuilder.AppendLine($"	[{typeof(ResultType).Name}]");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{searchName} = @{searchName})");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
+
+			return dataTable.Rows.Count > 0;
+		}
+
 		protected static ModelType ConvertFromDatabaseValue<ModelType>(object databaseObject)
 		{
 			if (databaseObject == null || databaseObject == DBNull.Value)
