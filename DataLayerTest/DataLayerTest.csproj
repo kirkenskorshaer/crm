@@ -68,6 +68,7 @@
     <Compile Include="SqlDataTest\AccountTest\AccountChangeContactTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountIndsamlerTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountContactTest.cs" />
+    <Compile Include="SqlDataTest\ByarbejdeTest\ByarbejdeTest.cs" />
     <Compile Include="SqlDataTest\ChangeProviderTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountChangeTest.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountTest.cs" />
