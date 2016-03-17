@@ -8,6 +8,7 @@ namespace DataLayer.SqlData
 {
 	public class AbstractIdData : AbstractData
 	{
+		[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
 		public Guid Id { get; protected set; }
 
 		public void Delete(SqlConnection sqlConnection)
