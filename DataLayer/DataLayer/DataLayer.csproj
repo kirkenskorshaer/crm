@@ -108,6 +108,7 @@
     <Compile Include="SqlData\Account\AccountIndsamler.cs" />
     <Compile Include="SqlData\Account\AccountContact.cs" />
     <Compile Include="SqlData\Account\ExternalAccount.cs" />
+    <Compile Include="SqlData\Byarbejde\Byarbejde.cs" />
     <Compile Include="SqlData\ChangeProvider.cs" />
     <Compile Include="SqlData\Contact\ContactChange.cs" />
     <Compile Include="SqlData\Contact\ExternalContact.cs" />
