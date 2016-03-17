@@ -57,6 +57,32 @@ namespace DataLayer.SqlData
 			Id = (Guid)row["id"];
 		}
 
+		public void Update(SqlConnection sqlConnection)
+		{
+			StringBuilder sqlStringBuilderSets = new StringBuilder();
+			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+
+			List<SqlColumnInfo> dataColumns = _sqlColumnsInfo.Where(SqlColumnInfo.IsNotPrimaryKey).ToList();
+
+			foreach (SqlColumnInfo sqlColumn in dataColumns)
+			{
+				object value = NonSqlUtilities.ReflectionHelper.GetValue(this, sqlColumn.Name);
+				AddUpdateParameter(value, sqlColumn.Name.ToLower(), sqlStringBuilderSets, parameters);
+			}
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("Update");
+			sqlStringBuilder.AppendLine("	" + TableName);
+			sqlStringBuilder.AppendLine("SET");
+			sqlStringBuilder.Append(sqlStringBuilderSets);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine("	id = @id");
+
+			parameters.Add(new KeyValuePair<string, object>("id", Id));
+
+			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (GetType() != obj.GetType())
