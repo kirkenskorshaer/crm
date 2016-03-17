@@ -16,7 +16,7 @@ namespace DataLayer.SqlData
 			TableName = GetType().Name;
 		}
 
-		protected static void CreateIfMissing(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, string name, Utilities.DataType type, SqlBoolean allowNull)
+		internal static void CreateIfMissing(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, string name, Utilities.DataType type, SqlBoolean allowNull)
 		{
 			if (columnsInDatabase.Contains(name) == false)
 			{
