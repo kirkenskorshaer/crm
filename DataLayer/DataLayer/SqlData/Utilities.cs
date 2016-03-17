@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace DataLayer.SqlData
@@ -364,6 +365,15 @@ namespace DataLayer.SqlData
 			}
 
 			return relatedIds;
+		}
+
+		private static SqlColumnInfo GetSqlColumnInfoFromMemberInfo(MemberInfo info)
+		{
+			CustomAttributeData SqlFieldAttributeData = info.CustomAttributes.Single(attribute => attribute.AttributeType == typeof(SqlColumn));
+
+			SqlColumn sqlColumn = (SqlColumn)SqlFieldAttributeData.Constructor.Invoke(SqlFieldAttributeData.ConstructorArguments.Select(data => data.Value).ToArray());
+
+			return new SqlColumnInfo(info.Name, sqlColumn);
 		}
 	}
 }
