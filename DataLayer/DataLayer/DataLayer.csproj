@@ -124,6 +124,7 @@
     <Compile Include="SqlData\Procedures\MaintainForeignKey.cs" />
     <Compile Include="SqlData\Procedures\MaintainUniqueConstraint1Column.cs" />
     <Compile Include="SqlData\Procedures\MaintainUniqueConstraint2Columns.cs" />
+    <Compile Include="SqlData\SqlColumnInfo.cs" />
     <Compile Include="SqlData\SqlColumn.cs" />
     <Compile Include="SqlData\Utilities.cs" />
     <Compile Include="SqlData\Procedures\AddColumn.cs" />
