@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Text;
+using NonSqlUtilities = Utilities;
 
 namespace DataLayer.SqlData
 {
@@ -80,6 +81,69 @@ namespace DataLayer.SqlData
 			sqlStringBuilderSets.AppendLine(databaseObjectName);
 
 			parameters.Add(new KeyValuePair<string, object>(databaseObjectName, databaseObject));
+		}
+
+		private static ResultType CreateFromRow<ResultType>(DataRow row, List<SqlColumnInfo> sqlColumnsInfo) where ResultType : new()
+		{
+			ResultType result = new ResultType();
+
+			foreach (SqlColumnInfo sqlColumnInfo in sqlColumnsInfo)
+			{
+				object value = null;
+
+				switch (sqlColumnInfo.SqlColumn.DataType)
+				{
+					case Utilities.DataType.NVARCHAR_MAX:
+						value = ConvertFromDatabaseValue<string>(row[sqlColumnInfo.Name.ToLower()]);
+						break;
+					case Utilities.DataType.INT:
+						if (sqlColumnInfo.SqlColumn.AllowNull)
+						{
+							value = ConvertFromDatabaseValue<int?>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						else
+						{
+							value = ConvertFromDatabaseValue<int>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						break;
+					case Utilities.DataType.DATETIME:
+						if (sqlColumnInfo.SqlColumn.AllowNull)
+						{
+							value = ConvertFromDatabaseValue<DateTime?>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						else
+						{
+							value = ConvertFromDatabaseValue<DateTime>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						break;
+					case Utilities.DataType.UNIQUEIDENTIFIER:
+						if (sqlColumnInfo.SqlColumn.AllowNull)
+						{
+							value = ConvertFromDatabaseValue<Guid?>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						else
+						{
+							value = ConvertFromDatabaseValue<Guid>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						break;
+					case Utilities.DataType.BIT:
+						if (sqlColumnInfo.SqlColumn.AllowNull)
+						{
+							value = ConvertFromDatabaseValue<bool?>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						else
+						{
+							value = ConvertFromDatabaseValue<bool>(row[sqlColumnInfo.Name.ToLower()]);
+						}
+						break;
+					default:
+						break;
+				}
+
+				NonSqlUtilities.ReflectionHelper.SetValue(result, sqlColumnInfo.Name, value);
+			}
+
+			return result;
 		}
 
 		public static bool Exists<ResultType>(SqlConnection sqlConnection, string searchName, object searchValue)
