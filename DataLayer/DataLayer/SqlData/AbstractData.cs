@@ -83,6 +83,45 @@ namespace DataLayer.SqlData
 			parameters.Add(new KeyValuePair<string, object>(databaseObjectName, databaseObject));
 		}
 
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, object searchValue) where ResultType : new()
+		{
+			List<SqlColumnInfo> sqlColumnsInfo = Utilities.GetSqlColumnsInfo(typeof(ResultType));
+
+			StringBuilder parameterStringBuilder = new StringBuilder();
+			foreach (SqlColumnInfo sqlColumn in sqlColumnsInfo)
+			{
+				if (parameterStringBuilder.Length == 0)
+				{
+					parameterStringBuilder.AppendLine($"	{sqlColumn.Name}");
+				}
+				else
+				{
+					parameterStringBuilder.AppendLine($"	,{sqlColumn.Name}");
+				}
+			}
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.Append(parameterStringBuilder);
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine($"	[{typeof(ResultType).Name}]");
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{searchName} = @{searchName}");
+
+			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
+
+			List<ResultType> results = new List<ResultType>();
+
+			foreach (DataRow row in dataTable.Rows)
+			{
+				ResultType result = CreateFromRow<ResultType>(row, sqlColumnsInfo);
+
+				results.Add(result);
+			}
+
+			return results;
+		}
+
 		private static ResultType CreateFromRow<ResultType>(DataRow row, List<SqlColumnInfo> sqlColumnsInfo) where ResultType : new()
 		{
 			ResultType result = new ResultType();
