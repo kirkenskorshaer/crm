@@ -1,10 +1,12 @@
 ﻿using DataLayer;
 using DataLayer.SqlData;
+using DataLayer.SqlData.Byarbejde;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Linq;
 using System.Text;
 
 namespace DataLayerTest.SqlDataTest
@@ -182,6 +184,29 @@ namespace DataLayerTest.SqlDataTest
 			sqlStringBuilder.AppendLine(")");
 
 			return sqlStringBuilder;
+		}
+
+		[Test]
+		public void GetDataFieldsReturnsInheritedFields()
+		{
+			List<SqlColumnInfo> byArbejdeFields = Utilities.GetSqlColumnsInfo(typeof(Byarbejde));
+
+			Assert.IsTrue(byArbejdeFields.Any(byarbejde =>
+				byarbejde.Name == "Id" &&
+				byarbejde.SqlColumn.DataType == Utilities.DataType.UNIQUEIDENTIFIER &&
+				byarbejde.SqlColumn.AllowNull == false &&
+				byarbejde.SqlColumn.Properties == SqlColumn.PropertyEnum.PrimaryKey));
+		}
+
+		[Test]
+		public void GetDataFieldsReturnsInstanceFields()
+		{
+			List<SqlColumnInfo> byArbejdeFields = Utilities.GetSqlColumnsInfo(typeof(Byarbejde));
+
+			Assert.IsTrue(byArbejdeFields.Any(byarbejde =>
+				byarbejde.Name == "Name" &&
+				byarbejde.SqlColumn.DataType == Utilities.DataType.NVARCHAR_MAX &&
+				byarbejde.SqlColumn.AllowNull == false));
 		}
 
 		[Test]
