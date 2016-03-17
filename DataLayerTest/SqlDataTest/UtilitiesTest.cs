@@ -1,6 +1,5 @@
 ﻿using DataLayer;
 using DataLayer.SqlData;
-using DataLayer.SqlData.Contact;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
