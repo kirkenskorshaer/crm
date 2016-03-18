@@ -416,6 +416,13 @@ namespace DataLayer.SqlData
 			{
 				AbstractData.CreateIfMissing(sqlConnection, tableName, columnsInDatabase, sqlColumnInfo.Name.ToLower(), sqlColumnInfo.SqlColumn.DataType, sqlColumnInfo.SqlColumn.AllowNull);
 			}
+
+			List<SqlColumnInfo> foreignKeyFields = allColumns.Where(SqlColumnInfo.IsForeignKey).ToList();
+
+			foreach (SqlColumnInfo sqlColumnInfo in foreignKeyFields)
+			{
+				AbstractData.CreateKeyIfMissing(sqlConnection, tableName, sqlColumnInfo.Name.ToLower(), sqlColumnInfo.SqlColumn.ForeignKeyTable.Name, sqlColumnInfo.SqlColumn.ForeignKeyIdName, sqlColumnInfo.SqlColumn.ForeignKeyCascade);
+			}
 		}
 	}
 }
