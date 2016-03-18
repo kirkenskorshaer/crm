@@ -20,6 +20,19 @@ namespace DataLayer.SqlData
 			ForeignKeyTable = foreignKeyTable;
 			ForeignKeyIdName = foreignKeyIdName;
 			ForeignKeyCascade = foreignKeyCascade;
+
+			ValidateArguments();
+		}
+
+		private void ValidateArguments()
+		{
+			if (ForeignKeyTable != null || string.IsNullOrWhiteSpace(ForeignKeyIdName) == false || Properties.HasFlag(PropertyEnum.ForeignKey))
+			{
+				if (ForeignKeyTable == null || string.IsNullOrWhiteSpace(ForeignKeyIdName) || Properties.HasFlag(PropertyEnum.ForeignKey) == false)
+				{
+					throw new ArgumentException("Not all ForeignKey parameters are filled");
+				}
+			}
 		}
 
 		public PropertyEnum Properties { get; private set; }
