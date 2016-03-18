@@ -20,5 +20,10 @@
 		{
 			return info.SqlColumn.Properties.HasFlag(SqlColumn.PropertyEnum.PrimaryKey) == false;
 		}
+
+		public static bool IsForeignKey(SqlColumnInfo info)
+		{
+			return info.SqlColumn.Properties.HasFlag(SqlColumn.PropertyEnum.ForeignKey);
+		}
 	}
 }
