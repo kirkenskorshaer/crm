@@ -83,6 +83,23 @@ namespace DataLayer.SqlData
 			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
+		public static ResultType ReadNextById<ResultType>(SqlConnection sqlConnection, Guid id) where ResultType : AbstractIdData, new()
+		{
+			List<ResultType> results = Read<ResultType>(sqlConnection, "id", ">", id, 1, "id");
+
+			if (results.Count == 1)
+			{
+				return results.Single();
+			}
+
+			if (id == Guid.Empty)
+			{
+				return null;
+			}
+
+			return ReadNextById<ResultType>(sqlConnection, Guid.Empty);
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (GetType() != obj.GetType())
