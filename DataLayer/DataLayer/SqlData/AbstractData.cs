@@ -85,6 +85,11 @@ namespace DataLayer.SqlData
 
 		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, object searchValue) where ResultType : new()
 		{
+			return Read<ResultType>(sqlConnection, searchName, "=", searchValue, null, null);
+		}
+
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, string operatorString, object searchValue, int? top, string orderby) where ResultType : new()
+		{
 			List<SqlColumnInfo> sqlColumnsInfo = Utilities.GetSqlColumnsInfo(typeof(ResultType));
 
 			StringBuilder parameterStringBuilder = new StringBuilder();
@@ -101,12 +106,25 @@ namespace DataLayer.SqlData
 			}
 
 			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.AppendLine("SELECT");
+			if (top.HasValue)
+			{
+				sqlStringBuilder.AppendLine($"SELECT TOP {top.Value}");
+			}
+			else
+			{
+				sqlStringBuilder.AppendLine("SELECT");
+			}
 			sqlStringBuilder.Append(parameterStringBuilder);
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine($"	[{typeof(ResultType).Name}]");
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine($"	{searchName} = @{searchName}");
+			sqlStringBuilder.AppendLine($"	{searchName} {operatorString} @{searchName}");
+
+			if (string.IsNullOrWhiteSpace(orderby) == false)
+			{
+				sqlStringBuilder.AppendLine("ORDER BY");
+				sqlStringBuilder.AppendLine($"	{orderby}");
+			}
 
 			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
 
