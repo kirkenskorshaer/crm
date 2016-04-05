@@ -24,6 +24,7 @@ namespace DataLayerTest.MongoDataTest
 		}
 
 		[Test]
+		[Ignore]
 		public void GetConfigFailsForEmptyDatabase()
 		{
 			Action testAction = () => Config.GetConfig(_connection);
@@ -42,6 +43,7 @@ namespace DataLayerTest.MongoDataTest
 		}
 
 		[Test]
+		[Ignore]
 		public void ExistsOnEmptyReturnsFalse()
 		{
 			bool existOnEmpty = Config.Exists(_connection);
