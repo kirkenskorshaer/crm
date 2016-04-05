@@ -128,7 +128,7 @@ namespace DataLayer.SqlData.Contact
 
 			CreateKeyIfMissing(sqlConnection, _tableName, "ContactId", typeof(Contact).Name, "id");
 
-			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId", typeof(ExternalContact).Name, "ChangeProviderId", "ExternalContactId", "ContactId");
+			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId", typeof(ExternalContact).Name, "ChangeProviderId", "ExternalContactId", "ContactId", true);
 		}
 
 		public void Insert()

@@ -125,7 +125,7 @@ namespace DataLayerTest.SqlDataTest
 			Utilities.AddColumn(_sqlConnection, tableName2, "id1", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 			Utilities.AddColumn(_sqlConnection, tableName2, "id2", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
-			Utilities.MaintainCompositeForeignKey2Keys(_sqlConnection, tableName2, "id1", "id2", tableName1, "id1", "id2");
+			Utilities.MaintainCompositeForeignKey2Keys(_sqlConnection, tableName2, "id1", "id2", tableName1, "id1", "id2", true);
 
 			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName1));
 
