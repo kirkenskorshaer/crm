@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 
@@ -10,64 +9,61 @@ namespace DataLayer.SqlData.Account
 {
 	public class AccountChange : AbstractIdData, IModifiedIdData
 	{
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.DATETIME, false)]
 		public DateTime createdon;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.DATETIME, false)]
 		public DateTime modifiedon { get; set; }
 
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string name;
 
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_line1;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_line2;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_city;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_postalcode;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string emailaddress1;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
 		public string telephone1;
 
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? erindsamlingssted;
-		public int new_kkadminmedlemsnr;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		public int? new_kkadminmedlemsnr;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? region;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? stedtype;
 
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ExternalAccountId", false, 2)]
 		public Guid ExternalAccountId { get; private set; }
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ChangeProviderId", false, 1)]
 		public Guid ChangeProviderId { get; private set; }
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, new string[] { "account", "ExternalAccount" }, new Type[] { typeof(Account), typeof(ExternalAccount) }, new string[] { "id", "AccountId" }, new bool[] { true, false }, new int[] { 1, 3 })]
 		public Guid AccountId { get; private set; }
 
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "bykoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? bykoordinatorid;
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "omraadekoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? omraadekoordinatorid;
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "korshaersleder", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? korshaerslederid;
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "genbrugskonsulent", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? genbrugskonsulentid;
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "primarycontact", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? primarycontact;
+		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? kredsellerby;
 
-		private static readonly List<string> _fields = new List<string>()
-		{
-			"createdon",
-			"modifiedon",
-
-			"name",
-
-			"address1_line1",
-			"address1_line2",
-			"address1_city",
-			"address1_postalcode",
-			"emailaddress1",
-			"telephone1",
-
-			"erindsamlingssted",
-			"new_kkadminmedlemsnr",
-			"region",
-			"stedtype",
-
-			"bykoordinatorid",
-			"omraadekoordinatorid",
-			"korshaerslederid",
-			"genbrugskonsulentid",
-			"primarycontact",
-			"kredsellerby",
-		};
-
-		private static string _tableName = typeof(AccountChange).Name;
-
 		private SqlConnection _sqlConnection;
+
+		public AccountChange()
+		{
+		}
 
 		public AccountChange(SqlConnection sqlConnection, Guid accountId, Guid externalAccountId, Guid changeProviderId)
 		{
@@ -83,103 +79,14 @@ namespace DataLayer.SqlData.Account
 			Account.MaintainTable(sqlConnection);
 			ExternalAccount.MaintainTable(sqlConnection);
 
-			string tableName = typeof(AccountChange).Name;
+			Type tableType = typeof(AccountChange);
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
-
-			if (columnsInDatabase.Any() == false)
-			{
-				Utilities.CreateTable(sqlConnection, tableName, "id");
-			}
-
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ExternalAccountId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "AccountId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "name", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
-
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "erindsamlingssted", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "region", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "stedtype", Utilities.DataType.INT, SqlBoolean.True);
-
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "bykoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "omraadekoordinatorid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "korshaerslederid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "genbrugskonsulentid", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "primarycontact", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kredsellerby", Utilities.DataType.INT, SqlBoolean.True);
-
-			CreateKeyIfMissing(sqlConnection, _tableName, "AccountId", typeof(Account).Name, "id");
-			CreateKeyIfMissing(sqlConnection, _tableName, "bykoordinatorid", typeof(Contact.Contact).Name, "id", false);
-			CreateKeyIfMissing(sqlConnection, _tableName, "omraadekoordinatorid", typeof(Contact.Contact).Name, "id", false);
-			CreateKeyIfMissing(sqlConnection, _tableName, "korshaerslederid", typeof(Contact.Contact).Name, "id", false);
-			CreateKeyIfMissing(sqlConnection, _tableName, "genbrugskonsulentid", typeof(Contact.Contact).Name, "id", false);
-			CreateKeyIfMissing(sqlConnection, _tableName, "primarycontact", typeof(Contact.Contact).Name, "id", false);
-
-			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId", typeof(ExternalAccount).Name, "ChangeProviderId", "ExternalAccountId", "AccountId");
+			Utilities.MaintainTable(sqlConnection, tableType);
 		}
 
 		public void Insert()
 		{
-			StringBuilder sqlStringBuilderColumns = new StringBuilder();
-			StringBuilder sqlStringBuilderParameters = new StringBuilder();
-			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-
-			AddInsertParameterIfNotNull(name, "name", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(modifiedon, "modifiedon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(createdon, "createdon", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-
-			AddInsertParameterIfNotNull(address1_line1, "address1_line1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(address1_line2, "address1_line2", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(address1_city, "address1_city", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(address1_postalcode, "address1_postalcode", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(emailaddress1, "emailaddress1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-
-			AddInsertParameterIfNotNull(erindsamlingssted, "erindsamlingssted", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(new_kkadminmedlemsnr, "new_kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(region, "region", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(stedtype, "stedtype", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-
-			AddInsertParameterIfNotNull(AccountId, "AccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ExternalAccountId, "ExternalAccountId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(ChangeProviderId, "ChangeProviderId", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-
-			AddInsertParameterIfNotNull(bykoordinatorid, "bykoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(omraadekoordinatorid, "omraadekoordinatorid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(korshaerslederid, "korshaerslederid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(genbrugskonsulentid, "genbrugskonsulentid", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(primarycontact, "primarycontact", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(kredsellerby, "kredsellerby", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-
-			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.AppendLine("INSERT INTO");
-			sqlStringBuilder.AppendLine("	" + TableName);
-			sqlStringBuilder.AppendLine("(");
-			sqlStringBuilder.Append(sqlStringBuilderColumns);
-			sqlStringBuilder.AppendLine(")");
-			sqlStringBuilder.AppendLine("OUTPUT");
-			sqlStringBuilder.AppendLine("	Inserted.id");
-			sqlStringBuilder.AppendLine("VALUES");
-			sqlStringBuilder.AppendLine("(");
-			sqlStringBuilder.Append(sqlStringBuilderParameters);
-			sqlStringBuilder.AppendLine(")");
-
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(_sqlConnection, sqlStringBuilder, parameters.ToArray());
-
-			DataRow row = dataTable.Rows[0];
-			Id = (Guid)row["id"];
+			Insert(_sqlConnection);
 		}
 
 		public static bool AccountChangeExists(SqlConnection sqlConnection, Guid accountId, Guid externalAccountId, Guid changeProviderId, DateTime modifiedOn)
@@ -239,94 +146,31 @@ namespace DataLayer.SqlData.Account
 
 		public static List<AccountChange> Read(SqlConnection sqlConnection, Guid id, IdType idType)
 		{
-			string tableName = typeof(AccountChange).Name;
-
-			StringBuilder sqlStringBuilder = new StringBuilder();
-			sqlStringBuilder.AppendLine("SELECT");
-			sqlStringBuilder.AppendLine("	id");
-
-			AddFieldsToStringBuilder(sqlStringBuilder);
-
-			sqlStringBuilder.AppendLine("	,AccountId");
-			sqlStringBuilder.AppendLine("	,ExternalAccountId");
-			sqlStringBuilder.AppendLine("	,ChangeProviderId");
-			sqlStringBuilder.AppendLine("FROM");
-			sqlStringBuilder.AppendLine("	" + tableName);
-			sqlStringBuilder.AppendLine("WHERE");
-
+			List<AccountChange> accountChanges = new List<AccountChange>();
 			if (idType == IdType.AccountChangeId)
 			{
-				sqlStringBuilder.AppendLine("	id = @id");
+				accountChanges = Read<AccountChange>(sqlConnection, "id", id);
 			}
 			else if (idType == IdType.AccountId)
 			{
-				sqlStringBuilder.AppendLine("	AccountId = @id");
+				accountChanges = Read<AccountChange>(sqlConnection, "AccountId", id);
 			}
 			else if (idType == IdType.ExternalAccountId)
 			{
-				sqlStringBuilder.AppendLine("	ExternalAccountId = @id");
+				accountChanges = Read<AccountChange>(sqlConnection, "ExternalAccountId", id);
 			}
 			else if (idType == IdType.ChangeProviderId)
 			{
-				sqlStringBuilder.AppendLine("	ChangeProviderId = @id");
+				accountChanges = Read<AccountChange>(sqlConnection, "ChangeProviderId", id);
 			}
 			else
 			{
 				throw new ArgumentException($"unknown IdType {idType}");
 			}
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
-
-			List<AccountChange> accountChanges = new List<AccountChange>();
-			foreach (DataRow row in dataTable.Rows)
-			{
-				AccountChange accountChange = CreateFromRow(sqlConnection, row);
-
-				accountChanges.Add(accountChange);
-			}
+			accountChanges.ForEach(accountChange => accountChange._sqlConnection = sqlConnection);
 
 			return accountChanges;
-		}
-
-		private static void AddFieldsToStringBuilder(StringBuilder sqlStringBuilder)
-		{
-			_fields.ForEach(field => sqlStringBuilder.AppendLine($"	,{field}"));
-		}
-
-		private static AccountChange CreateFromRow(SqlConnection sqlConnection, DataRow row)
-		{
-			Guid externalAccountId = (Guid)row["ExternalAccountId"];
-			Guid changeProviderId = (Guid)row["ChangeProviderId"];
-			Guid accountId = (Guid)row["AccountId"];
-
-			AccountChange accountChange = new AccountChange(sqlConnection, accountId, externalAccountId, changeProviderId)
-			{
-				name = ConvertFromDatabaseValue<string>(row["name"]),
-				modifiedon = ConvertFromDatabaseValue<DateTime>(row["modifiedon"]),
-				createdon = ConvertFromDatabaseValue<DateTime>(row["createdon"]),
-				Id = ConvertFromDatabaseValue<Guid>(row["id"]),
-
-				address1_line1 = ConvertFromDatabaseValue<string>(row["address1_line1"]),
-				address1_line2 = ConvertFromDatabaseValue<string>(row["address1_line2"]),
-				address1_city = ConvertFromDatabaseValue<string>(row["address1_city"]),
-				address1_postalcode = ConvertFromDatabaseValue<string>(row["address1_postalcode"]),
-				emailaddress1 = ConvertFromDatabaseValue<string>(row["emailaddress1"]),
-				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
-
-				erindsamlingssted = ConvertFromDatabaseValue<int?>(row["erindsamlingssted"]),
-				new_kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["new_kkadminmedlemsnr"]),
-				region = ConvertFromDatabaseValue<int?>(row["region"]),
-				stedtype = ConvertFromDatabaseValue<int?>(row["stedtype"]),
-
-				bykoordinatorid = ConvertFromDatabaseValue<Guid?>(row["bykoordinatorid"]),
-				omraadekoordinatorid = ConvertFromDatabaseValue<Guid?>(row["omraadekoordinatorid"]),
-				korshaerslederid = ConvertFromDatabaseValue<Guid?>(row["korshaerslederid"]),
-				genbrugskonsulentid = ConvertFromDatabaseValue<Guid?>(row["genbrugskonsulentid"]),
-				primarycontact = ConvertFromDatabaseValue<Guid?>(row["primarycontact"]),
-				kredsellerby = ConvertFromDatabaseValue<int?>(row["kredsellerby"]),
-			};
-
-			return accountChange;
 		}
 
 		public static List<Account> GetAccounts(SqlConnection sqlConnection, Guid externalAccountId)
