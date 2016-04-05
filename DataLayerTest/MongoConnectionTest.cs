@@ -28,7 +28,7 @@ namespace DataLayerTest
 
 			Log.Write(_connection, messageValue, string.Empty, Config.LogLevelEnum.OptionMessage);
 
-			List<Dictionary<string, object>> readList = _connection.ReadAsDictionaries(typeof(Log).Name.ToLower());
+			List<Dictionary<string, object>> readList = _connection.ReadAsDictionaries(typeof(Log).Name);
 
 			Assert.AreEqual(readList.Single()["Message"], messageValue);
 		}
