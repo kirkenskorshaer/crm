@@ -112,6 +112,7 @@
     <Compile Include="SqlData\ChangeProvider.cs" />
     <Compile Include="SqlData\Contact\ContactChange.cs" />
     <Compile Include="SqlData\Contact\ExternalContact.cs" />
+    <Compile Include="SqlData\ForeignKeyInfo.cs" />
     <Compile Include="SqlData\Group\AccountChangeGroup.cs" />
     <Compile Include="SqlData\Group\ContactChangeGroup.cs" />
     <Compile Include="SqlData\Group\AccountGroup.cs" />
