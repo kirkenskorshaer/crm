@@ -390,7 +390,30 @@ namespace DataLayer.SqlData
 		{
 			CustomAttributeData SqlFieldAttributeData = info.CustomAttributes.Single(attribute => attribute.AttributeType == typeof(SqlColumn));
 
-			SqlColumn sqlColumn = (SqlColumn)SqlFieldAttributeData.Constructor.Invoke(SqlFieldAttributeData.ConstructorArguments.Select(data => data.Value).ToArray());
+			object[] arguments = SqlFieldAttributeData.ConstructorArguments.Select(data =>
+			{
+				System.Collections.ObjectModel.ReadOnlyCollection<CustomAttributeTypedArgument> collection;
+
+				switch (data.ArgumentType.Name)
+				{
+					case "Boolean[]":
+						collection = (System.Collections.ObjectModel.ReadOnlyCollection<CustomAttributeTypedArgument>)data.Value;
+						return collection.Select(value => (bool)value.Value).ToArray();
+					case "String[]":
+						collection = (System.Collections.ObjectModel.ReadOnlyCollection<CustomAttributeTypedArgument>)data.Value;
+						return collection.Select(value => (string)value.Value).ToArray();
+					case "Int32[]":
+						collection = (System.Collections.ObjectModel.ReadOnlyCollection<CustomAttributeTypedArgument>)data.Value;
+						return collection.Select(value => (int)value.Value).ToArray();
+					case "Type[]":
+						collection = (System.Collections.ObjectModel.ReadOnlyCollection<CustomAttributeTypedArgument>)data.Value;
+						return collection.Select(value => (Type)value.Value).ToArray();
+					default:
+						return data.Value;
+				}
+			}).ToArray();
+
+			SqlColumn sqlColumn = (SqlColumn)SqlFieldAttributeData.Constructor.Invoke(arguments);
 
 			return new SqlColumnInfo(info.Name, sqlColumn);
 		}
