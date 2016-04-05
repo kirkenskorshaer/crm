@@ -49,6 +49,10 @@ namespace DataLayer.SqlData.Account
 		public Guid? genbrugskonsulentid;
 		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "primarycontact", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? primarycontact;
+
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "byarbejde", typeof(Byarbejde.Byarbejde), "id", false, 1)]
+		public Guid? byarbejdeid;
+
 		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? kredsellerby;
 
