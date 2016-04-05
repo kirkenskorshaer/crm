@@ -24,6 +24,8 @@ namespace DataLayerTest.MongoDataTest.Option
 				NextAllowedExecution = new DateTime(2015, 8, dayOrigin, hourOrigin, 0, 0),
 			};
 
+			Utilities.Clock.NowFunc = () => new DateTime(2015, 1, 1);
+
 			schedule.MoveNext();
 
 			Assert.AreEqual(new DateTime(2015, 8, dayExpected, hourExpected, minuteExpected, 0).ToString("s"), schedule.NextAllowedExecution.ToString("s"));

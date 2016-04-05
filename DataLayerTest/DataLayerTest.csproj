@@ -95,6 +95,10 @@
       <Project>{4cbe92ce-9259-4154-a810-fff1d1234f71}</Project>
       <Name>DataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities\Utilities.csproj">
+      <Project>{fda4e213-1c38-4a3f-beb0-0e8ee9c79d6c}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

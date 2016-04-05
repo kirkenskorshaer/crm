@@ -16,7 +16,7 @@ namespace DataLayer.MongoData.Option
 
 		public void MoveNext()
 		{
-			DateTime currentTime = DateTime.Now;
+			DateTime currentTime = Utilities.Clock.Now;
 
 			NextAllowedExecution += TimeBetweenAllowedExecutions;
 
