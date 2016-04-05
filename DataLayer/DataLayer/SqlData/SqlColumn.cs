@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DataLayer.SqlData
 {
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class SqlColumn : Attribute
 	{
+		public PropertyEnum Properties { get; private set; }
+		public Utilities.DataType DataType { get; private set; }
+		public bool AllowNull { get; private set; }
+		public List<ForeignKeyInfo> ForeignKeysInfo { get; private set; }
+
 		public enum PropertyEnum
 		{
 			None = 0,
@@ -12,34 +18,49 @@ namespace DataLayer.SqlData
 			ForeignKey = 2,
 		}
 
-		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull, Type foreignKeyTable = null, string foreignKeyIdName = null, bool foreignKeyCascade = false)
+		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull)
 		{
 			Properties = properties;
 			DataType = dataType;
 			AllowNull = allowNull;
-			ForeignKeyTable = foreignKeyTable;
-			ForeignKeyIdName = foreignKeyIdName;
-			ForeignKeyCascade = foreignKeyCascade;
-
-			ValidateArguments();
 		}
 
-		private void ValidateArguments()
+		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull, string foreignKeyGroup, Type foreignKeyTable, string foreignKeyIdName, bool foreignKeyCascade, int foreignKeyIndex)
 		{
-			if (ForeignKeyTable != null || string.IsNullOrWhiteSpace(ForeignKeyIdName) == false || Properties.HasFlag(PropertyEnum.ForeignKey))
+			Properties = properties;
+			DataType = dataType;
+			AllowNull = allowNull;
+			ForeignKeyInfo info = new ForeignKeyInfo(foreignKeyGroup, foreignKeyTable, foreignKeyIdName, foreignKeyCascade, foreignKeyIndex);
+			ForeignKeysInfo = new List<ForeignKeyInfo>() { info };
+		}
+
+		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull, string[] foreignKeyGroups, Type[] foreignKeyTables, string[] foreignKeyIdNames, bool[] foreignKeyCascades, int[] foreignKeyIndex)
+		{
+			Properties = properties;
+			DataType = dataType;
+			AllowNull = allowNull;
+
+			ValidateArguments(foreignKeyGroups, foreignKeyTables, foreignKeyIdNames, foreignKeyCascades);
+
+			ForeignKeysInfo = new List<ForeignKeyInfo>();
+
+			for (int index = 0; index < foreignKeyGroups.Length; index++)
 			{
-				if (ForeignKeyTable == null || string.IsNullOrWhiteSpace(ForeignKeyIdName) || Properties.HasFlag(PropertyEnum.ForeignKey) == false)
-				{
-					throw new ArgumentException("Not all ForeignKey parameters are filled");
-				}
+				ForeignKeyInfo info = new ForeignKeyInfo(foreignKeyGroups[index], foreignKeyTables[index], foreignKeyIdNames[index], foreignKeyCascades[index], foreignKeyIndex[index]);
+				ForeignKeysInfo.Add(info);
 			}
 		}
 
-		public PropertyEnum Properties { get; private set; }
-		public Utilities.DataType DataType { get; private set; }
-		public bool AllowNull { get; private set; }
-		public Type ForeignKeyTable { get; private set; }
-		public string ForeignKeyIdName { get; private set; }
-		public bool ForeignKeyCascade { get; private set; }
+		private void ValidateArguments(string[] foreignKeyGroups, Type[] foreignKeyTables, string[] foreignKeyIdNames, bool[] foreignKeyCascades)
+		{
+			if (
+				foreignKeyGroups.Length != foreignKeyTables.Length ||
+				foreignKeyIdNames.Length != foreignKeyCascades.Length ||
+				foreignKeyGroups.Length != foreignKeyCascades.Length)
+			{
+				throw new ArgumentException("Not all ForeignKey parameters are filled");
+			}
+		}
+
 	}
 }

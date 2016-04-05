@@ -39,15 +39,15 @@ namespace DataLayer.SqlData.Account
 		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? stedtype;
 
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, typeof(Contact.Contact), "id")]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "bykoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? bykoordinatorid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, typeof(Contact.Contact), "id")]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "omraadekoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? omraadekoordinatorid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, typeof(Contact.Contact), "id")]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "korshaersleder", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? korshaerslederid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, typeof(Contact.Contact), "id")]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "genbrugskonsulent", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? genbrugskonsulentid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, typeof(Contact.Contact), "id")]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "primarycontact", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? primarycontact;
 		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
 		public int? kredsellerby;
