@@ -426,27 +426,43 @@ namespace DataLayer.SqlData
 
 			List<SqlColumnInfo> allColumns = GetSqlColumnsInfo(SqlDataType);
 
-			bool isSingleIdTable = allColumns.Count(SqlColumnInfo.IsPrimaryKey) == 1;
+			MakeSureTableExists(sqlConnection, tableName, columnsInDatabase, allColumns);
 
-			if (columnsInDatabase.Any() == false && isSingleIdTable == true)
-			{
-				SqlColumnInfo primaryKeyField = allColumns.Single(SqlColumnInfo.IsPrimaryKey);
+			MakeSureColumnsExists(sqlConnection, tableName, columnsInDatabase, allColumns);
 
-				CreateTable(sqlConnection, tableName, primaryKeyField.Name.ToLower());
 			}
 
+		private static void MakeSureColumnsExists(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, List<SqlColumnInfo> allColumns)
+		{
 			List<SqlColumnInfo> nonPrimaryKeyFields = allColumns.Where(SqlColumnInfo.IsNotPrimaryKey).ToList();
 
 			foreach (SqlColumnInfo sqlColumnInfo in nonPrimaryKeyFields)
 			{
 				AbstractData.CreateIfMissing(sqlConnection, tableName, columnsInDatabase, sqlColumnInfo.Name.ToLower(), sqlColumnInfo.SqlColumn.DataType, sqlColumnInfo.SqlColumn.AllowNull);
 			}
+		}
 
-			List<SqlColumnInfo> foreignKeyFields = allColumns.Where(SqlColumnInfo.IsForeignKey).ToList();
-
-			foreach (SqlColumnInfo sqlColumnInfo in foreignKeyFields)
+		private static void MakeSureTableExists(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, List<SqlColumnInfo> allColumns)
+		{
+			if (columnsInDatabase.Any() == false)
 			{
-				AbstractData.CreateKeyIfMissing(sqlConnection, tableName, sqlColumnInfo.Name.ToLower(), sqlColumnInfo.SqlColumn.ForeignKeyTable.Name, sqlColumnInfo.SqlColumn.ForeignKeyIdName, sqlColumnInfo.SqlColumn.ForeignKeyCascade);
+				List<string> keyNames = allColumns.Where(SqlColumnInfo.IsPrimaryKey).Select(column => column.Name.ToLower()).ToList();
+				int primaryKeyCount = keyNames.Count();
+
+				switch (primaryKeyCount)
+				{
+					case 1:
+						CreateTable(sqlConnection, tableName, keyNames.Single());
+						break;
+					case 2:
+						CreateCompositeTable2Tables(sqlConnection, tableName, keyNames[0], keyNames[1]);
+						break;
+					case 3:
+						CreateCompositeTable3Tables(sqlConnection, tableName, keyNames[0], keyNames[1], keyNames[2]);
+						break;
+					default:
+						throw new Exception($"tables with {primaryKeyCount} keys are not supported");
+				}
 			}
 		}
 	}
