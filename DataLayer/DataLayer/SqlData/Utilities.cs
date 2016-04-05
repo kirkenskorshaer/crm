@@ -430,7 +430,57 @@ namespace DataLayer.SqlData
 
 			MakeSureColumnsExists(sqlConnection, tableName, columnsInDatabase, allColumns);
 
+			MakeSureForeignKeysExists(sqlConnection, tableName, allColumns);
+		}
+
+		private static void MakeSureForeignKeysExists(SqlConnection sqlConnection, string tableName, List<SqlColumnInfo> allColumns)
+		{
+			List<SqlColumnInfo> foreignKeyFields = allColumns.Where(SqlColumnInfo.IsForeignKey).ToList();
+
+			foreignKeyFields.ForEach(keyField => keyField.SqlColumn.ForeignKeysInfo.ForEach(info => info.SqlColumnInfo = keyField));
+
+			List<ForeignKeyInfo> keyInfo = foreignKeyFields.SelectMany(key => key.SqlColumn.ForeignKeysInfo).ToList();
+
+			var keyGroups = keyInfo.GroupBy(key => new { type = key.ForeignKeyTable, group = key.ForeignKeyGroup });
+
+			foreach (var keyGroup in keyGroups)
+			{
+				var orderedKeyGroup = keyGroup.OrderBy(key => key.ForeignKeyIndex);
+				switch (keyGroup.Count())
+				{
+					case 1:
+						ForeignKeyInfo info = keyGroup.Single();
+						AbstractData.CreateKeyIfMissing(sqlConnection, tableName, info.SqlColumnInfo.Name.ToLower(), info.ForeignKeyTable.Name, info.ForeignKeyIdName, info.ForeignKeyCascade);
+						break;
+					case 2:
+						{
+							string foreignKey1Name = orderedKeyGroup.ElementAt(0).SqlColumnInfo.Name.ToLower();
+							string foreignKey2Name = orderedKeyGroup.ElementAt(1).SqlColumnInfo.Name.ToLower();
+							Type foreignTable = keyGroup.First().ForeignKeyTable;
+							string primaryKey1Name = orderedKeyGroup.ElementAt(0).ForeignKeyIdName;
+							string primaryKey2Name = orderedKeyGroup.ElementAt(1).ForeignKeyIdName;
+							bool cascade = keyGroup.First().ForeignKeyCascade;
+							MaintainCompositeForeignKey2Keys(sqlConnection, tableName, foreignKey1Name, foreignKey2Name, foreignTable.Name, primaryKey1Name, primaryKey2Name, cascade);
+						}
+						break;
+					case 3:
+						{
+							string foreignKey1Name = orderedKeyGroup.ElementAt(0).SqlColumnInfo.Name.ToLower();
+							string foreignKey2Name = orderedKeyGroup.ElementAt(1).SqlColumnInfo.Name.ToLower();
+							string foreignKey3Name = orderedKeyGroup.ElementAt(2).SqlColumnInfo.Name.ToLower();
+							Type foreignTable = orderedKeyGroup.First().ForeignKeyTable;
+							string primaryKey1Name = orderedKeyGroup.ElementAt(0).ForeignKeyIdName;
+							string primaryKey2Name = orderedKeyGroup.ElementAt(1).ForeignKeyIdName;
+							string primaryKey3Name = orderedKeyGroup.ElementAt(2).ForeignKeyIdName;
+							bool cascade = orderedKeyGroup.First().ForeignKeyCascade;
+							MaintainCompositeForeignKey3Keys(sqlConnection, tableName, foreignKey1Name, foreignKey2Name, foreignKey3Name, foreignTable.Name, primaryKey1Name, primaryKey2Name, primaryKey3Name, cascade);
+						}
+						break;
+					default:
+						throw new Exception($"{keyGroup.Count()} foreign keys not supported for group {keyGroup.Key.group} on type {keyGroup.Key.type.Name}");
+				}
 			}
+		}
 
 		private static void MakeSureColumnsExists(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, List<SqlColumnInfo> allColumns)
 		{
