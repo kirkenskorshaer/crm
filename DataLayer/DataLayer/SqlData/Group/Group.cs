@@ -16,14 +16,14 @@ namespace DataLayer.SqlData.Group
 		{
 			string tableName = typeof(Group).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateTable(sqlConnection, tableName, "id");
+				SqlUtilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "Name", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "Name", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.False);
 		}
 
 		public void Insert(SqlConnection sqlConnection)
@@ -46,7 +46,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
@@ -63,7 +63,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	Name = @name");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
 
 			DataRow row = dataTable.Rows[0];
 			Group group = CreateFromRow(row);
@@ -99,7 +99,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
 
 			DataRow row = dataTable.Rows[0];
 			Group group = CreateFromRow(row);
@@ -115,14 +115,14 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	Name = @name");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
 
 			return dataTable.Rows.Count > 0;
 		}
 
 		public static Group ReadNextById(SqlConnection sqlConnection, Guid id)
 		{
-			return Utilities.ReadNextById<Group>(sqlConnection, id, new string[] { "Name" }, CreateFromRow);
+			return SqlUtilities.ReadNextById<Group>(sqlConnection, id, new string[] { "Name" }, CreateFromRow);
 		}
 
 		public static List<Group> ReadGroupsFromContact(SqlConnection sqlConnection, Guid contactId)
@@ -160,7 +160,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine($"	{NNTable.Name}.{foreignKeyName} = @{foreignKeyName}");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
 
 			List<Group> groups = ReadGroupsFromDataTable(dataTable);
 

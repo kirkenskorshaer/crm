@@ -11,7 +11,7 @@ using System.Text;
 
 namespace DataLayer.SqlData
 {
-	public static class Utilities
+	public static class SqlUtilities
 	{
 		public static DataTable ExecuteAdapterSelect(SqlConnection sqlConnection, StringBuilder sqlStringBuilder, params KeyValuePair<string, object>[] parameters)
 		{

@@ -27,7 +27,7 @@ namespace DataLayerTest.SqlDataTest.GroupTest
 		[SetUp]
 		public void SetUp()
 		{
-			Utilities.RecreateAllTables(_sqlConnection);
+			SqlUtilities.RecreateAllTables(_sqlConnection);
 		}
 
 		[Test]

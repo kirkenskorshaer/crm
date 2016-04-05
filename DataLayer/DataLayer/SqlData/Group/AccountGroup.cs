@@ -22,11 +22,11 @@ namespace DataLayer.SqlData.Group
 		{
 			string tableName = typeof(AccountGroup).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountId", "GroupId");
+				SqlUtilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountId", "GroupId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account.Account).Name, "id");
@@ -52,7 +52,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		public void Delete(SqlConnection sqlConnection)
@@ -65,14 +65,14 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	GroupId = @groupId");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("AccountId", AccountId),
 				new KeyValuePair<string, object>("groupId", GroupId));
 		}
 
 		public static List<AccountGroup> ReadFromGroupId(SqlConnection sqlConnection, Guid groupId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "GroupId", "ContactId", groupId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "GroupId", "ContactId", groupId);
 
 			List<AccountGroup> contactGroups = relatedIds.Select(accountId => new AccountGroup(accountId, groupId)).ToList();
 
@@ -81,7 +81,7 @@ namespace DataLayer.SqlData.Group
 
 		public static List<AccountGroup> ReadFromAccountId(SqlConnection sqlConnection, Guid accountId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "AccountId", "GroupId", accountId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountGroup), "AccountId", "GroupId", accountId);
 
 			List<AccountGroup> contactGroups = relatedIds.Select(groupId => new AccountGroup(accountId, groupId)).ToList();
 

@@ -31,17 +31,17 @@ namespace DataLayer.SqlData.Account
 
 			string tableName = typeof(ExternalAccount).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId");
+				SqlUtilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalAccountId", "AccountId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "ChangeProviderId", typeof(ChangeProvider).Name, "id");
 			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account).Name, "id", false);
 
-			Utilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalAccountId");
+			SqlUtilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalAccountId");
 		}
 
 		public static ExternalAccount Read(SqlConnection sqlConnection, Guid externalAccountId, Guid changeProviderId)
@@ -58,7 +58,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ExternalAccountId", externalAccountId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -80,7 +80,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
 			List<ExternalAccount> externalAccounts = new List<ExternalAccount>();
@@ -107,7 +107,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine($"	{typeof(ExternalAccount).Name}.AccountId = @AccountId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("AccountId", accountId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -152,7 +152,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ExternalAccountId", externalAccountId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -189,7 +189,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("	,@AccountId");
 			sqlStringBuilder.AppendLine(")");
 
-			Utilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
+			SqlUtilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("ExternalAccountId", ExternalAccountId)
 				, new KeyValuePair<string, object>("ChangeProviderId", ChangeProviderId)
 				, new KeyValuePair<string, object>("AccountId", AccountId));

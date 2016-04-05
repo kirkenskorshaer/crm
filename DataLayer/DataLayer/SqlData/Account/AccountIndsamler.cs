@@ -22,11 +22,11 @@ namespace DataLayer.SqlData.Account
 		{
 			string tableName = typeof(AccountIndsamler).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountId", "ContactId");
+				SqlUtilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountId", "ContactId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "AccountId", typeof(Account).Name, "id");
@@ -52,7 +52,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		public void Delete(SqlConnection sqlConnection)
@@ -65,14 +65,14 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	ContactId = @contactId");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("AccountId", AccountId),
 				new KeyValuePair<string, object>("contactId", ContactId));
 		}
 
 		public static List<AccountIndsamler> ReadFromContactId(SqlConnection sqlConnection, Guid contactId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountIndsamler), "ContactId", "AccountId", contactId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountIndsamler), "ContactId", "AccountId", contactId);
 
 			List<AccountIndsamler> accountIndsamlere = relatedIds.Select(AccountId => new AccountIndsamler(AccountId, contactId)).ToList();
 
@@ -81,7 +81,7 @@ namespace DataLayer.SqlData.Account
 
 		public static List<AccountIndsamler> ReadFromAccountId(SqlConnection sqlConnection, Guid accountId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountIndsamler), "AccountId", "ContactId", accountId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountIndsamler), "AccountId", "ContactId", accountId);
 
 			List<AccountIndsamler> accountIndsamlere = relatedIds.Select(ContactId => new AccountIndsamler(accountId, ContactId)).ToList();
 

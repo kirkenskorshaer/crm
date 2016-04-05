@@ -90,45 +90,45 @@ namespace DataLayer.SqlData.Contact
 
 			string tableName = typeof(ContactChange).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateTable(sqlConnection, tableName, "id");
+				SqlUtilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ExternalContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ContactId", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ExternalContactId", SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ChangeProviderId", SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "ContactId", SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "middlename", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "middlename", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", SqlUtilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", SqlUtilities.DataType.DATETIME, SqlBoolean.False);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", Utilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", Utilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "gavebrevudloebsdato", Utilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminmedlemsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "gavebrevudloebsdato", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", SqlUtilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", SqlUtilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
 
 			CreateKeyIfMissing(sqlConnection, _tableName, "ContactId", typeof(Contact).Name, "id");
 
-			Utilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId", typeof(ExternalContact).Name, "ChangeProviderId", "ExternalContactId", "ContactId", true);
+			SqlUtilities.MaintainCompositeForeignKey3Keys(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId", typeof(ExternalContact).Name, "ChangeProviderId", "ExternalContactId", "ContactId", true);
 		}
 
 		public void Insert()
@@ -178,7 +178,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(_sqlConnection, sqlStringBuilder, parameters.ToArray());
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(_sqlConnection, sqlStringBuilder, parameters.ToArray());
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
@@ -220,7 +220,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("			END = 0");
 			sqlStringBuilder.AppendLine("	)");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ContactId", contactId)
 				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId)
@@ -277,7 +277,7 @@ namespace DataLayer.SqlData.Contact
 				throw new ArgumentException($"unknown IdType {idType}");
 			}
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
 
 			List<ContactChange> contactChanges = new List<ContactChange>();
 			foreach (DataRow row in dataTable.Rows)
@@ -376,7 +376,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	ContactChange.ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
 			DataRow row = dataTable.Rows[0];
 			DateTime modifiedOn = (DateTime)row["ModifiedOn"];

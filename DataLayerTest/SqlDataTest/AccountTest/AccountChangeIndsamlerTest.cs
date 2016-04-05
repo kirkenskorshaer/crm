@@ -27,7 +27,7 @@ namespace DataLayerTest.SqlDataTest.ChangeContactTest
 		[SetUp]
 		public void SetUp()
 		{
-			Utilities.RecreateAllTables(_sqlConnection);
+			SqlUtilities.RecreateAllTables(_sqlConnection);
 		}
 
 		[Test]

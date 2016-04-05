@@ -26,7 +26,7 @@ namespace DataLayerTest.SqlDataTest.AccountTest
 		[SetUp]
 		public void SetUp()
 		{
-			Utilities.RecreateAllTables(_sqlConnection);
+			SqlUtilities.RecreateAllTables(_sqlConnection);
 		}
 
 		internal ExternalAccount InsertExternalAccount(SqlConnection sqlConnection, Guid accountId)

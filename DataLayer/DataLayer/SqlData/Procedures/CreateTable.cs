@@ -34,7 +34,7 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("	DROP PROCEDURE CreateTable");
 			sqlStringBuilder.AppendLine("END");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
 		}
 
 		private static void CreateProcedure(SqlConnection sqlConnection)
@@ -69,7 +69,7 @@ namespace DataLayer.SqlData.Procedures
 			sqlStringBuilder.AppendLine("	END");
 			sqlStringBuilder.AppendLine("END");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, System.Data.CommandType.Text);
 		}
 	}
 }

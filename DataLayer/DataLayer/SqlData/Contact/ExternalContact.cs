@@ -31,17 +31,17 @@ namespace DataLayer.SqlData.Contact
 
 			string tableName = typeof(ExternalContact).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId");
+				SqlUtilities.CreateCompositeTable3Tables(sqlConnection, tableName, "ChangeProviderId", "ExternalContactId", "ContactId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "ChangeProviderId", typeof(ChangeProvider).Name, "id");
 			CreateKeyIfMissing(sqlConnection, tableName, "ContactId", typeof(Contact).Name, "id", false);
 
-			Utilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalContactId");
+			SqlUtilities.MaintainUniqueConstraint(sqlConnection, tableName, tableName + "_ChangeProvider_ExternalContact", "ChangeProviderId", "ExternalContactId");
 		}
 
 		public static ExternalContact Read(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId)
@@ -58,7 +58,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -80,7 +80,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
 			List<ExternalContact> externalContacts = new List<ExternalContact>();
@@ -107,7 +107,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ContactId = @ContactId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ContactId", contactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -152,7 +152,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
@@ -189,7 +189,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("	,@ChangeProviderId");
 			sqlStringBuilder.AppendLine(")");
 
-			Utilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
+			SqlUtilities.ExecuteNonQuery(_sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("ExternalContactId", ExternalContactId)
 				, new KeyValuePair<string, object>("ContactId", ContactId)
 				, new KeyValuePair<string, object>("ChangeProviderId", ChangeProviderId));

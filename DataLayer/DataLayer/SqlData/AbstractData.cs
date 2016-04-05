@@ -16,20 +16,20 @@ namespace DataLayer.SqlData
 		public AbstractData()
 		{
 			TableName = GetType().Name;
-			_sqlColumnsInfo = Utilities.GetSqlColumnsInfo(GetType());
+			_sqlColumnsInfo = SqlUtilities.GetSqlColumnsInfo(GetType());
 		}
 
-		internal static void CreateIfMissing(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, string name, Utilities.DataType type, SqlBoolean allowNull)
+		internal static void CreateIfMissing(SqlConnection sqlConnection, string tableName, List<string> columnsInDatabase, string name, SqlUtilities.DataType type, SqlBoolean allowNull)
 		{
 			if (columnsInDatabase.Contains(name) == false)
 			{
-				Utilities.AddColumn(sqlConnection, tableName, name, type, allowNull);
+				SqlUtilities.AddColumn(sqlConnection, tableName, name, type, allowNull);
 			}
 		}
 
 		internal static void CreateKeyIfMissing(SqlConnection sqlConnection, string tableName, string foreignKeyName, string primaryTablename, string primaryKeyName, bool cascade = true)
 		{
-			Utilities.MaintainForeignKey(sqlConnection, tableName, foreignKeyName, primaryTablename, primaryKeyName, cascade);
+			SqlUtilities.MaintainForeignKey(sqlConnection, tableName, foreignKeyName, primaryTablename, primaryKeyName, cascade);
 		}
 
 		protected void AddInsertParameterIfNotNull(object databaseObject, string databaseObjectName, StringBuilder sqlStringBuilderColumns, StringBuilder sqlStringBuilderParameters, List<KeyValuePair<string, object>> parameters)
@@ -90,7 +90,7 @@ namespace DataLayer.SqlData
 
 		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, string operatorString, object searchValue, int? top, string orderby) where ResultType : new()
 		{
-			List<SqlColumnInfo> sqlColumnsInfo = Utilities.GetSqlColumnsInfo(typeof(ResultType));
+			List<SqlColumnInfo> sqlColumnsInfo = SqlUtilities.GetSqlColumnsInfo(typeof(ResultType));
 
 			StringBuilder parameterStringBuilder = new StringBuilder();
 			foreach (SqlColumnInfo sqlColumn in sqlColumnsInfo)
@@ -126,7 +126,7 @@ namespace DataLayer.SqlData
 				sqlStringBuilder.AppendLine($"	{orderby}");
 			}
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
 
 			List<ResultType> results = new List<ResultType>();
 
@@ -150,10 +150,10 @@ namespace DataLayer.SqlData
 
 				switch (sqlColumnInfo.SqlColumn.DataType)
 				{
-					case Utilities.DataType.NVARCHAR_MAX:
+					case SqlUtilities.DataType.NVARCHAR_MAX:
 						value = ConvertFromDatabaseValue<string>(row[sqlColumnInfo.Name.ToLower()]);
 						break;
-					case Utilities.DataType.INT:
+					case SqlUtilities.DataType.INT:
 						if (sqlColumnInfo.SqlColumn.AllowNull)
 						{
 							value = ConvertFromDatabaseValue<int?>(row[sqlColumnInfo.Name.ToLower()]);
@@ -163,7 +163,7 @@ namespace DataLayer.SqlData
 							value = ConvertFromDatabaseValue<int>(row[sqlColumnInfo.Name.ToLower()]);
 						}
 						break;
-					case Utilities.DataType.DATETIME:
+					case SqlUtilities.DataType.DATETIME:
 						if (sqlColumnInfo.SqlColumn.AllowNull)
 						{
 							value = ConvertFromDatabaseValue<DateTime?>(row[sqlColumnInfo.Name.ToLower()]);
@@ -173,7 +173,7 @@ namespace DataLayer.SqlData
 							value = ConvertFromDatabaseValue<DateTime>(row[sqlColumnInfo.Name.ToLower()]);
 						}
 						break;
-					case Utilities.DataType.UNIQUEIDENTIFIER:
+					case SqlUtilities.DataType.UNIQUEIDENTIFIER:
 						if (sqlColumnInfo.SqlColumn.AllowNull)
 						{
 							value = ConvertFromDatabaseValue<Guid?>(row[sqlColumnInfo.Name.ToLower()]);
@@ -183,7 +183,7 @@ namespace DataLayer.SqlData
 							value = ConvertFromDatabaseValue<Guid>(row[sqlColumnInfo.Name.ToLower()]);
 						}
 						break;
-					case Utilities.DataType.BIT:
+					case SqlUtilities.DataType.BIT:
 						if (sqlColumnInfo.SqlColumn.AllowNull)
 						{
 							value = ConvertFromDatabaseValue<bool?>(row[sqlColumnInfo.Name.ToLower()]);
@@ -211,7 +211,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine($"	{searchName} = @{searchName})");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
 
 			return dataTable.Rows.Count > 0;
 		}

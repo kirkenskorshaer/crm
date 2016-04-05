@@ -10,7 +10,7 @@ namespace Administration.Option.Options.Data
 
 		protected override bool ExecuteOption()
 		{
-			DataLayer.SqlData.Utilities.MaintainAllTables(SqlConnection);
+			DataLayer.SqlData.SqlUtilities.MaintainAllTables(SqlConnection);
 
 			return true;
 		}

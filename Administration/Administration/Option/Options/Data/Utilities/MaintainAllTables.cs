@@ -26,7 +26,7 @@ namespace Administration.Option.Options.Data.Utilities
 
 		protected override bool ExecuteOption()
 		{
-			DataLayer.SqlData.Utilities.MaintainAllTables(SqlConnection);
+			DataLayer.SqlData.SqlUtilities.MaintainAllTables(SqlConnection);
 
 			return true;
 		}

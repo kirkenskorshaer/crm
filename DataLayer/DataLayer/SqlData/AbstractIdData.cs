@@ -10,7 +10,7 @@ namespace DataLayer.SqlData
 {
 	public class AbstractIdData : AbstractData
 	{
-		[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+		[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 		public Guid Id { get; protected set; }
 
 		public void Delete(SqlConnection sqlConnection)
@@ -21,7 +21,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, new KeyValuePair<string, object>("id", Id));
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, new KeyValuePair<string, object>("id", Id));
 		}
 
 		public void Insert(SqlConnection sqlConnection)
@@ -51,7 +51,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
@@ -80,7 +80,7 @@ namespace DataLayer.SqlData
 
 			parameters.Add(new KeyValuePair<string, object>("id", Id));
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		public static ResultType ReadNextById<ResultType>(SqlConnection sqlConnection, Guid id) where ResultType : AbstractIdData, new()

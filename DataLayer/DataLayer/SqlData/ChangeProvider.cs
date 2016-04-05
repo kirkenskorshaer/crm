@@ -16,14 +16,14 @@ namespace DataLayer.SqlData
 		{
 			string tableName = typeof(ChangeProvider).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateTable(sqlConnection, tableName, "id");
+				SqlUtilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "Name", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "Name", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 		}
 
 		public void Insert(SqlConnection sqlConnection)
@@ -41,7 +41,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("	@name");
 			sqlStringBuilder.AppendLine(")");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", Name));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", Name));
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
@@ -56,7 +56,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine("	" + typeof(ChangeProvider).Name);
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder);
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder);
 
 			List<ChangeProvider> contactChangeProviders = new List<ChangeProvider>();
 
@@ -89,7 +89,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
 
 			DataRow row = dataTable.Rows[0];
 			ChangeProvider changeProvider = CreateFromDataRow(row);
@@ -108,7 +108,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	Name = @name");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
 
 			DataRow row = dataTable.Rows[0];
 			ChangeProvider changeProvider = CreateFromDataRow(row);
@@ -126,7 +126,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", changeProviderId));
 
 			bool exists = dataTable.Rows.Count >= 1;
 
@@ -143,7 +143,7 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	Name = @name");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("name", name));
 
 			bool exists = dataTable.Rows.Count >= 1;
 

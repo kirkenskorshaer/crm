@@ -29,7 +29,7 @@ namespace DataLayerTest.SqlDataTest
 		{
 			string tableName = GetRandomTableName();
 
-			List<string> columns = Utilities.GetExistingColumns(_sqlConnection, tableName);
+			List<string> columns = SqlUtilities.GetExistingColumns(_sqlConnection, tableName);
 
 			Assert.AreEqual(0, columns.Count);
 		}
@@ -38,13 +38,13 @@ namespace DataLayerTest.SqlDataTest
 		public void AddColumnAddsAColumn()
 		{
 			string tableName = GetRandomTableName();
-			Utilities.CreateTable(_sqlConnection, tableName, "id");
-			List<string> columnsBefore = Utilities.GetExistingColumns(_sqlConnection, tableName);
+			SqlUtilities.CreateTable(_sqlConnection, tableName, "id");
+			List<string> columnsBefore = SqlUtilities.GetExistingColumns(_sqlConnection, tableName);
 
-			Utilities.AddColumn(_sqlConnection, tableName, "q", Utilities.DataType.INT, SqlBoolean.False);
+			SqlUtilities.AddColumn(_sqlConnection, tableName, "q", SqlUtilities.DataType.INT, SqlBoolean.False);
 
-			List<string> columnsAfter = Utilities.GetExistingColumns(_sqlConnection, tableName);
-			Utilities.DropTable(_sqlConnection, tableName);
+			List<string> columnsAfter = SqlUtilities.GetExistingColumns(_sqlConnection, tableName);
+			SqlUtilities.DropTable(_sqlConnection, tableName);
 			Assert.AreEqual(columnsBefore.Count + 1, columnsAfter.Count);
 		}
 
@@ -52,11 +52,11 @@ namespace DataLayerTest.SqlDataTest
 		public void DropTableDeletesTable()
 		{
 			string tableName = GetRandomTableName();
-			Utilities.CreateTable(_sqlConnection, tableName, "id");
-			List<string> columnsBefore = Utilities.GetExistingColumns(_sqlConnection, tableName);
+			SqlUtilities.CreateTable(_sqlConnection, tableName, "id");
+			List<string> columnsBefore = SqlUtilities.GetExistingColumns(_sqlConnection, tableName);
 
-			Utilities.DropTable(_sqlConnection, tableName);
-			List<string> columnsAfter = Utilities.GetExistingColumns(_sqlConnection, tableName);
+			SqlUtilities.DropTable(_sqlConnection, tableName);
+			List<string> columnsAfter = SqlUtilities.GetExistingColumns(_sqlConnection, tableName);
 
 			Assert.AreEqual(1, columnsBefore.Count);
 			Assert.AreEqual(0, columnsAfter.Count);
@@ -69,20 +69,20 @@ namespace DataLayerTest.SqlDataTest
 			string tableName2 = GetRandomTableName();
 			string tableNameCompositeTable = GetRandomTableName();
 
-			Utilities.CreateTable(_sqlConnection, tableName1, "id");
-			Utilities.CreateTable(_sqlConnection, tableName2, "id");
+			SqlUtilities.CreateTable(_sqlConnection, tableName1, "id");
+			SqlUtilities.CreateTable(_sqlConnection, tableName2, "id");
 
-			Utilities.CreateCompositeTable2Tables(_sqlConnection, tableNameCompositeTable, "id1", "id2");
+			SqlUtilities.CreateCompositeTable2Tables(_sqlConnection, tableNameCompositeTable, "id1", "id2");
 
-			Utilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id1", tableName1, "id");
-			Utilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id2", tableName2, "id");
+			SqlUtilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id1", tableName1, "id");
+			SqlUtilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id2", tableName2, "id");
 
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName1));
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName2));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName1));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName2));
 
-			Utilities.DropTable(_sqlConnection, tableNameCompositeTable);
-			Utilities.DropTable(_sqlConnection, tableName1);
-			Utilities.DropTable(_sqlConnection, tableName2);
+			SqlUtilities.DropTable(_sqlConnection, tableNameCompositeTable);
+			SqlUtilities.DropTable(_sqlConnection, tableName1);
+			SqlUtilities.DropTable(_sqlConnection, tableName2);
 		}
 
 		[Test]
@@ -93,24 +93,24 @@ namespace DataLayerTest.SqlDataTest
 			string tableName3 = GetRandomTableName();
 			string tableNameCompositeTable = GetRandomTableName();
 
-			Utilities.CreateTable(_sqlConnection, tableName1, "id");
-			Utilities.CreateTable(_sqlConnection, tableName2, "id");
-			Utilities.CreateTable(_sqlConnection, tableName3, "id");
+			SqlUtilities.CreateTable(_sqlConnection, tableName1, "id");
+			SqlUtilities.CreateTable(_sqlConnection, tableName2, "id");
+			SqlUtilities.CreateTable(_sqlConnection, tableName3, "id");
 
-			Utilities.CreateCompositeTable3Tables(_sqlConnection, tableNameCompositeTable, "id1", "id2", "id3");
+			SqlUtilities.CreateCompositeTable3Tables(_sqlConnection, tableNameCompositeTable, "id1", "id2", "id3");
 
-			Utilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id1", tableName1, "id");
-			Utilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id2", tableName2, "id");
-			Utilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id3", tableName3, "id");
+			SqlUtilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id1", tableName1, "id");
+			SqlUtilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id2", tableName2, "id");
+			SqlUtilities.MaintainForeignKey(_sqlConnection, tableNameCompositeTable, "id3", tableName3, "id");
 
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName1));
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName2));
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName3));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName1));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName2));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName3));
 
-			Utilities.DropTable(_sqlConnection, tableNameCompositeTable);
-			Utilities.DropTable(_sqlConnection, tableName1);
-			Utilities.DropTable(_sqlConnection, tableName2);
-			Utilities.DropTable(_sqlConnection, tableName3);
+			SqlUtilities.DropTable(_sqlConnection, tableNameCompositeTable);
+			SqlUtilities.DropTable(_sqlConnection, tableName1);
+			SqlUtilities.DropTable(_sqlConnection, tableName2);
+			SqlUtilities.DropTable(_sqlConnection, tableName3);
 		}
 
 		[Test]
@@ -119,18 +119,18 @@ namespace DataLayerTest.SqlDataTest
 			string tableName1 = GetRandomTableName();
 			string tableName2 = GetRandomTableName();
 
-			Utilities.CreateCompositeTable2Tables(_sqlConnection, tableName1, "id1", "id2");
+			SqlUtilities.CreateCompositeTable2Tables(_sqlConnection, tableName1, "id1", "id2");
 
-			Utilities.CreateTable(_sqlConnection, tableName2, "id");
-			Utilities.AddColumn(_sqlConnection, tableName2, "id1", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			Utilities.AddColumn(_sqlConnection, tableName2, "id2", Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			SqlUtilities.CreateTable(_sqlConnection, tableName2, "id");
+			SqlUtilities.AddColumn(_sqlConnection, tableName2, "id1", SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			SqlUtilities.AddColumn(_sqlConnection, tableName2, "id2", SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
-			Utilities.MaintainCompositeForeignKey2Keys(_sqlConnection, tableName2, "id1", "id2", tableName1, "id1", "id2", true);
+			SqlUtilities.MaintainCompositeForeignKey2Keys(_sqlConnection, tableName2, "id1", "id2", tableName1, "id1", "id2", true);
 
-			Assert.Throws(typeof(SqlException), () => Utilities.DropTable(_sqlConnection, tableName1));
+			Assert.Throws(typeof(SqlException), () => SqlUtilities.DropTable(_sqlConnection, tableName1));
 
-			Utilities.DropTable(_sqlConnection, tableName2);
-			Utilities.DropTable(_sqlConnection, tableName1);
+			SqlUtilities.DropTable(_sqlConnection, tableName2);
+			SqlUtilities.DropTable(_sqlConnection, tableName1);
 		}
 
 		[Test]
@@ -140,11 +140,11 @@ namespace DataLayerTest.SqlDataTest
 			string column1Name = GetRandomTableName();
 			string column2Name = GetRandomTableName();
 
-			Utilities.CreateTable(_sqlConnection, tableName, "id");
-			Utilities.AddColumn(_sqlConnection, tableName, column1Name, Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
-			Utilities.AddColumn(_sqlConnection, tableName, column2Name, Utilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			SqlUtilities.CreateTable(_sqlConnection, tableName, "id");
+			SqlUtilities.AddColumn(_sqlConnection, tableName, column1Name, SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
+			SqlUtilities.AddColumn(_sqlConnection, tableName, column2Name, SqlUtilities.DataType.UNIQUEIDENTIFIER, SqlBoolean.False);
 
-			Utilities.MaintainUniqueConstraint(_sqlConnection, tableName, "testConstraint", column1Name, column2Name);
+			SqlUtilities.MaintainUniqueConstraint(_sqlConnection, tableName, "testConstraint", column1Name, column2Name);
 
 			StringBuilder insertStringBuilder = InsertQuery(tableName, column1Name, column2Name);
 
@@ -153,7 +153,7 @@ namespace DataLayerTest.SqlDataTest
 
 			Action insertAction = () =>
 			{
-				Utilities.ExecuteNonQuery(_sqlConnection, insertStringBuilder, System.Data.CommandType.Text
+				SqlUtilities.ExecuteNonQuery(_sqlConnection, insertStringBuilder, System.Data.CommandType.Text
 					, new KeyValuePair<string, object>("column1Value", column1Value)
 					, new KeyValuePair<string, object>("column2Value", column2Value));
 			};
@@ -162,7 +162,7 @@ namespace DataLayerTest.SqlDataTest
 
 			Assert.Throws(typeof(SqlException), () => insertAction());
 
-			Utilities.DropTable(_sqlConnection, tableName);
+			SqlUtilities.DropTable(_sqlConnection, tableName);
 		}
 
 		private StringBuilder InsertQuery(string tableName, string column1Name, string column2Name)
@@ -189,11 +189,11 @@ namespace DataLayerTest.SqlDataTest
 		[Test]
 		public void GetDataFieldsReturnsInheritedFields()
 		{
-			List<SqlColumnInfo> byArbejdeFields = Utilities.GetSqlColumnsInfo(typeof(Byarbejde));
+			List<SqlColumnInfo> byArbejdeFields = SqlUtilities.GetSqlColumnsInfo(typeof(Byarbejde));
 
 			Assert.IsTrue(byArbejdeFields.Any(byarbejde =>
 				byarbejde.Name == "Id" &&
-				byarbejde.SqlColumn.DataType == Utilities.DataType.UNIQUEIDENTIFIER &&
+				byarbejde.SqlColumn.DataType == SqlUtilities.DataType.UNIQUEIDENTIFIER &&
 				byarbejde.SqlColumn.AllowNull == false &&
 				byarbejde.SqlColumn.Properties == SqlColumn.PropertyEnum.PrimaryKey));
 		}
@@ -201,11 +201,11 @@ namespace DataLayerTest.SqlDataTest
 		[Test]
 		public void GetDataFieldsReturnsInstanceFields()
 		{
-			List<SqlColumnInfo> byArbejdeFields = Utilities.GetSqlColumnsInfo(typeof(Byarbejde));
+			List<SqlColumnInfo> byArbejdeFields = SqlUtilities.GetSqlColumnsInfo(typeof(Byarbejde));
 
 			Assert.IsTrue(byArbejdeFields.Any(byarbejde =>
 				byarbejde.Name == "Name" &&
-				byarbejde.SqlColumn.DataType == Utilities.DataType.NVARCHAR_MAX &&
+				byarbejde.SqlColumn.DataType == SqlUtilities.DataType.NVARCHAR_MAX &&
 				byarbejde.SqlColumn.AllowNull == false));
 		}
 
@@ -213,20 +213,20 @@ namespace DataLayerTest.SqlDataTest
 		[Ignore]
 		public void MaintainTables()
 		{
-			Utilities.DeleteAllTables(_sqlConnection);
-			Utilities.MaintainAllTables(_sqlConnection);
+			SqlUtilities.DeleteAllTables(_sqlConnection);
+			SqlUtilities.MaintainAllTables(_sqlConnection);
 		}
 
 		[Test]
 		public void MainTainTablesCanCreateTablesLinkedByCompositeKeys()
 		{
-			Utilities.MaintainTable(_sqlConnection, typeof(TableTest3Id));
-			Utilities.MaintainTable(_sqlConnection, typeof(TableTest2Id));
-			Utilities.MaintainTable(_sqlConnection, typeof(TableTest1Id));
+			SqlUtilities.MaintainTable(_sqlConnection, typeof(TableTest3Id));
+			SqlUtilities.MaintainTable(_sqlConnection, typeof(TableTest2Id));
+			SqlUtilities.MaintainTable(_sqlConnection, typeof(TableTest1Id));
 
-			Utilities.DropTable(_sqlConnection, typeof(TableTest1Id).Name);
-			Utilities.DropTable(_sqlConnection, typeof(TableTest2Id).Name);
-			Utilities.DropTable(_sqlConnection, typeof(TableTest3Id).Name);
+			SqlUtilities.DropTable(_sqlConnection, typeof(TableTest1Id).Name);
+			SqlUtilities.DropTable(_sqlConnection, typeof(TableTest2Id).Name);
+			SqlUtilities.DropTable(_sqlConnection, typeof(TableTest3Id).Name);
 		}
 
 		private string GetRandomTableName()
@@ -236,29 +236,29 @@ namespace DataLayerTest.SqlDataTest
 
 		private class TableTest1Id : AbstractIdData
 		{
-			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id1", "id1" }, new bool[] { true, false }, new int[] { 1, 1 })]
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id1", "id1" }, new bool[] { true, false }, new int[] { 1, 1 })]
 			public Guid? fkId1;
-			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id2", "id2" }, new bool[] { true, false }, new int[] { 1, 1 })]
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id2", "id2" }, new bool[] { true, false }, new int[] { 1, 1 })]
 			public Guid? fkId2;
-			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "FK2", typeof(TableTest3Id), "id3", false, 1)]
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "FK2", typeof(TableTest3Id), "id3", false, 1)]
 			public Guid? fkId3;
 		}
 
 		private class TableTest2Id : AbstractData
 		{
-			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 			public Guid? id1;
-			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 			public Guid? id2;
 		}
 
 		private class TableTest3Id : AbstractData
 		{
-			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 			public Guid? id1;
-			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 			public Guid? id2;
-			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false)]
 			public Guid? id3;
 		}
 	}

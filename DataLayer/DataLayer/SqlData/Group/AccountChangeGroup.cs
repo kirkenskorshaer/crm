@@ -22,11 +22,11 @@ namespace DataLayer.SqlData.Group
 		{
 			string tableName = typeof(AccountChangeGroup).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountChangeId", "GroupId");
+				SqlUtilities.CreateCompositeTable2Tables(sqlConnection, tableName, "AccountChangeId", "GroupId");
 			}
 
 			CreateKeyIfMissing(sqlConnection, tableName, "AccountChangeId", typeof(Account.AccountChange).Name, "id");
@@ -52,7 +52,7 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		public void Delete(SqlConnection sqlConnection)
@@ -65,14 +65,14 @@ namespace DataLayer.SqlData.Group
 			sqlStringBuilder.AppendLine("	AND");
 			sqlStringBuilder.AppendLine("	GroupId = @groupId");
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text,
 				new KeyValuePair<string, object>("accountChangeId", AccountChangeId),
 				new KeyValuePair<string, object>("groupId", GroupId));
 		}
 
 		public static List<AccountChangeGroup> ReadFromAccountChangeId(SqlConnection sqlConnection, Guid accountChangeId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeGroup), "AccountChangeId", "GroupId", accountChangeId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountChangeGroup), "AccountChangeId", "GroupId", accountChangeId);
 
 			List<AccountChangeGroup> contactChangeGroups = relatedIds.Select(groupId => new AccountChangeGroup(accountChangeId, groupId)).ToList();
 
@@ -81,7 +81,7 @@ namespace DataLayer.SqlData.Group
 
 		public static List<AccountChangeGroup> ReadFromGroupId(SqlConnection sqlConnection, Guid groupId)
 		{
-			List<Guid> relatedIds = Utilities.ReadNNTable(sqlConnection, typeof(AccountChangeGroup), "GroupId", "AccountChangeId", groupId);
+			List<Guid> relatedIds = SqlUtilities.ReadNNTable(sqlConnection, typeof(AccountChangeGroup), "GroupId", "AccountChangeId", groupId);
 
 			List<AccountChangeGroup> contactChangeGroups = relatedIds.Select(accountChangeId => new AccountChangeGroup(accountChangeId, groupId)).ToList();
 

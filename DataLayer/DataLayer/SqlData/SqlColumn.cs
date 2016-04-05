@@ -7,7 +7,7 @@ namespace DataLayer.SqlData
 	public class SqlColumn : Attribute
 	{
 		public PropertyEnum Properties { get; private set; }
-		public Utilities.DataType DataType { get; private set; }
+		public SqlUtilities.DataType DataType { get; private set; }
 		public bool AllowNull { get; private set; }
 		public List<ForeignKeyInfo> ForeignKeysInfo { get; private set; }
 
@@ -18,14 +18,14 @@ namespace DataLayer.SqlData
 			ForeignKey = 2,
 		}
 
-		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull)
+		public SqlColumn(PropertyEnum properties, SqlUtilities.DataType dataType, bool allowNull)
 		{
 			Properties = properties;
 			DataType = dataType;
 			AllowNull = allowNull;
 		}
 
-		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull, string foreignKeyGroup, Type foreignKeyTable, string foreignKeyIdName, bool foreignKeyCascade, int foreignKeyIndex)
+		public SqlColumn(PropertyEnum properties, SqlUtilities.DataType dataType, bool allowNull, string foreignKeyGroup, Type foreignKeyTable, string foreignKeyIdName, bool foreignKeyCascade, int foreignKeyIndex)
 		{
 			Properties = properties;
 			DataType = dataType;
@@ -34,7 +34,7 @@ namespace DataLayer.SqlData
 			ForeignKeysInfo = new List<ForeignKeyInfo>() { info };
 		}
 
-		public SqlColumn(PropertyEnum properties, Utilities.DataType dataType, bool allowNull, string[] foreignKeyGroups, Type[] foreignKeyTables, string[] foreignKeyIdNames, bool[] foreignKeyCascades, int[] foreignKeyIndex)
+		public SqlColumn(PropertyEnum properties, SqlUtilities.DataType dataType, bool allowNull, string[] foreignKeyGroups, Type[] foreignKeyTables, string[] foreignKeyIdNames, bool[] foreignKeyCascades, int[] foreignKeyIndex)
 		{
 			Properties = properties;
 			DataType = dataType;

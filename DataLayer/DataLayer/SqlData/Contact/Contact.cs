@@ -71,36 +71,36 @@ namespace DataLayer.SqlData.Contact
 		{
 			string tableName = typeof(Contact).Name;
 
-			List<string> columnsInDatabase = Utilities.GetExistingColumns(sqlConnection, tableName);
+			List<string> columnsInDatabase = SqlUtilities.GetExistingColumns(sqlConnection, tableName);
 
 			if (columnsInDatabase.Any() == false)
 			{
-				Utilities.CreateTable(sqlConnection, tableName, "id");
+				SqlUtilities.CreateTable(sqlConnection, tableName, "id");
 			}
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "middlename", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", Utilities.DataType.DATETIME, SqlBoolean.False);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", Utilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "firstname", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "middlename", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "lastname", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "createdon", SqlUtilities.DataType.DATETIME, SqlBoolean.False);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "modifiedon", SqlUtilities.DataType.DATETIME, SqlBoolean.False);
 
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", Utilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", Utilities.DataType.INT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "gavebrevudloebsdato", Utilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", Utilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", Utilities.DataType.BIT, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", Utilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "birthdate", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_line2", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_city", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "address1_postalcode", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "emailaddress1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "gavebrevudloebsdato", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "titel", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "hargavebrev", SqlUtilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminstatus", SqlUtilities.DataType.BIT, SqlBoolean.True);
+			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "new_kkadminmedlemsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
 		}
 
 		public void Insert(SqlConnection sqlConnection, MongoConnection mongoConnection = null)
@@ -146,7 +146,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.Append(sqlStringBuilderParameters);
 			sqlStringBuilder.AppendLine(")");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
 
 			DataRow row = dataTable.Rows[0];
 			Id = (Guid)row["id"];
@@ -191,7 +191,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	ModifiedOn >= @lastSearchDate");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("lastSearchDate", lastSearchDate));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("lastSearchDate", lastSearchDate));
 
 			List<Contact> contacts = new List<Contact>();
 
@@ -225,7 +225,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("ORDER BY");
 			sqlStringBuilder.AppendLine("	contact.id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
 
 			if (dataTable.Rows.Count == 1)
 			{
@@ -282,7 +282,7 @@ namespace DataLayer.SqlData.Contact
 
 			parameters.Add(new KeyValuePair<string, object>("id", Id));
 
-			Utilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
+			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, parameters.ToArray());
 		}
 
 		private static Contact CreateFromRow(DataRow row)
@@ -324,7 +324,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", id));
 
 			return dataTable.Rows.Count > 0;
 		}
@@ -342,7 +342,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	id = @id");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", contactId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("id", contactId));
 
 			DataRow row = dataTable.Rows[0];
 			Contact contact = CreateFromRow(row);
@@ -365,7 +365,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine($"	{fieldName} = @{fieldName}");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(fieldName, fieldValue));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(fieldName, fieldValue));
 
 			if (dataTable.Rows.Count == 0)
 			{
@@ -418,7 +418,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine($"	{NNTable.Name}.{foreignKeyName} = @{foreignKeyName}");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(foreignKeyName, foreignKeyId));
 
 			List<Contact> contacts = ReadContactsFromDataTable(dataTable);
 
@@ -452,7 +452,7 @@ namespace DataLayer.SqlData.Contact
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	firstname = @firstname");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("firstname", firstName));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("firstname", firstName));
 
 			List<Contact> contacts = new List<Contact>();
 

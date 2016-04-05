@@ -9,54 +9,54 @@ namespace DataLayer.SqlData.Account
 {
 	public class AccountChange : AbstractIdData, IModifiedIdData
 	{
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.DATETIME, false)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.DATETIME, false)]
 		public DateTime createdon;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.DATETIME, false)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.DATETIME, false)]
 		public DateTime modifiedon { get; set; }
 
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string name;
 
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_line1;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_line2;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_city;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string address1_postalcode;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string emailaddress1;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.NVARCHAR_MAX, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, true)]
 		public string telephone1;
 
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? erindsamlingssted;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? new_kkadminmedlemsnr;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? region;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? stedtype;
 
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ExternalAccountId", false, 2)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ExternalAccountId", true, 2)]
 		public Guid ExternalAccountId { get; private set; }
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ChangeProviderId", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, "ExternalAccount", typeof(ExternalAccount), "ChangeProviderId", true, 1)]
 		public Guid ChangeProviderId { get; private set; }
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, false, new string[] { "account", "ExternalAccount" }, new Type[] { typeof(Account), typeof(ExternalAccount) }, new string[] { "id", "AccountId" }, new bool[] { true, false }, new int[] { 1, 3 })]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, new string[] { "account", "ExternalAccount" }, new Type[] { typeof(Account), typeof(ExternalAccount) }, new string[] { "id", "AccountId" }, new bool[] { true, true }, new int[] { 1, 3 })]
 		public Guid AccountId { get; private set; }
 
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "bykoordinator", typeof(Contact.Contact), "id", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "bykoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? bykoordinatorid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "omraadekoordinator", typeof(Contact.Contact), "id", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "omraadekoordinator", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? omraadekoordinatorid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "korshaersleder", typeof(Contact.Contact), "id", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "korshaersleder", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? korshaerslederid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "genbrugskonsulent", typeof(Contact.Contact), "id", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "genbrugskonsulent", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? genbrugskonsulentid;
-		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "primarycontact", typeof(Contact.Contact), "id", false, 1)]
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, true, "primarycontact", typeof(Contact.Contact), "id", false, 1)]
 		public Guid? primarycontact;
-		[SqlColumn(SqlColumn.PropertyEnum.None, Utilities.DataType.INT, true)]
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.INT, true)]
 		public int? kredsellerby;
 
 		private SqlConnection _sqlConnection;
@@ -81,7 +81,7 @@ namespace DataLayer.SqlData.Account
 
 			Type tableType = typeof(AccountChange);
 
-			Utilities.MaintainTable(sqlConnection, tableType);
+			SqlUtilities.MaintainTable(sqlConnection, tableType);
 		}
 
 		public void Insert()
@@ -125,7 +125,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("			END = 0");
 			sqlStringBuilder.AppendLine("	)");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
 				, new KeyValuePair<string, object>("AccountId", accountId)
 				, new KeyValuePair<string, object>("ExternalAccountId", externalAccountId)
 				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId)
@@ -216,7 +216,7 @@ namespace DataLayer.SqlData.Account
 			sqlStringBuilder.AppendLine("WHERE");
 			sqlStringBuilder.AppendLine("	AccountChange.ChangeProviderId = @ChangeProviderId");
 
-			DataTable dataTable = Utilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
 
 			DataRow row = dataTable.Rows[0];
 			DateTime modifiedOn = (DateTime)row["ModifiedOn"];

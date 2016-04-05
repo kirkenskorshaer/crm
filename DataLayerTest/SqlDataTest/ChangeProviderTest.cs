@@ -26,7 +26,7 @@ namespace DataLayerTest.SqlDataTest
 		[SetUp]
 		public void SetUp()
 		{
-			Utilities.RecreateAllTables(_sqlConnection);
+			SqlUtilities.RecreateAllTables(_sqlConnection);
 		}
 
 		private ChangeProvider InsertChangeProvider()
