@@ -217,9 +217,49 @@ namespace DataLayerTest.SqlDataTest
 			Utilities.MaintainAllTables(_sqlConnection);
 		}
 
+		[Test]
+		public void MainTainTablesCanCreateTablesLinkedByCompositeKeys()
+		{
+			Utilities.MaintainTable(_sqlConnection, typeof(TableTest3Id));
+			Utilities.MaintainTable(_sqlConnection, typeof(TableTest2Id));
+			Utilities.MaintainTable(_sqlConnection, typeof(TableTest1Id));
+
+			Utilities.DropTable(_sqlConnection, typeof(TableTest1Id).Name);
+			Utilities.DropTable(_sqlConnection, typeof(TableTest2Id).Name);
+			Utilities.DropTable(_sqlConnection, typeof(TableTest3Id).Name);
+		}
+
 		private string GetRandomTableName()
 		{
 			return "T" + Guid.NewGuid().ToString().Replace('-', '_');
+		}
+
+		private class TableTest1Id : AbstractIdData
+		{
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id1", "id1" }, new bool[] { true, false }, new int[] { 1, 1 })]
+			public Guid? fkId1;
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, new string[] { "FK1", "FK2" }, new Type[] { typeof(TableTest2Id), typeof(TableTest3Id) }, new string[] { "id2", "id2" }, new bool[] { true, false }, new int[] { 1, 1 })]
+			public Guid? fkId2;
+			[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, Utilities.DataType.UNIQUEIDENTIFIER, true, "FK2", typeof(TableTest3Id), "id3", false, 1)]
+			public Guid? fkId3;
+		}
+
+		private class TableTest2Id : AbstractData
+		{
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			public Guid? id1;
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			public Guid? id2;
+		}
+
+		private class TableTest3Id : AbstractData
+		{
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			public Guid? id1;
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			public Guid? id2;
+			[SqlColumn(SqlColumn.PropertyEnum.PrimaryKey, Utilities.DataType.UNIQUEIDENTIFIER, false)]
+			public Guid? id3;
 		}
 	}
 }
