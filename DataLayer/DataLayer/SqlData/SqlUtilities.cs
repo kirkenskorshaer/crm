@@ -126,6 +126,8 @@ namespace DataLayer.SqlData
 			Contact.Contact.MaintainTable(sqlConnection);
 			ExternalContact.MaintainTable(sqlConnection);
 			ContactChange.MaintainTable(sqlConnection);
+			Byarbejde.Byarbejde.MaintainTable(sqlConnection);
+			Byarbejde.ExternalByarbejde.MaintainTable(sqlConnection);
 			Account.Account.MaintainTable(sqlConnection);
 			ExternalAccount.MaintainTable(sqlConnection);
 			AccountChange.MaintainTable(sqlConnection);
@@ -156,6 +158,9 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(Group.AccountGroup).Name);
 			DropTable(sqlConnection, typeof(ExternalAccount).Name);
 			DropTable(sqlConnection, typeof(Account.Account).Name);
+
+			DropTable(sqlConnection, typeof(Byarbejde.ExternalByarbejde).Name);
+			DropTable(sqlConnection, typeof(Byarbejde.Byarbejde).Name);
 
 			DropTable(sqlConnection, typeof(Contact.Contact).Name);
 
