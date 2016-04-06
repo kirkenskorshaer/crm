@@ -85,7 +85,7 @@ namespace DataLayer.SqlData
 
 		public static ResultType ReadNextById<ResultType>(SqlConnection sqlConnection, Guid id) where ResultType : AbstractIdData, new()
 		{
-			List<ResultType> results = Read<ResultType>(sqlConnection, "id", ">", id, 1, "id");
+			List<ResultType> results = Read<ResultType>(sqlConnection, new SqlCondition("id", ">", id), 1, "id");
 
 			if (results.Count == 1)
 			{

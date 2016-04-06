@@ -85,10 +85,25 @@ namespace DataLayer.SqlData
 
 		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, object searchValue) where ResultType : new()
 		{
-			return Read<ResultType>(sqlConnection, searchName, "=", searchValue, null, null);
+			return Read<ResultType>(sqlConnection, new SqlCondition(searchName, "=", searchValue), null, null);
 		}
 
-		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, string searchName, string operatorString, object searchValue, int? top, string orderby) where ResultType : new()
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, SqlCondition sqlCondition) where ResultType : new()
+		{
+			return Read<ResultType>(sqlConnection, new List<SqlCondition> { sqlCondition }, null, null);
+		}
+
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, SqlCondition sqlCondition, int? top, string orderby) where ResultType : new()
+		{
+			return Read<ResultType>(sqlConnection, new List<SqlCondition> { sqlCondition }, top, orderby);
+		}
+
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, List<SqlCondition> sqlConditions) where ResultType : new()
+		{
+			return Read<ResultType>(sqlConnection, sqlConditions, null, null);
+		}
+
+		internal static List<ResultType> Read<ResultType>(SqlConnection sqlConnection, List<SqlCondition> sqlConditions, int? top, string orderby) where ResultType : new()
 		{
 			List<SqlColumnInfo> sqlColumnsInfo = SqlUtilities.GetSqlColumnsInfo(typeof(ResultType));
 
@@ -118,7 +133,20 @@ namespace DataLayer.SqlData
 			sqlStringBuilder.AppendLine("FROM");
 			sqlStringBuilder.AppendLine($"	[{typeof(ResultType).Name}]");
 			sqlStringBuilder.AppendLine("WHERE");
-			sqlStringBuilder.AppendLine($"	{searchName} {operatorString} @{searchName}");
+
+			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+			bool firstSqlConditionIteration = true;
+			foreach (SqlCondition sqlCondition in sqlConditions)
+			{
+				if (firstSqlConditionIteration == false)
+				{
+					sqlStringBuilder.AppendLine("	AND");
+				}
+				sqlStringBuilder.AppendLine($"	{sqlCondition.searchName} {sqlCondition.operatorString} @{sqlCondition.searchName}");
+
+				firstSqlConditionIteration = false;
+				parameters.Add(new KeyValuePair<string, object>(sqlCondition.searchName, sqlCondition.searchValue));
+			}
 
 			if (string.IsNullOrWhiteSpace(orderby) == false)
 			{
@@ -126,7 +154,7 @@ namespace DataLayer.SqlData
 				sqlStringBuilder.AppendLine($"	{orderby}");
 			}
 
-			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(searchName, searchValue));
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
 
 			List<ResultType> results = new List<ResultType>();
 

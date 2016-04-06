@@ -113,7 +113,7 @@ namespace DataLayer.SqlData.Account
 
 		public static List<Account> ReadLatest(SqlConnection sqlConnection, DateTime lastSearchDate)
 		{
-			List<Account> accounts = Read<Account>(sqlConnection, "modifiedon", ">=", lastSearchDate, null, null);
+			List<Account> accounts = Read<Account>(sqlConnection, new SqlCondition("modifiedon", ">=", lastSearchDate), null, null);
 
 			return accounts;
 		}
