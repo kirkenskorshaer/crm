@@ -49,7 +49,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			List<Group> Groups = Group.Read(_connection, groupInserted.Name);
 			groupInserted.Delete(_connection);
 
-			Assert.True(Groups.Any(group => group.GroupId == groupInserted.GroupId));
+			Assert.AreEqual(groupInserted.GroupId, Groups.Single().GroupId);
 			Assert.AreNotEqual(Guid.Empty, groupInserted.GroupId);
 		}
 

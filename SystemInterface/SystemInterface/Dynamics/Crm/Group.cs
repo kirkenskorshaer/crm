@@ -72,6 +72,7 @@ namespace SystemInterface.Dynamics.Crm
 				AttributeName = "new_name",
 				Operator = ConditionOperator.Equal,
 			};
+			equalsNameExpression.Values.Add(name);
 
 			FilterExpression filterExpression = new FilterExpression();
 			filterExpression.Conditions.Add(equalsNameExpression);
@@ -80,6 +81,7 @@ namespace SystemInterface.Dynamics.Crm
 			{
 				ColumnSet = ColumnSetGroup,
 			};
+			query.Criteria.AddFilter(filterExpression);
 
 			EntityCollection GroupEntities = connection.Service.RetrieveMultiple(query);
 
