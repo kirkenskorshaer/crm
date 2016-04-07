@@ -13,6 +13,8 @@ using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
+using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
+using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using SystemInterfaceAccount = SystemInterface.Dynamics.Crm.Account;
 using SystemInterfaceGroup = SystemInterface.Dynamics.Crm.Group;
@@ -137,6 +139,8 @@ namespace Administration.Option.Options.Logic
 
 		private void InsertAccountAndCreateExternalAccount(Guid changeProviderId, DatabaseAccount databaseAccount)
 		{
+			InsertByarbejdeIfNeeded(changeProviderId, databaseAccount);
+
 			SystemInterfaceAccount systemInterfaceAccount = Conversion.Account.Convert(_dynamicsCrmConnection, SqlConnection, changeProviderId, databaseAccount);
 			systemInterfaceAccount.Insert();
 
@@ -144,6 +148,30 @@ namespace Administration.Option.Options.Logic
 			externalAccount.Insert();
 
 			InsertAccountRelations(databaseAccount, systemInterfaceAccount, changeProviderId);
+		}
+
+		private void InsertByarbejdeIfNeeded(Guid changeProviderId, DatabaseAccount databaseAccount)
+		{
+			if (databaseAccount.byarbejdeid.HasValue == false)
+			{
+				return;
+			}
+
+			List<DatabaseExternalByarbejde> databaseExternalByarbejder = DatabaseExternalByarbejde.ReadFromChangeProviderAndByarbejde(SqlConnection, changeProviderId, databaseAccount.byarbejdeid.Value);
+
+			if (databaseExternalByarbejder.Any())
+			{
+				return;
+			}
+
+			DatabaseByarbejde databaseByarbejde = DatabaseByarbejde.Read(SqlConnection, databaseAccount.byarbejdeid.Value);
+
+			Byarbejde crmByarbejde = new Byarbejde(_dynamicsCrmConnection);
+			Conversion.Byarbejde.Convert(databaseByarbejde, crmByarbejde);
+			crmByarbejde.Insert();
+
+			DatabaseExternalByarbejde databaseExternalByarbejde = new DatabaseExternalByarbejde(crmByarbejde.Id, changeProviderId, databaseByarbejde.Id);
+			databaseExternalByarbejde.Insert(SqlConnection);
 		}
 
 		private void InsertAccountRelations(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
