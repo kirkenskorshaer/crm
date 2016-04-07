@@ -56,6 +56,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void ExecuteOptionInsertsContactInCrm()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
@@ -75,6 +76,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void ExecuteOptionInsertsAccountInCrm()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
 
 			DatabaseAccount databaseAccount = CreateAccount();
@@ -95,6 +97,7 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			Contact contact = InsertCrmContact();
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
@@ -126,6 +129,7 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			Account account = InsertCrmAccount();
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseAccount databaseAccount = CreateAccount();
@@ -155,6 +159,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void GroupsWillBeSynchronizedOnContact()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
@@ -178,6 +183,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void GroupsCanBeRemovedFromContact()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
@@ -203,6 +209,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void GroupsWillBeSynchronizedOnAccount()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseAccount databaseAccount = CreateAccount();
@@ -227,6 +234,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void AccountsWillBeSynchronized()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Both;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
@@ -252,6 +260,7 @@ namespace AdministrationTest.Option.Options.Logic
 		public void IndsamlereWillBeSynchronized()
 		{
 			DatabaseSynchronizeToCrm databaseSynchronizeFromCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeFromCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Both;
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
