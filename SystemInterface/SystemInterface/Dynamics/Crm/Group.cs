@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
-	public class Group
+	public class Group : IComparable
 	{
 		public Guid GroupId { get; private set; }
 		public DateTime CreatedOn { get; private set; }
@@ -142,5 +142,11 @@ namespace SystemInterface.Dynamics.Crm
 			return attributeNames;
 		}
 
+		public int CompareTo(object obj)
+		{
+			Group objAsGroup = obj as Group;
+
+			return Name.CompareTo(objAsGroup.Name);
+		}
 	}
 }
