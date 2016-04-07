@@ -24,7 +24,7 @@ namespace DataLayer.SqlData
 			SqlUtilities.ExecuteNonQuery(sqlConnection, sqlStringBuilder, CommandType.Text, new KeyValuePair<string, object>("id", Id));
 		}
 
-		public void Insert(SqlConnection sqlConnection)
+		public new void Insert(SqlConnection sqlConnection)
 		{
 			StringBuilder sqlStringBuilderColumns = new StringBuilder();
 			StringBuilder sqlStringBuilderParameters = new StringBuilder();

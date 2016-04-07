@@ -255,5 +255,31 @@ namespace DataLayer.SqlData
 				return (ModelType)databaseObject;
 			}
 		}
+
+		public void Insert(SqlConnection sqlConnection)
+		{
+			StringBuilder sqlStringBuilderColumns = new StringBuilder();
+			StringBuilder sqlStringBuilderParameters = new StringBuilder();
+			List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+
+			foreach (SqlColumnInfo sqlColumn in _sqlColumnsInfo)
+			{
+				object value = NonSqlUtilities.ReflectionHelper.GetValue(this, sqlColumn.Name);
+				AddInsertParameterIfNotNull(value, sqlColumn.Name.ToLower(), sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
+			}
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("INSERT INTO");
+			sqlStringBuilder.AppendLine("	" + TableName);
+			sqlStringBuilder.AppendLine("(");
+			sqlStringBuilder.Append(sqlStringBuilderColumns);
+			sqlStringBuilder.AppendLine(")");
+			sqlStringBuilder.AppendLine("VALUES");
+			sqlStringBuilder.AppendLine("(");
+			sqlStringBuilder.Append(sqlStringBuilderParameters);
+			sqlStringBuilder.AppendLine(")");
+
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, parameters.ToArray());
+		}
 	}
 }
