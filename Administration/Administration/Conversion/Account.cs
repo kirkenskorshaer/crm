@@ -268,7 +268,7 @@ namespace Administration.Conversion
 
 			if (fromAccount.byarbejdeid.HasValue)
 			{
-				List<DatabaseExternalByarbejde> externalByarbejder = DatabaseExternalByarbejde.ReadFromChangeProviderAndByarbejde(sqlConnection, changeProviderId, fromAccount.byarbejdeid.Value);
+				List<DatabaseExternalByarbejde> externalByarbejder = DatabaseExternalByarbejde.ReadFromChangeProviderAndExternalByarbejde(sqlConnection, changeProviderId, fromAccount.byarbejdeid.Value);
 				if (externalByarbejder.Any())
 				{
 					toAccount.byarbejdeid = externalByarbejder.First().ByarbejdeId;
