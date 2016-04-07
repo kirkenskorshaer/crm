@@ -38,5 +38,10 @@ namespace DataLayer.SqlData.Byarbejde
 		{
 			return Read<ExternalByarbejde>(sqlConnection, new List<SqlCondition> { new SqlCondition("ChangeProviderId", "=", changeProviderId), new SqlCondition("ByarbejdeId", "=", byarbejdeId) });
 		}
+
+		public static List<ExternalByarbejde> ReadFromChangeProviderAndExternalByarbejde(SqlConnection sqlConnection, Guid changeProviderId, Guid ExternalByarbejdeId)
+		{
+			return Read<ExternalByarbejde>(sqlConnection, new List<SqlCondition> { new SqlCondition("ChangeProviderId", "=", changeProviderId), new SqlCondition("ExternalByarbejdeId", "=", ExternalByarbejdeId) });
+		}
 	}
 }
