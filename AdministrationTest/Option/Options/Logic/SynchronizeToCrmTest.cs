@@ -15,6 +15,7 @@ using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
 using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
+using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
 using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
 using DatabaseAccountContact = DataLayer.SqlData.Account.AccountContact;
 using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
@@ -28,6 +29,8 @@ namespace AdministrationTest.Option.Options.Logic
 		private DataLayer.MongoData.UrlLogin _urlLogin;
 		private DynamicsCrmConnection _dynamicsCrmConnection;
 		private DatabaseChangeProvider _changeProvider;
+		private DatabaseChangeProvider _changeProviderLocal;
+		private Squash _squash;
 
 		[SetUp]
 		new public void SetUp()
@@ -37,6 +40,8 @@ namespace AdministrationTest.Option.Options.Logic
 			_urlLogin = DataLayer.MongoData.UrlLogin.GetUrlLogin(Connection, "test");
 			_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(_urlLogin.Url, _urlLogin.Username, _urlLogin.Password);
 			_changeProvider = FindOrCreateChangeProvider(_sqlConnection, "testCrmProvider");
+			_changeProviderLocal = FindOrCreateChangeProvider(_sqlConnection, "testCrmProviderLocal");
+			_squash = new Squash(Connection, null);
 		}
 
 		private DatabaseSynchronizeToCrm GetDatabaseSynchronizeToCrm()
@@ -163,7 +168,9 @@ namespace AdministrationTest.Option.Options.Logic
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
-			AddGroupsToDatabaseContact(databaseContact, "group1", "group2");
+			DatabaseExternalContact databaseExternalContact = new DatabaseExternalContact(_sqlConnection, Guid.NewGuid(), _changeProviderLocal.Id, databaseContact.Id);
+			databaseExternalContact.Insert();
+			AddGroupsToDatabaseContact(databaseContact, databaseExternalContact, "group1", "group2");
 
 			MakeSureContactIsNextInProgressQueue(databaseContact);
 
@@ -187,13 +194,15 @@ namespace AdministrationTest.Option.Options.Logic
 			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeFromCrm);
 
 			DatabaseContact databaseContact = CreateContact();
-			AddGroupsToDatabaseContact(databaseContact, "group1", "group2");
+			DatabaseExternalContact databaseExternalContact = new DatabaseExternalContact(_sqlConnection, Guid.NewGuid(), _changeProviderLocal.Id, databaseContact.Id);
+			databaseExternalContact.Insert();
+			AddGroupsToDatabaseContact(databaseContact, databaseExternalContact, "group1", "group2");
 
 			MakeSureContactIsNextInProgressQueue(databaseContact);
 
 			synchronizeToCrm.Execute();
 
-			RemoveGroupFromDatabaseContact(databaseContact, "group1");
+			AddGroupsToDatabaseContact(databaseContact, databaseExternalContact, "group2");
 
 			synchronizeToCrm.Execute();
 
@@ -308,15 +317,23 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(databaseByarbejde.new_name, byarbejde.new_name);
 		}
 
-		private void AddGroupsToDatabaseContact(DatabaseContact databaseContact, params string[] groupNames)
+		private void AddGroupsToDatabaseContact(DatabaseContact databaseContact, DatabaseExternalContact databaseExternalContact, params string[] groupNames)
 		{
+			DatabaseContactChange databaseContactChange = new DatabaseContactChange(_sqlConnection, databaseContact.Id, databaseExternalContact.ExternalContactId, _changeProviderLocal.Id)
+			{
+				createdon = DateTime.Now,
+				modifiedon = DateTime.Now,
+			};
+
+			databaseContactChange.Insert();
 			foreach (string groupName in groupNames)
 			{
 				DatabaseGroup group = ReadOrCreateGroup(groupName);
-
-				DatabaseContactGroup contactGroup = new DatabaseContactGroup(databaseContact.Id, group.Id);
-				contactGroup.Insert(_sqlConnection);
+				DatabaseContactChangeGroup contactChangeGroup = new DatabaseContactChangeGroup(databaseContactChange.Id, group.Id);
+				contactChangeGroup.Insert(_sqlConnection);
 			}
+
+			_squash.SquashContact(databaseContact);
 		}
 
 		private void AddGroupsToDatabaseAccount(DatabaseAccount databaseAccount, params string[] groupNames)
@@ -327,17 +344,6 @@ namespace AdministrationTest.Option.Options.Logic
 
 				DatabaseAccountGroup accountGroup = new DatabaseAccountGroup(databaseAccount.Id, group.Id);
 				accountGroup.Insert(_sqlConnection);
-			}
-		}
-
-		private void RemoveGroupFromDatabaseContact(DatabaseContact databaseContact, params string[] groupNames)
-		{
-			foreach (string groupName in groupNames)
-			{
-				DatabaseGroup group = DatabaseGroup.ReadByName(_sqlConnection, groupName);
-				DatabaseContactGroup contactGroup = new DatabaseContactGroup(databaseContact.Id, group.Id);
-
-				contactGroup.Delete(_sqlConnection);
 			}
 		}
 
