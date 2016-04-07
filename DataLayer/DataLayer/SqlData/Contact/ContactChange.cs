@@ -28,7 +28,6 @@ namespace DataLayer.SqlData.Contact
 
 		public string cprnr;
 
-		public int kkadminmedlemsnr;
 		public string storkredsnavn;
 		public int storkredsnr;
 		public string kkadminsoegenavn;
@@ -59,7 +58,6 @@ namespace DataLayer.SqlData.Contact
 			"mobilephone",
 			"telephone1",
 			"cprnr",
-			"kkadminmedlemsnr",
 			"storkredsnavn",
 			"storkredsnr",
 			"kkadminsoegenavn",
@@ -116,7 +114,6 @@ namespace DataLayer.SqlData.Contact
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "mobilephone", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "telephone1", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "cprnr", SqlUtilities.DataType.DATETIME, SqlBoolean.True);
-			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminmedlemsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "storkredsnr", SqlUtilities.DataType.INT, SqlBoolean.True);
 			CreateIfMissing(sqlConnection, tableName, columnsInDatabase, "kkadminsoegenavn", SqlUtilities.DataType.NVARCHAR_MAX, SqlBoolean.True);
@@ -151,7 +148,6 @@ namespace DataLayer.SqlData.Contact
 			AddInsertParameterIfNotNull(mobilephone, "mobilephone", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(telephone1, "telephone1", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(cprnr, "cprnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
-			AddInsertParameterIfNotNull(kkadminmedlemsnr, "kkadminmedlemsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(storkredsnavn, "storkredsnavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(storkredsnr, "storkredsnr", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
 			AddInsertParameterIfNotNull(kkadminsoegenavn, "kkadminsoegenavn", sqlStringBuilderColumns, sqlStringBuilderParameters, parameters);
@@ -319,7 +315,6 @@ namespace DataLayer.SqlData.Contact
 				mobilephone = ConvertFromDatabaseValue<string>(row["mobilephone"]),
 				telephone1 = ConvertFromDatabaseValue<string>(row["telephone1"]),
 				cprnr = ConvertFromDatabaseValue<string>(row["cprnr"]),
-				kkadminmedlemsnr = ConvertFromDatabaseValue<int>(row["kkadminmedlemsnr"]),
 				storkredsnavn = ConvertFromDatabaseValue<string>(row["storkredsnavn"]),
 				storkredsnr = ConvertFromDatabaseValue<int>(row["storkredsnr"]),
 				kkadminsoegenavn = ConvertFromDatabaseValue<string>(row["kkadminsoegenavn"]),
