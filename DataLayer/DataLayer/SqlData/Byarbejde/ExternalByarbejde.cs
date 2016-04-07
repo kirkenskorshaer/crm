@@ -23,6 +23,17 @@ namespace DataLayer.SqlData.Byarbejde
 			SqlUtilities.MaintainTable(sqlConnection, typeof(ExternalByarbejde));
 		}
 
+		public ExternalByarbejde()
+		{
+		}
+
+		public ExternalByarbejde(Guid externalByarbejdeId, Guid changeProviderId, Guid byarbejdeId)
+		{
+			ExternalByarbejdeId = externalByarbejdeId;
+			ChangeProviderId = changeProviderId;
+			ByarbejdeId = byarbejdeId;
+        }
+
 		public static List<ExternalByarbejde> ReadFromChangeProviderAndByarbejde(SqlConnection sqlConnection, Guid changeProviderId, Guid byarbejdeId)
 		{
 			return Read<ExternalByarbejde>(sqlConnection, new List<SqlCondition> { new SqlCondition("ChangeProviderId", "=", changeProviderId), new SqlCondition("ByarbejdeId", "=", byarbejdeId) });
