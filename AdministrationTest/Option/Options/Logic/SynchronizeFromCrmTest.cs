@@ -11,6 +11,8 @@ using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
 using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
+using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
+using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
 using System.Linq;
 using System.Collections.Generic;
 using Administration.Option.Options.Logic;
@@ -218,6 +220,40 @@ namespace AdministrationTest.Option.Options.Logic
 			crmGroup.Delete(_dynamicsCrmConnection);
 
 			Assert.AreEqual(groupName, databaseGroups.Single().Name);
+		}
+
+		[Test]
+		public void ByarbejdeWillBeRetreived()
+		{
+			string accountname = $"account {Guid.NewGuid()}";
+			string byarbejdeNew_name = $"byarbejde {Guid.NewGuid()}";
+
+			Account crmAccount = CreateCrmAccount(accountname);
+			Byarbejde crmByarbejde = CreateCrmByarbejde(byarbejdeNew_name);
+
+			crmByarbejde.Insert();
+			crmAccount.byarbejdeid = crmByarbejde.Id;
+			crmAccount.Insert();
+
+			_synchronizeFromCrm.Execute();
+
+			crmAccount.Delete();
+			crmByarbejde.Delete();
+
+			List<DatabaseExternalByarbejde> databaseExternalByarbejder = DatabaseExternalByarbejde.ReadFromChangeProviderAndExternalByarbejde(_sqlConnection, _changeProvider.Id, crmAccount.byarbejdeid.Value);
+			Guid byarbejderId = databaseExternalByarbejder.Single().ByarbejdeId;
+
+			DatabaseByarbejde databaseByarbejde = DatabaseByarbejde.Read(_sqlConnection, byarbejderId);
+
+			Assert.AreEqual(byarbejdeNew_name, databaseByarbejde.new_name);
+		}
+
+		private Byarbejde CreateCrmByarbejde(string byarbejdeNew_name)
+		{
+			return new Byarbejde(_dynamicsCrmConnection)
+			{
+				new_name = byarbejdeNew_name,
+			};
 		}
 
 		private Contact CreateCrmContact(string firstname1)
