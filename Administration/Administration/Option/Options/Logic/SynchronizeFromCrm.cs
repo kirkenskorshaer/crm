@@ -15,6 +15,8 @@ using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
+using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
+using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
 using DataLayer;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +89,8 @@ namespace Administration.Option.Options.Logic
 
 			List<Account> accounts = Account.ReadLatest(connection, searchDate, _databaseSynchronizeFromCrm.maxNumberOfAccounts);
 
+			accounts.ForEach(account => StoreByarbejdeIfNeeded(account, changeProviderId, connection));
+
 			accounts.ForEach(account => StoreInAccountChangesIfNeeded(account, changeProviderId, connection));
 
 			if (_databaseSynchronizeFromCrm.ignoreChangesMadeBySystemUser)
@@ -146,6 +150,35 @@ namespace Administration.Option.Options.Logic
 
 			StoreInAccountChangesIfNeeded(crmAccount, changeProviderId, externalAccountId, account, dynamicsCrmConnection);
 		}
+
+		private void StoreByarbejdeIfNeeded(Account crmAccount, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			Guid? externalByarbejdeId = crmAccount.byarbejdeid;
+
+			if (externalByarbejdeId.HasValue == false)
+			{
+				return;
+			}
+
+			Byarbejde crmByarbejde = Byarbejde.Read(dynamicsCrmConnection, externalByarbejdeId.Value);
+
+			if (crmByarbejde == null)
+			{
+				return;
+			}
+
+			List<DatabaseExternalByarbejde> databaseExternalByarbejder = DatabaseExternalByarbejde.ReadFromChangeProviderAndExternalByarbejde(SqlConnection, changeProviderId, externalByarbejdeId.Value);
+
+			if (databaseExternalByarbejder.Any())
+			{
+				return;
+			}
+
+			DatabaseByarbejde databaseByarbejde = DatabaseByarbejde.ReadByNameOrCreate(SqlConnection, crmByarbejde.new_name);
+
+			DatabaseExternalByarbejde databaseExternalByarbejde = new DatabaseExternalByarbejde(externalByarbejdeId.Value, changeProviderId, databaseByarbejde.Id);
+			databaseExternalByarbejde.Insert(SqlConnection);
+        }
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId, Guid externalContactId, DatabaseContact contact)
 		{
