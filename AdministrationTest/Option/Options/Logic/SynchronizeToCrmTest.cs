@@ -11,6 +11,8 @@ using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
+using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
+using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseContactGroup = DataLayer.SqlData.Group.ContactGroup;
 using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
@@ -269,6 +271,32 @@ namespace AdministrationTest.Option.Options.Logic
 			List<Contact> indsamlere = account.ReadIndsamlere();
 
 			Assert.AreEqual(externalContact.ExternalContactId, indsamlere.Single().Id);
+		}
+
+		[Test]
+		public void ByarbejdeWillBeSynchronized()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseAccount databaseAccount = CreateAccount();
+			MakeSureAccountIsNextInProgressQueue(databaseAccount);
+
+			DatabaseByarbejde databaseByarbejde = new DatabaseByarbejde()
+			{
+				new_name = $"name {Guid.NewGuid()}",
+			};
+			databaseByarbejde.Insert(_sqlConnection);
+
+			databaseAccount.byarbejdeid = databaseByarbejde.Id;
+			databaseAccount.Update(_sqlConnection);
+
+			synchronizeToCrm.Execute();
+
+			Byarbejde byarbejde = Byarbejde.Read(_dynamicsCrmConnection, databaseByarbejde.new_name).Single();
+
+			Assert.AreEqual(databaseByarbejde.new_name, byarbejde.new_name);
 		}
 
 		private void AddGroupsToDatabaseContact(DatabaseContact databaseContact, params string[] groupNames)
