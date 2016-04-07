@@ -121,6 +121,34 @@ namespace DataLayer.SqlData.Contact
 			return externalContacts;
 		}
 
+		public static List<ExternalContact> ReadFromChangeProviderAndExternalContact(SqlConnection sqlConnection, Guid changeProviderId, Guid externalContactId)
+		{
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT DISTINCT");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ExternalContactId");
+			sqlStringBuilder.AppendLine($"	,{typeof(ExternalContact).Name}.ContactId");
+			sqlStringBuilder.AppendLine($"	,{typeof(ExternalContact).Name}.ChangeProviderId");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(ExternalContact).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ChangeProviderId = @ChangeProviderId");
+			sqlStringBuilder.AppendLine("	AND");
+			sqlStringBuilder.AppendLine($"	{typeof(ExternalContact).Name}.ExternalContactId = @ExternalContactId");
+
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder
+				, new KeyValuePair<string, object>("ExternalContactId", externalContactId)
+				, new KeyValuePair<string, object>("ChangeProviderId", changeProviderId));
+
+			List<ExternalContact> externalContacts = new List<ExternalContact>();
+			foreach (DataRow row in dataTable.Rows)
+			{
+				ExternalContact externalContact = CreateFromDataRow(sqlConnection, row);
+				externalContacts.Add(externalContact);
+			}
+
+			return externalContacts;
+		}
+
 		public static ExternalContact ReadOrCreate(SqlConnection sqlConnection, Guid externalContactId, Guid changeProviderId, Guid contactId)
 		{
 			bool externalContactExists = Exists(sqlConnection, externalContactId, changeProviderId);
