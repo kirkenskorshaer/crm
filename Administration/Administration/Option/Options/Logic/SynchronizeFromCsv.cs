@@ -206,7 +206,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -253,6 +253,12 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["genbrugskonsulentkkadminmedlemsnr"].ToString());
 				accountChange.genbrugskonsulentid = contactId;
+			}
+
+			if (csvRow.ContainsKey("indsamlingskoordinatorkkadminmedlemsnr") && csvRow["indsamlingskoordinatorkkadminmedlemsnr"] != null)
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["indsamlingskoordinatorkkadminmedlemsnr"].ToString());
+				accountChange.indsamlingskoordinatorid = contactId;
 			}
 
 			if (csvRow.ContainsKey("kredsellerby") && csvRow["kredsellerby"] != null && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
@@ -354,7 +360,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -401,6 +407,12 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["genbrugskonsulentkkadminmedlemsnr"].ToString());
 				account.genbrugskonsulentid = contactId;
+			}
+
+			if (csvRow.ContainsKey("indsamlingskoordinatorkkadminmedlemsnr") && csvRow["indsamlingskoordinatorkkadminmedlemsnr"] != null)
+			{
+				Guid? contactId = Contact.ReadIdFromField(SqlConnection, "new_kkadminmedlemsnr", csvRow["indsamlingskoordinatorkkadminmedlemsnr"].ToString());
+				account.indsamlingskoordinatorid = contactId;
 			}
 
 			if (csvRow.ContainsKey("kredsellerby") && csvRow["kredsellerby"] != null && string.IsNullOrWhiteSpace(csvRow["kredsellerby"].ToString()) == false)
