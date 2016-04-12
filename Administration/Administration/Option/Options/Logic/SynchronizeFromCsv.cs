@@ -36,6 +36,7 @@ namespace Administration.Option.Options.Logic
 			char delimeter = _databaseSynchronizeFromCsv.delimeter;
 			string keyName = _databaseSynchronizeFromCsv.keyName;
 			string dateName = _databaseSynchronizeFromCsv.dateName;
+			string mappingField = _databaseSynchronizeFromCsv.mappingField;
 			SystemInterface.Csv.ColumnDefinition[] fields = SystemInterface.Csv.ColumnDefinition.Read(_databaseSynchronizeFromCsv.fields);
 			Guid changeProviderId = _databaseSynchronizeFromCsv.changeProviderId;
 			DatabaseSynchronizeFromCsv.ImportTypeEnum importType = _databaseSynchronizeFromCsv.importType;
@@ -70,12 +71,12 @@ namespace Administration.Option.Options.Logic
 
 			DataLayer.SqlData.ChangeProvider changeProvider = DataLayer.SqlData.ChangeProvider.Read(SqlConnection, changeProviderId);
 
-			ProcessCsvData(changeProviderId, csvData, dateName, importType, keyName);
+			ProcessCsvData(changeProviderId, csvData, dateName, importType, keyName, mappingField);
 
 			return true;
 		}
 
-		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, DatabaseSynchronizeFromCsv.ImportTypeEnum importType, string keyName)
+		private void ProcessCsvData(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, DatabaseSynchronizeFromCsv.ImportTypeEnum importType, string keyName, string mappingField)
 		{
 			switch (importType)
 			{
