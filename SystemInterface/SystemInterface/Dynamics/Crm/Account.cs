@@ -299,6 +299,7 @@ namespace SystemInterface.Dynamics.Crm
 			Herberg = 100000003,
 			Sognegård = 100000004,
 			Andet = 100000005,
+			Butik = 100000006,
 		}
 
 		public enum erindsamlingsstedEnum
