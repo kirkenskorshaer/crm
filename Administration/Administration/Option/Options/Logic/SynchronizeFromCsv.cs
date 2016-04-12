@@ -95,6 +95,9 @@ namespace Administration.Option.Options.Logic
 				case DatabaseSynchronizeFromCsv.ImportTypeEnum.Account:
 					ProcessCsvDataOnAccount(changeProviderId, csvData, dateName, keyName);
 					break;
+				case DatabaseSynchronizeFromCsv.ImportTypeEnum.AccountIndsamler:
+					ProcessCsvDataOnAccountIndsamler(changeProviderId, csvData, dateName, keyName, mappingField);
+					break;
 				default:
 					break;
 			}
@@ -146,6 +149,30 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
+		private void ProcessCsvDataOnAccountIndsamler(Guid changeProviderId, List<Dictionary<string, object>> csvData, string dateName, string keyName, string mappingField)
+		{
+			Dictionary<Guid, List<Guid>> externalContactsByExternalAccount = new Dictionary<Guid, List<Guid>>();
+
+			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(_databaseSynchronizeFromCsv.dateStringOverride);
+
+			foreach (Dictionary<string, object> csvRow in csvData)
+			{
+				Guid externalAccountId = GetIdFromRow(csvRow, keyName);
+				Guid externalContactId = GetIdFromRow(csvRow, mappingField);
+
+				if (externalContactsByExternalAccount.ContainsKey(externalAccountId))
+				{
+					externalContactsByExternalAccount[externalAccountId].Add(externalContactId);
+				}
+				else
+				{
+					externalContactsByExternalAccount.Add(externalAccountId, new List<Guid>() { externalContactId });
+				}
+			}
+
+			SetAccountIndsamler(externalContactsByExternalAccount, changeProviderId, dateName, collectedDate);
+		}
+
 		private Contact ReadOrCreateContact(Dictionary<string, object> csvRow, Guid externalContactId, Guid changeProviderId, string dateName)
 		{
 			bool externalContactExists = ExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
@@ -188,6 +215,59 @@ namespace Administration.Option.Options.Logic
 			}
 
 			return account;
+		}
+
+		private void SetAccountIndsamler(Dictionary<Guid, List<Guid>> externalContactsByExternalAccount, Guid changeProviderId, string dateName, DateTime collectedDate)
+		{
+			foreach (Guid externalAccountId in externalContactsByExternalAccount.Keys)
+			{
+				ExternalAccount externalAccount = ExternalAccount.Read(SqlConnection, externalAccountId, changeProviderId);
+
+				Guid accountId = externalAccount.AccountId;
+
+				List<Guid> externalContactsRequired = externalContactsByExternalAccount[externalAccountId];
+				List<Guid> contactsRequiredGuid = externalContactsRequired.Select(externalContactId => ExternalContact.Read(SqlConnection, externalContactId, changeProviderId).ContactId).ToList();
+				List<AccountIndsamler> accountIndsamlerRequired = contactsRequiredGuid.Select(contactId => new AccountIndsamler(accountId, contactId)).ToList();
+				List<AccountIndsamler> accountIndsamlerExisting = AccountIndsamler.ReadFromAccountId(SqlConnection, accountId).ToList();
+				List<AccountIndsamler> accountIndsamlerToRemove = accountIndsamlerExisting.Except(accountIndsamlerRequired).ToList();
+				List<AccountIndsamler> accountIndsamlerToAdd = accountIndsamlerRequired.Except(accountIndsamlerExisting).ToList();
+
+				accountIndsamlerToRemove.ForEach(accountIndsamler => accountIndsamler.Delete(SqlConnection));
+				accountIndsamlerToAdd.ForEach(accountIndsamler => accountIndsamler.Insert(SqlConnection));
+
+				SetAccountChangeIndsamler(changeProviderId, collectedDate, externalAccountId, accountId, contactsRequiredGuid);
+			}
+		}
+
+		private void SetAccountChangeIndsamler(Guid changeProviderId, DateTime collectedDate, Guid externalAccountId, Guid accountId, List<Guid> contactsRequiredGuid)
+		{
+			bool AccountChangeExists = AccountChange.AccountChangeExists(SqlConnection, accountId, externalAccountId, changeProviderId, collectedDate);
+
+			AccountChange accountChange;
+			if (AccountChangeExists == false)
+			{
+				List<AccountChange> accountChanges = AccountChange.Read(SqlConnection, accountId, externalAccountId, changeProviderId, collectedDate);
+				accountChanges = accountChanges.OrderBy(LAccountChange => (LAccountChange.modifiedon - collectedDate).Duration()).ToList();
+				accountChange = accountChanges.FirstOrDefault();
+			}
+			else
+			{
+				accountChange = new AccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
+
+				accountChange.createdon = collectedDate;
+				accountChange.modifiedon = collectedDate;
+				accountChange.Insert();
+			}
+
+			Guid accountChangeId = accountChange.Id;
+
+			List<AccountChangeIndsamler> accountChangeIndsamlerRequired = contactsRequiredGuid.Select(contactId => new AccountChangeIndsamler(accountChangeId, contactId)).ToList();
+			List<AccountChangeIndsamler> accountChangeIndsamlerExisting = AccountChangeIndsamler.ReadFromAccountChangeId(SqlConnection, accountChangeId).ToList();
+			List<AccountChangeIndsamler> accountChangeIndsamlerToRemove = accountChangeIndsamlerExisting.Except(accountChangeIndsamlerRequired).ToList();
+			List<AccountChangeIndsamler> accountChangeIndsamlerToAdd = accountChangeIndsamlerRequired.Except(accountChangeIndsamlerExisting).ToList();
+
+			accountChangeIndsamlerToRemove.ForEach(accountChangeIndsamler => accountChangeIndsamler.Delete(SqlConnection));
+			accountChangeIndsamlerToAdd.ForEach(accountChangeIndsamler => accountChangeIndsamler.Insert(SqlConnection));
 		}
 
 		private void CreateContactChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate)
