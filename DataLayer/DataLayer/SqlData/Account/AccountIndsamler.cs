@@ -12,6 +12,10 @@ namespace DataLayer.SqlData.Account
 		public Guid AccountId { get; private set; }
 		public Guid ContactId { get; private set; }
 
+		public AccountIndsamler()
+		{
+		}
+
 		public AccountIndsamler(Guid AccountId, Guid ContactId)
 		{
 			this.AccountId = AccountId;
@@ -86,6 +90,17 @@ namespace DataLayer.SqlData.Account
 			List<AccountIndsamler> accountIndsamlere = relatedIds.Select(ContactId => new AccountIndsamler(accountId, ContactId)).ToList();
 
 			return accountIndsamlere;
+		}
+
+		public static AccountIndsamler ReadIfExists(SqlConnection sqlConnection, Guid accountId, Guid contactId)
+		{
+			AccountIndsamler accountIndsamler = Read<AccountIndsamler>(sqlConnection, new List<SqlCondition>()
+			{
+				new SqlCondition("AccountId", "=", accountId),
+				new SqlCondition("ContactId", "=", contactId)
+			}).FirstOrDefault();
+
+			return accountIndsamler;
 		}
 	}
 }
