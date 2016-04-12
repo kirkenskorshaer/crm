@@ -17,6 +17,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		{
 			Contact = 1,
 			Account = 2,
+			AccountIndsamler = 3,
 		}
 
 		public Guid changeProviderId { get; set; }
