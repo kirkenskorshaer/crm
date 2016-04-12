@@ -231,7 +231,7 @@ namespace AdministrationTest.Option.Options.Logic
 				"importDate",
 			};
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Contact);
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, null, DatabaseSynchronizeFromCsv.ImportTypeEnum.Contact);
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 			synchronizeFromCsv.Execute();
@@ -294,7 +294,7 @@ namespace AdministrationTest.Option.Options.Logic
                 "importDate",
 			};
 
-			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, null, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 			synchronizeFromCsv.Execute();
