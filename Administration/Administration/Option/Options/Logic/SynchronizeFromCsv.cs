@@ -43,7 +43,10 @@ namespace Administration.Option.Options.Logic
 			if
 			(
 				fields.Any(definition => definition.Name == keyName) == false ||
-				fields.Any(definition => definition.Name == dateName) == false
+				(
+					dateName != null &&
+					fields.Any(definition => definition.Name == dateName) == false
+				)
 			)
 			{
 				return false;
