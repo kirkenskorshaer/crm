@@ -284,6 +284,42 @@ namespace SystemInterface.Csv
 			return collectedValues;
 		}
 
+		public List<Dictionary<string, object>> ReadAll()
+		{
+			StreamReader streamReader = GetReader();
+
+			List<Dictionary<string, object>> collectedValues = new List<Dictionary<string, object>>();
+
+			bool IsHeaderRow = true;
+
+			while (streamReader.EndOfStream == false)
+			{
+				string line = streamReader.ReadLine();
+
+				if (IsHeaderRow)
+				{
+					IsHeaderRow = false;
+					continue;
+				}
+
+				string[] parts = line.Split(_delimeter);
+
+				Dictionary<string, object> rowValues = new Dictionary<string, object>();
+				for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
+				{
+					string key = Columns[columnIndex].Name;
+					object value = GetValue(parts, columnIndex);
+
+					rowValues.Add(key, value);
+				}
+				collectedValues.Add(rowValues);
+			}
+
+			streamReader.Close();
+
+			return collectedValues;
+		}
+
 		private object GetValue(string[] parts, int columnIndex)
 		{
 			ColumnDefinition definition = Columns[columnIndex];
