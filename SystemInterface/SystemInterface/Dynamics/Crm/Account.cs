@@ -281,7 +281,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Ja = 100000000,
 			Nej = 100000001,
-			Ubesvaret = 100000002,
+			Afventer = 100000002,
 		}
 
 		public kredsellerbyEnum? kredsellerby
