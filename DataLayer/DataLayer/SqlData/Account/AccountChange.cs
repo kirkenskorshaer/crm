@@ -181,6 +181,18 @@ namespace DataLayer.SqlData.Account
 			return accountChanges;
 		}
 
+		public static List<AccountChange> Read(SqlConnection sqlConnection, Guid accountId, Guid externalAccountId, Guid changeProviderId, DateTime modifiedOn)
+		{
+			return Read<AccountChange>(sqlConnection, new List<SqlCondition>()
+			{
+				new SqlCondition("AccountId", "=", accountId),
+				new SqlCondition("ExternalAccountId", "=", externalAccountId),
+				new SqlCondition("ChangeProviderId", "=", changeProviderId),
+				new SqlCondition("modifiedon", ">=", modifiedOn.AddMilliseconds(-1)),
+				new SqlCondition("modifiedon", "<=", modifiedOn.AddMilliseconds(1)),
+			});
+		}
+
 		public static List<Account> GetAccounts(SqlConnection sqlConnection, Guid externalAccountId)
 		{
 			List<AccountChange> accountChanges = Read(sqlConnection, externalAccountId, IdType.ExternalAccountId);
