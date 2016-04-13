@@ -217,6 +217,7 @@ namespace AdministrationTest.Option.Options.Logic
 			string mappingField = "emailaddress1";
 			string[] fields = new string[]
 			{
+				"note",
 				"int:new_kkadminmedlemsnr",
 				"firstname",
 				"middlename",
@@ -224,6 +225,7 @@ namespace AdministrationTest.Option.Options.Logic
 				"titel",
 				"group",
 				"emailaddress1",
+				"mobilephone",
 				"telephone1",
 				"address1_line1",
 				"address1_postalcode",
@@ -257,6 +259,9 @@ namespace AdministrationTest.Option.Options.Logic
 			string mappingField = "emailaddress1";
 			string[] fields = new string[]
 			{
+				"kredsellerby",
+				"indsamlingskoordinatorkkadminmedlemsnr",
+				"kommentar",
 				"erindsamlingssted",
 				"name",
 				"int:new_kkadminmedlemsnr",
@@ -268,12 +273,13 @@ namespace AdministrationTest.Option.Options.Logic
 				"address1_postalcode",
 				"address1_city",
 				"region",
+				"byarbejde",
+				"stedtype",
 				"korshaerslederkkadminmedlemsnr",
 				"bykoordinatorkkadminmedlemsnr",
 				"omraadekoordinatorkkadminmedlemsnr",
 				"genbrugskonsulentkkadminmedlemsnr",
-				"kredsellerby",
-                "importDate",
+				"importDate",
 			};
 
 			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, dateName, mappingField, fields, null, DatabaseSynchronizeFromCsv.ImportTypeEnum.Account);
