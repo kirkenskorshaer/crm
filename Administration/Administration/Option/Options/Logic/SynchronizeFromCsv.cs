@@ -10,6 +10,7 @@ using DatabaseSynchronizeFromCsv = DataLayer.MongoData.Option.Options.Logic.Sync
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DataLayer.SqlData.Account;
 using DataLayer.SqlData.Group;
+using DataLayer.SqlData.Byarbejde;
 
 namespace Administration.Option.Options.Logic
 {
@@ -299,7 +300,7 @@ namespace Administration.Option.Options.Logic
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -406,6 +407,12 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
+			if (csvRow.Keys.Contains("byarbejde") && csvRow["byarbejde"] != null)
+			{
+				Byarbejde byarbejde = Byarbejde.ReadByNameOrCreate(SqlConnection, csvRow["byarbejde"].ToString());
+				accountChange.byarbejdeid = byarbejde.Id;
+			}
+
 			accountChange.Insert();
 
 			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
@@ -453,7 +460,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -558,6 +565,12 @@ namespace Administration.Option.Options.Logic
 				{
 					account.stedtype = (int)Enum.Parse(typeof(SystemInterface.Dynamics.Crm.Account.stedtypeEnum), csvObject.ToString(), true);
 				}
+			}
+
+			if (csvRow.Keys.Contains("byarbejde") && csvRow["byarbejde"] != null)
+			{
+				Byarbejde byarbejde = Byarbejde.ReadByNameOrCreate(SqlConnection, csvRow["byarbejde"].ToString());
+				account.byarbejdeid = byarbejde.Id;
 			}
 
 			account.Insert(SqlConnection);
