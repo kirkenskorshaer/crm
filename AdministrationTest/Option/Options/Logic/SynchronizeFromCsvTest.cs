@@ -235,24 +235,6 @@ namespace AdministrationTest.Option.Options.Logic
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 			synchronizeFromCsv.Execute();
-
-			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
-			{
-				changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "crm").Id,
-				Name = "test",
-				Schedule = schedule,
-				urlLoginName = "test",
-				synchronizeType = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact,
-			};
-
-			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
-
-			MakeSureThereAreProgressOnAllContacts();
-
-			for (int contactCount = 0; contactCount < 102; contactCount++)
-			{
-				synchronizeToCrm.Execute();
-			}
 		}
 
 		[Test]
@@ -314,6 +296,39 @@ namespace AdministrationTest.Option.Options.Logic
 
 			for (int contactCount = 0; contactCount < 291; contactCount++)
 			//for (int contactCount = 0; contactCount < 10; contactCount++)
+			{
+
+		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact, 232)]
+		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account, 291)]
+		public void SendTest(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum type, int numberOfEntities)
+		{
+			DataLayer.MongoData.Option.Schedule schedule = new DataLayer.MongoData.Option.Schedule()
+			{
+				NextAllowedExecution = DateTime.Now,
+				Recurring = false,
+			};
+
+			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
+			{
+				changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "crm").Id,
+				Name = "test",
+				Schedule = schedule,
+				urlLoginName = "test",
+				synchronizeType = type,
+			};
+
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			if (type.HasFlag(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact))
+			{
+				MakeSureThereAreProgressOnAllContacts();
+			}
+			if (type.HasFlag(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account))
+			{
+				MakeSureThereAreProgressOnAllAccounts();
+			}
+
+			for (int entityCount = 0; entityCount < numberOfEntities; entityCount++)
 			{
 				synchronizeToCrm.Execute();
 			}
