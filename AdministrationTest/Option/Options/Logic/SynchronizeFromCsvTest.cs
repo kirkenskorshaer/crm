@@ -286,23 +286,37 @@ namespace AdministrationTest.Option.Options.Logic
 
 			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
 			synchronizeFromCsv.Execute();
+		}
 
-			DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm databaseSynchronizeToCrm = new DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm()
+		[Test]
+		[Ignore]
+		public void ImportAccountIndsamler()
+		{
+			DataLayer.MongoData.Option.Schedule schedule = new DataLayer.MongoData.Option.Schedule()
 			{
-				changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "crm").Id,
-				Name = "test",
-				Schedule = schedule,
-				urlLoginName = "test",
-				synchronizeType = DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account,
+				NextAllowedExecution = DateTime.Now,
+				Recurring = false,
 			};
 
-			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv").Id;
 
-			MakeSureThereAreProgressOnAllAccounts();
-
-			for (int contactCount = 0; contactCount < 291; contactCount++)
-			//for (int contactCount = 0; contactCount < 10; contactCount++)
+			string filename = "C:/Users/Svend/Documents/produktionsimport/AccountIndsamler.txt";
+			string filenameTmp = "C:/Users/Svend/Documents/produktionsimport/AccountIndsamler.txt.tmp";
+			char delimeter = '\t';
+			string keyName = "new_kkadminmedlemsnrAccount";
+			string mappingField = "new_kkadminmedlemsnrContact";
+			string dateStringOverride = "20160411 00:00:00";
+			string[] fields = new string[]
 			{
+				"int:new_kkadminmedlemsnrAccount",
+				"int:new_kkadminmedlemsnrContact",
+			};
+
+			DatabaseSynchronizeFromCsv databaseSynchronizeFromCsv = DatabaseSynchronizeFromCsv.Create(Connection, "test", schedule, changeProviderId, filename, filenameTmp, delimeter, keyName, null, mappingField, fields, dateStringOverride, DatabaseSynchronizeFromCsv.ImportTypeEnum.AccountIndsamler);
+
+			SynchronizeFromCsv synchronizeFromCsv = new SynchronizeFromCsv(Connection, databaseSynchronizeFromCsv);
+			synchronizeFromCsv.Execute();
+		}
 
 		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact, 232)]
 		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account, 291)]
