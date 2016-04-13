@@ -207,7 +207,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Recurring = false,
 			};
 
-			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-contacts").Id;
+			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv").Id;
 
 			string filename = "C:/Users/Svend/Documents/produktionsimport/Contact.txt";
 			string filenameTmp = "C:/Users/Svend/Documents/produktionsimport/Contact.txt.tmp";
@@ -247,7 +247,7 @@ namespace AdministrationTest.Option.Options.Logic
 				Recurring = false,
 			};
 
-			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv-accounts").Id;
+			Guid changeProviderId = DatabaseChangeProvider.ReadByNameOrCreate(_sqlConnection, "csv").Id;
 
 			string filename = "C:/Users/Svend/Documents/produktionsimport/Account.txt";
 			string filenameTmp = "C:/Users/Svend/Documents/produktionsimport/Account.txt.tmp";
