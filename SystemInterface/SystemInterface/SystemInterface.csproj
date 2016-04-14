@@ -116,6 +116,7 @@
     <Compile Include="Dynamics\Crm\AbstractCrm.cs" />
     <Compile Include="Dynamics\Crm\Account.cs" />
     <Compile Include="Dynamics\Crm\Address.cs" />
+    <Compile Include="Dynamics\Crm\Annotation.cs" />
     <Compile Include="Dynamics\Crm\Byarbejde.cs" />
     <Compile Include="Dynamics\Crm\Contact.cs" />
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
