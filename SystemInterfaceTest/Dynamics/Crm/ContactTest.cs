@@ -169,5 +169,35 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Assert.IsFalse(contactRead.Groups.Any(group => group.Name == group2.Name));
 			Assert.IsTrue(contactRead.Groups.Any(group => group.Name == group3.Name));
 		}
+
+		[Test]
+		public void AnnotationsCanBeRead()
+		{
+			DateTime testDate = DateTime.Now;
+			Contact contactInserted = CreateTestContact(testDate);
+			contactInserted.Insert();
+			List<Annotation> annotations = new List<Annotation>()
+			{
+				new Annotation(_dynamicsCrmConnection)
+				{
+					notetext = "test1",
+				},
+				new Annotation(_dynamicsCrmConnection)
+				{
+					notetext = "test2",
+				},
+			};
+			annotations.ForEach(annotation => annotation.Insert());
+
+			contactInserted.SynchronizeAnnotations(annotations);
+
+			List<Annotation> annotationsRead = contactInserted.GetAnnotations();
+
+			contactInserted.Delete();
+
+			Assert.AreEqual(2, annotationsRead.Count);
+			Assert.True(annotationsRead.Any(annotation => annotation.notetext == annotations.First().notetext));
+			Assert.True(annotationsRead.Any(annotation => annotation.notetext == annotations.Last().notetext));
+		}
 	}
 }
