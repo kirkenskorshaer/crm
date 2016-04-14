@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -94,6 +96,20 @@ namespace SystemInterface.Dynamics.Crm
 			List<AbstractCrmType> crmEntities = entityCollection.Entities.Select(entity => CrmTypeConstructor(connection, entity)).ToList();
 
 			return crmEntities;
+		}
+
+		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Type entityType)
+		{
+			RetrieveEntityRequest retrieveBankAccountEntityRequest = new RetrieveEntityRequest
+			{
+				EntityFilters = EntityFilters.Attributes,
+				LogicalName = entityType.Name.ToLower()
+			};
+			RetrieveEntityResponse response = (RetrieveEntityResponse)connection.Service.Execute(retrieveBankAccountEntityRequest);
+
+			List<string> attributeNames = response.EntityMetadata.Attributes.Select(attribute => attribute.SchemaName).ToList();
+
+			return attributeNames;
 		}
 	}
 }
