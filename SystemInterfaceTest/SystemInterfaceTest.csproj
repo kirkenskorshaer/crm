@@ -53,6 +53,7 @@
     <Compile Include="DnsHelperTest.cs" />
     <Compile Include="Dynamics\Crm\AccountTest.cs" />
     <Compile Include="Dynamics\Crm\AddressTest.cs" />
+    <Compile Include="Dynamics\Crm\AnnotationTest.cs" />
     <Compile Include="Dynamics\Crm\ByarbejdeTest.cs" />
     <Compile Include="Dynamics\Crm\ContactTest.cs" />
     <Compile Include="Dynamics\Crm\GroupTest.cs" />
