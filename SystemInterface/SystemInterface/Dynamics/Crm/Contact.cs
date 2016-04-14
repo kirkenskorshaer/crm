@@ -48,6 +48,7 @@ namespace SystemInterface.Dynamics.Crm
 		private static string _groupRelationshipName = "new_group_contact";
 		private string _accountRelationshipName = "new_account_contact";
 		private string _indsamlerAccountRelationshipName = "new_account_contact_indsamlere";
+		private string _annotationRelationshipName = "Contact_Annotation";
 
 		private static readonly ColumnSet ColumnSetContact = new ColumnSet(
 			"contactid",
@@ -159,6 +160,13 @@ namespace SystemInterface.Dynamics.Crm
 			List<Contact> contacts = StaticCrm.ReadLatest(connection, "contact", ColumnSetContact, lastSearchDate, (lConnection, entity) => new Contact(lConnection, entity), maximumNumberOfContacts);
 
 			return contacts;
+		}
+
+		public List<Annotation> GetAnnotations()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			return ReadNNRelationship(_annotationRelationshipName, currentEntity, entity => new Annotation(Connection, entity));
 		}
 
 		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid contactId)
