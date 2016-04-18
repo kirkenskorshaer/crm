@@ -108,6 +108,12 @@
     <Compile Include="SqlData\Account\AccountIndsamler.cs" />
     <Compile Include="SqlData\Account\AccountContact.cs" />
     <Compile Include="SqlData\Account\ExternalAccount.cs" />
+    <Compile Include="SqlData\Annotation\AccountChangeAnnotation.cs" />
+    <Compile Include="SqlData\Annotation\AccountAnnotation.cs" />
+    <Compile Include="SqlData\Annotation\ContactChangeAnnotation.cs" />
+    <Compile Include="SqlData\Annotation\ContactAnnotation.cs" />
+    <Compile Include="SqlData\Annotation\ExternalContactAnnotation.cs" />
+    <Compile Include="SqlData\Annotation\ExternalAccountAnnotation.cs" />
     <Compile Include="SqlData\Byarbejde\Byarbejde.cs" />
     <Compile Include="SqlData\Byarbejde\ExternalByarbejde.cs" />
     <Compile Include="SqlData\ChangeProvider.cs" />
