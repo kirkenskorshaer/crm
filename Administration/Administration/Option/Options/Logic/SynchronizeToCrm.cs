@@ -25,6 +25,8 @@ using System.Linq;
 using Administration.Mapping.Account;
 using Utilities.Comparer;
 using DataLayer.SqlData.Account;
+using DataLayer.SqlData.Contact;
+using DataLayer.SqlData.Annotation;
 
 namespace Administration.Option.Options.Logic
 {
@@ -134,6 +136,7 @@ namespace Administration.Option.Options.Logic
 		{
 			InsertAccountContact(databaseContact, systemInterfaceContact, changeProviderId);
 			InsertContactGroup(databaseContact, systemInterfaceContact);
+			InsertContactAnnotation(databaseContact, systemInterfaceContact, changeProviderId);
 			InsertAccountIndsamler(databaseContact, systemInterfaceContact, changeProviderId);
 		}
 
@@ -179,6 +182,7 @@ namespace Administration.Option.Options.Logic
 			InsertAccountContact(databaseAccount, systemInterfaceAccount, changeProviderId);
 			InsertAccountIndsamler(databaseAccount, systemInterfaceAccount, changeProviderId);
 			InsertAccountGroup(databaseAccount, systemInterfaceAccount);
+			InsertAccountAnnotation(databaseAccount, systemInterfaceAccount, changeProviderId);
 		}
 
 		private void UpdateExternalContactIfNeeded(Guid changeProviderId, DatabaseExternalContact databaseExternalContact, DatabaseContact databaseContact)
@@ -192,6 +196,7 @@ namespace Administration.Option.Options.Logic
 			isDeactivated = SynchronizeContactGroup(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
 			isDeactivated = SynchronizeAccountContact(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
 			isDeactivated = SynchronizeAccountIndsamler(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
+			isDeactivated = SynchronizeContactAnnotation(databaseContact, systemInterfaceContactInCrm, changeProviderId, isDeactivated);
 
 			if (isDeactivated)
 			{
@@ -236,6 +241,7 @@ namespace Administration.Option.Options.Logic
 			isDeactivated = SynchronizeAccountContact(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
 			isDeactivated = SynchronizeAccountIndsamler(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
 			isDeactivated = SynchronizeAccountGroup(databaseAccount, systemInterfaceAccountInCrm, isDeactivated);
+			isDeactivated = SynchronizeAccountAnnotation(databaseAccount, systemInterfaceAccountInCrm, changeProviderId, isDeactivated);
 
 			if (isDeactivated)
 			{
@@ -366,6 +372,102 @@ namespace Administration.Option.Options.Logic
 			return true;
 		}
 
+		private bool SynchronizeContactAnnotation(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Annotation> crmAnnotations = systemInterfaceContact.GetAnnotations();
+
+			List<ContactAnnotation> localContactAnnotations = ContactAnnotation.ReadByContactIdAndIsdeleted(SqlConnection, databaseContact.Id, false);
+
+			if (ListCompare.ListEquals(crmAnnotations, localContactAnnotations, (crmAnnotation, contactAnnotation) => crmAnnotation.notetext == contactAnnotation.notetext))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceContact.SetActive(false);
+				_squash.SquashContact(databaseContact);
+			}
+
+			List<Annotation> annotationsToSynchronize = new List<Annotation>();
+			localContactAnnotations.ForEach(localContactAnnotation =>
+			{
+				ExternalContactAnnotation externalContactAnnotation = ExternalContactAnnotation.ReadFromChangeProviderAndAnnotation(SqlConnection, changeProviderId, localContactAnnotation.Id).SingleOrDefault();
+
+				if (externalContactAnnotation == null)
+				{
+					Annotation annotation = new Annotation(_dynamicsCrmConnection);
+					Conversion.Annotation.Convert(localContactAnnotation, annotation);
+
+					annotation.Insert();
+					annotationsToSynchronize.Add(annotation);
+
+					externalContactAnnotation = new ExternalContactAnnotation(annotation.Id, changeProviderId, localContactAnnotation.Id);
+					externalContactAnnotation.Insert(SqlConnection);
+				}
+				else
+				{
+					Annotation annotation = crmAnnotations.Single(crmAnnotation => crmAnnotation.Id == externalContactAnnotation.ExternalAnnotationId);
+					Conversion.Annotation.Convert(localContactAnnotation, annotation);
+					annotation.Update();
+
+					annotationsToSynchronize.Add(annotation);
+				}
+			});
+
+			systemInterfaceContact.SynchronizeAnnotations(annotationsToSynchronize);
+
+			return true;
+		}
+
+		private bool SynchronizeAccountAnnotation(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			List<Annotation> crmAnnotations = systemInterfaceAccount.GetAnnotations();
+
+			List<AccountAnnotation> localAccountAnnotations = AccountAnnotation.ReadByAccountIdAndIsdeleted(SqlConnection, databaseAccount.Id, false);
+
+			if (ListCompare.ListEquals(crmAnnotations, localAccountAnnotations, (crmAnnotation, accountAnnotation) => crmAnnotation.notetext == accountAnnotation.notetext))
+			{
+				return isDeactivated;
+			}
+
+			if (isDeactivated == false)
+			{
+				systemInterfaceAccount.SetActive(false);
+				_squash.SquashAccount(databaseAccount);
+			}
+
+			List<Annotation> annotationsToSynchronize = new List<Annotation>();
+			localAccountAnnotations.ForEach(localAccountAnnotation =>
+			{
+				ExternalAccountAnnotation externalAccountAnnotation = ExternalAccountAnnotation.ReadFromChangeProviderAndAnnotation(SqlConnection, changeProviderId, localAccountAnnotation.Id).SingleOrDefault();
+
+				if (externalAccountAnnotation == null)
+				{
+					Annotation annotation = new Annotation(_dynamicsCrmConnection);
+					Conversion.Annotation.Convert(localAccountAnnotation, annotation);
+
+					annotation.Insert();
+					annotationsToSynchronize.Add(annotation);
+
+					externalAccountAnnotation = new ExternalAccountAnnotation(annotation.Id, changeProviderId, localAccountAnnotation.Id);
+					externalAccountAnnotation.Insert(SqlConnection);
+				}
+				else
+				{
+					Annotation annotation = crmAnnotations.Single(crmAnnotation => crmAnnotation.Id == externalAccountAnnotation.ExternalAnnotationId);
+					Conversion.Annotation.Convert(localAccountAnnotation, annotation);
+					annotation.Update();
+
+					annotationsToSynchronize.Add(annotation);
+				}
+			});
+
+			systemInterfaceAccount.SynchronizeAnnotations(annotationsToSynchronize);
+
+			return true;
+		}
+
 		private void InsertContactGroup(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact)
 		{
 			List<DatabaseContactGroup> contactGroups = DatabaseContactGroup.ReadFromContactId(SqlConnection, databaseContact.Id);
@@ -374,6 +476,46 @@ namespace Administration.Option.Options.Logic
 
 			List<string> groupNames = databaseGroups.Select(group => group.Name).ToList();
 			systemInterfaceContact.SynchronizeGroups(groupNames);
+		}
+
+		private void InsertContactAnnotation(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId)
+		{
+			List<ContactAnnotation> contactAnnotations = ContactAnnotation.ReadByContactIdAndIsdeleted(SqlConnection, databaseContact.Id, false);
+
+			List<Annotation> crmAnnotations = new List<Annotation>();
+			contactAnnotations.ForEach(contactAnnotation =>
+			{
+				Annotation crmAnnotation = new Annotation(_dynamicsCrmConnection);
+				Conversion.Annotation.Convert(contactAnnotation, crmAnnotation);
+
+				crmAnnotation.Insert();
+				crmAnnotations.Add(crmAnnotation);
+
+				ExternalContactAnnotation externalContactAnnotation = new ExternalContactAnnotation(crmAnnotation.Id, changeProviderId, contactAnnotation.Id);
+				externalContactAnnotation.Insert(SqlConnection);
+			});
+
+			systemInterfaceContact.SynchronizeAnnotations(crmAnnotations);
+		}
+
+		private void InsertAccountAnnotation(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			List<AccountAnnotation> accountAnnotations = AccountAnnotation.ReadByAccountIdAndIsdeleted(SqlConnection, databaseAccount.Id, false);
+
+			List<Annotation> crmAnnotations = new List<Annotation>();
+			accountAnnotations.ForEach(accountAnnotation =>
+			{
+				Annotation crmAnnotation = new Annotation(_dynamicsCrmConnection);
+				Conversion.Annotation.Convert(accountAnnotation, crmAnnotation);
+
+				crmAnnotation.Insert();
+				crmAnnotations.Add(crmAnnotation);
+
+				ExternalAccountAnnotation externalAccountAnnotation = new ExternalAccountAnnotation(crmAnnotation.Id, changeProviderId, accountAnnotation.Id);
+				externalAccountAnnotation.Insert(SqlConnection);
+			});
+
+			systemInterfaceAccount.SynchronizeAnnotations(crmAnnotations);
 		}
 
 		private bool SynchronizeAccountIndsamler(DatabaseContact databaseContact, SystemInterfaceContact systemInterfaceContact, Guid changeProviderId, bool isDeactivated)
