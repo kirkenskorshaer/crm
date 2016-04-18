@@ -24,6 +24,7 @@ using SystemInterface.Dynamics.Crm;
 using Administration.Mapping.Contact;
 using System.Data.SqlClient;
 using Administration.Mapping.Account;
+using DataLayer.SqlData.Annotation;
 
 namespace Administration.Option.Options.Logic
 {
@@ -178,7 +179,7 @@ namespace Administration.Option.Options.Logic
 
 			DatabaseExternalByarbejde databaseExternalByarbejde = new DatabaseExternalByarbejde(externalByarbejdeId.Value, changeProviderId, databaseByarbejde.Id);
 			databaseExternalByarbejde.Insert(SqlConnection);
-        }
+		}
 
 		internal void StoreInContactChangesIfNeeded(Contact crmContact, Guid changeProviderId, Guid externalContactId, DatabaseContact contact)
 		{
@@ -274,6 +275,7 @@ namespace Administration.Option.Options.Logic
 		private void StoreContactRelations(Contact crmContact, DatabaseContactChange contactChange, Guid changeProviderId)
 		{
 			StoreContactRelationContactChangeGroup(crmContact, contactChange, changeProviderId);
+			StoreContactRelationContactAnnotation(crmContact, contactChange, changeProviderId);
 		}
 
 		private void StoreContactRelationContactChangeGroup(Contact crmContact, DatabaseContactChange contactChange, Guid changeProviderId)
@@ -287,6 +289,30 @@ namespace Administration.Option.Options.Logic
 				DatabaseContactChangeGroup contactChangeGroup = new DatabaseContactChangeGroup(contactChange.Id, groupId);
 				contactChangeGroup.Insert(SqlConnection);
 			}
+		}
+
+		private void StoreContactRelationContactAnnotation(Contact crmContact, DatabaseContactChange contactChange, Guid changeProviderId)
+		{
+			List<Annotation> externalAnnotations = crmContact.GetAnnotations();
+
+			externalAnnotations.ForEach(externalAnnotation =>
+			{
+				ExternalContactAnnotation externalContactAnnotation = ExternalContactAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, externalAnnotation.Id).SingleOrDefault();
+
+				if (externalContactAnnotation == null)
+				{
+					ContactAnnotation contactAnnotation = new ContactAnnotation(contactChange.ContactId);
+					Conversion.Annotation.Convert(externalAnnotation, contactAnnotation);
+					contactAnnotation.Insert(SqlConnection);
+
+					externalContactAnnotation = new ExternalContactAnnotation(externalAnnotation.Id, changeProviderId, contactAnnotation.Id);
+					externalContactAnnotation.Insert(SqlConnection);
+				}
+
+				ContactChangeAnnotation contactChangeAnnotation = new ContactChangeAnnotation(contactChange.Id, contactAnnotationId);
+				Conversion.Annotation.Convert(externalAnnotation, contactChangeAnnotation);
+				contactChangeAnnotation.Insert(SqlConnection);
+			});
 		}
 
 		private DatabaseAccountChange CreateAccountChange(Guid changeProviderId, Account crmAccount, Guid externalAccountId, Guid accountId, DateTime modifiedOn)
@@ -305,6 +331,31 @@ namespace Administration.Option.Options.Logic
 			StoreAccountRelationAccountChangeContact(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
 			StoreAccountRelationAccountChangeIndsamler(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
 			StoreAccountRelationAccountChangeGroup(crmAccount, accountChange, changeProviderId);
+			StoreAccountRelationAccountAnnotation(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection);
+		}
+
+		private void StoreAccountRelationAccountAnnotation(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			List<Annotation> externalAnnotations = crmAccount.GetAnnotations();
+
+			externalAnnotations.ForEach(externalAnnotation =>
+			{
+				ExternalAccountAnnotation externalAccountAnnotation = ExternalAccountAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, externalAnnotation.Id).SingleOrDefault();
+
+				if (externalAccountAnnotation == null)
+				{
+					AccountAnnotation accountAnnotation = new AccountAnnotation(accountChange.AccountId);
+					Conversion.Annotation.Convert(externalAnnotation, accountAnnotation);
+					accountAnnotation.Insert(SqlConnection);
+
+					externalAccountAnnotation = new ExternalAccountAnnotation(externalAnnotation.Id, changeProviderId, accountAnnotation.Id);
+					externalAccountAnnotation.Insert(SqlConnection);
+				}
+
+				AccountChangeAnnotation accountChangeAnnotation = new AccountChangeAnnotation(accountChange.Id, accountAnnotationId);
+				Conversion.Annotation.Convert(externalAnnotation, accountChangeAnnotation);
+				accountChangeAnnotation.Insert(SqlConnection);
+			});
 		}
 
 		private void StoreAccountRelationAccountChangeContact(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
