@@ -46,6 +46,7 @@ namespace SystemInterface.Dynamics.Crm
 		private string _contactRelationshipName = "new_account_contact";
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
 		private string _groupRelationshipName = "new_account_new_group";
+		private string _annotationRelationshipName = "Account_Annotation";
 
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
 
@@ -402,6 +403,13 @@ namespace SystemInterface.Dynamics.Crm
 			List<Account> accounts = StaticCrm.ReadLatest(connection, "account", ColumnSetAccount, lastSearchDate, (lConnection, entity) => new Account(lConnection, entity), maximumNumberOfAccounts);
 
 			return accounts;
+		}
+
+		public List<Annotation> GetAnnotations()
+		{
+			Entity currentEntity = GetAsEntity(true);
+
+			return ReadNNRelationship(_annotationRelationshipName, currentEntity, entity => new Annotation(Connection, entity));
 		}
 
 		protected override CrmEntity GetAsEntity(bool includeId)
