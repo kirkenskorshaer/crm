@@ -21,6 +21,9 @@ using Utilities;
 using Administration.Option.Options.Logic.SquashData;
 using DataLayer.SqlData;
 using Utilities.Comparer;
+using DataLayer.SqlData.Annotation;
+using DataLayer.SqlData.Contact;
+using System.Data.SqlClient;
 
 namespace Administration.Option.Options.Logic
 {
@@ -126,6 +129,8 @@ namespace Administration.Option.Options.Logic
 
 			bool contactReferenceChanged = UpdateReferencesIfNeeded(contact, referenceGetAndSets, changedReferences);
 
+			SquashAnnotations(contact);
+
 			return contactFieldChanged;
 		}
 
@@ -172,7 +177,101 @@ namespace Administration.Option.Options.Logic
 			};
 			bool accountReferenceChanged = UpdateReferencesIfNeeded(account, referenceGetAndSets, changedReferences);
 
+			SquashAnnotations(account);
+
 			return accountChanged;
+		}
+
+		public void SquashAnnotations(DatabaseContact contact)
+		{
+			List<ContactAnnotation> contactAnnotationsOnContact = ContactAnnotation.ReadByContactId(SqlConnection, contact.Id);
+
+			List<ContactAnnotation> squashedAnnotations = new List<ContactAnnotation>();
+			foreach (ContactAnnotation contactAnnotation in contactAnnotationsOnContact)
+			{
+				ContactAnnotation squashedAnnotation = SquashAnnotation(contactAnnotation);
+				if (squashedAnnotation != null)
+				{
+					squashedAnnotations.Add(squashedAnnotation);
+				}
+			}
+
+			contact.RemoveAnnotationsNotInList(SqlConnection, squashedAnnotations.Select(annotation => annotation.Id).ToList());
+		}
+
+		public void SquashAnnotations(DatabaseAccount account)
+		{
+			List<AccountAnnotation> accountAnnotationsOnAccount = AccountAnnotation.ReadByAccountId(SqlConnection, account.Id);
+
+			List<AccountAnnotation> squashedAnnotations = new List<AccountAnnotation>();
+			foreach (AccountAnnotation accountAnnotation in accountAnnotationsOnAccount)
+			{
+				AccountAnnotation squashedAnnotation = SquashAnnotation(accountAnnotation);
+				if (squashedAnnotation != null)
+				{
+					squashedAnnotations.Add(squashedAnnotation);
+				}
+			}
+
+			account.RemoveAnnotationsNotInList(SqlConnection, squashedAnnotations.Select(annotation => annotation.Id).ToList());
+		}
+
+		public ContactAnnotation SquashAnnotation(ContactAnnotation annotation)
+		{
+			List<IModifiedIdData> contactChangeAnnotations = ContactChangeAnnotation.ReadByContactAnnotationId(SqlConnection, annotation.Id).Select(data => (IModifiedIdData)data).ToList();
+
+			contactChangeAnnotations = contactChangeAnnotations.OrderBy(contactChange => contactChange.modifiedon).ToList();
+
+			List<string> exclusionList = new List<string>()
+			{
+				"Id",
+				"ContactChangeId",
+				"ContactAnnotationId",
+			};
+
+			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(ContactChangeAnnotation), exclusionList);
+
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = GetContactChangeAnnotationsByProviderId(SqlConnection, contactChangeAnnotations);
+			List<ModifiedField> changedFields = new List<ModifiedField>();
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
+
+			bool annotationFieldChanged = UpdateFieldsIfNeeded(annotation, columnNames, changedFields);
+
+			if (annotationFieldChanged)
+			{
+				annotation.Update(SqlConnection);
+			}
+
+			return annotation;
+		}
+
+		public AccountAnnotation SquashAnnotation(AccountAnnotation annotation)
+		{
+			List<IModifiedIdData> accountChangeAnnotations = AccountChangeAnnotation.ReadByAccountAnnotationId(SqlConnection, annotation.Id).Select(data => (IModifiedIdData)data).ToList();
+
+			accountChangeAnnotations = accountChangeAnnotations.OrderBy(accountChange => accountChange.modifiedon).ToList();
+
+			List<string> exclusionList = new List<string>()
+			{
+				"Id",
+				"AccountChangeId",
+				"AccountAnnotationId",
+			};
+
+			List<string> columnNames = ReflectionHelper.GetFieldsAndProperties(typeof(AccountChangeAnnotation), exclusionList);
+
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = GetAccountChangeAnnotationsByProviderId(SqlConnection, accountChangeAnnotations);
+			List<ModifiedField> changedFields = new List<ModifiedField>();
+			CollectModifiedFieldsForAllProviders(columnNames, changesByProviderId, changedFields);
+
+			bool annotationFieldChanged = UpdateFieldsIfNeeded(annotation, columnNames, changedFields);
+
+			if (annotationFieldChanged)
+			{
+				annotation.Update(SqlConnection);
+			}
+
+			return annotation;
 		}
 
 		private List<Guid> GroupFromAccountChangeId(Guid id)
@@ -494,6 +593,44 @@ namespace Administration.Option.Options.Logic
 				}
 
 				changesByProviderId[providerId].Add(contactChange);
+			}
+
+			return changesByProviderId;
+		}
+
+		private static Dictionary<Guid, List<IModifiedIdData>> GetContactChangeAnnotationsByProviderId(SqlConnection sqlConnection, List<IModifiedIdData> contactChangeAnnotations)
+		{
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = new Dictionary<Guid, List<IModifiedIdData>>();
+
+			foreach (ContactChangeAnnotation contactChangeAnnotation in contactChangeAnnotations)
+			{
+				Guid providerId = DatabaseContactChange.Read(sqlConnection, contactChangeAnnotation.ContactChangeId, DatabaseContactChange.IdType.ContactChangeId).Single().ChangeProviderId;
+
+				if (changesByProviderId.ContainsKey(providerId) == false)
+				{
+					changesByProviderId.Add(providerId, new List<IModifiedIdData>());
+				}
+
+				changesByProviderId[providerId].Add(contactChangeAnnotation);
+			}
+
+			return changesByProviderId;
+		}
+
+		private static Dictionary<Guid, List<IModifiedIdData>> GetAccountChangeAnnotationsByProviderId(SqlConnection sqlConnection, List<IModifiedIdData> accountChangeAnnotations)
+		{
+			Dictionary<Guid, List<IModifiedIdData>> changesByProviderId = new Dictionary<Guid, List<IModifiedIdData>>();
+
+			foreach (AccountChangeAnnotation accountChangeAnnotation in accountChangeAnnotations)
+			{
+				Guid providerId = DatabaseAccountChange.Read(sqlConnection, accountChangeAnnotation.AccountChangeId, DatabaseAccountChange.IdType.AccountChangeId).Single().ChangeProviderId;
+
+				if (changesByProviderId.ContainsKey(providerId) == false)
+				{
+					changesByProviderId.Add(providerId, new List<IModifiedIdData>());
+				}
+
+				changesByProviderId[providerId].Add(accountChangeAnnotation);
 			}
 
 			return changesByProviderId;
