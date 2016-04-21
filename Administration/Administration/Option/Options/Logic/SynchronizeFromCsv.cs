@@ -11,6 +11,7 @@ using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DataLayer.SqlData.Account;
 using DataLayer.SqlData.Group;
 using DataLayer.SqlData.Byarbejde;
+using DataLayer.SqlData.Annotation;
 
 namespace Administration.Option.Options.Logic
 {
@@ -110,7 +111,8 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid externalContactId = GetIdFromRow(csvRow, keyName);
 
-				Contact contact = ReadOrCreateContact(csvRow, externalContactId, changeProviderId, dateName);
+				ContactAnnotation annotation;
+				Contact contact = ReadOrCreateContact(csvRow, externalContactId, changeProviderId, dateName, out annotation);
 
 				Guid contactId = contact.Id;
 
@@ -123,7 +125,7 @@ namespace Administration.Option.Options.Logic
 					continue;
 				}
 
-				CreateContactChange(changeProviderId, csvRow, externalContactId, contactId, collectedDate);
+				CreateContactChange(changeProviderId, csvRow, externalContactId, contactId, collectedDate, annotation);
 			}
 		}
 
@@ -133,7 +135,8 @@ namespace Administration.Option.Options.Logic
 			{
 				Guid externalAccountId = GetIdFromRow(csvRow, keyName);
 
-				Account account = ReadOrCreateAccount(csvRow, externalAccountId, changeProviderId, dateName);
+				AccountAnnotation annotation;
+				Account account = ReadOrCreateAccount(csvRow, externalAccountId, changeProviderId, dateName, out annotation);
 
 				Guid accountId = account.Id;
 
@@ -146,7 +149,7 @@ namespace Administration.Option.Options.Logic
 					continue;
 				}
 
-				CreateAccountChange(changeProviderId, csvRow, externalAccountId, accountId, collectedDate);
+				CreateAccountChange(changeProviderId, csvRow, externalAccountId, accountId, collectedDate, annotation);
 			}
 		}
 
@@ -174,7 +177,7 @@ namespace Administration.Option.Options.Logic
 			SetAccountIndsamler(externalContactsByExternalAccount, changeProviderId, dateName, collectedDate);
 		}
 
-		private Contact ReadOrCreateContact(Dictionary<string, object> csvRow, Guid externalContactId, Guid changeProviderId, string dateName)
+		private Contact ReadOrCreateContact(Dictionary<string, object> csvRow, Guid externalContactId, Guid changeProviderId, string dateName, out ContactAnnotation annotation)
 		{
 			bool externalContactExists = ExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
 
@@ -185,10 +188,11 @@ namespace Administration.Option.Options.Logic
 			{
 				externalContact = ExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
 				contact = Contact.Read(SqlConnection, externalContact.ContactId);
+				annotation = null;
 			}
 			else
 			{
-				contact = CreateContact(SqlConnection, csvRow, dateName);
+				contact = CreateContact(SqlConnection, csvRow, dateName, out annotation);
 				externalContact = new ExternalContact(SqlConnection, externalContactId, changeProviderId, contact.Id);
 				externalContact.Insert();
 			}
@@ -196,7 +200,7 @@ namespace Administration.Option.Options.Logic
 			return contact;
 		}
 
-		private Account ReadOrCreateAccount(Dictionary<string, object> csvRow, Guid externalAccountId, Guid changeProviderId, string dateName)
+		private Account ReadOrCreateAccount(Dictionary<string, object> csvRow, Guid externalAccountId, Guid changeProviderId, string dateName, out AccountAnnotation annotation)
 		{
 			bool externalAccountExists = ExternalAccount.Exists(SqlConnection, externalAccountId, changeProviderId);
 
@@ -207,10 +211,11 @@ namespace Administration.Option.Options.Logic
 			{
 				externalAccount = ExternalAccount.Read(SqlConnection, externalAccountId, changeProviderId);
 				account = Account.Read(SqlConnection, externalAccount.AccountId);
+				annotation = null;
 			}
 			else
 			{
-				account = CreateAccount(SqlConnection, csvRow, dateName);
+				account = CreateAccount(SqlConnection, csvRow, dateName, out annotation);
 				externalAccount = new ExternalAccount(SqlConnection, externalAccountId, changeProviderId, account.Id);
 				externalAccount.Insert();
 			}
@@ -271,7 +276,7 @@ namespace Administration.Option.Options.Logic
 			accountChangeIndsamlerToAdd.ForEach(accountChangeIndsamler => accountChangeIndsamler.Insert(SqlConnection));
 		}
 
-		private void CreateContactChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate)
+		private void CreateContactChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalContactId, Guid contactId, DateTime collectedDate, ContactAnnotation annotation)
 		{
 			ContactChange contactChange = new ContactChange(SqlConnection, contactId, externalContactId, changeProviderId);
 
@@ -291,16 +296,24 @@ namespace Administration.Option.Options.Logic
 				ContactChangeGroup contactChangeGroup = new ContactChangeGroup(contactChange.Id, group.Id);
 				contactChangeGroup.Insert(SqlConnection);
 			}
+
+			if (csvRow.Keys.Contains("annotation") && csvRow["annotation"] != null && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			{
+				ContactChangeAnnotation annotationChange = new ContactChangeAnnotation(contactChange.Id, annotation.Id);
+				annotationChange.notetext = csvRow["annotation"].ToString();
+				annotationChange.modifiedon = collectedDate;
+				annotationChange.Insert(SqlConnection);
+			}
 		}
 
-		private void CreateAccountChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalAccountId, Guid accountId, DateTime collectedDate)
+		private void CreateAccountChange(Guid changeProviderId, Dictionary<string, object> csvRow, Guid externalAccountId, Guid accountId, DateTime collectedDate, AccountAnnotation annotation)
 		{
 			AccountChange accountChange = new AccountChange(SqlConnection, accountId, externalAccountId, changeProviderId);
 
 			accountChange.createdon = collectedDate;
 			accountChange.modifiedon = collectedDate;
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "annotation", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -421,9 +434,17 @@ namespace Administration.Option.Options.Logic
 				AccountChangeGroup accountChangeGroup = new AccountChangeGroup(accountChange.Id, group.Id);
 				accountChangeGroup.Insert(SqlConnection);
 			}
+
+			if (csvRow.Keys.Contains("annotation") && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			{
+				AccountChangeAnnotation annotationChange = new AccountChangeAnnotation(accountChange.Id, annotation.Id);
+				annotationChange.notetext = csvRow["annotation"].ToString();
+				annotationChange.modifiedon = collectedDate;
+				annotationChange.Insert(SqlConnection);
+			}
 		}
 
-		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
+		private Contact CreateContact(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName, out ContactAnnotation annotation)
 		{
 			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
 
@@ -447,10 +468,22 @@ namespace Administration.Option.Options.Logic
 				contactGroup.Insert(SqlConnection);
 			}
 
+			if (csvRow.Keys.Contains("annotation") && csvRow["annotation"] != null && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			{
+				annotation = new ContactAnnotation(contact.Id);
+				annotation.notetext = csvRow["annotation"].ToString();
+				annotation.modifiedon = collectedDate;
+				annotation.Insert(SqlConnection);
+			}
+			else
+			{
+				annotation = null;
+			}
+
 			return contact;
 		}
 
-		private Account CreateAccount(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName)
+		private Account CreateAccount(SqlConnection sqlConnection, Dictionary<string, object> csvRow, string dateName, out AccountAnnotation annotation)
 		{
 			DateTime collectedDate = Utilities.Converter.DateTimeConverter.DateTimeFromString(csvRow[dateName].ToString());
 
@@ -460,7 +493,7 @@ namespace Administration.Option.Options.Logic
 				modifiedon = collectedDate,
 			};
 
-			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
+			IEnumerable<string> keys = csvRow.Keys.Except(new string[] { "group", "annotation", "byarbejde", "kredsellerby", "region", "stedtype", "bykoordinatoremail", "omraadekoordinatoremail", "bykoordinatorkkadminmedlemsnr", "omraadekoordinatorkkadminmedlemsnr", "primarycontactkkadminmedlemsnr", "erindsamlingssted", "korshaerslederkkadminmedlemsnr", "genbrugskonsulentkkadminmedlemsnr", "indsamlingskoordinatorkkadminmedlemsnr" });
 
 			foreach (string key in keys)
 			{
@@ -580,6 +613,18 @@ namespace Administration.Option.Options.Logic
 				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
 				AccountGroup accountGroup = new AccountGroup(account.Id, group.Id);
 				accountGroup.Insert(SqlConnection);
+			}
+
+			if (csvRow.Keys.Contains("annotation") && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			{
+				annotation = new AccountAnnotation(account.Id);
+				annotation.notetext = csvRow["annotation"].ToString();
+				annotation.modifiedon = collectedDate;
+				annotation.Insert(SqlConnection);
+			}
+			else
+			{
+				annotation = null;
 			}
 
 			return account;
