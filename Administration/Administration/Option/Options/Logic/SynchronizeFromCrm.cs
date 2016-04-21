@@ -299,18 +299,45 @@ namespace Administration.Option.Options.Logic
 			{
 				ExternalContactAnnotation externalContactAnnotation = ExternalContactAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, externalAnnotation.Id).SingleOrDefault();
 
+				Guid contactAnnotationId;
+
 				if (externalContactAnnotation == null)
 				{
 					ContactAnnotation contactAnnotation = new ContactAnnotation(contactChange.ContactId);
 					Conversion.Annotation.Convert(externalAnnotation, contactAnnotation);
 					contactAnnotation.Insert(SqlConnection);
 
-					externalContactAnnotation = new ExternalContactAnnotation(externalAnnotation.Id, changeProviderId, contactAnnotation.Id);
+					contactAnnotationId = contactAnnotation.Id;
+
+					externalContactAnnotation = new ExternalContactAnnotation(externalAnnotation.Id, changeProviderId, contactAnnotationId);
 					externalContactAnnotation.Insert(SqlConnection);
+				}
+				else
+				{
+					contactAnnotationId = externalContactAnnotation.ContactAnnotationId;
 				}
 
 				ContactChangeAnnotation contactChangeAnnotation = new ContactChangeAnnotation(contactChange.Id, contactAnnotationId);
 				Conversion.Annotation.Convert(externalAnnotation, contactChangeAnnotation);
+				contactChangeAnnotation.Insert(SqlConnection);
+			});
+
+			List<ContactAnnotation> localContactAnnotations = ContactAnnotation.ReadByContactId(SqlConnection, contactChange.ContactId);
+
+			List<Guid> remoteContactAnnotationIdsToKeep = externalAnnotations.
+				Select(crmAnnotation => ExternalContactAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, crmAnnotation.Id).SingleOrDefault()).
+				Where(externalAnnotation => externalAnnotation != null).
+				Select(externalAnnotation => externalAnnotation.ContactAnnotationId).ToList();
+
+			List<ContactAnnotation> localContactAnnotationsToDelete = localContactAnnotations.
+				Where(contactAnnotation => remoteContactAnnotationIdsToKeep.Any(keepId => contactAnnotation.Id == keepId) == false).ToList();
+
+			localContactAnnotationsToDelete.ForEach(contactAnnotation =>
+			{
+				ContactChangeAnnotation contactChangeAnnotation = new ContactChangeAnnotation(contactChange.Id, contactAnnotation.Id);
+				contactChangeAnnotation.modifiedon = contactChange.modifiedon;
+				contactChangeAnnotation.isdeleted = true;
+				contactChangeAnnotation.notetext = string.Empty;
 				contactChangeAnnotation.Insert(SqlConnection);
 			});
 		}
@@ -342,18 +369,45 @@ namespace Administration.Option.Options.Logic
 			{
 				ExternalAccountAnnotation externalAccountAnnotation = ExternalAccountAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, externalAnnotation.Id).SingleOrDefault();
 
+				Guid accountAnnotationId;
+
 				if (externalAccountAnnotation == null)
 				{
 					AccountAnnotation accountAnnotation = new AccountAnnotation(accountChange.AccountId);
 					Conversion.Annotation.Convert(externalAnnotation, accountAnnotation);
 					accountAnnotation.Insert(SqlConnection);
 
-					externalAccountAnnotation = new ExternalAccountAnnotation(externalAnnotation.Id, changeProviderId, accountAnnotation.Id);
+					accountAnnotationId = accountAnnotation.Id;
+
+					externalAccountAnnotation = new ExternalAccountAnnotation(externalAnnotation.Id, changeProviderId, accountAnnotationId);
 					externalAccountAnnotation.Insert(SqlConnection);
+				}
+				else
+				{
+					accountAnnotationId = externalAccountAnnotation.AccountAnnotationId;
 				}
 
 				AccountChangeAnnotation accountChangeAnnotation = new AccountChangeAnnotation(accountChange.Id, accountAnnotationId);
 				Conversion.Annotation.Convert(externalAnnotation, accountChangeAnnotation);
+				accountChangeAnnotation.Insert(SqlConnection);
+			});
+
+			List<AccountAnnotation> localAccountAnnotations = AccountAnnotation.ReadByAccountId(SqlConnection, accountChange.AccountId);
+
+			List<Guid> remoteAccountAnnotationIdsToKeep = externalAnnotations.
+				Select(crmAnnotation => ExternalAccountAnnotation.ReadFromChangeProviderAndExternalAnnotation(SqlConnection, changeProviderId, crmAnnotation.Id).SingleOrDefault()).
+				Where(externalAnnotation => externalAnnotation != null).
+				Select(externalAnnotation => externalAnnotation.AccountAnnotationId).ToList();
+
+			List<AccountAnnotation> localAccountAnnotationsToDelete = localAccountAnnotations.
+				Where(accountAnnotation => remoteAccountAnnotationIdsToKeep.Any(keepId => accountAnnotation.Id == keepId) == false).ToList();
+
+			localAccountAnnotationsToDelete.ForEach(accountAnnotation =>
+			{
+				AccountChangeAnnotation accountChangeAnnotation = new AccountChangeAnnotation(accountChange.Id, accountAnnotation.Id);
+				accountChangeAnnotation.modifiedon = accountChange.modifiedon;
+				accountChangeAnnotation.isdeleted = true;
+				accountChangeAnnotation.notetext = string.Empty;
 				accountChangeAnnotation.Insert(SqlConnection);
 			});
 		}
