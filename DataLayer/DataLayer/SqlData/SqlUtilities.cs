@@ -124,13 +124,25 @@ namespace DataLayer.SqlData
 		{
 			ChangeProvider.MaintainTable(sqlConnection);
 			Contact.Contact.MaintainTable(sqlConnection);
+
 			ExternalContact.MaintainTable(sqlConnection);
 			ContactChange.MaintainTable(sqlConnection);
+
+			Annotation.ContactAnnotation.MaintainTable(sqlConnection);
+			Annotation.ExternalContactAnnotation.MaintainTable(sqlConnection);
+			Annotation.ContactChangeAnnotation.MaintainTable(sqlConnection);
+
 			Byarbejde.Byarbejde.MaintainTable(sqlConnection);
 			Byarbejde.ExternalByarbejde.MaintainTable(sqlConnection);
 			Account.Account.MaintainTable(sqlConnection);
 			ExternalAccount.MaintainTable(sqlConnection);
+
 			AccountChange.MaintainTable(sqlConnection);
+
+			Annotation.AccountAnnotation.MaintainTable(sqlConnection);
+			Annotation.ExternalAccountAnnotation.MaintainTable(sqlConnection);
+			Annotation.AccountChangeAnnotation.MaintainTable(sqlConnection);
+
 			AccountContact.MaintainTable(sqlConnection);
 			AccountChangeContact.MaintainTable(sqlConnection);
 			AccountIndsamler.MaintainTable(sqlConnection);
@@ -144,6 +156,10 @@ namespace DataLayer.SqlData
 
 		public static void DeleteAllTables(SqlConnection sqlConnection)
 		{
+			DropTable(sqlConnection, typeof(Annotation.ExternalContactAnnotation).Name);
+			DropTable(sqlConnection, typeof(Annotation.ContactChangeAnnotation).Name);
+			DropTable(sqlConnection, typeof(Annotation.ContactAnnotation).Name);
+
 			DropTable(sqlConnection, typeof(Group.ContactChangeGroup).Name);
 			DropTable(sqlConnection, typeof(ContactChange).Name);
 			DropTable(sqlConnection, typeof(Group.ContactGroup).Name);
@@ -152,6 +168,10 @@ namespace DataLayer.SqlData
 			DropTable(sqlConnection, typeof(AccountChangeIndsamler).Name);
 			DropTable(sqlConnection, typeof(AccountChangeContact).Name);
 			DropTable(sqlConnection, typeof(ExternalContact).Name);
+
+			DropTable(sqlConnection, typeof(Annotation.ExternalAccountAnnotation).Name);
+			DropTable(sqlConnection, typeof(Annotation.AccountChangeAnnotation).Name);
+			DropTable(sqlConnection, typeof(Annotation.AccountAnnotation).Name);
 
 			DropTable(sqlConnection, typeof(Group.AccountChangeGroup).Name);
 			DropTable(sqlConnection, typeof(AccountChange).Name);
