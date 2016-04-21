@@ -1,5 +1,6 @@
 ﻿using DataLayer.MongoData;
 using DataLayer.SqlData.Account;
+using DataLayer.SqlData.Annotation;
 using DataLayer.SqlData.Group;
 using System;
 using System.Collections.Generic;
@@ -484,6 +485,19 @@ namespace DataLayer.SqlData.Contact
 				{
 					ContactGroup contactGroup = new ContactGroup(Id, groupId);
 					contactGroup.Insert(sqlConnection);
+				}
+			}
+		}
+
+		public void RemoveAnnotationsNotInList(SqlConnection sqlConnection, List<Guid> annotationIdsToKeep)
+		{
+			List<ContactAnnotation> contactAnnotations = ContactAnnotation.ReadByContactId(sqlConnection, Id);
+
+			foreach (ContactAnnotation contactAnnotation in contactAnnotations)
+			{
+				if (annotationIdsToKeep.Contains(contactAnnotation.Id) == false)
+				{
+					contactAnnotation.Delete(sqlConnection);
 				}
 			}
 		}
