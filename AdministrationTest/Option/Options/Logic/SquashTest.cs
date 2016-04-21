@@ -1,6 +1,5 @@
 ﻿using Administration.Option.Options.Logic;
 using NUnit.Framework;
-using System.Data.SqlClient;
 using System;
 using DatabaseSquash = DataLayer.MongoData.Option.Options.Logic.Squash;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
@@ -18,7 +17,7 @@ using DatabaseProgress = DataLayer.MongoData.Progress;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using System.Collections.Generic;
 using System.Linq;
-using DataLayer.SqlData.Account;
+using DataLayer.SqlData.Annotation;
 
 namespace AdministrationTest.Option.Options.Logic
 {
@@ -359,6 +358,113 @@ namespace AdministrationTest.Option.Options.Logic
 			}
 		}
 
+		[Test]
+		public void ExecuteOptionSquashesContactAnnotationsOnDifferentChanges()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			ContactAnnotation contactAnnotation = new ContactAnnotation(_contact.Id);
+			contactAnnotation.notetext = "note";
+			contactAnnotation.modifiedon = new DateTime(1999, 1, 1);
+			contactAnnotation.Insert(_sqlConnection);
+
+			DatabaseContactChange contactChange1 = CreateContactChange("firstname", "lastname", new DateTime(1999, 1, 1), true);
+			DatabaseContactChange contactChange2 = CreateContactChange("firstname", "lastname", new DateTime(1999, 1, 1), false);
+
+			CreateAnnotationChange(contactAnnotation, contactChange1, new DateTime(2000, 1, 1), "note1", false);
+			CreateAnnotationChange(contactAnnotation, contactChange2, new DateTime(2000, 1, 2), "note2", false);
+
+			squash.Execute();
+
+			contactAnnotation = ContactAnnotation.Read(_sqlConnection, contactAnnotation.Id);
+
+			Assert.AreEqual("note2", contactAnnotation.notetext);
+		}
+
+		[Test]
+		public void ExecuteOptionSquashesContactAnnotationsOnSameChange()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			ContactAnnotation contactAnnotation = new ContactAnnotation(_contact.Id);
+			contactAnnotation.notetext = "note";
+			contactAnnotation.modifiedon = new DateTime(1999, 1, 1);
+			contactAnnotation.Insert(_sqlConnection);
+
+			DatabaseContactChange contactChange = CreateContactChange("firstname", "lastname", new DateTime(1999, 1, 1), true);
+
+			CreateAnnotationChange(contactAnnotation, contactChange, new DateTime(2000, 1, 1), "note1", false);
+			CreateAnnotationChange(contactAnnotation, contactChange, new DateTime(2000, 1, 2), "note2", false);
+
+			squash.Execute();
+
+			contactAnnotation = ContactAnnotation.Read(_sqlConnection, contactAnnotation.Id);
+
+			Assert.AreEqual("note2", contactAnnotation.notetext);
+		}
+
+		[Test]
+		public void ExecuteOptionSquashesAccountAnnotationsOnDifferentChanges()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			AccountAnnotation accountAnnotation = new AccountAnnotation(_account.Id);
+			accountAnnotation.notetext = "note";
+			accountAnnotation.modifiedon = new DateTime(1999, 1, 1);
+			accountAnnotation.Insert(_sqlConnection);
+
+			DatabaseAccountChange accountChange1 = CreateAccountChange("firstname", "lastname", new DateTime(1999, 1, 1), true);
+			DatabaseAccountChange accountChange2 = CreateAccountChange("firstname", "lastname", new DateTime(1999, 1, 1), false);
+
+			CreateAnnotationChange(accountAnnotation, accountChange1, new DateTime(2000, 1, 1), "note1", false);
+			CreateAnnotationChange(accountAnnotation, accountChange2, new DateTime(2000, 1, 2), "note2", false);
+
+			squash.Execute();
+
+			accountAnnotation = AccountAnnotation.Read(_sqlConnection, accountAnnotation.Id);
+
+			Assert.AreEqual("note2", accountAnnotation.notetext);
+		}
+
+		[Test]
+		public void ExecuteOptionSquashesAccountAnnotationsOnSameChange()
+		{
+			DatabaseSquash databaseSquash = GetDatabaseSquash();
+
+			Squash squash = new Squash(Connection, databaseSquash);
+
+			AccountAnnotation accountAnnotation = new AccountAnnotation(_account.Id);
+			accountAnnotation.notetext = "note";
+			accountAnnotation.modifiedon = new DateTime(1999, 1, 1);
+			accountAnnotation.Insert(_sqlConnection);
+
+			DatabaseAccountChange accountChange = CreateAccountChange("firstname", "lastname", new DateTime(1999, 1, 1), true);
+
+			CreateAnnotationChange(accountAnnotation, accountChange, new DateTime(2000, 1, 1), "note1", false);
+			CreateAnnotationChange(accountAnnotation, accountChange, new DateTime(2000, 1, 2), "note2", false);
+
+			squash.Execute();
+
+			accountAnnotation = AccountAnnotation.Read(_sqlConnection, accountAnnotation.Id);
+
+			Assert.AreEqual("note2", accountAnnotation.notetext);
+		}
+
+		private ContactAnnotation CreateContactAnnotation(string note)
+		{
+			ContactAnnotation contactAnnotation = new ContactAnnotation(_contact.Id);
+			contactAnnotation.notetext = note;
+			contactAnnotation.modifiedon = new DateTime(1999, 1, 1);
+			contactAnnotation.Insert(_sqlConnection);
+			return contactAnnotation;
+		}
+
 		private void AttachGroupToAccountChange(DatabaseAccountChange databaseAccountChange, params string[] groups)
 		{
 			foreach (string groupname in groups)
@@ -417,7 +523,7 @@ namespace AdministrationTest.Option.Options.Logic
 			return contact;
 		}
 
-		private void CreateContactChange(string firstName, string lastName, DateTime modifiedOn, bool isProvider1, params string[] groups)
+		private DatabaseContactChange CreateContactChange(string firstName, string lastName, DateTime modifiedOn, bool isProvider1, params string[] groups)
 		{
 			Guid externalContactId;
 			Guid changeProviderId;
@@ -450,6 +556,8 @@ namespace AdministrationTest.Option.Options.Logic
 				DatabaseContactChangeGroup contactGroup = new DatabaseContactChangeGroup(databaseContactChange.Id, group.Id);
 				contactGroup.Insert(_sqlConnection);
 			}
+
+			return databaseContactChange;
 		}
 
 		private DatabaseGroup ReadOrCreateGroup(string groupname)
@@ -497,6 +605,24 @@ namespace AdministrationTest.Option.Options.Logic
 			databaseAccountChange.Insert();
 
 			return databaseAccountChange;
+		}
+
+		private void CreateAnnotationChange(ContactAnnotation contactAnnotation, DatabaseContactChange contactChange, DateTime modifiedon, string note, bool isdeleted)
+		{
+			ContactChangeAnnotation annotationChange = new ContactChangeAnnotation(contactChange.Id, contactAnnotation.Id);
+			annotationChange.notetext = note;
+			annotationChange.modifiedon = modifiedon;
+			annotationChange.isdeleted = isdeleted;
+			annotationChange.Insert(_sqlConnection);
+		}
+
+		private void CreateAnnotationChange(AccountAnnotation accountAnnotation, DatabaseAccountChange accountChange, DateTime modifiedon, string note, bool isdeleted)
+		{
+			AccountChangeAnnotation annotationChange = new AccountChangeAnnotation(accountChange.Id, accountAnnotation.Id);
+			annotationChange.notetext = note;
+			annotationChange.modifiedon = modifiedon;
+			annotationChange.isdeleted = isdeleted;
+			annotationChange.Insert(_sqlConnection);
 		}
 
 		private DatabaseSquash GetDatabaseSquash()
