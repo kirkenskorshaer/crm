@@ -5,13 +5,19 @@ using System.Linq;
 
 namespace DataLayer.SqlData.Annotation
 {
-	public class ContactChangeAnnotation : AbstractIdData
+	public class ContactChangeAnnotation : AbstractIdData, IDeletableModifiedIdData
 	{
 		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, false)]
 		public string notetext;
 
 		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, "contactchangeid", typeof(Contact.ContactChange), "id", true, 1)]
 		public Guid ContactChangeId;
+
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.DATETIME, false)]
+		public DateTime modifiedon { get; set; }
+
+		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.BIT, false)]
+		public bool isdeleted { get; set; }
 
 		public ContactChangeAnnotation()
 		{
