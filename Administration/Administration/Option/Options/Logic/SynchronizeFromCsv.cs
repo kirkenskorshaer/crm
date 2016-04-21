@@ -428,14 +428,14 @@ namespace Administration.Option.Options.Logic
 
 			accountChange.Insert();
 
-			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			if (csvRow.Keys.Contains("group") && csvRow["group"] != null && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
 			{
 				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
 				AccountChangeGroup accountChangeGroup = new AccountChangeGroup(accountChange.Id, group.Id);
 				accountChangeGroup.Insert(SqlConnection);
 			}
 
-			if (csvRow.Keys.Contains("annotation") && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			if (csvRow.Keys.Contains("annotation") && csvRow["annotation"] != null && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
 			{
 				AccountChangeAnnotation annotationChange = new AccountChangeAnnotation(accountChange.Id, annotation.Id);
 				annotationChange.notetext = csvRow["annotation"].ToString();
@@ -608,14 +608,14 @@ namespace Administration.Option.Options.Logic
 
 			account.Insert(SqlConnection);
 
-			if (csvRow.Keys.Contains("group") && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
+			if (csvRow.Keys.Contains("group") && csvRow["group"] != null && string.IsNullOrWhiteSpace(csvRow["group"].ToString()) == false)
 			{
 				Group group = Group.ReadByNameOrCreate(SqlConnection, csvRow["group"].ToString());
 				AccountGroup accountGroup = new AccountGroup(account.Id, group.Id);
 				accountGroup.Insert(SqlConnection);
 			}
 
-			if (csvRow.Keys.Contains("annotation") && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
+			if (csvRow.Keys.Contains("annotation") && csvRow["annotation"] != null && string.IsNullOrWhiteSpace(csvRow["annotation"].ToString()) == false)
 			{
 				annotation = new AccountAnnotation(account.Id);
 				annotation.notetext = csvRow["annotation"].ToString();
