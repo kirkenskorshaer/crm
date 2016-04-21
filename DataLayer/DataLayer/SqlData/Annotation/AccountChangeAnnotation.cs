@@ -50,5 +50,10 @@ namespace DataLayer.SqlData.Annotation
 		{
 			return Exists<AccountChangeAnnotation>(sqlConnection, "id", id);
 		}
+
+		public static List<AccountChangeAnnotation> ReadByAccountAnnotationId(SqlConnection sqlConnection, Guid id)
+		{
+			return Read<AccountChangeAnnotation>(sqlConnection, new SqlCondition("AccountAnnotationId", "=", id));
+		}
 	}
 }

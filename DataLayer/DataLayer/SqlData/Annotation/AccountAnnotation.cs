@@ -54,5 +54,14 @@ namespace DataLayer.SqlData.Annotation
 				new SqlCondition("AccountId", "=", accountId),
 			});
 		}
+
+		public static List<AccountAnnotation> ReadByAccountIdAndIsdeleted(SqlConnection sqlConnection, Guid accountId, bool isdeleted)
+		{
+			return Read<AccountAnnotation>(sqlConnection, new List<SqlCondition>()
+			{
+				new SqlCondition("AccountId", "=", accountId),
+				new SqlCondition("isdeleted", "=", isdeleted),
+			});
+		}
 	}
 }

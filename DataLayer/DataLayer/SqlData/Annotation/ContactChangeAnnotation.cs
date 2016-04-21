@@ -50,5 +50,15 @@ namespace DataLayer.SqlData.Annotation
 		{
 			return Exists<ContactChangeAnnotation>(sqlConnection, "id", id);
 		}
+
+		public static List<ContactChangeAnnotation> ReadByContactChangeId(SqlConnection sqlConnection, Guid id)
+		{
+			return Read<ContactChangeAnnotation>(sqlConnection, new SqlCondition("ContactChangeId", "=", id));
+		}
+
+		public static List<ContactChangeAnnotation> ReadByContactAnnotationId(SqlConnection sqlConnection, Guid id)
+		{
+			return Read<ContactChangeAnnotation>(sqlConnection, new SqlCondition("ContactAnnotationId", "=", id));
+		}
 	}
 }
