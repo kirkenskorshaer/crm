@@ -26,6 +26,13 @@ namespace DataLayer.SqlData.Annotation
 			ContactAnnotationId = contactAnnotationId;
 		}
 
+		public static void MaintainTable(SqlConnection sqlConnection)
+		{
+			Type dataClassType = typeof(ExternalContactAnnotation);
+
+			SqlUtilities.MaintainTable(sqlConnection, dataClassType);
+		}
+
 		public static List<ExternalContactAnnotation> ReadFromChangeProviderAndAnnotation(SqlConnection sqlConnection, Guid changeProviderId, Guid contactAnnotationId)
 		{
 			return Read<ExternalContactAnnotation>(sqlConnection, new List<SqlCondition> { new SqlCondition("ChangeProviderId", "=", changeProviderId), new SqlCondition("ContactAnnotationId", "=", contactAnnotationId) });
