@@ -13,6 +13,9 @@ namespace DataLayer.SqlData.Annotation
 		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, "contactchangeid", typeof(Contact.ContactChange), "id", true, 1)]
 		public Guid ContactChangeId;
 
+		[SqlColumn(SqlColumn.PropertyEnum.ForeignKey, SqlUtilities.DataType.UNIQUEIDENTIFIER, false, "ContactAnnotationId", typeof(ContactAnnotation), "id", false, 1)]
+		public Guid ContactAnnotationId;
+
 		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.DATETIME, false)]
 		public DateTime modifiedon { get; set; }
 
@@ -23,9 +26,10 @@ namespace DataLayer.SqlData.Annotation
 		{
 		}
 
-		public ContactChangeAnnotation(Guid contactChangeId)
+		public ContactChangeAnnotation(Guid contactChangeId, Guid contactAnnotationId)
 		{
 			ContactChangeId = contactChangeId;
+			ContactAnnotationId = contactAnnotationId;
 		}
 
 		public static void MaintainTable(SqlConnection sqlConnection)
