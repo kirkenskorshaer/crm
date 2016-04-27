@@ -494,7 +494,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _contactRelationshipName, "contact", "contactid", contactIds);
+			SynchronizeNNRelationship(currentEntity, _contactRelationshipName, "contact", "contactid", contactIds, SynchronizeActionEnum.Disassociate);
 		}
 
 		public void SynchronizeIndsamlere(List<Contact> indsamlere)
@@ -508,7 +508,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds);
+			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds, SynchronizeActionEnum.Disassociate);
 		}
 
 
@@ -523,7 +523,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
+			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds, SynchronizeActionEnum.Disassociate);
 		}
 
 		public void SetActive(bool isActive)

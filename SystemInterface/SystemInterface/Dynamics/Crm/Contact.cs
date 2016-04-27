@@ -212,7 +212,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		private void SynchronizeGroupsInCrm(Entity contactEntity)
 		{
-			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList());
+			SynchronizeNNRelationship(contactEntity, _groupRelationshipName, "new_group", "new_groupid", Groups.Select(group => group.GroupId).ToList(), SynchronizeActionEnum.Disassociate);
 		}
 
 		public void SynchronizeGroups()
@@ -233,7 +233,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds);
+			SynchronizeNNRelationship(currentEntity, _groupRelationshipName, "new_group", "new_groupid", groupIds, SynchronizeActionEnum.Disassociate);
 		}
 
 		public void SynchronizeAccounts(List<Account> accounts)
@@ -246,7 +246,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _accountRelationshipName, "account", "accountid", accountIds);
+			SynchronizeNNRelationship(currentEntity, _accountRelationshipName, "account", "accountid", accountIds, SynchronizeActionEnum.Disassociate);
 		}
 
 		public void SynchronizeIndsamlere(List<Account> indsamlerAccounts)
@@ -259,7 +259,7 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _indsamlerAccountRelationshipName, "account", "accountid", indsamlerAccountIds);
+			SynchronizeNNRelationship(currentEntity, _indsamlerAccountRelationshipName, "account", "accountid", indsamlerAccountIds, SynchronizeActionEnum.Disassociate);
 		}
 
 		public List<Guid> GetExternalAccountIdsFromAccountContact()

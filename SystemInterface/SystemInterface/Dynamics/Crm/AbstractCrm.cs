@@ -120,6 +120,19 @@ namespace SystemInterface.Dynamics.Crm
 			Connection.Service.Disassociate(entityName, Id, relationShip, entityReferenceCollection);
 		}
 
+		protected void DeleteRelated(string relatedEntityName, List<Guid> idsToDelete)
+		{
+			if (idsToDelete.Any() == false)
+			{
+				return;
+			}
+
+			foreach (Guid id in idsToDelete)
+			{
+				Connection.Service.Delete(relatedEntityName, id);
+			}
+		}
+
 		private EntityReferenceCollection CreateReferenceCollection(string relationshipName, string entityName, List<Guid> idsToCollect)
 		{
 			EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
@@ -133,7 +146,13 @@ namespace SystemInterface.Dynamics.Crm
 			return entityReferenceCollection;
 		}
 
-		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds)
+		protected enum SynchronizeActionEnum
+		{
+			Disassociate = 1,
+			Delete = 2,
+		}
+
+		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds, SynchronizeActionEnum synchronizeAction)
 		{
 			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, relationshipName);
 
@@ -146,7 +165,14 @@ namespace SystemInterface.Dynamics.Crm
 
 			AddRelated(relationshipName, relatedEntityName, localButNotInCrm);
 
-			RemoveRelated(relationshipName, relatedEntityName, remoteButNotLocal);
+			if (synchronizeAction.HasFlag(SynchronizeActionEnum.Disassociate))
+			{
+				RemoveRelated(relationshipName, relatedEntityName, remoteButNotLocal);
+			}
+			if (synchronizeAction.HasFlag(SynchronizeActionEnum.Delete))
+			{
+				DeleteRelated(relatedEntityName, remoteButNotLocal);
+			}
 		}
 
 		protected IEnumerable<Entity> GetRelatedEntities(Entity currentEntity, string relationshipName)
