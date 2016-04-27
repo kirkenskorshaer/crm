@@ -13,10 +13,13 @@ using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseByarbejde = DataLayer.SqlData.Byarbejde.Byarbejde;
 using DatabaseExternalByarbejde = DataLayer.SqlData.Byarbejde.ExternalByarbejde;
+using DatabaseExternalAccountAnnotation = DataLayer.SqlData.Annotation.ExternalAccountAnnotation;
+using DatabaseExternalContactAnnotation = DataLayer.SqlData.Annotation.ExternalContactAnnotation;
 using System.Linq;
 using System.Collections.Generic;
 using Administration.Option.Options.Logic;
 using System;
+using DataLayer.SqlData.Annotation;
 
 namespace AdministrationTest.Option.Options.Logic
 {
@@ -246,6 +249,54 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseByarbejde databaseByarbejde = DatabaseByarbejde.Read(_sqlConnection, byarbejderId);
 
 			Assert.AreEqual(byarbejdeNew_name, databaseByarbejde.new_name);
+		}
+
+		[Test]
+		public void AnnotationsOnContactCanBeRetreived()
+		{
+			Contact contact = CreateCrmContact($"firstname {Guid.NewGuid()}");
+			contact.Insert();
+
+			Annotation annotation = new Annotation(_dynamicsCrmConnection);
+			annotation.notetext = $"note {Guid.NewGuid()}";
+			annotation.Insert();
+
+			contact.SynchronizeAnnotations(new List<Annotation>() { annotation });
+
+			_synchronizeFromCrm.Execute();
+
+			contact.Delete();
+
+			List<DatabaseExternalContactAnnotation> externalContactAnnotation = DatabaseExternalContactAnnotation.ReadFromChangeProviderAndExternalAnnotation(_sqlConnection, _changeProvider.Id, annotation.Id);
+			Guid contactAnnotationId = externalContactAnnotation.Single().ContactAnnotationId;
+
+			ContactAnnotation contactAnnotation = ContactAnnotation.Read(_sqlConnection, contactAnnotationId);
+
+			Assert.AreEqual(annotation.notetext, contactAnnotation.notetext);
+		}
+
+		[Test]
+		public void AnnotationsOnAccountCanBeRetreived()
+		{
+			Account account = CreateCrmAccount($"firstname {Guid.NewGuid()}");
+			account.Insert();
+
+			Annotation annotation = new Annotation(_dynamicsCrmConnection);
+			annotation.notetext = $"note {Guid.NewGuid()}";
+			annotation.Insert();
+
+			account.SynchronizeAnnotations(new List<Annotation>() { annotation });
+
+			_synchronizeFromCrm.Execute();
+
+			account.Delete();
+
+			List<DatabaseExternalAccountAnnotation> externalAccountAnnotation = DatabaseExternalAccountAnnotation.ReadFromChangeProviderAndExternalAnnotation(_sqlConnection, _changeProvider.Id, annotation.Id);
+			Guid accountAnnotationId = externalAccountAnnotation.Single().AccountAnnotationId;
+
+			AccountAnnotation accountAnnotation = AccountAnnotation.Read(_sqlConnection, accountAnnotationId);
+
+			Assert.AreEqual(annotation.notetext, accountAnnotation.notetext);
 		}
 
 		private Byarbejde CreateCrmByarbejde(string byarbejdeNew_name)
