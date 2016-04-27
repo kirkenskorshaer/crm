@@ -20,6 +20,7 @@ using DatabaseAccountGroup = DataLayer.SqlData.Group.AccountGroup;
 using DatabaseAccountContact = DataLayer.SqlData.Account.AccountContact;
 using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using System.Collections.Generic;
+using DataLayer.SqlData.Annotation;
 
 namespace AdministrationTest.Option.Options.Logic
 {
@@ -315,6 +316,170 @@ namespace AdministrationTest.Option.Options.Logic
 			Byarbejde byarbejde = Byarbejde.Read(_dynamicsCrmConnection, databaseByarbejde.new_name).Single();
 
 			Assert.AreEqual(databaseByarbejde.new_name, byarbejde.new_name);
+		}
+
+		[Test]
+		public void AnnotationOnContactCanBeAdded()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseContact databaseContact = CreateContact();
+			MakeSureContactIsNextInProgressQueue(databaseContact);
+
+			ContactAnnotation contactAnnotation = CreateContactAnnotation(databaseContact);
+
+			synchronizeToCrm.Execute();
+
+			DatabaseExternalContact externalContact = DatabaseExternalContact.Read(_sqlConnection, _changeProvider.Id).Single();
+			Contact contact = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
+
+			List<Annotation> annotationsRead = contact.GetAnnotations();
+
+			contact.Delete();
+
+			Assert.AreEqual(annotationsRead.Single().notetext, contactAnnotation.notetext);
+		}
+
+		[Test]
+		public void AnnotationOnContactCanBeRemoved()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Contact;
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseContact databaseContact = CreateContact();
+			MakeSureContactIsNextInProgressQueue(databaseContact);
+
+			ContactAnnotation contactAnnotation1 = CreateContactAnnotation(databaseContact);
+			ContactAnnotation contactAnnotation2 = CreateContactAnnotation(databaseContact);
+			ContactAnnotation contactAnnotation3 = CreateContactAnnotation(databaseContact);
+
+			synchronizeToCrm.Execute();
+
+			DeleteContactAnnotation(contactAnnotation2, databaseContact);
+
+			synchronizeToCrm.Execute();
+
+			DatabaseExternalContact externalContact = DatabaseExternalContact.Read(_sqlConnection, _changeProvider.Id).Single();
+			Contact contact = Contact.Read(_dynamicsCrmConnection, externalContact.ExternalContactId);
+
+			List<Annotation> annotationsRead = contact.GetAnnotations();
+
+			contact.Delete();
+
+			Assert.AreEqual(2, annotationsRead.Count);
+			Assert.IsTrue(annotationsRead.Any(annotation => annotation.notetext == contactAnnotation1.notetext));
+			Assert.IsTrue(annotationsRead.Any(annotation => annotation.notetext == contactAnnotation3.notetext));
+		}
+
+		[Test]
+		public void AnnotationOnAccountCanBeAdded()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseAccount databaseAccount = CreateAccount();
+			MakeSureAccountIsNextInProgressQueue(databaseAccount);
+
+			AccountAnnotation accountAnnotation = CreateAccountAnnotation(databaseAccount);
+
+			synchronizeToCrm.Execute();
+
+			DatabaseExternalAccount externalAccount = DatabaseExternalAccount.Read(_sqlConnection, _changeProvider.Id).Single();
+			Account account = Account.Read(_dynamicsCrmConnection, externalAccount.ExternalAccountId);
+
+			List<Annotation> annotationsRead = account.GetAnnotations();
+
+			account.Delete();
+
+			Assert.AreEqual(annotationsRead.Single().notetext, accountAnnotation.notetext);
+		}
+
+		[Test]
+		public void AnnotationOnAccountCanBeRemoved()
+		{
+			DatabaseSynchronizeToCrm databaseSynchronizeToCrm = GetDatabaseSynchronizeToCrm();
+			databaseSynchronizeToCrm.synchronizeType = DatabaseSynchronizeToCrm.SynchronizeTypeEnum.Account;
+			SynchronizeToCrm synchronizeToCrm = new SynchronizeToCrm(Connection, databaseSynchronizeToCrm);
+
+			DatabaseAccount databaseAccount = CreateAccount();
+			MakeSureAccountIsNextInProgressQueue(databaseAccount);
+
+			AccountAnnotation accountAnnotation1 = CreateAccountAnnotation(databaseAccount);
+			AccountAnnotation accountAnnotation2 = CreateAccountAnnotation(databaseAccount);
+			AccountAnnotation accountAnnotation3 = CreateAccountAnnotation(databaseAccount);
+
+			synchronizeToCrm.Execute();
+
+			DeleteAccountAnnotation(accountAnnotation2, databaseAccount);
+
+			synchronizeToCrm.Execute();
+
+			DatabaseExternalAccount externalAccount = DatabaseExternalAccount.Read(_sqlConnection, _changeProvider.Id).Single();
+			Account account = Account.Read(_dynamicsCrmConnection, externalAccount.ExternalAccountId);
+
+			List<Annotation> annotationsRead = account.GetAnnotations();
+
+			account.Delete();
+
+			Assert.AreEqual(2, annotationsRead.Count);
+			Assert.IsTrue(annotationsRead.Any(annotation => annotation.notetext == accountAnnotation1.notetext));
+			Assert.IsTrue(annotationsRead.Any(annotation => annotation.notetext == accountAnnotation3.notetext));
+		}
+
+		private ContactAnnotation CreateContactAnnotation(DatabaseContact databaseContact)
+		{
+			ContactAnnotation contactAnnotation = new ContactAnnotation(databaseContact.Id);
+			contactAnnotation.notetext = $"note {Guid.NewGuid()}";
+			contactAnnotation.modifiedon = DateTime.Now;
+			contactAnnotation.Insert(_sqlConnection);
+			return contactAnnotation;
+		}
+
+		private void DeleteContactAnnotation(ContactAnnotation contactAnnotation2, DatabaseContact databaseContact)
+		{
+			DatabaseExternalContact externalContact = new DatabaseExternalContact(_sqlConnection, Guid.NewGuid(), _changeProviderLocal.Id, databaseContact.Id);
+			externalContact.Insert();
+
+			DatabaseContactChange change = new DatabaseContactChange(_sqlConnection, databaseContact.Id, externalContact.ExternalContactId, _changeProviderLocal.Id);
+			change.modifiedon = DateTime.Now;
+			change.createdon = DateTime.Now;
+			change.Insert();
+
+			ContactChangeAnnotation changeAnnotation = new ContactChangeAnnotation(change.Id, contactAnnotation2.Id);
+			changeAnnotation.modifiedon = change.modifiedon;
+			changeAnnotation.isdeleted = true;
+			changeAnnotation.notetext = string.Empty;
+			changeAnnotation.Insert(_sqlConnection);
+		}
+
+		private AccountAnnotation CreateAccountAnnotation(DatabaseAccount databaseAccount)
+		{
+			AccountAnnotation accountAnnotation = new AccountAnnotation(databaseAccount.Id);
+			accountAnnotation.notetext = $"note {Guid.NewGuid()}";
+			accountAnnotation.modifiedon = DateTime.Now;
+			accountAnnotation.Insert(_sqlConnection);
+			return accountAnnotation;
+		}
+
+		private void DeleteAccountAnnotation(AccountAnnotation accountAnnotation2, DatabaseAccount databaseAccount)
+		{
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), _changeProviderLocal.Id, databaseAccount.Id);
+			externalAccount.Insert();
+
+			DatabaseAccountChange change = new DatabaseAccountChange(_sqlConnection, databaseAccount.Id, externalAccount.ExternalAccountId, _changeProviderLocal.Id);
+			change.modifiedon = DateTime.Now;
+			change.createdon = DateTime.Now;
+			change.Insert();
+
+			AccountChangeAnnotation changeAnnotation = new AccountChangeAnnotation(change.Id, accountAnnotation2.Id);
+			changeAnnotation.modifiedon = change.modifiedon;
+			changeAnnotation.isdeleted = true;
+			changeAnnotation.notetext = string.Empty;
+			changeAnnotation.Insert(_sqlConnection);
 		}
 
 		private void AddGroupsToDatabaseContact(DatabaseContact databaseContact, DatabaseExternalContact databaseExternalContact, params string[] groupNames)
