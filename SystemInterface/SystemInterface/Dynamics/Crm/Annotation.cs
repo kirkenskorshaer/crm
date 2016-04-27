@@ -9,7 +9,7 @@ using Microsoft.Xrm.Sdk;
 
 namespace SystemInterface.Dynamics.Crm
 {
-	public class Annotation : AbstractCrm
+	public class Annotation : AbstractCrm, IComparable
 	{
 		public DateTime createdon;
 		public DateTime modifiedon;
@@ -74,6 +74,13 @@ namespace SystemInterface.Dynamics.Crm
 			List<Annotation> annotations = StaticCrm.ReadLatest(connection, "annotation", ColumnSetAnnotation, lastSearchDate, (lConnection, entity) => new Annotation(lConnection, entity), maximumNumberOfAnnotations);
 
 			return annotations;
+		}
+
+		public int CompareTo(object obj)
+		{
+			Annotation compareAnnotation = obj as Annotation;
+
+			return compareAnnotation.notetext.CompareTo(notetext);
 		}
 	}
 }

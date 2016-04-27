@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DataLayer.SqlData.Annotation
 {
-	public class AccountAnnotation : AbstractIdData, IDeletableModifiedIdData
+	public class AccountAnnotation : AbstractIdData, IDeletableModifiedIdData, IComparable
 	{
 		[SqlColumn(SqlColumn.PropertyEnum.None, SqlUtilities.DataType.NVARCHAR_MAX, false)]
 		public string notetext;
@@ -62,6 +62,13 @@ namespace DataLayer.SqlData.Annotation
 				new SqlCondition("AccountId", "=", accountId),
 				new SqlCondition("isdeleted", "=", isdeleted),
 			});
+		}
+
+		public int CompareTo(object obj)
+		{
+			AccountAnnotation compareAnnotation = obj as AccountAnnotation;
+
+			return compareAnnotation.notetext.CompareTo(notetext);
 		}
 	}
 }
