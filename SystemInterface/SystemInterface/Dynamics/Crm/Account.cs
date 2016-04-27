@@ -583,5 +583,13 @@ namespace SystemInterface.Dynamics.Crm
 
 			return externalGroups;
 		}
+
+		public void SynchronizeAnnotations(List<Annotation> annotations)
+		{
+			Entity currentEntity = GetAsEntity(true);
+			List<Guid> annotationIds = annotations.Select(annotation => annotation.Id).ToList();
+
+			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
+		}
 	}
 }

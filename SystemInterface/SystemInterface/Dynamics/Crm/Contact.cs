@@ -169,6 +169,14 @@ namespace SystemInterface.Dynamics.Crm
 			return ReadNNRelationship(_annotationRelationshipName, currentEntity, entity => new Annotation(Connection, entity));
 		}
 
+		public void SynchronizeAnnotations(List<Annotation> annotations)
+		{
+			Entity currentEntity = GetAsEntity(true);
+			List<Guid> annotationIds = annotations.Select(annotation => annotation.Id).ToList();
+
+			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
+		}
+
 		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid contactId)
 		{
 			List<string> attributeNames = new List<string>();
