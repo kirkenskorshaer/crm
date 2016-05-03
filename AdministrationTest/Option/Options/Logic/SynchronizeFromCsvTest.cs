@@ -217,7 +217,7 @@ namespace AdministrationTest.Option.Options.Logic
 			string mappingField = "emailaddress1";
 			string[] fields = new string[]
 			{
-				"note",
+				"annotation",
 				"int:new_kkadminmedlemsnr",
 				"firstname",
 				"middlename",
@@ -261,7 +261,7 @@ namespace AdministrationTest.Option.Options.Logic
 			{
 				"kredsellerby",
 				"indsamlingskoordinatorkkadminmedlemsnr",
-				"kommentar",
+				"annotation",
 				"erindsamlingssted",
 				"name",
 				"int:new_kkadminmedlemsnr",
@@ -305,7 +305,7 @@ namespace AdministrationTest.Option.Options.Logic
 			char delimeter = '\t';
 			string keyName = "new_kkadminmedlemsnrAccount";
 			string mappingField = "new_kkadminmedlemsnrContact";
-			string dateStringOverride = "20160411 00:00:00";
+			string dateStringOverride = "20160429 00:00:00";
 			string[] fields = new string[]
 			{
 				"int:new_kkadminmedlemsnrAccount",
@@ -318,8 +318,8 @@ namespace AdministrationTest.Option.Options.Logic
 			synchronizeFromCsv.Execute();
 		}
 
-		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact, 232)]
-		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account, 291)]
+		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Contact, 278)]
+		[TestCase(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum.Account, 296)]
 		public void SendTest(DataLayer.MongoData.Option.Options.Logic.SynchronizeToCrm.SynchronizeTypeEnum type, int numberOfEntities)
 		{
 			DataLayer.MongoData.Option.Schedule schedule = new DataLayer.MongoData.Option.Schedule()
