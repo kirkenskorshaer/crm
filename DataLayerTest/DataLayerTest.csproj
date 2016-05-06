@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="MongoConnectionTest.cs" />
     <Compile Include="MongoDataTest\ConfigTest.cs" />
+    <Compile Include="MongoDataTest\InputTest\WebCampaignTest.cs" />
     <Compile Include="MongoDataTest\LogTest.cs" />
     <Compile Include="MongoDataTest\MongoTestUtilities.cs" />
     <Compile Include="MongoDataTest\Option\Options\CsvTest\CsvWriteLineTest.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="MongoDataTest\SqlConnectionStringTest.cs" />
     <Compile Include="MongoDataTest\StatisticsTest\AbstratStatisticsTest.cs" />
     <Compile Include="MongoDataTest\StatisticsTest\StringStatisticsTest\StringIntStatisticsTest.cs" />
+    <Compile Include="MongoDataTest\InputTest\StubTest.cs" />
     <Compile Include="MongoDataTest\UrlLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDataTest\AccountTest\AccountChangeIndsamlerTest.cs" />
