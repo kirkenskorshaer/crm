@@ -18,5 +18,17 @@ namespace DataLayer.MongoData
 
 			return task.Result;
 		}
+
+		internal static void WaitForTaskOrThrowTimeout(Task task)
+		{
+			int timeoutMilliSeconds = MongoConnection.TimeoutMilliSeconds;
+
+			task.Wait(timeoutMilliSeconds);
+
+			if (task.IsCompleted == false)
+			{
+				throw new TimeoutException($"timeout after waiting {timeoutMilliSeconds} MilliSeconds");
+			}
+		}
 	}
 }
