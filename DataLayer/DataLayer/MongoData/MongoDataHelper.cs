@@ -13,7 +13,7 @@ namespace DataLayer.MongoData
 
 			if (task.IsCompleted == false)
 			{
-				throw new TimeoutException($"timeout after waiting {timeoutMilliSeconds} seconds to fetch {typeof(SearchedObjectType).Name}");
+				throw new TimeoutException($"timeout after waiting {timeoutMilliSeconds} MilliSeconds to fetch {typeof(SearchedObjectType).Name}");
 			}
 
 			return task.Result;
