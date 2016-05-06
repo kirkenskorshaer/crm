@@ -26,6 +26,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebInterface", "..\WebInterface\", "{45FFA163-372A-43B1-990B-D0BF5734E53C}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		ProjectReferences = "{4cbe92ce-9259-4154-a810-fff1d1234f71}|DataLayer.dll;{FDA4E213-1C38-4A3F-BEB0-0E8EE9C79D6C}|Utilities.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_56214"
 		Debug.AspNetCompiler.PhysicalPath = "..\WebInterface\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_56214\"
@@ -41,6 +42,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebInterface", "..\WebInter
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "56214"
+		SlnRelativePath = "..\WebInterface\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
