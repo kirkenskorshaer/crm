@@ -20,5 +20,15 @@ namespace UtilitiesTest
 
 			Assert.AreEqual(resultGuid, convertedGuid);
 		}
+
+		[Test]
+		public void StringConversion()
+		{
+			string input = "lots of random characters qwertyuiopå¨^asdfghjklæø'zxcvbnm,.-∠°²³∯@私";
+
+			Guid resultGuid = Utilities.Converter.GuidConverter.Convert(input);
+
+			Assert.AreNotEqual(Guid.Empty, resultGuid);
+		}
 	}
 }
