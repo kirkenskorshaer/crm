@@ -13,6 +13,7 @@ namespace DataLayer.MongoData.Input
 		public ObjectId _id { get; set; }
 		public Guid FormId;
 		public string RedirectTarget;
+		public string KeyField;
 
 		public void Insert(MongoConnection connection)
 		{
@@ -26,6 +27,27 @@ namespace DataLayer.MongoData.Input
 			IMongoCollection<WebCampaign> WebCampaignCollection = connection.Database.GetCollection<WebCampaign>(typeof(WebCampaign).Name);
 			IFindFluent<WebCampaign, WebCampaign> WebCampaignFind = WebCampaignCollection.Find(WebCampaign =>
 				WebCampaign.FormId == formId);
+
+			Task<List<WebCampaign>> WebCampaignTask = WebCampaignFind.ToListAsync();
+
+			WebCampaignTask.Wait();
+
+			List<WebCampaign> WebCampaignFound = WebCampaignTask.Result;
+
+			return WebCampaignFound.SingleOrDefault();
+		}
+
+		public static WebCampaign ReadByIdBytesSingleOrDefault(MongoConnection connection, byte[] id)
+		{
+			ObjectId searchId = new ObjectId(id);
+			return ReadByIdSingleOrDefault(connection, searchId);
+		}
+
+		public static WebCampaign ReadByIdSingleOrDefault(MongoConnection connection, ObjectId id)
+		{
+			IMongoCollection<WebCampaign> WebCampaignCollection = connection.Database.GetCollection<WebCampaign>(typeof(WebCampaign).Name);
+			IFindFluent<WebCampaign, WebCampaign> WebCampaignFind = WebCampaignCollection.Find(WebCampaign =>
+				WebCampaign._id == id);
 
 			Task<List<WebCampaign>> WebCampaignTask = WebCampaignFind.ToListAsync();
 
