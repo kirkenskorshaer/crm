@@ -38,6 +38,27 @@ namespace Utilities
 			return propertyInfo.GetValue(holderObject);
 		}
 
+		public static Type GetType(object holderObject, string fieldOrPropertyName)
+		{
+			Type holderType = holderObject.GetType();
+
+			FieldInfo fieldInfo = holderType.GetField(fieldOrPropertyName, BindingFlags.Public | BindingFlags.Instance);
+
+			if (fieldInfo != null)
+			{
+				return fieldInfo.FieldType;
+			}
+
+			PropertyInfo propertyInfo = holderType.GetProperty(fieldOrPropertyName, BindingFlags.Public | BindingFlags.Instance);
+
+			if (propertyInfo == null)
+			{
+				throw new ArgumentException($"failed to get type from {holderObject}.{fieldOrPropertyName}");
+			}
+
+			return propertyInfo.PropertyType;
+		}
+
 		public static bool SetValue(object holderObject, string fieldOrPropertyName, object value)
 		{
 			Type holderType = holderObject.GetType();
