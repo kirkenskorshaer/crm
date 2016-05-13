@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,19 @@ namespace DataLayer.MongoData.Input
 			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("PostTime");
 
 			BsonDocument filter = new BsonDocument();
+
+			IMongoCollection<Stub> stubCollection = connection.Database.GetCollection<Stub>(typeof(Stub).Name);
+			IFindFluent<Stub, Stub> stubFind = stubCollection.Find(filter).Sort(sortDefinition).Limit(1);
+
+			Task<Stub> stubTask = stubFind.FirstOrDefaultAsync();
+			return MongoDataHelper.GetValueOrThrowTimeout(stubTask);
+		}
+
+		public static Stub ReadFirst(MongoConnection connection, WebCampaign webCampaign)
+		{
+			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("PostTime");
+
+			Expression<Func<Stub, bool>> filter = option => option.WebCampaignId == webCampaign._id;
 
 			IMongoCollection<Stub> stubCollection = connection.Database.GetCollection<Stub>(typeof(Stub).Name);
 			IFindFluent<Stub, Stub> stubFind = stubCollection.Find(filter).Sort(sortDefinition).Limit(1);
