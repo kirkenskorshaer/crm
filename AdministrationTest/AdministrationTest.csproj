@@ -60,6 +60,7 @@
     <Compile Include="HeartTest.cs" />
     <Compile Include="LogTest.cs" />
     <Compile Include="Option\Options\Logic\AdjustDnsTest.cs" />
+    <Compile Include="Option\Options\Logic\Campaign\SynchronizeFromStubTest.cs" />
     <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignmentTest.cs" />
     <Compile Include="Option\Options\Logic\SquashTest.cs" />
