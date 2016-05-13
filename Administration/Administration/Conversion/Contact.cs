@@ -7,6 +7,8 @@ using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using SystemInterface.Dynamics.Crm;
+using DataLayer.MongoData.Input;
+using DataLayer.SqlData.Contact;
 
 namespace Administration.Conversion
 {
@@ -53,6 +55,44 @@ namespace Administration.Conversion
 			{
 				object value = Utilities.ReflectionHelper.GetValue(fromContact, key);
 				Utilities.ReflectionHelper.SetValue(toContact, key, value);
+			}
+		}
+
+		public static void Convert(Stub fromStub, DatabaseContactChange toContactChange)
+		{
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keysInContactChange = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseContactChange), exclusionList);
+			List<string> keysInStub = fromStub.Contents.Select(stub => stub.Key).ToList();
+
+			List<string> keys = keysInStub.Intersect(keysInContactChange).ToList();
+
+			foreach (string key in keys)
+			{
+				string valueString = fromStub.Contents.Where(content => content.Key == key).FirstOrDefault().Value;
+
+				Type objectType = Utilities.ReflectionHelper.GetType(toContactChange, key);
+				object newValue = null;
+
+				switch (objectType.Name)
+				{
+					case "String":
+						newValue = valueString;
+						break;
+					case "Int32":
+						int valueInt = 0;
+						int.TryParse(valueString, out valueInt);
+						newValue = valueInt;
+						break;
+					case "Boolean":
+						bool valueBool = false;
+						bool.TryParse(valueString, out valueBool);
+						newValue = valueBool;
+						break;
+					default:
+						break;
+				}
+
+				Utilities.ReflectionHelper.SetValue(toContactChange, key, newValue);
 			}
 		}
 	}
