@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Utilities.Converter
 {
@@ -14,6 +16,16 @@ namespace Utilities.Converter
 			BitConverter.GetBytes(source4).CopyTo(bytes, 12);
 
 			return new Guid(bytes);
+		}
+
+		public static Guid Convert(string input)
+		{
+			MD5 md5 = MD5.Create();
+
+			byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+			Guid resultGuid = new Guid(hash);
+
+			return resultGuid;
 		}
 	}
 }
