@@ -6,6 +6,9 @@ using DataLayer.MongoData;
 using DataLayer.MongoData.Option;
 using NUnit.Framework;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using System.Linq;
 using System.Data.SqlClient;
 using SystemInterface.Dynamics.Crm;
@@ -110,6 +113,28 @@ namespace AdministrationTest
 			_changeProviders.Add(changeProvider);
 
 			return changeProvider;
+		}
+
+		protected DatabaseAccount CreateAccount(Guid changeProviderId, string name, DateTime createdAndModifiedOn)
+		{
+			DatabaseAccount account = new DatabaseAccount();
+			account.createdon = createdAndModifiedOn;
+			account.modifiedon = createdAndModifiedOn;
+
+			account.Insert(_sqlConnection);
+
+			DatabaseExternalAccount externalAccount = new DatabaseExternalAccount(_sqlConnection, Guid.NewGuid(), changeProviderId, account.Id);
+			externalAccount.Insert();
+
+			DatabaseAccountChange accountChange = new DatabaseAccountChange(_sqlConnection, account.Id, externalAccount.ExternalAccountId, changeProviderId);
+			accountChange.createdon = createdAndModifiedOn;
+			accountChange.modifiedon = createdAndModifiedOn;
+
+			accountChange.name = name;
+
+			accountChange.Insert(_sqlConnection);
+
+			return account;
 		}
 	}
 }

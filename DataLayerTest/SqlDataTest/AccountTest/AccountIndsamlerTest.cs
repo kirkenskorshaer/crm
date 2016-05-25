@@ -37,7 +37,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Contact contactInserted = new ContactTest().ContactInsert(_sqlConnection);
 
-			AccountIndsamler accountIndsamler = new AccountIndsamler(accountInserted.Id, contactInserted.Id);
+			AccountIndsamler accountIndsamler = new AccountIndsamler(accountInserted.Id, contactInserted.Id, AccountIndsamler.IndsamlerTypeEnum.Indsamlingshjaelper, 2016);
 			accountIndsamler.Insert(_sqlConnection);
 
 			List<Contact> contacts = Contact.ReadContactsFromAccountIndsamler(_sqlConnection, accountInserted.Id);
@@ -54,7 +54,7 @@ namespace DataLayerTest.SqlDataTest.ContactTest
 
 			Contact contactInserted = new ContactTest().ContactInsert(_sqlConnection);
 
-			AccountIndsamler accountIndsamler = new AccountIndsamler(accountInserted.Id, contactInserted.Id);
+			AccountIndsamler accountIndsamler = new AccountIndsamler(accountInserted.Id, contactInserted.Id, AccountIndsamler.IndsamlerTypeEnum.Indsamlingshjaelper, 2016);
 			accountIndsamler.Insert(_sqlConnection);
 
 			accountIndsamler.Delete(_sqlConnection);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System;
 using System.Linq;
+using DataLayer.MongoData.Input;
 
 namespace Administration.Conversion
 {
@@ -331,6 +332,70 @@ namespace Administration.Conversion
 			if (fromAccount.stedtype.HasValue)
 			{
 				toAccount.stedtype = (int)toAccount.stedtype;
+			}
+		}
+
+		public static void Convert(Stub fromStub, DatabaseAccountChange toAccountChange)
+		{
+			List<string> exclusionList = new List<string>() { "Id" };
+			List<string> keysInAccountChange = Utilities.ReflectionHelper.GetFieldsAndProperties(typeof(DatabaseAccountChange), exclusionList);
+			List<string> keysInStub = fromStub.Contents.Select(stub => stub.Key).ToList();
+
+			List<string> keys = keysInStub.Intersect(keysInAccountChange).ToList();
+
+			foreach (string key in keys)
+			{
+				string valueString = fromStub.Contents.Where(content => content.Key == key).FirstOrDefault().Value;
+
+				Type objectType = Utilities.ReflectionHelper.GetType(toAccountChange, key);
+				object newValue = null;
+
+				switch (objectType.Name)
+				{
+					case "String":
+						newValue = valueString;
+						break;
+					case "Int32":
+						int valueInt = 0;
+						int.TryParse(valueString, out valueInt);
+						newValue = valueInt;
+						break;
+					case "Boolean":
+						bool valueBool = false;
+						bool.TryParse(valueString, out valueBool);
+						newValue = valueBool;
+						break;
+					default:
+						break;
+				}
+
+				Utilities.ReflectionHelper.SetValue(toAccountChange, key, newValue);
+			}
+		}
+
+		public static IndsamlerDefinition.IndsamlerTypeEnum Convert(DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum indsamlerType)
+		{
+			switch (indsamlerType)
+			{
+				case DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum.Indsamlingshjaelper:
+					return IndsamlerDefinition.IndsamlerTypeEnum.Indsamlingshjaelper;
+				case DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum.Indsamler:
+					return IndsamlerDefinition.IndsamlerTypeEnum.Indsamler;
+				default:
+					throw new Exception($"Cannot convert {indsamlerType}");
+			}
+		}
+
+		public static DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum Convert(IndsamlerDefinition.IndsamlerTypeEnum indsamlerType)
+		{
+			switch (indsamlerType)
+			{
+				case IndsamlerDefinition.IndsamlerTypeEnum.Indsamlingshjaelper:
+					return DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum.Indsamlingshjaelper;
+				case IndsamlerDefinition.IndsamlerTypeEnum.Indsamler:
+					return DataLayer.SqlData.Account.AccountIndsamler.IndsamlerTypeEnum.Indsamler;
+				default:
+					throw new Exception($"Cannot convert {indsamlerType}");
 			}
 		}
 	}

@@ -184,7 +184,7 @@ namespace AdministrationTest.Option.Options.Logic
 			crmContact.Insert();
 			crmAccount.Insert();
 
-			crmAccount.SynchronizeIndsamlere(new List<Contact>() { crmContact });
+			crmAccount.SynchronizeIndsamlere(new List<Contact>() { crmContact }, 2016, IndsamlerDefinition.IndsamlerTypeEnum.Indsamlingshjaelper);
 
 			_synchronizeFromCrm.Execute();
 

@@ -91,7 +91,7 @@ namespace DataLayerTest.SqlDataTest.ChangeContactTest
 
 			response.Contact = new ContactTest.ContactTest().ContactInsert(_sqlConnection);
 
-			response.AccountChangeIndsamler = new AccountChangeIndsamler(response.AccountChange.Id, response.Contact.Id);
+			response.AccountChangeIndsamler = new AccountChangeIndsamler(response.AccountChange.Id, response.Contact.Id, AccountIndsamler.IndsamlerTypeEnum.Indsamler, 2016);
 			response.AccountChangeIndsamler.Insert(_sqlConnection);
 
 			return response;

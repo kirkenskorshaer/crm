@@ -167,7 +167,7 @@ namespace DataLayer.SqlData.Account
 			}
 		}
 
-		public void SynchronizeIndsamlere(SqlConnection sqlConnection, List<Guid> contactIds)
+		public void SynchronizeIndsamlere(SqlConnection sqlConnection, List<Guid> contactIds, AccountIndsamler.IndsamlerTypeEnum indsamlerType, int aar)
 		{
 			List<AccountIndsamler> accountIndsamlere = AccountIndsamler.ReadFromAccountId(sqlConnection, Id);
 
@@ -183,7 +183,7 @@ namespace DataLayer.SqlData.Account
 			{
 				if (accountIndsamlere.Any(accountContact => accountContact.ContactId == contactId) == false)
 				{
-					AccountIndsamler accountGroup = new AccountIndsamler(Id, contactId);
+					AccountIndsamler accountGroup = new AccountIndsamler(Id, contactId, indsamlerType, aar);
 					accountGroup.Insert(sqlConnection);
 				}
 			}
@@ -200,6 +200,11 @@ namespace DataLayer.SqlData.Account
 					accountAnnotation.Delete(sqlConnection);
 				}
 			}
+		}
+
+		public static Guid? ReadIdFromField(SqlConnection sqlConnection, string fieldName, string fieldValue)
+		{
+			return ReadIdFromField<Account>(sqlConnection, fieldName, fieldValue);
 		}
 	}
 }

@@ -7,6 +7,7 @@ using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
 using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseAccountChangeContact = DataLayer.SqlData.Account.AccountChangeContact;
 using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
 using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
@@ -493,7 +494,7 @@ namespace AdministrationTest.Option.Options.Logic
 			{
 				DatabaseContact contact = ReadOrCreateContact(contactFirstname);
 
-				DatabaseAccountChangeIndsamler accountChangeIndsamler = new DatabaseAccountChangeIndsamler(databaseAccountChange.Id, contact.Id);
+				DatabaseAccountChangeIndsamler accountChangeIndsamler = new DatabaseAccountChangeIndsamler(databaseAccountChange.Id, contact.Id, DatabaseAccountIndsamler.IndsamlerTypeEnum.Indsamler, 2016);
 				accountChangeIndsamler.Insert(_sqlConnection);
 			}
 		}

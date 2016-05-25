@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 using SystemInterfaceContact = SystemInterface.Dynamics.Crm.Contact;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
+using DatabaseAccountChangeIndsamler = DataLayer.SqlData.Account.AccountChangeIndsamler;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using SystemInterface.Dynamics.Crm;
 using DataLayer.MongoData.Input;
-using DataLayer.SqlData.Contact;
+using System.Data.SqlClient;
+using Utilities.StaticData;
 
 namespace Administration.Conversion
 {
@@ -93,6 +97,19 @@ namespace Administration.Conversion
 				}
 
 				Utilities.ReflectionHelper.SetValue(toContactChange, key, newValue);
+			}
+		}
+
+		public static void Convert(Stub fromStub, DatabaseContactChange toContactChange, DatabaseAccountChange toAccountChange, SqlConnection sqlConnection)
+		{
+			Convert(fromStub, toContactChange);
+
+			List<string> keysInStub = fromStub.Contents.Select(stub => stub.Key).ToList();
+
+			if (keysInStub.Contains(ImportRelationshipNames.indsamlingssted2016))
+			{
+				DatabaseAccountChangeIndsamler databaseAccountChangeIndsamler = new DatabaseAccountChangeIndsamler(toAccountChange.Id, toContactChange.ContactId, DatabaseAccountIndsamler.IndsamlerTypeEnum.Indsamler, 2016);
+				databaseAccountChangeIndsamler.Insert(sqlConnection);
 			}
 		}
 	}

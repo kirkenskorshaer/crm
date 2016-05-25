@@ -9,6 +9,7 @@ using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
 using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseContactChangeGroup = DataLayer.SqlData.Group.ContactChangeGroup;
 using DatabaseAccountChangeGroup = DataLayer.SqlData.Group.AccountChangeGroup;
 using DatabaseGroup = DataLayer.SqlData.Group.Group;
@@ -453,13 +454,23 @@ namespace Administration.Option.Options.Logic
 
 		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection)
 		{
-			List<Guid> externalContactIdsFromAccountIndsamler = crmAccount.GetExternalContactIdsFromAccountIndsamler();
+			foreach (IndsamlerDefinition definition in Account.IndsamlerRelationshipDefinitions)
+			{
+				StoreAccountRelationAccountChangeIndsamler(crmAccount, accountChange, changeProviderId, dynamicsCrmConnection, definition.IndsamlerType, definition.Aar);
+			}
+		}
+
+		private void StoreAccountRelationAccountChangeIndsamler(Account crmAccount, DatabaseAccountChange accountChange, Guid changeProviderId, DynamicsCrmConnection dynamicsCrmConnection, IndsamlerDefinition.IndsamlerTypeEnum indsamlerType, int aar)
+		{
+			DatabaseAccountIndsamler.IndsamlerTypeEnum indsamlerTypeDatabase = Conversion.Account.Convert(indsamlerType);
+
+			List<Guid> externalContactIdsFromAccountIndsamler = crmAccount.GetExternalContactIdsFromAccountIndsamler(indsamlerType, aar);
 			List<DatabaseExternalContact> externalContacts = externalContactIdsFromAccountIndsamler.Select(externalContactId => ReadOrCreateContactFromExternalContactId(externalContactId, changeProviderId, dynamicsCrmConnection)).ToList();
 			List<Guid> contactIds = externalContacts.Select(externalContact => externalContact.ContactId).ToList();
 
 			foreach (Guid contactId in contactIds)
 			{
-				DatabaseAccountChangeIndsamler accountChangeIndsamler = new DatabaseAccountChangeIndsamler(accountChange.Id, contactId);
+				DatabaseAccountChangeIndsamler accountChangeIndsamler = new DatabaseAccountChangeIndsamler(accountChange.Id, contactId, indsamlerTypeDatabase, aar);
 				accountChangeIndsamler.Insert(SqlConnection);
 			}
 		}

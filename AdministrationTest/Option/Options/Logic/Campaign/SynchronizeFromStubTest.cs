@@ -4,7 +4,10 @@ using DatabaseSynchronizeFromStub = DataLayer.MongoData.Option.Options.Logic.Syn
 using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 using DatabaseStub = DataLayer.MongoData.Input.Stub;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
+using DatabaseAccountIndsamler = DataLayer.SqlData.Account.AccountIndsamler;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using System;
 using DataLayer.MongoData.Input;
@@ -28,11 +31,7 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 		{
 			base.SetUp();
 
-			_databaseWebCampaign = InsertDatabaseWebCampaign();
-			_databaseSynchronizeFromStub = InsertDatabaseSynchronizeFromStub(_databaseWebCampaign);
-			_synchronizeFromStub = new SynchronizeFromStub(Connection, _databaseSynchronizeFromStub);
 			_squash = new Squash(Connection, null);
-			_changeProvider = FindOrCreateChangeProvider(_sqlConnection, $"WebCampaign {_databaseWebCampaign.FormId}");
 		}
 
 		[TearDown]
@@ -49,6 +48,7 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			string firstname = $"firstname {Guid.NewGuid()}";
 			string lastname = $"lastname {Guid.NewGuid()}";
 
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
 			InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 1));
 
 			_synchronizeFromStub.Execute();
@@ -64,7 +64,8 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			string firstname = $"firstname {Guid.NewGuid()}";
 			string lastname = $"lastname {Guid.NewGuid()}";
 
-			DatabaseWebCampaign wrongDatabaseWebCampaign = InsertDatabaseWebCampaign();
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
+			DatabaseWebCampaign wrongDatabaseWebCampaign = InsertDatabaseWebCampaign(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
 			InsertDatabaseStub(wrongDatabaseWebCampaign, $"firstname {Guid.NewGuid()}", $"lastname {Guid.NewGuid()}", new DateTime(2000, 1, 1));
 			InsertDatabaseStub(wrongDatabaseWebCampaign, $"firstname {Guid.NewGuid()}", $"lastname {Guid.NewGuid()}", new DateTime(2000, 1, 1));
 
@@ -86,6 +87,8 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			string firstname = $"firstname {Guid.NewGuid()}";
 			string lastname = $"lastname {Guid.NewGuid()}";
 
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
+
 			DatabaseStub stub = InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 1));
 
 			_synchronizeFromStub.Execute();
@@ -96,11 +99,35 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 		}
 
 		[Test]
+		public void stubWillBeRequeuedAfterFailedSynchronize()
+		{
+			string firstname = $"firstname {Guid.NewGuid()}";
+			string lastname = $"lastname {Guid.NewGuid()}";
+
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "wrongKey");
+
+			DatabaseStub stub1 = InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 1));
+			_synchronizeFromStub.Execute();
+			DatabaseStub stub2 = InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 2));
+
+			DatabaseStub stubRead = DatabaseStub.ReadFirst(Connection, _databaseWebCampaign);
+			Assert.AreEqual(stub2._id, stubRead._id);
+			Assert.AreEqual(0, stubRead.ImportAttempt);
+
+			_synchronizeFromStub.Execute();
+			stubRead = DatabaseStub.ReadFirst(Connection, _databaseWebCampaign);
+			Assert.AreEqual(stub1._id, stubRead._id);
+			Assert.AreEqual(1, stubRead.ImportAttempt);
+		}
+
+		[Test]
 		public void stubWillMergeOnKeyField()
 		{
 			string firstname = $"firstname {Guid.NewGuid()}";
 			string firstname2 = $"firstname {Guid.NewGuid()}";
 			string lastname = $"lastname {Guid.NewGuid()}";
+
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
 
 			InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 1));
 			InsertDatabaseStub(_databaseWebCampaign, firstname2, lastname, new DateTime(2000, 1, 2));
@@ -120,6 +147,8 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			string lastname = $"lastname {Guid.NewGuid()}";
 			string lastname2 = $"lastname {Guid.NewGuid()}";
 
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Contact, "lastname");
+
 			InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2000, 1, 1));
 			InsertDatabaseStub(_databaseWebCampaign, firstname, lastname2, new DateTime(2000, 1, 2));
 
@@ -129,6 +158,54 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			int numberOfContact = GetSquashedContactsOnChangeProvider().Count();
 
 			Assert.AreEqual(2, numberOfContact);
+		}
+
+		[Test]
+		public void stubCanRelateToAccount()
+		{
+			string firstname = $"firstname {Guid.NewGuid()}";
+			string lastname = $"lastname {Guid.NewGuid()}";
+			string accountName = $"name {Guid.NewGuid()}";
+
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.ContactWithAccountRelation, "lastname");
+
+			DatabaseAccount accountCreated = CreateAccount(_changeProvider.Id, accountName, new DateTime(2000, 1, 1));
+
+			StubElement indsamlingsstedStubElement = new StubElement() { Key = "indsamlingssted2016", Value = accountCreated.Id.ToString() };
+			DatabaseStub stub = InsertDatabaseStub(_databaseWebCampaign, firstname, lastname, new DateTime(2001, 1, 1), indsamlingsstedStubElement);
+
+			_synchronizeFromStub.Execute();
+
+			DatabaseContact contact = GetSquashedContactsOnChangeProvider().Single();
+			GetSquashedAccountsOnChangeProvider();
+			DatabaseAccountIndsamler accountIndsamler = DatabaseAccountIndsamler.ReadFromContactId(_sqlConnection, contact.Id).Single();
+
+			Assert.AreEqual(accountCreated.Id, accountIndsamler.AccountId);
+		}
+
+		[Test]
+		public void stubCanSynchronizeAccount()
+		{
+			string name = $"name {Guid.NewGuid()}";
+
+			ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum.Account, "name");
+
+			StubElement nameStubElement = new StubElement() { Key = "name", Value = name };
+			InsertDatabaseStub(_databaseWebCampaign, "firstname", "lastname", new DateTime(2000, 1, 1), nameStubElement);
+
+			_synchronizeFromStub.Execute();
+
+			DatabaseAccount account = GetSquashedAccountsOnChangeProvider().Single();
+
+			Assert.AreEqual(name, account.name);
+		}
+
+		private void ArrangeCampaignParameters(DatabaseWebCampaign.CollectTypeEnum collectType, string keyField)
+		{
+			_databaseWebCampaign = InsertDatabaseWebCampaign(collectType, keyField);
+			_databaseSynchronizeFromStub = InsertDatabaseSynchronizeFromStub(_databaseWebCampaign);
+			_synchronizeFromStub = new SynchronizeFromStub(Connection, _databaseSynchronizeFromStub);
+			_changeProvider = FindOrCreateChangeProvider(_sqlConnection, $"WebCampaign {_databaseWebCampaign.FormId}");
 		}
 
 		private List<DatabaseContact> GetSquashedContactsOnChangeProvider()
@@ -142,7 +219,18 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			return contacts;
 		}
 
-		private DatabaseStub InsertDatabaseStub(DatabaseWebCampaign databaseWebCampaign, string firstname, string lastname, DateTime postDate)
+		private List<DatabaseAccount> GetSquashedAccountsOnChangeProvider()
+		{
+			List<DatabaseAccountChange> accountChanges = DatabaseAccountChange.Read(_sqlConnection, _changeProvider.Id, DatabaseAccountChange.IdType.ChangeProviderId);
+			List<Guid> accountIds = accountChanges.Select(accountChange => accountChange.AccountId).Distinct().ToList();
+
+			List<DatabaseAccount> accounts = accountIds.Select(accountId => DatabaseAccount.Read(_sqlConnection, accountId)).ToList();
+			accounts.ForEach(account => _squash.SquashAccount(account));
+
+			return accounts;
+		}
+
+		private DatabaseStub InsertDatabaseStub(DatabaseWebCampaign databaseWebCampaign, string firstname, string lastname, DateTime postDate, params StubElement[] otherStubElements)
 		{
 			DatabaseStub stub = new DatabaseStub()
 			{
@@ -154,6 +242,8 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 					new StubElement() {Key = "lastname", Value = lastname},
 				},
 			};
+
+			stub.Contents.AddRange(otherStubElements);
 
 			stub.Push(Connection);
 
@@ -167,13 +257,14 @@ namespace AdministrationTest.Option.Options.Logic.Campaign
 			return databaseSynchronizeFromStub;
 		}
 
-		private DatabaseWebCampaign InsertDatabaseWebCampaign()
+		private DatabaseWebCampaign InsertDatabaseWebCampaign(DatabaseWebCampaign.CollectTypeEnum collectType, string keyField)
 		{
 			DatabaseWebCampaign databaseWebCampaign = new DatabaseWebCampaign()
 			{
 				FormId = Guid.NewGuid(),
-				KeyField = "lastname",
+				KeyField = keyField,
 				RedirectTarget = "test.html",
+				CollectType = collectType,
 			};
 			databaseWebCampaign.Insert(Connection);
 

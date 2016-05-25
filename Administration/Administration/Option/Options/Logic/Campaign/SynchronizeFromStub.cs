@@ -2,18 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DatabaseSynchronizeFromStub = DataLayer.MongoData.Option.Options.Logic.SynchronizeFromStub;
 using DataLayer.MongoData.Input;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseContactChange = DataLayer.SqlData.Contact.ContactChange;
+using DatabaseAccountChange = DataLayer.SqlData.Account.AccountChange;
 using DatabaseContact = DataLayer.SqlData.Contact.Contact;
+using DatabaseAccount = DataLayer.SqlData.Account.Account;
 using DatabaseExternalContact = DataLayer.SqlData.Contact.ExternalContact;
+using DatabaseExternalAccount = DataLayer.SqlData.Account.ExternalAccount;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DataLayer;
-using DataLayer.SqlData.Contact;
-using System.Data.SqlClient;
+using Utilities.StaticData;
 
 namespace Administration.Option.Options.Logic.Campaign
 {
@@ -42,17 +42,27 @@ namespace Administration.Option.Options.Logic.Campaign
 
 			Guid changeProviderId = GetChangeProvider(webCampaign.FormId).Id;
 
+			WebCampaign.CollectTypeEnum collectType = webCampaign.CollectType;
+
 			Stub stub = Stub.ReadFirst(Connection, webCampaign);
 			if (stub == null)
 			{
 				return true;
 			}
 
-			SynchronizeStub(stub, keyField, changeProviderId);
-
-			stub.Delete(Connection);
-
-			return true;
+			try
+			{
+				SynchronizeStub(stub, keyField, changeProviderId, collectType);
+				stub.Delete(Connection);
+				return true;
+			}
+			catch (Exception exception)
+			{
+				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				stub.ImportAttempt++;
+				stub.Update(Connection);
+				return false;
+			}
 		}
 
 		private DatabaseChangeProvider GetChangeProvider(Guid CampaignId)
@@ -64,9 +74,30 @@ namespace Administration.Option.Options.Logic.Campaign
 			return changeProvider;
 		}
 
-		private void SynchronizeStub(Stub stub, string keyField, Guid changeProviderId)
+		private void SynchronizeStub(Stub stub, string keyField, Guid changeProviderId, WebCampaign.CollectTypeEnum collectType)
 		{
-			DatabaseExternalContact externalContact = ReadOrCreateExternalContact(stub, keyField, changeProviderId);
+			string keyValue = stub.Contents.Single(content => content.Key == keyField).Value;
+			Guid keyId = Utilities.Converter.GuidConverter.Convert(keyValue);
+
+			switch (collectType)
+			{
+				case WebCampaign.CollectTypeEnum.Contact:
+					SynchronizeStubContact(stub, keyField, keyValue, keyId, changeProviderId);
+					break;
+				case WebCampaign.CollectTypeEnum.ContactWithAccountRelation:
+					SynchronizeStubContactWithAccountRelation(stub, keyField, keyValue, keyId, changeProviderId);
+					break;
+				case WebCampaign.CollectTypeEnum.Account:
+					SynchronizeStubAccount(stub, keyField, keyValue, keyId, changeProviderId);
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void SynchronizeStubContact(Stub stub, string keyField, string keyValue, Guid keyId, Guid changeProviderId)
+		{
+			DatabaseExternalContact externalContact = ReadOrCreateExternalContact(stub, keyField, keyValue, keyId, changeProviderId);
 
 			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, externalContact.ContactId, externalContact.ExternalContactId, changeProviderId);
 
@@ -77,35 +108,82 @@ namespace Administration.Option.Options.Logic.Campaign
 			contactChange.Insert();
 		}
 
-		private DatabaseExternalContact ReadOrCreateExternalContact(Stub stub, string keyField, Guid changeProviderId)
+		private void SynchronizeStubAccount(Stub stub, string keyField, string keyValue, Guid keyId, Guid changeProviderId)
 		{
-			string value = stub.Contents.Single(content => content.Key == keyField).Value;
+			DatabaseExternalAccount externalAccount = ReadOrCreateExternalAccount(stub, keyField, keyValue, keyId, changeProviderId);
 
-			Guid externalContactId = Utilities.Converter.GuidConverter.Convert(value);
+			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, externalAccount.AccountId, externalAccount.ExternalAccountId, changeProviderId);
 
-			bool externalContactExists = DatabaseExternalContact.Exists(SqlConnection, externalContactId, changeProviderId);
+			Conversion.Account.Convert(stub, accountChange);
+			accountChange.createdon = stub.PostTime;
+			accountChange.modifiedon = stub.PostTime;
+
+			accountChange.Insert();
+		}
+
+		private void SynchronizeStubContactWithAccountRelation(Stub stub, string keyField, string keyValue, Guid keyId, Guid changeProviderId)
+		{
+			DatabaseExternalContact externalContact = ReadOrCreateExternalContact(stub, keyField, keyValue, keyId, changeProviderId);
+
+			DatabaseAccountChange accountChange = null;
+			if (stub.Contents.Any(content => content.Key == ImportRelationshipNames.indsamlingssted2016))
+			{
+				accountChange = GetAccountChangeForRelation(stub, keyField, keyId, ImportRelationshipNames.indsamlingssted2016, changeProviderId);
+			}
+
+			DatabaseContactChange contactChange = new DatabaseContactChange(SqlConnection, externalContact.ContactId, externalContact.ExternalContactId, changeProviderId);
+			if (accountChange == null)
+			{
+				Conversion.Contact.Convert(stub, contactChange);
+			}
+			else
+			{
+				Conversion.Contact.Convert(stub, contactChange, accountChange, SqlConnection);
+			}
+			contactChange.createdon = stub.PostTime;
+			contactChange.modifiedon = stub.PostTime;
+
+			contactChange.Insert();
+		}
+
+		private DatabaseAccountChange GetAccountChangeForRelation(Stub stub, string keyField, Guid keyId, string relationshipName, Guid changeProviderId)
+		{
+			string relationshipValue = stub.Contents.Single(content => content.Key == relationshipName).Value;
+			Guid relationshipId = Guid.Parse(relationshipValue);
+
+			DatabaseExternalAccount externalAccount = DatabaseExternalAccount.ReadOrCreate(SqlConnection, keyId, changeProviderId, relationshipId);
+			DatabaseAccountChange accountChange = new DatabaseAccountChange(SqlConnection, externalAccount.AccountId, externalAccount.ExternalAccountId, changeProviderId);
+			accountChange.createdon = stub.PostTime;
+			accountChange.modifiedon = stub.PostTime;
+			accountChange.Insert();
+			return accountChange;
+		}
+
+		private DatabaseExternalContact ReadOrCreateExternalContact(Stub stub, string keyField, string keyValue, Guid keyId, Guid changeProviderId)
+		{
+			bool externalContactExists = DatabaseExternalContact.Exists(SqlConnection, keyId, changeProviderId);
 
 			DatabaseContact contact = null;
 			DatabaseExternalContact externalContact = null;
 
 			if (externalContactExists)
 			{
-				externalContact = DatabaseExternalContact.Read(SqlConnection, externalContactId, changeProviderId);
+				externalContact = DatabaseExternalContact.Read(SqlConnection, keyId, changeProviderId);
 				contact = DatabaseContact.Read(SqlConnection, externalContact.ContactId);
 			}
 			else
 			{
-				contact = ReadOrCreateContact(stub, keyField, value);
-				externalContact = new DatabaseExternalContact(SqlConnection, externalContactId, changeProviderId, contact.Id);
+				contact = ReadOrCreateContact(stub, keyField, keyValue);
+				externalContact = new DatabaseExternalContact(SqlConnection, keyId, changeProviderId, contact.Id);
 				externalContact.Insert();
 			}
 
 			return externalContact;
 		}
 
-		private DatabaseContact ReadOrCreateContact(Stub stub, string keyField, string value)
+		private DatabaseContact ReadOrCreateContact(Stub stub, string keyField, string keyValue)
 		{
-			Guid? contactId = DatabaseContact.ReadIdFromField(SqlConnection, keyField, value);
+			Guid? contactId = DatabaseContact.ReadIdFromField(SqlConnection, keyField, keyValue);
 			DatabaseContact contact;
 
 			if (contactId.HasValue)
@@ -124,6 +202,51 @@ namespace Administration.Option.Options.Logic.Campaign
 			}
 
 			return contact;
+		}
+
+		private DatabaseExternalAccount ReadOrCreateExternalAccount(Stub stub, string keyField, string keyValue, Guid keyId, Guid changeProviderId)
+		{
+			bool externalAccountExists = DatabaseExternalAccount.Exists(SqlConnection, keyId, changeProviderId);
+
+			DatabaseAccount account = null;
+			DatabaseExternalAccount externalAccount = null;
+
+			if (externalAccountExists)
+			{
+				externalAccount = DatabaseExternalAccount.Read(SqlConnection, keyId, changeProviderId);
+				account = DatabaseAccount.Read(SqlConnection, externalAccount.AccountId);
+			}
+			else
+			{
+				account = ReadOrCreateAccount(stub, keyField, keyValue);
+				externalAccount = new DatabaseExternalAccount(SqlConnection, keyId, changeProviderId, account.Id);
+				externalAccount.Insert();
+			}
+
+			return externalAccount;
+		}
+
+		private DatabaseAccount ReadOrCreateAccount(Stub stub, string keyField, string value)
+		{
+			Guid? accountId = DatabaseAccount.ReadIdFromField(SqlConnection, keyField, value);
+			DatabaseAccount account;
+
+			if (accountId.HasValue)
+			{
+				account = DatabaseAccount.Read(SqlConnection, accountId.Value);
+			}
+			else
+			{
+				account = new DatabaseAccount()
+				{
+					createdon = stub.PostTime,
+					modifiedon = stub.PostTime,
+				};
+
+				account.Insert(SqlConnection);
+			}
+
+			return account;
 		}
 	}
 }

@@ -117,5 +117,35 @@ namespace DataLayer.SqlData
 			string idAndType = Id.ToString() + GetType().GUID.ToString();
 			return idAndType.GetHashCode();
 		}
+
+		protected static Guid? ReadIdFromField<DataType>(SqlConnection sqlConnection, string fieldName, string fieldValue) where DataType : AbstractIdData
+		{
+			List<SqlColumnInfo> sqlColumnsInfo = SqlUtilities.GetSqlColumnsInfo(typeof(DataType));
+
+			if (sqlColumnsInfo.Any(sqlColumn => sqlColumn.Name == fieldName) == false)
+			{
+				throw new Exception($"Unknown fieldName {fieldName}");
+			}
+
+			StringBuilder sqlStringBuilder = new StringBuilder();
+			sqlStringBuilder.AppendLine("SELECT");
+			sqlStringBuilder.AppendLine("	id");
+			sqlStringBuilder.AppendLine("FROM");
+			sqlStringBuilder.AppendLine("	" + typeof(DataType).Name);
+			sqlStringBuilder.AppendLine("WHERE");
+			sqlStringBuilder.AppendLine($"	{fieldName} = @{fieldName}");
+
+			DataTable dataTable = SqlUtilities.ExecuteAdapterSelect(sqlConnection, sqlStringBuilder, new KeyValuePair<string, object>(fieldName, fieldValue));
+
+			if (dataTable.Rows.Count == 0)
+			{
+				return null;
+			}
+
+			DataRow row = dataTable.Rows[0];
+			Guid id = AbstractData.ConvertFromDatabaseValue<Guid>(row["id"]);
+
+			return id;
+		}
 	}
 }

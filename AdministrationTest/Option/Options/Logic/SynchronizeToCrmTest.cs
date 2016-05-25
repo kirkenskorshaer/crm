@@ -279,7 +279,7 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseAccount databaseAccount = CreateAccount();
 			MakeSureAccountIsNextInProgressQueue(databaseAccount);
 
-			DatabaseAccountIndsamler accountIndsamler = new DatabaseAccountIndsamler(databaseAccount.Id, databaseContact.Id);
+			DatabaseAccountIndsamler accountIndsamler = new DatabaseAccountIndsamler(databaseAccount.Id, databaseContact.Id, DatabaseAccountIndsamler.IndsamlerTypeEnum.Indsamlingshjaelper, 2016);
 			accountIndsamler.Insert(_sqlConnection);
 
 			synchronizeToCrm.Execute();
@@ -287,9 +287,9 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseExternalAccount externalAccount = DatabaseExternalAccount.Read(_sqlConnection, _changeProvider.Id).Single();
 			DatabaseExternalContact externalContact = DatabaseExternalContact.Read(_sqlConnection, _changeProvider.Id).Single();
 			Account account = Account.Read(_dynamicsCrmConnection, externalAccount.ExternalAccountId);
-			List<Contact> indsamlere = account.ReadIndsamlere();
+			List<Indsamler> indsamlere = account.ReadIndsamlere();
 
-			Assert.AreEqual(externalContact.ExternalContactId, indsamlere.Single().Id);
+			Assert.AreEqual(externalContact.ExternalContactId, indsamlere.Single().Contact.Id);
 		}
 
 		[Test]

@@ -600,9 +600,11 @@ namespace Administration.Option.Options.Logic
 			systemInterfaceAccount.SynchronizeContacts(contactIds);
 		}
 
-		private bool SynchronizeAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		private bool SynchronizeAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated, DatabaseAccountIndsamler.IndsamlerTypeEnum indsamlerType, int aar)
 		{
-			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+			IndsamlerDefinition.IndsamlerTypeEnum indsamlerTypeCrm = Conversion.Account.Convert(indsamlerType);
+
+			List<Guid> systemInterfaceContactsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler(indsamlerTypeCrm, aar);
 
 			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
 
@@ -621,12 +623,30 @@ namespace Administration.Option.Options.Logic
 				_squash.SquashAccount(databaseAccount);
 			}
 
-			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+			systemInterfaceAccount.SynchronizeIndsamlere(contactIds, aar, indsamlerTypeCrm);
 
 			return true;
 		}
 
+		private bool SynchronizeAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, bool isDeactivated)
+		{
+			foreach (IndsamlerDefinition definition in SystemInterfaceAccount.IndsamlerRelationshipDefinitions)
+			{
+				DatabaseAccountIndsamler.IndsamlerTypeEnum indsamlerTypeDatabase = Conversion.Account.Convert(definition.IndsamlerType);
+				isDeactivated = SynchronizeAccountIndsamler(databaseAccount, systemInterfaceAccount, changeProviderId, isDeactivated, indsamlerTypeDatabase, definition.Aar);
+			}
+			return isDeactivated;
+		}
+
 		private void InsertAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId)
+		{
+			foreach (IndsamlerDefinition definition in SystemInterfaceAccount.IndsamlerRelationshipDefinitions)
+			{
+				InsertAccountIndsamler(databaseAccount, systemInterfaceAccount, changeProviderId, definition.IndsamlerType, definition.Aar);
+			}
+		}
+
+		private void InsertAccountIndsamler(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, Guid changeProviderId, IndsamlerDefinition.IndsamlerTypeEnum indsamlerType, int aar)
 		{
 			List<DatabaseAccountIndsamler> accountIndsamlere = DatabaseAccountIndsamler.ReadFromAccountId(SqlConnection, databaseAccount.Id);
 
@@ -634,12 +654,12 @@ namespace Administration.Option.Options.Logic
 
 			List<Guid> contactIds = GetExternalContactIdsFromDatabaseContacts(changeProviderId, databaseContacts);
 
-			systemInterfaceAccount.SynchronizeIndsamlere(contactIds);
+			systemInterfaceAccount.SynchronizeIndsamlere(contactIds, aar, indsamlerType);
 		}
 
 		private bool SynchronizeAccountGroup(DatabaseAccount databaseAccount, SystemInterfaceAccount systemInterfaceAccount, bool isDeactivated)
 		{
-			List<Guid> systemInterfaceGroupsAlreadyAssociated = systemInterfaceAccount.GetExternalContactIdsFromAccountIndsamler();
+			List<Guid> systemInterfaceGroupsAlreadyAssociated = systemInterfaceAccount.GetExternalGroupsFromAccountGroup().Select(group => group.GroupId).ToList();
 
 			List<DatabaseAccountGroup> accountGroups = DatabaseAccountGroup.ReadFromAccountId(SqlConnection, databaseAccount.Id);
 

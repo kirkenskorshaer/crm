@@ -3,9 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataLayer.MongoData.Input
@@ -17,6 +15,7 @@ namespace DataLayer.MongoData.Input
 		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
 		public DateTime PostTime;
 		public ObjectId WebCampaignId;
+		public int ImportAttempt = 0;
 
 		public void Push(MongoConnection connection)
 		{
@@ -27,7 +26,7 @@ namespace DataLayer.MongoData.Input
 
 		public static Stub ReadFirst(MongoConnection connection)
 		{
-			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("PostTime");
+			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("ImportAttempt").Ascending("PostTime");
 
 			BsonDocument filter = new BsonDocument();
 
@@ -40,9 +39,9 @@ namespace DataLayer.MongoData.Input
 
 		public static Stub ReadFirst(MongoConnection connection, WebCampaign webCampaign)
 		{
-			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("PostTime");
+			SortDefinition<Stub> sortDefinition = Builders<Stub>.Sort.Ascending("ImportAttempt").Ascending("PostTime");
 
-			Expression<Func<Stub, bool>> filter = option => option.WebCampaignId == webCampaign._id;
+			Expression<Func<Stub, bool>> filter = option =>	option.WebCampaignId == webCampaign._id;
 
 			IMongoCollection<Stub> stubCollection = connection.Database.GetCollection<Stub>(typeof(Stub).Name);
 			IFindFluent<Stub, Stub> stubFind = stubCollection.Find(filter).Sort(sortDefinition).Limit(1);
@@ -64,6 +63,14 @@ namespace DataLayer.MongoData.Input
 			IMongoCollection<Stub> stubCollection = connection.Database.GetCollection<Stub>(typeof(Stub).Name);
 			Task deleteTask = stubCollection.DeleteOneAsync(stub => stub._id == _id);
 			MongoDataHelper.WaitForTaskOrThrowTimeout(deleteTask);
+		}
+
+		public void Update(MongoConnection connection)
+		{
+			IMongoCollection<Stub> stubs = connection.Database.GetCollection<Stub>(typeof(Stub).Name);
+			FilterDefinition<Stub> filter = Builders<Stub>.Filter.Eq(stub => stub._id, _id);
+			Task<ReplaceOneResult> result = stubs.ReplaceOneAsync(filter, this);
+			result.Wait();
 		}
 	}
 }

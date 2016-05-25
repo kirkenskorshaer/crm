@@ -48,7 +48,7 @@ namespace Administration.Option.Options.Logic
 			List<SystemInterfaceContact> indsamlere = contacts.Where(contact => RandomAccount.GetInstance().GetRandomBool(random, 25)).ToList();
 			List<SystemInterfaceContact> related = contacts.Where(contact => RandomAccount.GetInstance().GetRandomBool(random, 25)).ToList();
 
-			account.SynchronizeIndsamlere(indsamlere);
+			account.SynchronizeIndsamlere(indsamlere, 2016, IndsamlerDefinition.IndsamlerTypeEnum.Indsamlingshjaelper);
 			account.SynchronizeContacts(related);
 		}
 

@@ -47,7 +47,11 @@ namespace SystemInterface.Dynamics.Crm
 		public OptionSetValue new_stedtype;
 
 		private string _contactRelationshipName = "new_account_contact";
-		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
+		public static readonly List<IndsamlerDefinition> IndsamlerRelationshipDefinitions = new List<IndsamlerDefinition>
+		{
+			new IndsamlerDefinition() { IndsamlerRelationshipName = "new_account_contact_indsamlere", Aar = 2016, IndsamlerType = IndsamlerDefinition.IndsamlerTypeEnum.Indsamlingshjaelper }
+		};
+
 		private string _groupRelationshipName = "new_account_new_group";
 		private string _annotationRelationshipName = "Account_Annotation";
 
@@ -497,11 +501,22 @@ namespace SystemInterface.Dynamics.Crm
 			return contacts;
 		}
 
-		public List<Contact> ReadIndsamlere()
+		public List<Indsamler> ReadIndsamlere()
 		{
 			Entity accountEntity = GetAsEntity(true);
 
-			List<Contact> indsamlere = ReadNNRelationship(_indsamlerRelationshipName, accountEntity, entity => new Contact(Connection, entity));
+			List<Indsamler> indsamlere = new List<Indsamler>();
+
+			foreach (IndsamlerDefinition indsamlerDefinition in IndsamlerRelationshipDefinitions)
+			{
+				indsamlere.AddRange(ReadNNRelationship(indsamlerDefinition.IndsamlerRelationshipName, accountEntity, entity =>
+					new Indsamler()
+					{
+						Contact = new Contact(Connection, entity),
+						Account = this,
+						IndsamlerDefinition = indsamlerDefinition,
+					}));
+			}
 
 			return indsamlere;
 		}
@@ -520,20 +535,28 @@ namespace SystemInterface.Dynamics.Crm
 			SynchronizeNNRelationship(currentEntity, _contactRelationshipName, "contact", "contactid", contactIds, SynchronizeActionEnum.Disassociate);
 		}
 
-		public void SynchronizeIndsamlere(List<Contact> indsamlere)
+		public void SynchronizeIndsamlere(List<Contact> indsamlere, int aar, IndsamlerDefinition.IndsamlerTypeEnum indsamlerType)
 		{
 			List<Guid> indsamlerIds = indsamlere.Select(contact => contact.Id).ToList();
 
-			SynchronizeIndsamlere(indsamlerIds);
+			SynchronizeIndsamlere(indsamlerIds, aar, indsamlerType);
 		}
 
-		public void SynchronizeIndsamlere(List<Guid> indsamlerIds)
+		public void SynchronizeIndsamlere(List<Guid> indsamlerIds, int aar, IndsamlerDefinition.IndsamlerTypeEnum indsamlerType)
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds, SynchronizeActionEnum.Disassociate);
+			IndsamlerDefinition indsamlerDefinition = GetIndsamlerDefinition(aar, indsamlerType);
+
+			SynchronizeNNRelationship(currentEntity, indsamlerDefinition.IndsamlerRelationshipName, "contact", "contactid", indsamlerIds, SynchronizeActionEnum.Disassociate);
 		}
 
+		private IndsamlerDefinition GetIndsamlerDefinition(int aar, IndsamlerDefinition.IndsamlerTypeEnum indsamlerType)
+		{
+			return IndsamlerRelationshipDefinitions.Single(definition =>
+				definition.Aar == aar &&
+				definition.IndsamlerType == indsamlerType);
+		}
 
 		public void SynchronizeGroups(List<Group> groups)
 		{
@@ -585,11 +608,13 @@ namespace SystemInterface.Dynamics.Crm
 			return externalIds;
 		}
 
-		public List<Guid> GetExternalContactIdsFromAccountIndsamler()
+		public List<Guid> GetExternalContactIdsFromAccountIndsamler(IndsamlerDefinition.IndsamlerTypeEnum indsamlerType, int aar)
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerRelationshipName);
+			IndsamlerDefinition indsamlerDefinition = GetIndsamlerDefinition(aar, indsamlerType);
+
+			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, indsamlerDefinition.IndsamlerRelationshipName);
 
 			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
 

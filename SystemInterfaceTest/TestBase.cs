@@ -42,5 +42,16 @@ namespace SystemInterfaceTest
 
 			return contactCreated;
 		}
+
+		protected Campaign CreateTestCampaign(DateTime testDate)
+		{
+			string dateString = testDate.ToString("yyyy_MM_dd_HH_mm_ss");
+			Campaign campaignCreated = new Campaign(_dynamicsCrmConnection)
+			{
+				name = $"name_{dateString}",
+			};
+
+			return campaignCreated;
+		}
 	}
 }

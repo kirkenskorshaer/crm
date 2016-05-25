@@ -244,7 +244,7 @@ namespace DataLayer.SqlData
 			return dataTable.Rows.Count > 0;
 		}
 
-		protected static ModelType ConvertFromDatabaseValue<ModelType>(object databaseObject)
+		internal static ModelType ConvertFromDatabaseValue<ModelType>(object databaseObject)
 		{
 			if (databaseObject == null || databaseObject == DBNull.Value)
 			{

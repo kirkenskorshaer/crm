@@ -173,8 +173,14 @@ namespace Administration.Option.Options.Logic
 			{
 				{ typeof(DatabaseAccountChangeGroup), new ReferenceGetAndSet() {GetReferences = GroupFromAccountId, SetReferences = (guids) => SetGroupsOnAccount(account, guids)} },
 				{ typeof(DatabaseAccountChangeContact), new ReferenceGetAndSet() {GetReferences = ContactFromAccountId, SetReferences = (guids) => SetContactsOnAccount(account, guids)} },
-				{ typeof(DatabaseAccountChangeIndsamler), new ReferenceGetAndSet() {GetReferences = IndsamlerFromAccountId, SetReferences = (guids) => SetIndsamlereOnAccount(account, guids)} },
 			};
+
+			foreach (SystemInterface.Dynamics.Crm.IndsamlerDefinition definition in SystemInterface.Dynamics.Crm.Account.IndsamlerRelationshipDefinitions)
+			{
+				DatabaseAccountIndsamler.IndsamlerTypeEnum databaseIndsamlerType = Conversion.Account.Convert(definition.IndsamlerType);
+				referenceGetAndSets.Add(typeof(DatabaseAccountChangeIndsamler), new ReferenceGetAndSet() { GetReferences = IndsamlerFromAccountId, SetReferences = (guids) => SetIndsamlereOnAccount(account, guids, databaseIndsamlerType, definition.Aar) });
+			}
+
 			bool accountReferenceChanged = UpdateReferencesIfNeeded(account, referenceGetAndSets, changedReferences);
 
 			SquashAnnotations(account);
@@ -329,9 +335,9 @@ namespace Administration.Option.Options.Logic
 			databaseAccount.SynchronizeContacts(SqlConnection, contactIds);
 		}
 
-		private void SetIndsamlereOnAccount(DatabaseAccount databaseAccount, List<Guid> indsamlerIds)
+		private void SetIndsamlereOnAccount(DatabaseAccount databaseAccount, List<Guid> indsamlerIds, DatabaseAccountIndsamler.IndsamlerTypeEnum indsamlerType, int aar)
 		{
-			databaseAccount.SynchronizeIndsamlere(SqlConnection, indsamlerIds);
+			databaseAccount.SynchronizeIndsamlere(SqlConnection, indsamlerIds, indsamlerType, aar);
 		}
 
 		private void CollectModifiedFieldsForAllProviders(List<string> columnNames, Dictionary<Guid, List<IModifiedIdData>> changesByProviderId, List<ModifiedField> modifiedFields)

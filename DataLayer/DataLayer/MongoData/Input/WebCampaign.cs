@@ -14,6 +14,14 @@ namespace DataLayer.MongoData.Input
 		public Guid FormId;
 		public string RedirectTarget;
 		public string KeyField;
+		public CollectTypeEnum CollectType;
+
+		public enum CollectTypeEnum
+		{
+			Contact = 1,
+			Account = 2,
+			ContactWithAccountRelation = 3,
+		}
 
 		public void Insert(MongoConnection connection)
 		{
