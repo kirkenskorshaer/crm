@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch distinct='true' mapping='logical' aggregate='true'>
+	<entity name='account'>
+		<attribute name='name' alias='name' groupby='true'/>
+		<link-entity from='accountid' name='new_account_contact_indsamlere' to='accountid'>
+			<attribute name='contactid' alias='Indsamlingshjaelpere' aggregate='count'/>
+		</link-entity>
+		<filter type='and'>
+			<condition attribute='name' operator='eq' value='test account'/>
+		</filter>
+	</entity>
+</fetch>

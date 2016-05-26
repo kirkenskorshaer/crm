@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<savedquery>
+	<name>account</name>
+	<savedqueryid>D1B8B675-DBF5-4201-9853-A1F01AC14AC0</savedqueryid>
+	<fetchxml>
+		<fetch distinct='true' mapping='logical'>
+			<entity name='account'>
+				<attribute name='name' alias='name'/>
+				<attribute name='Indsamlingshjaelpere' alias='Indsamlingshjaelpere'/>
+			</entity>
+		</fetch>
+	</fetchxml>
+	<querytype formattedvalue='2'>2</querytype>
+	<returnedtypecode>1</returnedtypecode>
+	<CanBeDeleted>1</CanBeDeleted>
+	<columnsetxml>
+		<columnset distinct='true'>
+			<column>name</column>
+			<column>Indsamlingshjaelpere</column>
+		</columnset>
+	</columnsetxml>
+</savedquery>

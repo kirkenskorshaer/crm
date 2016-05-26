@@ -124,6 +124,7 @@
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
+    <Compile Include="Dynamics\Crm\View.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -201,6 +202,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\KKAdminService\KKAdminService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dynamics\Crm\FetchXml\AccountAntalIndsamlingshjaelpere.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Dynamics\Crm\ViewXml\Test.xml" />
+    <Content Include="Dynamics\Crm\ViewXml\AccountAntalIndsamlingshjaelpereView.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

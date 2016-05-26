@@ -46,6 +46,12 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			Assert.Throws(Is.InstanceOf(typeof(Exception)), readTest);
 		}
 
+		[Test]
+		public void MaintainMarketingLists()
+		{
+			MarketingList.MaintainMarketingLists(_connection);
+		}
+
 		private MarketingList InsertMarketingList()
 		{
 			MarketingList marketingListInserted = new MarketingList();

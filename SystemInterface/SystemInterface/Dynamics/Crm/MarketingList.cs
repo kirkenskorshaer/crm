@@ -3,7 +3,9 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -13,6 +15,12 @@ namespace SystemInterface.Dynamics.Crm
 		public string query;
 		public createdfromcodeEnum createdfromcode = createdfromcodeEnum.Contact;
 		public string listname;
+		/*
+		private static readonly List<string> _marketingLists = new List<string>()
+		{
+			"Dynamics/Crm/FetchXml/AccountAntalIndsamlingshjaelpere.xml",
+		};
+		*/
 
 		public enum createdfromcodeEnum
 		{
@@ -81,6 +89,41 @@ namespace SystemInterface.Dynamics.Crm
 		public void Delete(DynamicsCrmConnection connection)
 		{
 			connection.Service.Delete("list", listid);
+		}
+
+		public static void MaintainMarketingLists(DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			string[] files = Directory.GetFiles("Dynamics/Crm/FetchXml");
+			/*
+			foreach(string fetchXml in files)
+			{
+			}
+			*/
+			XDocument fetchXml = XDocument.Load("C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/Dynamics/Crm/FetchXml/AccountAntalIndsamlingshjaelpere.xml");
+
+			MarketingList marketingList = new MarketingList()
+			{
+				createdfromcode = createdfromcodeEnum.Account,
+				listname = "test_auto",
+				query = fetchXml.ToString(),
+			};
+
+			marketingList.Insert(dynamicsCrmConnection);
+
+			/*
+			FetchExpression fetchExpression = new FetchExpression(fetchXml.ToString());
+
+			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
+
+			foreach (Entity entity in entityCollection.Entities)
+			{
+				foreach (KeyValuePair<string, object> attribute in entity.Attributes)
+				{
+					Console.Out.WriteLine($"{attribute.Key} = {((AliasedValue)attribute.Value).Value}");
+				}
+				Console.Out.WriteLine("-----------------------------------------");
+			}
+			*/
 		}
 	}
 }

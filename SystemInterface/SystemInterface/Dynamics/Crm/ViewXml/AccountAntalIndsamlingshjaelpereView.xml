@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<savedquery>
+	<name>account</name>
+	<savedqueryid>D1B8B675-DBF5-4201-9853-A1F01AC14AC0</savedqueryid>
+	<fetchxml>
+		<fetch distinct='true' mapping='logical' aggregate='true'>
+			<entity name='account'>
+				<attribute name='name' alias='name' groupby='true'/>
+				<attribute name='processid' alias='processid' groupby='true'/>
+				<attribute name='versionnumber' alias='versionnumber' groupby='true'/>
+				<link-entity from='accountid' name='new_account_contact_indsamlere' to='accountid'>
+					<attribute name='contactid' alias='Indsamlingshjaelpere' aggregate='count'/>
+					<attribute name='versionnumber' alias='versionnumber2' groupby='true'/>
+				</link-entity>
+			</entity>
+		</fetch>
+	</fetchxml>
+	<querytype formattedvalue='2'>2</querytype>
+	<returnedtypecode>1</returnedtypecode>
+	<CanBeDeleted>1</CanBeDeleted>
+	<columnsetxml>
+		<columnset>
+			<column>name</column>
+			<column>Indsamlingshjaelpere</column>
+		</columnset>
+	</columnsetxml>
+</savedquery>

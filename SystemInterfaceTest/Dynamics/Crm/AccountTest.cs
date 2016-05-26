@@ -78,5 +78,11 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			Assert.AreEqual(accountInserted.kredsellerby, readKredsellerby);
 		}
+
+		[Test]
+		public void UpdateAntal()
+		{
+			Account.UpdateAntal(_connection);
+		}
     }
 }

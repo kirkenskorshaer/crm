@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -590,6 +591,63 @@ namespace SystemInterface.Dynamics.Crm
 			List<Guid> annotationIds = annotations.Select(annotation => annotation.Id).ToList();
 
 			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
+		}
+
+		public static void UpdateAntal(DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			/*
+			ConditionExpression modifiedOnExpression = new ConditionExpression
+			{
+				AttributeName = "modifiedon",
+				Operator = ConditionOperator.GreaterEqual
+			};
+			modifiedOnExpression.Values.Add(lastSearchDate);
+			*/
+			/*
+			FilterExpression filterExpression = new FilterExpression();
+			//filterExpression.Conditions.Add(modifiedOnExpression);
+
+			QueryExpression query = new QueryExpression("account")
+			{
+				ColumnSet = new ColumnSet("new_antalindsamlere"),
+			};
+			query.Criteria.AddFilter(filterExpression);
+
+			if (maximumNumberOfEntities.HasValue)
+			{
+				query.TopCount = maximumNumberOfEntities.Value;
+				query.AddOrder("modifiedon", OrderType.Descending);
+			}
+
+			EntityCollection entityCollection = connection.Service.RetrieveMultiple(query);
+
+			List<AbstractCrmType> crmEntities = entityCollection.Entities.Select(entity => CrmTypeConstructor(connection, entity)).ToList();
+
+			return crmEntities;
+			*/
+			/*
+			XDocument fetchXml = new XDocument(
+				new XElement("fetch", new XAttribute("distinct", "false"), new XAttribute("mapping", "logical"), new XAttribute("aggregate", "true"),
+					new XElement("entity")
+				)
+			);
+			*/
+			//XDocument fetchXml = XDocument.Load("Dynamics/Crm/FetchXml/AccountAntalIndsamlingshjaelpere.xml");
+			XDocument fetchXml = XDocument.Load("C:/Users/Svend/Documents/GitHub/crm/SystemInterface/SystemInterface/Dynamics/Crm/FetchXml/AccountAntalIndsamlingshjaelpere.xml");
+
+
+			FetchExpression fetchExpression = new FetchExpression(fetchXml.ToString());
+
+			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
+
+			foreach (Entity entity in entityCollection.Entities)
+			{
+				foreach (KeyValuePair<string, object> attribute in entity.Attributes)
+				{
+					Console.Out.WriteLine($"{attribute.Key} = {((AliasedValue)attribute.Value).Value}");
+				}
+				Console.Out.WriteLine("-----------------------------------------");
+			}
 		}
 	}
 }
