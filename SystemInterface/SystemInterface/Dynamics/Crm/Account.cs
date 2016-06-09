@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Utilities;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -342,6 +344,11 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
+		public int CountIndsamlingsHjaelper()
+		{
+			return CountNNRelationship(_indsamlerRelationshipName, "contactid");
+		}
+
 		public regionEnum? region
 		{
 			get
@@ -603,6 +610,149 @@ namespace SystemInterface.Dynamics.Crm
 			List<Guid> annotationIds = annotations.Select(annotation => annotation.Id).ToList();
 
 			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
+		}
+
+		public static int CountIndsamlingssteder(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountIndsamlingssted.xml");
+
+			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
+		}
+
+		public static int CountForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountForventetAntalIndsamlere2016.xml");
+
+			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
+		}
+
+		public static int CountIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountIndsamlingshjaelper.xml");
+
+			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
+		}
+
+		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingssted.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "accountid").Single().
+						Attribute("value").Value = lastAccountId.ToString();
+
+			if (withMaterialeBehov)
+			{
+				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+							Attribute("operator").Value = "eq";
+			}
+
+			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
+
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+
+			return accounts;
+		}
+
+		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetForventetAntalIndsamlere2016.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "accountid").Single().
+						Attribute("value").Value = lastAccountId.ToString();
+
+			if (withMaterialeBehov)
+			{
+				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+							Attribute("operator").Value = "eq";
+			}
+
+			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
+
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+
+			return accounts;
+		}
+
+		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingshjaelper.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+						Attribute("value").Value = materialeId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "accountid").Single().
+						Attribute("value").Value = lastAccountId.ToString();
+
+			if (withMaterialeBehov)
+			{
+				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
+							Attribute("operator").Value = "eq";
+			}
+
+			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
+
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+
+			return accounts;
+		}
+
+		public int CountMaterialeBehov(Guid materialeId, Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountMaterialeBehov.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Element("condition").Attribute("value").Value = Id.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("filter").Element("condition").Attribute("value").Value = materialeId.ToString();
+
+			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
+
+			EntityCollection entityCollection = Connection.Service.RetrieveMultiple(fetchExpression);
+
+			var entities = entityCollection.Entities.Select(entity => new
+			{
+				new_materialepakkeid = (AliasedValue)entity.Attributes["new_materialepakkeid"],
+				new_antal = (AliasedValue)entity.Attributes["new_antal"],
+				new_stoerrelse = (AliasedValue)entity.Attributes["new_stoerrelse"],
+			});
+
+			int total = entities.Sum(entity => ((int?)entity.new_antal.Value).GetValueOrDefault(0) * ((int?)entity.new_stoerrelse.Value).GetValueOrDefault(0));
+
+			return total;
 		}
 	}
 }
