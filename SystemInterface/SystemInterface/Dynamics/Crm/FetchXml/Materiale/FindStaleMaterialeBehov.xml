@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch>
+	<entity name="new_materialebehov">
+		<link-entity from="new_materialepakkeid" name="new_materialepakke" to="new_materialepakkeid">
+			<filter>
+				<condition attribute="new_materialeid" operator="eq" value=""/>
+			</filter>
+		</link-entity>
+		<filter>
+			<condition attribute="new_forsendelsestatus" operator="eq" value="100000000"/>
+		</filter>
+	</entity>
+</fetch>

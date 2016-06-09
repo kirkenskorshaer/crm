@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch aggregate="true">
+	<entity name="account">
+		<attribute name="accountid" aggregate="count" alias="accounts"/>
+		<link-entity from="accountid" name="new_account_contact_indsamlere" to="accountid" link-type="inner">
+		</link-entity>
+	</entity>
+</fetch>

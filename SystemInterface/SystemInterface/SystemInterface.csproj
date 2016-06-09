@@ -202,6 +202,41 @@
   <ItemGroup>
     <None Include="Service References\KKAdminService\KKAdminService.disco" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingshjaelper.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\CountForventetAntalIndsamlere2016.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\CountMaterialeBehov.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\GetForventetAntalIndsamlere2016.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\GetIndsamlingshjaelper.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\GetIndsamlingssted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingssted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\MaterialeBehovDefinition\FindMaterialeBehovDefinitionPerMateriale.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Materiale\FindStaleMaterialeBehov.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Materiale\MaterialeNeedingUpdate.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
