@@ -19,6 +19,7 @@ namespace Administration.Option.Finder
 		public List<OptionBase> Find()
 		{
 			List<OptionBase> options = new List<OptionBase>();
+			/*
 			options.AddRange(Email.Find(_connection));
 
 			options.AddRange(ServiceCreate.Find(_connection));
@@ -38,8 +39,11 @@ namespace Administration.Option.Finder
 			options.AddRange(SynchronizeFromCsv.Find(_connection));
 			options.AddRange(SynchronizeToCrm.Find(_connection));
 			options.AddRange(AdjustDns.Find(_connection));
+			*/
 
-			options.AddRange(MaintainAllTables.Find(_connection));
+			options.AddRange(MaterialeBehovAssignment.Find(_connection));
+
+			//options.AddRange(MaintainAllTables.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);
 			options.Add(sleep);
