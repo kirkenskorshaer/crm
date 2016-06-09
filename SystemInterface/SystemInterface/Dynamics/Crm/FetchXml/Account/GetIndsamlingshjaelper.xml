@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch count="10" distinct="true" >
+	<entity name="account" >
+		<attribute name="accountid" />
+		<attribute name="statecode" />
+		<attribute name="new_forventetantalindsamlere2016"/>
+		<attribute name="new_leveringstedid"/>
+		<attribute name="new_leveringkontaktid"/>
+		<attribute name="new_erindsamlingssted"/>
+		<link-entity from="accountid" name="new_account_contact_indsamlere" to="accountid" link-type="inner">
+		</link-entity>
+	</entity>
+</fetch>

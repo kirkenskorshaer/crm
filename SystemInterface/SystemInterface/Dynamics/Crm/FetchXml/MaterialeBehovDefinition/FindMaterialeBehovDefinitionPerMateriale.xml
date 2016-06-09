@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch>
+	<entity name="new_materialebehovdefinition">
+		<attribute name="new_materialebehovdefinitionid"/>
+		<attribute name="new_antal"/>
+		<attribute name="new_behovtype"/>
+		<attribute name="new_materialeid"/>
+		<filter>
+			<condition attribute="new_materialeid" operator="eq" value=""/>
+		</filter>
+	</entity>
+</fetch>

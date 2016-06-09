@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch aggregate="true">
+	<entity name="new_materialebehov">
+		<attribute name="new_materialebehovid" alias="new_materialebehovid" groupby="true"/>
+		<attribute name="new_antal" alias="new_antal" groupby="true"/>
+		<attribute name="new_materialepakkeid" alias="new_materialepakkeid" groupby="true"/>
+		<link-entity from="new_materialepakkeid" name="new_materialepakke" to="new_materialepakkeid">
+			<attribute name="new_stoerrelse" alias="new_stoerrelse" aggregate="sum"/>
+			<filter>
+				<condition attribute="new_materialeid" operator="eq" value=""/>
+			</filter>
+		</link-entity>
+		<filter>
+			<condition attribute="new_modtagerid" operator="eq" value=""/>
+		</filter>
+	</entity>
+</fetch>

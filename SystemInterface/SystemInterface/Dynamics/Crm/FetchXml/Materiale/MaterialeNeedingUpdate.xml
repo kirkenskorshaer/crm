@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch>
+	<entity name="new_materiale">
+		<attribute name="new_name"/>
+		<attribute name="new_antalfaktor"/>
+		<attribute name="new_behovsberegning"/>
+		<attribute name="new_beregningsstatus"/>
+		<attribute name="new_leverandoerid"/>
+		<attribute name="new_materialetype"/>
+		<filter>
+			<condition attribute="new_behovsberegning" operator="eq" value="100000000"/>
+		</filter>
+	</entity>
+</fetch>

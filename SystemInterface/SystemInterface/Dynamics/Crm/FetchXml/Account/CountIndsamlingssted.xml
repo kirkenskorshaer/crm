@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch aggregate="true">
+	<entity name="account">
+		<attribute name="accountid" aggregate="count" alias="accounts"/>
+		<filter>
+			<condition attribute="new_erindsamlingssted" operator="eq" value="100000000"/>
+		</filter>
+	</entity>
+</fetch>
