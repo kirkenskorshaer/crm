@@ -4,6 +4,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -55,6 +56,41 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			return relatedObjects;
+		}
+
+		public int CountNNRelationship(string relationshipName, string countIdName)
+		{
+			string numberAlias = "numberofentities";
+
+			XDocument xDocument = new XDocument(
+			new XElement("fetch", new XAttribute("aggregate", true),
+				new XElement("entity", new XAttribute("name", entityName),
+					new XElement("link-entity", new XAttribute("from", idName), new XAttribute("name", relationshipName), new XAttribute("to", idName),
+						new XElement("attribute", new XAttribute("name", countIdName), new XAttribute("aggregate", "count"), new XAttribute("alias", numberAlias))),
+					new XElement("filter",
+						new XElement("condition", new XAttribute("attribute", idName), new XAttribute("operator", "eq"), new XAttribute("value", Id))))));
+
+			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
+
+			EntityCollection entityCollection = Connection.Service.RetrieveMultiple(fetchExpression);
+
+			int collectionCount = entityCollection.Entities.Count;
+
+			if (collectionCount == 0)
+			{
+				return 0;
+			}
+
+			if (collectionCount != 1)
+			{
+				throw new Exception("wrong collection count");
+			}
+
+			Entity entity = entityCollection.Entities[0];
+
+			AliasedValue aliasedValue = (AliasedValue)entity.Attributes[numberAlias];
+
+			return (int)aliasedValue.Value;
 		}
 
 		public void Delete()
