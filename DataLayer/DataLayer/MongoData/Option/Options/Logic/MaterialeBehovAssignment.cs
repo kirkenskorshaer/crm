@@ -1,0 +1,31 @@
+﻿namespace DataLayer.MongoData.Option.Options.Logic
+{
+	public class MaterialeBehovAssignment : OptionBase
+	{
+		public string urlLoginName { get; set; }
+
+		public static MaterialeBehovAssignment Create(MongoConnection connection, string name, Schedule schedule, string urlLoginName)
+		{
+			MaterialeBehovAssignment materialeBehovAssignment = new MaterialeBehovAssignment
+			{
+				urlLoginName = urlLoginName,
+			};
+
+			Create(connection, materialeBehovAssignment, name, schedule);
+
+			return materialeBehovAssignment;
+		}
+
+		protected override void Execute(MongoConnection connection, bool recurring)
+		{
+			if (recurring)
+			{
+				Update<MaterialeBehovAssignment>(connection);
+			}
+			else
+			{
+				Delete<MaterialeBehovAssignment>(connection);
+			}
+		}
+	}
+}
