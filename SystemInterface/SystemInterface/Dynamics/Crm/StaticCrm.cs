@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -98,6 +99,48 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntities;
 		}
 
+		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		where AbstractCrmType : AbstractCrm
+		{
+			XDocument xDocument = XDocument.Load(path);
+
+			return ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInformation);
+		}
+
+		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		where AbstractCrmType : AbstractCrm
+		{
+			if (pagingInformation.FirstRun == false)
+			{
+				if (pagingInformation.MoreRecords == false)
+				{
+					return new List<AbstractCrmType>();
+				}
+
+				xDocument.Element("fetch").Add(new XAttribute("paging-cookie", pagingInformation.PagingCookie));
+				xDocument.Element("fetch").Add(new XAttribute("page", pagingInformation.Page));
+			}
+
+			pagingInformation.FirstRun = false;
+
+			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
+
+			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
+
+			if (entityCollection.Entities.Count == 0)
+			{
+				return new List<AbstractCrmType>();
+			}
+
+			List<AbstractCrmType> crmEntities = entityCollection.Entities.Select(entity => CrmTypeConstructor(dynamicsCrmConnection, entity)).ToList();
+
+			pagingInformation.MoreRecords = entityCollection.MoreRecords;
+			pagingInformation.PagingCookie = entityCollection.PagingCookie;
+			pagingInformation.Page++;
+
+			return crmEntities;
+		}
+
 		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Type entityType)
 		{
 			RetrieveEntityRequest retrieveBankAccountEntityRequest = new RetrieveEntityRequest
@@ -110,6 +153,38 @@ namespace SystemInterface.Dynamics.Crm
 			List<string> attributeNames = response.EntityMetadata.Attributes.Select(attribute => attribute.SchemaName).ToList();
 
 			return attributeNames;
+		}
+
+		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path, string aliasName)
+		{
+			XDocument xDocument = XDocument.Load(path);
+
+			return CountByFetchXml(dynamicsCrmConnection, xDocument, aliasName);
+		}
+
+		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, string aliasName)
+		{
+			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
+
+			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
+
+			int collectionCount = entityCollection.Entities.Count;
+
+			if (collectionCount == 0)
+			{
+				return 0;
+			}
+
+			if (collectionCount != 1)
+			{
+				throw new Exception("wrong collection count");
+			}
+
+			Entity entity = entityCollection.Entities[0];
+
+			AliasedValue aliasedValue = (AliasedValue)entity.Attributes[aliasName];
+
+			return (int)aliasedValue.Value;
 		}
 	}
 }
