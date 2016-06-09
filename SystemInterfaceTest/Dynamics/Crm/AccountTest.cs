@@ -11,7 +11,7 @@ using SystemInterface.Dynamics.Crm;
 namespace SystemInterfaceTest.Dynamics.Crm
 {
 	[TestFixture]
-	public class AccountTest
+	public class AccountTest : TestBase
 	{
 		private DynamicsCrmConnection _connection;
 
@@ -78,5 +78,31 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			Assert.AreEqual(accountInserted.kredsellerby, readKredsellerby);
 		}
-    }
+
+		[Test]
+		public void AccountIndsamlerCanBeCounted()
+		{
+			Account accountInserted = new Account(_connection);
+			string name = $"testnavn_{Guid.NewGuid()}";
+			accountInserted.name = name;
+
+			accountInserted.Insert();
+
+			Contact contactInserted1 = CreateTestContact();
+			contactInserted1.Insert();
+
+			Contact contactInserted2 = CreateTestContact();
+			contactInserted2.Insert();
+
+			accountInserted.SynchronizeIndsamlere(new List<Contact> { contactInserted1, contactInserted2 });
+
+			int indsamlingshjaelpere = accountInserted.CountIndsamlingsHjaelper();
+
+			accountInserted.Delete();
+			contactInserted1.Delete();
+			contactInserted2.Delete();
+
+			Assert.AreEqual(2, indsamlingshjaelpere);
+		}
+	}
 }
