@@ -33,11 +33,47 @@
     </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
-    <Group Id="Fundraising" IsProfile="false">
+    <Group Id="Manage" Title="Manage" IsProfile="false">
+      <SubArea Id="nav_dashboards" ResourceId="Homepage_Dashboards" Icon="/_imgs/area/18_home.gif" DescriptionResourceId="Dashboards_Description" Url="/workplace/home_dashboards.aspx" GetStartedPanePath="Dashboards_Web_User_Visor.html" GetStartedPanePathAdmin="Dashboards_Web_Admin_Visor.html" GetStartedPanePathOutlook="Dashboards_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Dashboards_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_calendar" Icon="/_imgs/area/18_calendar.gif" ResourceId="Homepage_Calendar" Url="/workplace/home_calendar.aspx" Client="Web">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_activities" Entity="activitypointer" DescriptionResourceId="Activities_SubArea_Description" Url="/_root/homepage.aspx?etc=4200" GetStartedPanePath="Activities_Web_User_Visor.html" GetStartedPanePathAdmin="Activities_Web_Admin_Visor.html" GetStartedPanePathOutlook="Activities_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Activities_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Data" Title="Data" IsProfile="false">
+      <SubArea Entity="account" Id="Account" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
       <SubArea Entity="contact" Id="Contact" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
       </SubArea>
+      <SubArea Id="nav_oppts" Entity="opportunity" DescriptionResourceId="Opportunity_SubArea_Description" GetStartedPanePath="Opportunities_Web_User_Visor.html" GetStartedPanePathAdmin="Opportunities_Web_Admin_Visor.html" GetStartedPanePathOutlook="Opportunities_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Opportunities_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_leads" Entity="lead" DescriptionResourceId="Lead_SubArea_Description" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Info" Title="Info" IsProfile="false">
+      <SubArea Entity="new_group" Id="Group" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
       <SubArea Entity="list" Id="List" Title="Lists" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Email" Description="Email" Title="Email" IsProfile="false">
+      <SubArea Entity="template" Id="Template" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="email" Id="Email" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="mailbox" Id="Mailbox" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_fundraising" Privilege="Read" />
       </SubArea>
     </Group>
@@ -56,8 +92,12 @@
       <SubArea Id="nav_servicemanagement" ResourceId="Homepage_ServiceManagement" DescriptionResourceId="ServiceManagement_SubArea_Description" ToolTipResourseId="ServiceManagement_SubArea_ToolTip" Url="/tools/servicemanagement/servicemanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
         <Privilege Entity="new_priviledge_setting" Privilege="Read" />
       </SubArea>
-      <SubArea Id="nav_externAppmanagement" ResourceId="Homepage_ExternAppManagement" DescriptionResourceId="ExternAppManagement_SubArea_Description" Icon="/_imgs/ExternalAppManagement_16.png" Url="/tools/externappmanagement/externappmanagement.aspx" AvailableOffline="false" IntroducedVersion="8.0.0.0" />
-      <SubArea Id="nav_mobileoffline" ResourceId="Homepage_MobileOffline" DescriptionResourceId="MobileOffline_SubArea_Description" Icon="/_imgs/ico_18_mobileoffline.gif" Url="/tools/mobileoffline/mobileoffline.aspx" AvailableOffline="false" IntroducedVersion="8.0.0.0" />
+      <SubArea Id="nav_externAppmanagement" ResourceId="Homepage_ExternAppManagement" DescriptionResourceId="ExternAppManagement_SubArea_Description" Icon="/_imgs/ExternalAppManagement_16.png" Url="/tools/externappmanagement/externappmanagement.aspx" AvailableOffline="false" IntroducedVersion="8.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_mobileoffline" ResourceId="Homepage_MobileOffline" DescriptionResourceId="MobileOffline_SubArea_Description" Icon="/_imgs/ico_18_mobileoffline.gif" Url="/tools/mobileoffline/mobileoffline.aspx" AvailableOffline="false" IntroducedVersion="8.0.0.0">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
     </Group>
     <Group Id="Customizations" ResourceId="Homepage_SystemCustomization" DescriptionResourceId="Homepage_SystemCustomization" ToolTipResourseId="Homepage_SystemCustomization_ToolTip" IntroducedVersion="7.0.0.0">
       <SubArea Id="nav_syscust" ResourceId="Menu_Label_Customizations" DescriptionResourceId="Customization_SubArea_Description" ToolTipResourseId="Customization_SubArea_ToolTip" Icon="/_imgs/area/18_syscust.gif" Url="/tools/systemcustomization/systemcustomization.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
@@ -109,10 +149,22 @@
         <Privilege Entity="new_priviledge_setting" Privilege="Read" />
       </SubArea>
     </Group>
-  </Area>
-  <Area Id="HLP" ResourceId="Area_Help" ShowGroups="true" Icon="/_imgs/icn_help16.png" DescriptionResourceId="Help_Area_Description" IntroducedVersion="7.0.0.0">
-    <Group Id="HLP_GRP" ResourceId="Group_Help" DescriptionResourceId="Help_Description" ToolTipResourseId="Help_ToolTip" IntroducedVersion="7.0.0.0">
-      <SubArea Id="Help_Resource_Center" Url="http://go.microsoft.com/fwlink/?LinkId=296269&amp;clcid=0x409" ResourceId="Area_CustomerCenter" DescriptionResourceId="ResourceCenter_Area_Description" ToolTipResourseId="ResourceCenter_Area_ToolTip" AvailableOffline="false" IntroducedVersion="7.0.0.0" />
+    <Group Id="Custom" Title="Custom" IsProfile="false">
+      <SubArea Id="nav_queues" Icon="/_imgs/ico_18_2020.gif" Url="/_root/homepage.aspx?etc=2029" ResourceId="Homepage_Queues" DescriptionResourceId="Queues_SubArea_Description" GetStartedPanePath="Queues_Web_User_Visor.html" GetStartedPanePathAdmin="Queues_Web_Admin_Visor.html" GetStartedPanePathOutlook="Queues_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Queues_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_duplicatedetectionjobs" Icon="/_imgs/data_management.gif" ResourceId="Homepage_DuplicateDetectionJobs" Url="/Tools/DuplicateDetection/SystemWideDuplicateDetection/home_duplicatedetectionjobs.aspx" DescriptionResourceId="DuplicateDetectionJobs_Description" AvailableOffline="false" GetStartedPanePath="Dup-Det-Jobs_Web_User_Visor.html" GetStartedPanePathAdmin="Dup-Det-Jobs_Web_Admin_Visor.html" GetStartedPanePathOutlook="Dup-Det-Jobs_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Dup-Det-Jobs_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_news" Entity="businessunitnewsarticle" Url="/home/homepage/home_news.aspx" DescriptionResourceId="News_SubArea_Description">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_answers" Entity="kbarticle" DescriptionResourceId="Article_SubArea_Description" GetStartedPanePath="KB_Web_User_Visor.html" GetStartedPanePathAdmin="KB_Web_Admin_Visor.html" GetStartedPanePathOutlook="KB_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="KB_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_reports" Entity="report" DescriptionResourceId="Reports_Description">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
     </Group>
   </Area>
 </SiteMap>
