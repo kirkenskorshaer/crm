@@ -11,7 +11,7 @@ using SystemInterface.Dynamics.Crm;
 namespace SystemInterfaceTest.Dynamics.Crm
 {
 	[TestFixture]
-	public class AccountTest
+	public class AccountTest : TestBase
 	{
 		private DynamicsCrmConnection _connection;
 
@@ -78,5 +78,55 @@ namespace SystemInterfaceTest.Dynamics.Crm
 
 			Assert.AreEqual(accountInserted.kredsellerby, readKredsellerby);
 		}
-    }
+
+		[Test]
+		public void AccountIndsamlerCanBeCounted()
+		{
+			Account accountInserted = new Account(_connection);
+			string name = $"testnavn_{Guid.NewGuid()}";
+			accountInserted.name = name;
+
+			accountInserted.Insert();
+
+			Contact contactInserted1 = CreateTestContact();
+			contactInserted1.Insert();
+
+			Contact contactInserted2 = CreateTestContact();
+			contactInserted2.Insert();
+
+			accountInserted.SynchronizeIndsamlere(new List<Contact> { contactInserted1, contactInserted2 });
+
+			int indsamlingshjaelpere = accountInserted.CountIndsamlingsHjaelper();
+
+			accountInserted.Delete();
+			contactInserted1.Delete();
+			contactInserted2.Delete();
+
+			Assert.AreEqual(2, indsamlingshjaelpere);
+		}
+
+		[Test]
+		[Ignore]
+		public void GetIndsamlingsSted()
+		{
+			Materiale materiale = Materiale.ReadCalculationNeed(_dynamicsCrmConnection, _config.GetResourcePath);
+			Guid businessId = materiale.owningbusinessunitGuid.Value;
+
+			PagingInformation pagingInformation = new PagingInformation();
+
+			int lastAccountCount = -1;
+			int total = 0;
+
+			while (lastAccountCount != 0)
+			{
+				List<Account> accounts = Account.GetIndsamlingsSted(_dynamicsCrmConnection, 15, businessId, _config.GetResourcePath, pagingInformation);
+				lastAccountCount = accounts.Count;
+				total += lastAccountCount;
+				accounts.ForEach(account => Console.Out.WriteLine(account.Id));
+				//Console.Out.Write($" {lastAccountCount} ");
+			}
+			Console.Out.WriteLine("-------");
+			Console.Out.WriteLine(total);
+		}
+	}
 }
