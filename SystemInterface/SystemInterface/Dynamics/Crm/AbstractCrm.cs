@@ -182,5 +182,48 @@ namespace SystemInterface.Dynamics.Crm
 
 			return relatedEntities;
 		}
+
+		protected Guid? GetEntityReferenceId(EntityReference entityReference)
+		{
+			if (entityReference == null)
+			{
+				return null;
+			}
+
+			return entityReference.Id;
+		}
+
+		protected EntityReference SetEntityReferenceId(Guid? id, string foreignEntityName)
+		{
+			if (id == null)
+			{
+				return null;
+			}
+
+			EntityReference entityReference = new EntityReference(foreignEntityName, id.Value);
+
+			return entityReference;
+		}
+
+		protected enumType? GetOptionSet<enumType>(OptionSetValue enumValue)
+		where enumType : struct, IComparable, IConvertible, IFormattable
+		{
+			if (enumValue == null)
+			{
+				return null;
+			}
+
+			return (enumType)Enum.Parse(typeof(enumType), enumValue.Value.ToString());
+		}
+
+		protected OptionSetValue SetOptionSet(int? value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+
+			return new OptionSetValue((int)value.Value);
+		}
 	}
 }
