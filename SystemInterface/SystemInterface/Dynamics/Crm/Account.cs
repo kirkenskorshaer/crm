@@ -31,6 +31,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public OptionSetValue new_erindsamlingssted;
 		public int new_kkadminmedlemsnr;
+		public int? new_forventetantalindsamlere2016;
 
 		public EntityReference new_bykoordinatorid;
 		public EntityReference new_omraadekoordinatorid;
@@ -47,6 +48,12 @@ namespace SystemInterface.Dynamics.Crm
 		private string _indsamlerRelationshipName = "new_account_contact_indsamlere";
 		private string _groupRelationshipName = "new_account_new_group";
 		private string _annotationRelationshipName = "Account_Annotation";
+
+		public EntityReference new_leveringstedid;
+		public Guid? leveringstedid { get { return GetEntityReferenceId(new_leveringstedid); } set { new_leveringstedid = SetEntityReferenceId(value, "account"); } }
+
+		public EntityReference new_leveringkontaktid;
+		public Guid? leveringkontaktid { get { return GetEntityReferenceId(new_leveringkontaktid); } set { new_leveringkontaktid = SetEntityReferenceId(value, "contact"); } }
 
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
 
@@ -72,6 +79,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			"new_erindsamlingssted",
 			"new_kkadminmedlemsnr",
+			"new_forventetantalindsamlere2016",
 			"new_bykoordinatorid",
 			"new_omraadekoordinatorid",
 			"new_korshaerslederid",
@@ -79,6 +87,8 @@ namespace SystemInterface.Dynamics.Crm
 			"new_indsamlingskoordinatorid",
 			"new_byarbejdeid",
 			"primarycontactid",
+			"new_leveringstedid",
+			"new_leveringkontaktid",
 			"new_kredsellerby",
 			"new_region",
 			"new_stedtype"
@@ -433,12 +443,15 @@ namespace SystemInterface.Dynamics.Crm
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_erindsamlingssted", new_erindsamlingssted));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kkadminmedlemsnr", new_kkadminmedlemsnr));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_forventetantalindsamlere2016", new_forventetantalindsamlere2016));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_bykoordinatorid", new_bykoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_omraadekoordinatorid", new_omraadekoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_korshaerslederid", new_korshaerslederid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_genbrugskonsulentid", new_genbrugskonsulentid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_indsamlingskoordinatorid", new_indsamlingskoordinatorid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_byarbejdeid", new_byarbejdeid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_leveringstedid", new_leveringstedid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_leveringkontaktid", new_leveringkontaktid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("primarycontactid", primarycontactid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_kredsellerby", new_kredsellerby));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_region", new_region));
