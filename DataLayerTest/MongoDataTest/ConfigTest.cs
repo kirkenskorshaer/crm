@@ -76,6 +76,36 @@ namespace DataLayerTest.MongoDataTest
 			Assert.AreEqual(newEmail, config.Email);
 		}
 
+		[Test]
+		public void ConfigWithResourcePathReturnsCorrectPath()
+		{
+			InsertData();
+			Config config = Config.GetConfig(_connection);
+
+			config.ResourcePath = "c:/home";
+
+			string localPath = "test/file.txt";
+
+			string pathRead = config.GetResourcePath(localPath);
+
+			Assert.AreEqual(pathRead, config.ResourcePath + "/" + localPath);
+		}
+
+		[Test]
+		public void ConfigWithoutResourcePathReturnsAPath()
+		{
+			InsertData();
+			Config config = Config.GetConfig(_connection);
+
+			config.ResourcePath = string.Empty;
+
+			string localPath = "test/file.txt";
+
+			string pathRead = config.GetResourcePath(localPath);
+
+			Assert.Greater(pathRead.Length, localPath.Length + 5);
+		}
+
 		private Config InsertData()
 		{
 			Config config;
