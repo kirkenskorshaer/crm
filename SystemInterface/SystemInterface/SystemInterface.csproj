@@ -123,8 +123,13 @@
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
     <Compile Include="Dynamics\Crm\PagingInformation.cs" />
+    <Compile Include="Dynamics\Crm\MaterialeBehovDefinition.cs" />
+    <Compile Include="Dynamics\Crm\MaterialePakke.cs" />
+    <Compile Include="Dynamics\Crm\MaterialeBehov.cs" />
+    <Compile Include="Dynamics\Crm\MaterialeProcessState.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
+    <Compile Include="Dynamics\Crm\Materiale.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

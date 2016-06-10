@@ -633,98 +633,41 @@ namespace SystemInterface.Dynamics.Crm
 			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
 		}
 
-		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingssted.xml");
 
 			XDocument xDocument = XDocument.Load(path);
 
-			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "accountid").Single().
-						Attribute("value").Value = lastAccountId.ToString();
-
-			if (withMaterialeBehov)
-			{
-				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-							Attribute("operator").Value = "eq";
-			}
-
 			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
 
-			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity), pagingInformation);
 
 			return accounts;
 		}
 
-		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetForventetAntalIndsamlere2016.xml");
 
 			XDocument xDocument = XDocument.Load(path);
 
-			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "accountid").Single().
-						Attribute("value").Value = lastAccountId.ToString();
-
-			if (withMaterialeBehov)
-			{
-				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-							Attribute("operator").Value = "eq";
-			}
-
 			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
 
-			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity), pagingInformation);
 
 			return accounts;
 		}
 
-		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingshjaelper.xml");
 
 			XDocument xDocument = XDocument.Load(path);
 
-			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("link-entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-						Attribute("value").Value = materialeId.ToString();
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-					Where(element => element.Attribute("attribute").Value == "accountid").Single().
-						Attribute("value").Value = lastAccountId.ToString();
-
-			if (withMaterialeBehov)
-			{
-				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
-						Where(element => element.Attribute("attribute").Value == "new_materialeid").Single().
-							Attribute("operator").Value = "eq";
-			}
-
 			xDocument.Element("fetch").Attribute("count").Value = maxCount.ToString();
 
-			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity));
+			List<Account> accounts = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, lEntity) => new Account(connection, lEntity), pagingInformation);
 
 			return accounts;
 		}
