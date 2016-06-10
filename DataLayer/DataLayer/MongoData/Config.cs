@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.IO;
+using System.Reflection;
 
 namespace DataLayer.MongoData
 {
@@ -14,6 +16,7 @@ namespace DataLayer.MongoData
 		public string EmailSmtpHost { get; set; }
 		public int EmailSmtpPort { get; set; }
 		public LogLevelEnum LogLevel { get; set; }
+		public string ResourcePath { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
@@ -53,7 +56,7 @@ namespace DataLayer.MongoData
 
 		public void Insert(MongoConnection connection)
 		{
-			if(Exists(connection))
+			if (Exists(connection))
 			{
 				throw new Exception("Config already exists");
 			}
@@ -61,6 +64,22 @@ namespace DataLayer.MongoData
 			IMongoCollection<Config> configs = connection.Database.GetCollection<Config>(typeof(Config).Name);
 			Task insertTask = configs.InsertOneAsync(this);
 			insertTask.Wait();
+		}
+
+		public string GetResourcePath(string path)
+		{
+			if(string.IsNullOrWhiteSpace(ResourcePath) == false)
+			{
+				return ResourcePath + "/" + path;
+			}
+
+			Assembly entryAssembly = Assembly.GetEntryAssembly();
+			if(entryAssembly != null)
+			{
+				return entryAssembly.Location + "/" + path;
+			}
+
+			return Directory.GetCurrentDirectory() + "/" + path;
 		}
 	}
 }
