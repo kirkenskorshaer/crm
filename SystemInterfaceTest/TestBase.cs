@@ -14,6 +14,7 @@ namespace SystemInterfaceTest
 		protected SqlConnection _sqlConnection;
 		protected DynamicsCrmConnection _dynamicsCrmConnection;
 		protected UrlLogin _urlLogin;
+		protected Config _config;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -22,6 +23,7 @@ namespace SystemInterfaceTest
 			_urlLogin = UrlLogin.GetUrlLogin(_mongoConnection, "test");
 			_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(_urlLogin.Url, _urlLogin.Username, _urlLogin.Password);
 			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "sql");
+			_config = Config.GetConfig(_mongoConnection);
 		}
 
 		protected Contact CreateTestContact()
