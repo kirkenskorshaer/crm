@@ -25,6 +25,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		private static readonly ColumnSet ColumnSetMaterialeBehovr = new ColumnSet(
 			"new_name",
+			"ownerid",
 			"new_forsendelsestatus",
 			"new_antal",
 			"new_kontaktpersonid",

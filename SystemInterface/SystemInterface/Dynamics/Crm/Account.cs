@@ -62,6 +62,7 @@ namespace SystemInterface.Dynamics.Crm
 		private static readonly ColumnSet ColumnSetAccount = new ColumnSet(
 			"name",
 			"accountid",
+			"ownerid",
 
 			"statecode",
 
@@ -439,6 +440,7 @@ namespace SystemInterface.Dynamics.Crm
 				crmEntity.Id = Id;
 			}
 
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("ownerid", ownerid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("name", name));
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line1", address1_line1));
