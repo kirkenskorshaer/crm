@@ -111,7 +111,7 @@ namespace SystemInterface.Dynamics.Crm
 			return staleMaterialeCount;
 		}
 
-		public void RemoveStaleMaterialeBehov(Func<string, string> getResourcePath)
+		public void RemoveStaleMaterialeBehov(Func<string, string> getResourcePath, Action<int> updateProgress, int updateProgressFrequency)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Materiale/FindStaleMaterialeBehov.xml");
 			XDocument xDocument = XDocument.Load(path);
@@ -119,9 +119,20 @@ namespace SystemInterface.Dynamics.Crm
 
 			List<MaterialeBehov> materialeBehovList = StaticCrm.ReadFromFetchXml(Connection, xDocument, (connection, entity) => new MaterialeBehov(connection, entity), new PagingInformation());
 
+			int updateProgressCounter = 0;
+			int deletedCount = 0;
 			foreach (MaterialeBehov materialeBehov in materialeBehovList)
 			{
+				updateProgressCounter++;
+				deletedCount++;
+
 				materialeBehov.Delete();
+
+				if (updateProgressCounter >= updateProgressFrequency)
+				{
+					updateProgressCounter = 0;
+					updateProgress(deletedCount);
+				}
 			}
 		}
 

@@ -29,6 +29,7 @@ namespace Administration.Option.Options.Logic
 		protected override bool ExecuteOption()
 		{
 			string urlLoginName = _databaseMaterialeBehovAssignment.urlLoginName;
+			int updateProgressFrequency = _databaseMaterialeBehovAssignment.updateProgressFrequency;
 
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
@@ -43,13 +44,15 @@ namespace Administration.Option.Options.Logic
 			materiale.FindBehovDefinitioner(Config.GetResourcePath);
 
 			int total = CountTotalAccountsToUpdate(dynamicsCrmConnection, materiale);
+			int staleMaterialeBehovCount = materiale.CountStaleMaterialeBehov(Config.GetResourcePath);
+			total += staleMaterialeBehovCount;
 
 			materiale.new_beregningsstatus = 0;
 			materiale.Update();
 
-			materiale.RemoveStaleMaterialeBehov(Config.GetResourcePath);
+			materiale.RemoveStaleMaterialeBehov(Config.GetResourcePath, currentProgress => updateProgress(materiale, currentProgress, total), updateProgressFrequency);
 
-			int materialeAdded = 0;
+			int progress = staleMaterialeBehovCount;
 			int materialeAddedCurrent = -1;
 
 			MaterialeProcessState state = new MaterialeProcessState();
@@ -60,24 +63,24 @@ namespace Administration.Option.Options.Logic
 			{
 				materiale.AddMissingMateriale(state, Config.GetResourcePath);
 				materialeAddedCurrent = state.AccountsProcessed;
-				materialeAdded += materialeAddedCurrent;
-				updateProgress(materiale, materialeAdded, total);
+				progress += materialeAddedCurrent;
+				updateProgress(materiale, progress, total);
 			}
 			materialeAddedCurrent = -1;
 
 			materiale.behovsberegning = Materiale.behovsberegningEnum.Afsluttet;
-			materiale.new_beregningsstatus = 0;
+			materiale.new_beregningsstatus = null;
 			materiale.Update();
 
 			return true;
 		}
 
-		private void updateProgress(Materiale materiale, int materialeAdded, int total)
+		private void updateProgress(Materiale materiale, int current, int total)
 		{
 			int progress = 0;
 			if (total != 0)
 			{
-				progress = ((materialeAdded * 100) / total);
+				progress = ((current * 100) / total);
 			}
 
 			if (progress < 0)
