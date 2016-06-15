@@ -235,6 +235,9 @@
     <Content Include="Dynamics\Crm\FetchXml\MaterialeBehovDefinition\FindMaterialeBehovDefinitionPerMateriale.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Materiale\CountStaleMaterialeBehov.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Dynamics\Crm\FetchXml\Materiale\FindStaleMaterialeBehov.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
