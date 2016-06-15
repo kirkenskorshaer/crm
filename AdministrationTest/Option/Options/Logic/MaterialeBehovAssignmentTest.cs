@@ -14,6 +14,7 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseMaterialeBehovAssignment databaseMaterialeBehovAssignment = new DatabaseMaterialeBehovAssignment()
 			{
 				urlLoginName = "test",
+				updateProgressFrequency = 1,
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
 			};
 
