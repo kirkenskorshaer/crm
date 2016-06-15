@@ -99,6 +99,18 @@ namespace SystemInterface.Dynamics.Crm
 			return materiale;
 		}
 
+		public int CountStaleMaterialeBehov(Func<string, string> getResourcePath)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Materiale/CountStaleMaterialeBehov.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+			xDocument.Element("fetch").Element("entity").Element("link-entity").Element("filter").Element("condition").Attribute("value").Value = Id.ToString();
+
+			int staleMaterialeCount = StaticCrm.CountByFetchXml(Connection, xDocument, "new_materialebehovidcount");
+
+			return staleMaterialeCount;
+		}
+
 		public void RemoveStaleMaterialeBehov(Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Materiale/FindStaleMaterialeBehov.xml");
