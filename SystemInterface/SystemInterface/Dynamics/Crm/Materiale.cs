@@ -215,6 +215,8 @@ namespace SystemInterface.Dynamics.Crm
 				};
 
 				behov.Insert();
+
+				behov.Assign();
 			}
 		}
 
