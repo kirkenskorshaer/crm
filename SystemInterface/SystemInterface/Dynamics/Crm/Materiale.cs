@@ -177,6 +177,7 @@ namespace SystemInterface.Dynamics.Crm
 				{
 					new_name = $"auto defineret {DateTime.Now.ToString("yyyyMMdd")}",
 					new_antal = materialePakkeAndCount.Value,
+					ownerid = account.ownerid,
 					forsendelsestatus = MaterialeBehov.forsendelsestatusEnum.Oprettet,
 					materialepakkeid = materialePakkeAndCount.Key.Id,
 					leveringsstedid = GetLeveringsSted(account),
