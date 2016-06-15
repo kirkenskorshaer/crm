@@ -138,10 +138,15 @@ namespace SystemInterface.Dynamics.Crm
 			return attributeNames;
 		}
 
-		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path,string aliasName)
+		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path, string aliasName)
 		{
 			XDocument xDocument = XDocument.Load(path);
 
+			return CountByFetchXml(dynamicsCrmConnection, xDocument, aliasName);
+        }
+
+		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, string aliasName)
+		{
 			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
 
 			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
