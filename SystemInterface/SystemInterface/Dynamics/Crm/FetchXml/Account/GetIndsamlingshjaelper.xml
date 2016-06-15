@@ -2,6 +2,7 @@
 <fetch count="10" distinct="true" >
 	<entity name="account" >
 		<attribute name="accountid" />
+		<attribute name="ownerid"/>
 		<attribute name="statecode" />
 		<attribute name="new_forventetantalindsamlere2016"/>
 		<attribute name="new_leveringstedid"/>
@@ -18,6 +19,7 @@
 		<filter type="and" >
 			<condition entityname="new_materialepakke" attribute="new_materialeid" operator="neq" value="" />
 			<condition attribute="accountid" operator="gt" value="00000000-0000-0000-0000-000000000000"/>
+			<condition attribute="owningbusinessunit" operator="eq" value="" />
 		</filter>
 		<link-entity from="accountid" name="new_account_contact_indsamlere" to="accountid" link-type="inner">
 		</link-entity>

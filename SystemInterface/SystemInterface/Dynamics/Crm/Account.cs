@@ -441,6 +441,7 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("ownerid", ownerid));
+
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("name", name));
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("address1_line1", address1_line1));
@@ -635,7 +636,7 @@ namespace SystemInterface.Dynamics.Crm
 			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
 		}
 
-		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingssted.xml");
 
@@ -653,6 +654,10 @@ namespace SystemInterface.Dynamics.Crm
 					Where(element => element.Attribute("attribute").Value == "accountid").Single().
 						Attribute("value").Value = lastAccountId.ToString();
 
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "owningbusinessunit").Single().
+						Attribute("value").Value = owningbusinessunit.ToString();
+
 			if (withMaterialeBehov)
 			{
 				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
@@ -667,7 +672,7 @@ namespace SystemInterface.Dynamics.Crm
 			return accounts;
 		}
 
-		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetForventetAntalIndsamlere2016.xml");
 
@@ -685,6 +690,10 @@ namespace SystemInterface.Dynamics.Crm
 					Where(element => element.Attribute("attribute").Value == "accountid").Single().
 						Attribute("value").Value = lastAccountId.ToString();
 
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "owningbusinessunit").Single().
+						Attribute("value").Value = owningbusinessunit.ToString();
+
 			if (withMaterialeBehov)
 			{
 				xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
@@ -699,7 +708,7 @@ namespace SystemInterface.Dynamics.Crm
 			return accounts;
 		}
 
-		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid materialeId, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingshjaelper.xml");
 
@@ -716,6 +725,10 @@ namespace SystemInterface.Dynamics.Crm
 			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
 					Where(element => element.Attribute("attribute").Value == "accountid").Single().
 						Attribute("value").Value = lastAccountId.ToString();
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Elements("condition").
+					Where(element => element.Attribute("attribute").Value == "owningbusinessunit").Single().
+						Attribute("value").Value = owningbusinessunit.ToString();
 
 			if (withMaterialeBehov)
 			{

@@ -220,7 +220,7 @@ namespace SystemInterface.Dynamics.Crm
 			switch (state.BehovType)
 			{
 				case MaterialeBehovDefinition.behovtypeEnum.Indsamlingssted:
-					GetAccountsIndsamlingssted(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, getResourcePath);
+					GetAccountsIndsamlingssted(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, state.owningbusinessunit, getResourcePath);
 					if (accounts.Count == 0)
 					{
 						state.LargestAccountId = Guid.Empty;
@@ -229,7 +229,7 @@ namespace SystemInterface.Dynamics.Crm
 					}
 					break;
 				case MaterialeBehovDefinition.behovtypeEnum.ForventetAntalIndsamlere2016:
-					GetAccountsForventetAntalIndsamlere2016(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, getResourcePath);
+					GetAccountsForventetAntalIndsamlere2016(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, state.owningbusinessunit, getResourcePath);
 					if (accounts.Count == 0)
 					{
 						state.LargestAccountId = Guid.Empty;
@@ -238,7 +238,7 @@ namespace SystemInterface.Dynamics.Crm
 					}
 					break;
 				case MaterialeBehovDefinition.behovtypeEnum.Indsamlingshjaelper:
-					GetAccountsIndsamlingshjaelper(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, getResourcePath);
+					GetAccountsIndsamlingshjaelper(behovDefinitioner, accounts, state.withMaterialeBehov, state.LargestAccountId, state.owningbusinessunit, getResourcePath);
 					break;
 				default:
 					break;
@@ -247,27 +247,27 @@ namespace SystemInterface.Dynamics.Crm
 			return accounts;
 		}
 
-		private void GetAccountsIndsamlingssted(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		private void GetAccountsIndsamlingssted(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			if (behovDefinitioner.Any(definition => definition.behovtype == MaterialeBehovDefinition.behovtypeEnum.Indsamlingssted))
 			{
-				accounts.AddRange(Account.GetIndsamlingsSted(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, getResourcePath));
+				accounts.AddRange(Account.GetIndsamlingsSted(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, owningbusinessunit, getResourcePath));
 			}
 		}
 
-		private void GetAccountsForventetAntalIndsamlere2016(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		private void GetAccountsForventetAntalIndsamlere2016(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			if (behovDefinitioner.Any(definition => definition.behovtype == MaterialeBehovDefinition.behovtypeEnum.ForventetAntalIndsamlere2016))
 			{
-				accounts.AddRange(Account.GetForventetAntalIndsamlere2016(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, getResourcePath));
+				accounts.AddRange(Account.GetForventetAntalIndsamlere2016(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, owningbusinessunit, getResourcePath));
 			}
 		}
 
-		private void GetAccountsIndsamlingshjaelper(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Func<string, string> getResourcePath)
+		private void GetAccountsIndsamlingshjaelper(List<MaterialeBehovDefinition> behovDefinitioner, List<Account> accounts, bool withMaterialeBehov, Guid lastAccountId, Guid owningbusinessunit, Func<string, string> getResourcePath)
 		{
 			if (behovDefinitioner.Any(definition => definition.behovtype == MaterialeBehovDefinition.behovtypeEnum.Indsamlingshjaelper))
 			{
-				accounts.AddRange(Account.GetIndsamlingshjaelper(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, getResourcePath));
+				accounts.AddRange(Account.GetIndsamlingshjaelper(Connection, _numberOfAccountsPerMaterialeAssign, Id, withMaterialeBehov, lastAccountId, owningbusinessunit, getResourcePath));
 			}
 		}
 

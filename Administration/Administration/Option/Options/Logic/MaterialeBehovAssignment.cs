@@ -53,6 +53,7 @@ namespace Administration.Option.Options.Logic
 			int materialeAddedCurrent = -1;
 
 			MaterialeProcessState state = new MaterialeProcessState();
+			state.owningbusinessunit = materiale.owningbusinessunitGuid.Value;
 
 			while (materialeAddedCurrent != 0)
 			{

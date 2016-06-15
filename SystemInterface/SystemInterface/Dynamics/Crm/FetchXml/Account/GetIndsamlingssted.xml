@@ -2,6 +2,7 @@
 <fetch count="10" distinct="true" >
 	<entity name="account" >
 		<attribute name="accountid" />
+		<attribute name="ownerid"/>
 		<attribute name="statecode" />
 		<attribute name="new_forventetantalindsamlere2016"/>
 		<attribute name="new_leveringstedid"/>
@@ -19,6 +20,7 @@
 			<condition attribute="new_erindsamlingssted" operator="eq" value="100000000" />
 			<condition entityname="new_materialepakke" attribute="new_materialeid" operator="neq" value="" />
 			<condition attribute="accountid" operator="gt" value="00000000-0000-0000-0000-000000000000"/>
+			<condition attribute="owningbusinessunit" operator="eq" value=""/>
 		</filter>
 		<order attribute="accountid" descending="false"/>
 	</entity>
