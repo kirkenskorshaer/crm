@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Client;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -114,6 +115,34 @@ namespace SystemInterface.Dynamics.Crm
 			ReadCrmGeneratedFields(generatedEntity);
 
 			AfterInsert(generatedEntity);
+		}
+
+		protected CrmEntity GetAsIdEntity()
+		{
+			CrmEntity crmEntity = new CrmEntity(entityName);
+
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>(idName, Id));
+			crmEntity.Id = Id;
+
+			return crmEntity;
+		}
+
+		protected EntityReference GetAsEntityReference()
+		{
+			EntityReference entityReference = new EntityReference(entityName, Id);
+
+			return entityReference;
+		}
+
+		public void Assign()
+		{
+			AssignRequest assignRequest = new AssignRequest()
+			{
+				Assignee = ownerid,
+				Target = GetAsEntityReference(),
+			};
+
+			Connection.Service.Execute(assignRequest);
 		}
 
 		public void Update()
