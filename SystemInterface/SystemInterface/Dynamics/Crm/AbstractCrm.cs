@@ -21,6 +21,12 @@ namespace SystemInterface.Dynamics.Crm
 
 		public Guid Id { get; private set; }
 
+		public EntityReference ownerid;
+		public Guid? owner { get { return GetEntityReferenceId(ownerid); } set { ownerid = SetEntityReferenceId(value, "user"); } }
+
+		public EntityReference owningbusinessunit;
+		public Guid? owningbusinessunitGuid { get { return GetEntityReferenceId(owningbusinessunit); } set { owningbusinessunit = SetEntityReferenceId(value, "businessunit"); } }
+
 		public AbstractCrm(DynamicsCrmConnection connection)
 		{
 			Connection = connection;
