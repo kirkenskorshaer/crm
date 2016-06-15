@@ -6,6 +6,7 @@ namespace SystemInterface.Dynamics.Crm
 	{
 		public MaterialeBehovDefinition.behovtypeEnum BehovType = MaterialeBehovDefinition.behovtypeEnum.Indsamlingssted;
 		public int AccountsProcessed = 0;
+		public Guid owningbusinessunit;
 		public PagingInformation pagingInformation = null;
 	}
 }

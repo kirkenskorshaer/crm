@@ -54,6 +54,7 @@ namespace Administration.Option.Options.Logic
 
 			MaterialeProcessState state = new MaterialeProcessState();
 			state.pagingInformation = new PagingInformation();
+			state.owningbusinessunit = materiale.owningbusinessunitGuid.Value;
 
 			while (materialeAddedCurrent != 0)
 			{

@@ -2,6 +2,7 @@
 <fetch count="10" distinct="true" >
 	<entity name="account" >
 		<attribute name="accountid" />
+		<attribute name="ownerid"/>
 		<attribute name="statecode" />
 		<attribute name="new_forventetantalindsamlere2016"/>
 		<attribute name="new_leveringstedid"/>
@@ -9,6 +10,7 @@
 		<attribute name="new_erindsamlingssted"/>
 		<filter type="and" >
 			<condition attribute="new_erindsamlingssted" operator="eq" value="100000000" />
+			<condition attribute="owningbusinessunit" operator="eq" value=""/>
 		</filter>
 	</entity>
 </fetch>
