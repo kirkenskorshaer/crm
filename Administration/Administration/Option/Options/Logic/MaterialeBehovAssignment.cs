@@ -53,6 +53,7 @@ namespace Administration.Option.Options.Logic
 			int materialeAddedCurrent = -1;
 
 			MaterialeProcessState state = new MaterialeProcessState();
+			state.pagingInformation = new PagingInformation();
 
 			while (materialeAddedCurrent != 0)
 			{
@@ -62,17 +63,6 @@ namespace Administration.Option.Options.Logic
 				updateProgress(materiale, materialeAdded, total);
 			}
 			materialeAddedCurrent = -1;
-
-			state.withMaterialeBehov = false;
-			state.BehovType = MaterialeBehovDefinition.behovtypeEnum.Indsamlingssted;
-
-			while (materialeAddedCurrent != 0)
-			{
-				materiale.AddMissingMateriale(state, Config.GetResourcePath);
-				materialeAddedCurrent = state.AccountsProcessed;
-				materialeAdded += materialeAddedCurrent;
-				updateProgress(materiale, materialeAdded, total);
-			}
 
 			materiale.behovsberegning = Materiale.behovsberegningEnum.Afsluttet;
 			materiale.new_beregningsstatus = 0;
