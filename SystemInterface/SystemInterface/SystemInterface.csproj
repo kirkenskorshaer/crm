@@ -122,6 +122,7 @@
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
+    <Compile Include="Dynamics\Crm\PagingInformation.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Email.cs" />
@@ -223,6 +224,7 @@
     </Content>
     <Content Include="Dynamics\Crm\FetchXml\Account\GetIndsamlingssted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingssted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
