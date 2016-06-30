@@ -347,6 +347,13 @@ namespace SystemInterface.Dynamics.Crm
 			return StaticCrm.Exists<Contact>(dynamicsCrmConnection, keyContent);
 		}
 
+		public static Contact Create(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
+		{
+			Contact contact = new Contact(dynamicsCrmConnection);
+			CreateFromContent(dynamicsCrmConnection, contact, allContent);
+			return contact;
+		}
+
 		public static List<Contact> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Contact(connection, contactEntity), new PagingInformation());
