@@ -303,5 +303,19 @@ namespace SystemInterface.Dynamics.Crm
 
 			return new OptionSetValue((int)value.Value);
 		}
+
+		protected static void CreateFromContent(DynamicsCrmConnection dynamicsCrmConnection, AbstractCrm crmObject, Dictionary<string, string> allContent)
+		{
+			foreach (KeyValuePair<string, string> keyValue in allContent)
+			{
+				string key = keyValue.Key;
+				string valueString = keyValue.Value;
+
+				Type targetType = Utilities.ReflectionHelper.GetType(crmObject, key);
+				object value = Utilities.ReflectionHelper.StringToObject(valueString, targetType);
+
+				Utilities.ReflectionHelper.SetValue(crmObject, key, value);
+			}
+		}
 	}
 }
