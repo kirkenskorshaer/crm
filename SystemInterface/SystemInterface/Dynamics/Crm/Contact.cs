@@ -98,7 +98,10 @@ namespace SystemInterface.Dynamics.Crm
 
 		public Contact(DynamicsCrmConnection connection, Entity contactEntity) : base(connection, contactEntity)
 		{
-			State = (StateEnum)((OptionSetValue)contactEntity.Attributes["statecode"]).Value;
+			if (contactEntity.Attributes.Any(attribute => attribute.Key == "statecode"))
+			{
+				State = (StateEnum)((OptionSetValue)contactEntity.Attributes["statecode"]).Value;
+			}
 		}
 
 		public Guid? modifiedbyGuid
