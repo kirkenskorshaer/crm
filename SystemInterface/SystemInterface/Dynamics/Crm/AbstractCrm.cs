@@ -20,7 +20,7 @@ namespace SystemInterface.Dynamics.Crm
 		protected virtual void AfterInsert(Entity generatedEntity) { }
 		protected virtual void AfterUpdate(Entity generatedEntity) { }
 
-		public Guid Id { get; private set; }
+		public Guid Id { get; protected set; }
 
 		public EntityReference ownerid;
 		public Guid? owner { get { return GetEntityReferenceId(ownerid); } set { ownerid = SetEntityReferenceId(value, "user"); } }
