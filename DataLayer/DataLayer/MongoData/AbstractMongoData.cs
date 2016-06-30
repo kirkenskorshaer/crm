@@ -92,5 +92,14 @@ namespace DataLayer.MongoData
 			Task deleteTask = datas.DeleteOneAsync(data => data._id == _id);
 			deleteTask.Wait();
 		}
+
+		protected static long Count<TDataType>(MongoConnection connection)
+		where TDataType : AbstractMongoData
+		{
+			IMongoCollection<TDataType> dataCollection = connection.Database.GetCollection<TDataType>(typeof(TDataType).Name);
+			BsonDocument filter = new BsonDocument();
+			Task<long> dataCount = dataCollection.CountAsync(filter);
+			return MongoDataHelper.GetValueOrThrowTimeout(dataCount);
+		}
 	}
 }
