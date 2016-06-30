@@ -117,6 +117,13 @@ namespace SystemInterface.Dynamics.Crm
 			AfterInsert(generatedEntity);
 		}
 
+		public void InsertWithoutRead()
+		{
+			CrmEntity crmEntity = GetAsEntity(false);
+
+			Id = Connection.Service.Create(crmEntity);
+		}
+
 		protected CrmEntity GetAsIdEntity()
 		{
 			CrmEntity crmEntity = new CrmEntity(entityName);
