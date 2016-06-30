@@ -31,6 +31,12 @@
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
     </Group>
+    <Group Id="Materiale" Title="Materiale" IsProfile="false">
+      <SubArea Entity="new_materiale" Id="Materiale" Title="Materiale" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="new_materialebehov" Id="MaterialeBehov" Title="Materiale Behov" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="new_materialebehovdefinition" Id="MaterialeBehovDefinition" Title="Materiale Behov Definition" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="new_materialepakke" Id="Materialepakke" Title="Materiale pakke" AvailableOffline="false" PassParams="false" />
+    </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
     <Group Id="Manage" Title="Manage" IsProfile="false">
