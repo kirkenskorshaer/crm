@@ -171,6 +171,12 @@
       <SubArea Id="nav_reports" Entity="report" DescriptionResourceId="Reports_Description">
         <Privilege Entity="new_priviledge_setting" Privilege="Read" />
       </SubArea>
+      <SubArea Id="nav_campaigns" Entity="campaign" DescriptionResourceId="Campaign_SubArea_Description" GetStartedPanePath="Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_setting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_minicamps" Entity="bulkoperation" DescriptionResourceId="Quick_Campaign_Description" Icon="/_imgs/ico_18_minicamps.gif" OutlookShortcutIcon="/_imgs/olk_4400.ico" GetStartedPanePath="Quick-Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Quick-Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quick-Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quick-Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_setting" Privilege="All,AllowQuickCampaign,Read" />
+      </SubArea>
     </Group>
   </Area>
 </SiteMap>
