@@ -90,6 +90,7 @@
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
     <Compile Include="Option\Options\Logic\AdjustDns.cs" />
+    <Compile Include="Option\Options\Logic\CreateImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedReference.cs" />
