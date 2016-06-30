@@ -6,6 +6,9 @@ using DataLayer.MongoData;
 using DataLayer.MongoData.Option;
 using NUnit.Framework;
 using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
+using DatabaseStub = DataLayer.MongoData.Input.Stub;
+using DatabaseStubElement = DataLayer.MongoData.Input.StubElement;
+using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 using System.Linq;
 using System.Data.SqlClient;
 using SystemInterface.Dynamics.Crm;
@@ -110,6 +113,59 @@ namespace AdministrationTest
 			_changeProviders.Add(changeProvider);
 
 			return changeProvider;
+		}
+
+		protected Campaign CreateCampaign()
+		{
+			Campaign campaign = new Campaign(DynamicsCrmConnection)
+			{
+				collecttype = Campaign.collecttypeEnum.ContactOgLeadVedEksisterendeContact,
+				name = $"test campaign {Guid.NewGuid()}",
+				new_redirecttarget = "https://cassiel.kad.korsnet.dk/ChewieTest/main.aspx",
+			};
+
+			return campaign;
+		}
+
+		protected Account CreateAccount()
+		{
+			Account account = new Account(DynamicsCrmConnection)
+			{
+				erindsamlingssted = Account.erindsamlingsstedEnum.Ja,
+				name = $"name {Guid.NewGuid()}",
+			};
+
+			return account;
+		}
+
+		protected DatabaseStub CreateStub(DatabaseWebCampaign webcampaign)
+		{
+			return CreateStub(webcampaign, $"firstname {Guid.NewGuid()}", $"lastname {Guid.NewGuid()}");
+		}
+
+		protected DatabaseStub CreateStub(DatabaseWebCampaign webcampaign, string firstname)
+		{
+			return CreateStub(webcampaign, firstname, $"lastname {Guid.NewGuid()}");
+		}
+
+		protected DatabaseStub CreateStub(DatabaseWebCampaign webcampaign, string firstname, string lastname)
+		{
+			DatabaseStub stub = new DatabaseStub()
+			{
+				Contents = new List<DatabaseStubElement>()
+				{
+					new DatabaseStubElement() { Key = "firstname", Value = firstname }
+					,new DatabaseStubElement() { Key = "lastname", Value = lastname }
+				},
+				PostTime = DateTime.Now,
+			};
+
+			if (webcampaign != null)
+			{
+				stub.WebCampaignId = webcampaign._id;
+			}
+
+			return stub;
 		}
 	}
 }
