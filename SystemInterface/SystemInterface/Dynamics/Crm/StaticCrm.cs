@@ -206,6 +206,38 @@ namespace SystemInterface.Dynamics.Crm
 			return (int)aliasedValue.Value;
 		}
 
+		public static bool ExistsByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path)
+		{
+			XDocument xDocument = XDocument.Load(path);
+
+			return ExistsByFetchXml(dynamicsCrmConnection, xDocument);
+		}
+
+		public static bool ExistsByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument)
+		{
+			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
+
+			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
+
+			int collectionCount = entityCollection.Entities.Count;
+
+			return collectionCount >= 1;
+		}
+
+		public static bool Exists<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> keyContent)
+		{
+			XDocument xDocument = new XDocument(
+				new XElement("fetch", new XAttribute("count", 1),
+					new XElement("entity", new XAttribute("name", typeof(AbstractCrmType).Name.ToLower()),
+						new XElement("filter"))));
+
+			xDocument.Element("fetch").Element("entity").Element("filter").Add(GetConditionElements(keyContent));
+
+			bool exists = ExistsByFetchXml(dynamicsCrmConnection, xDocument);
+
+			return exists;
+		}
+
 		public static List<XElement> GetAttributeElements(List<string> attributes)
 		{
 			List<XElement> xElements = new List<XElement>();
