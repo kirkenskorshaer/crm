@@ -118,9 +118,11 @@
     <Compile Include="Dynamics\Crm\Address.cs" />
     <Compile Include="Dynamics\Crm\Annotation.cs" />
     <Compile Include="Dynamics\Crm\Byarbejde.cs" />
+    <Compile Include="Dynamics\Crm\Campaign.cs" />
     <Compile Include="Dynamics\Crm\Contact.cs" />
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
+    <Compile Include="Dynamics\Crm\Lead.cs" />
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
     <Compile Include="Dynamics\Crm\PagingInformation.cs" />
     <Compile Include="Dynamics\Crm\MaterialeBehovDefinition.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Dynamics\Crm\Materiale.cs" />
+    <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -215,6 +218,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Dynamics\Crm\FetchXml\Account\CountForventetAntalIndsamlere2016.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Account\plant.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dynamics\Crm\FetchXml\Account\CountMaterialeBehov.xml">
