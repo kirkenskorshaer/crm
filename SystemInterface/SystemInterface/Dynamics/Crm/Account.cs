@@ -479,6 +479,11 @@ namespace SystemInterface.Dynamics.Crm
 			return account;
 		}
 
+		public static List<Account> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
+		{
+			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Account(connection, contactEntity), new PagingInformation());
+		}
+
 		public List<Group> ReadGroups()
 		{
 			Entity accountEntity = GetAsEntity(true);
