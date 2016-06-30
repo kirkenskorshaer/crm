@@ -82,5 +82,49 @@ namespace Utilities
 
 			return true;
 		}
+
+		public static object StringToObject(string from, Type targetType)
+		{
+			string fullName = targetType.FullName;
+
+			if (fullName == typeof(String).FullName)
+			{
+				return from;
+			}
+
+			if (fullName == typeof(Int32).FullName)
+			{
+				int valueInt = 0;
+				int.TryParse(from, out valueInt);
+				return valueInt;
+			}
+
+			if (fullName == typeof(Boolean).FullName)
+			{
+				bool valueBool = false;
+				bool.TryParse(from, out valueBool);
+				return valueBool;
+			}
+
+			if (fullName == typeof(Guid?).FullName)
+			{
+				Guid valueGuid = Guid.Empty;
+				Guid.TryParse(from, out valueGuid);
+				return (Guid?)valueGuid;
+			}
+
+			throw new Exception($"unknown type {fullName}");
+		}
+
+		public static void Copy(object from, object to, List<string> exclusionList)
+		{
+			List<string> keys = GetFieldsAndProperties(from.GetType(), exclusionList);
+
+			foreach (string key in keys)
+			{
+				object value = GetValue(from, key);
+				SetValue(to, key, value);
+			}
+		}
 	}
 }
