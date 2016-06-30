@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MongoData\AbstractMongoData.cs" />
     <Compile Include="MongoData\MongoDataHelper.cs" />
     <Compile Include="MongoData\Config.cs" />
     <Compile Include="MongoConnection.cs" />
