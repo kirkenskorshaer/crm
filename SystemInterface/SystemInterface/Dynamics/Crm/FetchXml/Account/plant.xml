@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fetch>
+	<entity name="account">
+		<attribute name="accountid"/>
+		<attribute name="name"/>
+		<attribute name="address1_line1"/>
+		<attribute name="address1_line2"/>
+		<attribute name="address1_postalcode"/>
+		<attribute name="address1_city"/>
+		<filter>
+			<condition attribute="new_erindsamlingssted" operator="eq" value="100000000"/>
+		</filter>
+	</entity>
+</fetch>
