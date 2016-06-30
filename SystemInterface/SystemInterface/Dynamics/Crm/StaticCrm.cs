@@ -97,6 +97,27 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntities;
 		}
 
+		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		where AbstractCrmType : AbstractCrm
+		{
+			XDocument xDocument = new XDocument(
+				new XElement("fetch",
+					new XElement("entity", new XAttribute("name", typeof(AbstractCrmType).Name.ToLower()),
+						new XElement("filter"))));
+
+			if (maxCount.HasValue)
+			{
+				xDocument.Element("fetch").Add(new XAttribute("count", maxCount.Value));
+			}
+
+			xDocument.Element("fetch").Element("entity").Add(GetAttributeElements(fields.ToList()));
+			xDocument.Element("fetch").Element("entity").Element("filter").Add(GetConditionElements(keyContent));
+
+			List<AbstractCrmType> crmObjects = ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInformation);
+
+			return crmObjects;
+		}
+
 		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		where AbstractCrmType : AbstractCrm
 		{
@@ -183,6 +204,36 @@ namespace SystemInterface.Dynamics.Crm
 			AliasedValue aliasedValue = (AliasedValue)entity.Attributes[aliasName];
 
 			return (int)aliasedValue.Value;
+		}
+
+		public static List<XElement> GetAttributeElements(List<string> attributes)
+		{
+			List<XElement> xElements = new List<XElement>();
+
+			foreach (string name in attributes)
+			{
+				XElement condition = new XElement("attribute", new XAttribute("name", name));
+				xElements.Add(condition);
+			}
+
+			return xElements;
+		}
+
+		public static List<XElement> GetConditionElements(Dictionary<string, string> searchContent)
+		{
+			List<XElement> xElements = new List<XElement>();
+
+			foreach (KeyValuePair<string, string> keyValue in searchContent)
+			{
+				string key = keyValue.Key;
+				string value = keyValue.Value;
+
+				XElement condition = new XElement("condition", new XAttribute("attribute", key), new XAttribute("operator", "eq"), new XAttribute("value", value));
+
+				xElements.Add(condition);
+			}
+
+			return xElements;
 		}
 	}
 }
