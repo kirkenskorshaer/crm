@@ -73,7 +73,7 @@ namespace Utilities
 
 			PropertyInfo propertyInfo = holderType.GetProperty(fieldOrPropertyName, BindingFlags.Public | BindingFlags.Instance);
 
-			if(propertyInfo == null)
+			if (propertyInfo == null)
 			{
 				return false;
 			}
