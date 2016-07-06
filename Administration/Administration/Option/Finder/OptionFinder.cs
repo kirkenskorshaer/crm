@@ -40,7 +40,8 @@ namespace Administration.Option.Finder
 			options.AddRange(SynchronizeToCrm.Find(_connection));
 			options.AddRange(AdjustDns.Find(_connection));
 			*/
-
+			options.AddRange(ImportFromStub.Find(_connection));
+			options.AddRange(CreateImportFromStub.Find(_connection));
 			options.AddRange(MaterialeBehovAssignment.Find(_connection));
 
 			//options.AddRange(MaintainAllTables.Find(_connection));
