@@ -37,6 +37,14 @@
       <SubArea Entity="new_materialebehovdefinition" Id="MaterialeBehovDefinition" Title="Materiale Behov Definition" AvailableOffline="false" PassParams="false" />
       <SubArea Entity="new_materialepakke" Id="Materialepakke" Title="Materiale pakke" AvailableOffline="false" PassParams="false" />
     </Group>
+    <Group Id="Campaign" Description="Campaign" Title="Campaign" IsProfile="false">
+      <SubArea Id="nav_campaigns" Entity="campaign" DescriptionResourceId="Campaign_SubArea_Description" GetStartedPanePath="Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_leads" Entity="lead" DescriptionResourceId="Lead_SubArea_Description" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+    </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
     <Group Id="Manage" Title="Manage" IsProfile="false">
