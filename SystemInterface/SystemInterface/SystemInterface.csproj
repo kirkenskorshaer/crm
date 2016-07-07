@@ -132,6 +132,7 @@
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Dynamics\Crm\Materiale.cs" />
+    <Compile Include="Dynamics\Crm\Team.cs" />
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
