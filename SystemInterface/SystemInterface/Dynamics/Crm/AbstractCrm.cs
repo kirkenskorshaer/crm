@@ -23,7 +23,7 @@ namespace SystemInterface.Dynamics.Crm
 		public Guid Id { get; protected set; }
 
 		public EntityReference ownerid;
-		public Guid? owner { get { return GetEntityReferenceId(ownerid); } set { ownerid = SetEntityReferenceId(value, "user"); } }
+		public Guid? owner { get { return GetEntityReferenceId(ownerid); } set { ownerid = SetEntityReferenceId(value, ""); } }
 
 		public EntityReference owningbusinessunit;
 		public Guid? owningbusinessunitGuid { get { return GetEntityReferenceId(owningbusinessunit); } set { owningbusinessunit = SetEntityReferenceId(value, "businessunit"); } }
@@ -143,6 +143,14 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Assign()
 		{
+			if (Id == Guid.Empty)
+			{
+				throw new ArgumentException($"Assign can only be called on entities with id, the entity is {entityName}");
+			}
+
+			string ownerEntityName = GetOwnerEntityName();
+			ownerid.LogicalName = ownerEntityName;
+
 			AssignRequest assignRequest = new AssignRequest()
 			{
 				Assignee = ownerid,
@@ -150,6 +158,23 @@ namespace SystemInterface.Dynamics.Crm
 			};
 
 			Connection.Service.Execute(assignRequest);
+		}
+
+		private string GetOwnerEntityName()
+		{
+			SystemUser user = SystemUser.ReadFromFetchXml(Connection, new List<string>() { "systemuserid" }, new Dictionary<string, string>() { { "systemuserid", owner.ToString() } }).SingleOrDefault();
+			if (user != null)
+			{
+				return "user";
+			}
+
+			Team team = Team.ReadFromFetchXml(Connection, new List<string>() { "teamid" }, new Dictionary<string, string>() { { "teamid", owner.ToString() } }).SingleOrDefault();
+			if (user == null)
+			{
+				return "team";
+			}
+
+			throw new ArgumentException($"no user or team found on id {owner}");
 		}
 
 		public void Update()
