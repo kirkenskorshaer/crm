@@ -47,6 +47,9 @@ namespace SystemInterface.Dynamics.Crm
 		public EntityReference new_indsamler2016;
 		public Guid? indsamler2016 { get { return GetEntityReferenceId(new_indsamler2016); } set { new_indsamler2016 = SetEntityReferenceId(value, "account"); } }
 
+		public string new_oprindelse;
+		public string new_oprindelseip;
+
 		public List<Group> Groups = new List<Group>();
 		private static string _groupRelationshipName = "new_group_contact";
 		private string _accountRelationshipName = "new_account_contact";
@@ -88,6 +91,8 @@ namespace SystemInterface.Dynamics.Crm
 			"firstname",
 			"middlename",
 			"lastname",
+			"new_oprindelse",
+			"new_oprindelseip",
 			"statecode");
 
 		protected override string entityName { get { return "contact"; } }
@@ -158,6 +163,8 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("mobilephone", mobilephone));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("telephone1", telephone1));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("birthdate", birthdate));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelse", new_oprindelse));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelseip", new_oprindelseip));
 
 			return crmEntity;
 		}
