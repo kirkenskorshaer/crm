@@ -17,6 +17,8 @@ namespace DataLayer.MongoData
 		public int EmailSmtpPort { get; set; }
 		public LogLevelEnum LogLevel { get; set; }
 		public string ResourcePath { get; set; }
+		public string MailrelayUrl { get; set; }
+		public string MailrelayApiKey { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
