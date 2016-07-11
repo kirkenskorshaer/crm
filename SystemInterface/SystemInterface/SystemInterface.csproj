@@ -217,7 +217,19 @@
   <ItemGroup>
     <None Include="Service References\KKAdminService\KKAdminService.disco" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mailrelay\Function\CampaignFolders\" />
+    <Folder Include="Mailrelay\Function\Campaigns\" />
+    <Folder Include="Mailrelay\Function\CustomFields\" />
+    <Folder Include="Mailrelay\Function\GeneralFunctions\" />
+    <Folder Include="Mailrelay\Function\Import\" />
+    <Folder Include="Mailrelay\Function\LogFunctions\" />
+    <Folder Include="Mailrelay\Function\Mailboxes\" />
+    <Folder Include="Mailrelay\Function\MailingLists\" />
+    <Folder Include="Mailrelay\Function\SMTP\" />
+    <Folder Include="Mailrelay\Function\SpamReports\" />
+    <Folder Include="Mailrelay\Function\Subscribers\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingshjaelper.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
