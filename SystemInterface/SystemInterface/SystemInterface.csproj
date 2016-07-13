@@ -149,6 +149,7 @@
     <Compile Include="Mailrelay\Function\Groups\getGroups.cs" />
     <Compile Include="Mailrelay\Function\Groups\getGroupsReply.cs" />
     <Compile Include="Mailrelay\Function\Groups\addGroup.cs" />
+    <Compile Include="Mailrelay\Function\Groups\updateGroup.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayArrayReply.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayObjectReply.cs" />
     <Compile Include="Mailrelay\Function\Statistics\getStats.cs" />
