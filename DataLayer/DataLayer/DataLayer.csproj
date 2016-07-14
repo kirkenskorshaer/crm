@@ -81,6 +81,7 @@
     <Compile Include="MongoData\Option\Options\Data\Utilities\MaintainAllTables.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="MongoData\Option\Options\Logic\CreateImportFromStub.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\ExposeIndsamlingssteder.cs" />
     <Compile Include="MongoData\Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaterialeBehovAssignment.cs" />

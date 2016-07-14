@@ -79,6 +79,8 @@ namespace Administration.Option.Options.Logic
 
 			List<DatabaseStubElement> contentList = Utilities.LinqExtension.DistinctBy(stub.Contents, content => content.Key).ToList();
 
+			contentList = contentList.Where(content => content.Key != null).ToList();
+
 			Dictionary<string, string> allContent = contentList.ToDictionary(content => content.Key, content => content.Value);
 
 			Dictionary<string, string> keyContent = allContent.Where(content => keyFields.Contains(content.Key)).ToDictionary(content => content.Key, content => content.Value);

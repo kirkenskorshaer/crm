@@ -120,6 +120,8 @@
     <Compile Include="Dynamics\Crm\Byarbejde.cs" />
     <Compile Include="Dynamics\Crm\Campaign.cs" />
     <Compile Include="Dynamics\Crm\Contact.cs" />
+    <Compile Include="Dynamics\Crm\Custom\CampaignIndsamlingssted.cs" />
+    <Compile Include="Dynamics\Crm\Custom\Indsamlingssted.cs" />
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\Lead.cs" />
