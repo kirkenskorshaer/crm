@@ -18,7 +18,8 @@ public partial class Stub : System.Web.UI.Page
 
 		if (Request.HttpMethod != "POST")
 		{
-			Response.Redirect(errorRedirect);
+			result.InnerHtml = "ikke en post";
+			//Response.Redirect(errorRedirect);
 		}
 
 		string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
@@ -106,11 +107,16 @@ public partial class Stub : System.Web.UI.Page
 	private void Redirect(DatabaseWebCampaign webCampaign)
 	{
 		string redirectTarget = _defaultRedirect;
+		if (webCampaign == null)
+		{
+			result.InnerHtml = "kunne ikke finde formId";
+		}
 		if (webCampaign != null)
 		{
 			redirectTarget = webCampaign.RedirectTarget;
-		};
+			result.InnerHtml = "OK";
+		}
 
-		Response.Redirect(redirectTarget);
+		//Response.Redirect(redirectTarget);
 	}
 }
