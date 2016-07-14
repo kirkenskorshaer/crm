@@ -61,11 +61,6 @@ public partial class Stub : System.Web.UI.Page
 	{
 		foreach (string key in Request.Form)
 		{
-			if (key == "formId")
-			{
-				continue;
-			}
-
 			DatabaseStubElement element = new DatabaseStubElement()
 			{
 				Key = HttpUtility.HtmlDecode(key),
