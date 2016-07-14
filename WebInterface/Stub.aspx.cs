@@ -94,7 +94,7 @@ public partial class Stub : System.Web.UI.Page
 
 	private void AddOprindelse(DatabaseStub stub)
 	{
-		if (Request.UrlReferrer != null && stub.Contents.Any(lElement => lElement.Key == "new_oprindelse"))
+		if (Request.UrlReferrer == null || stub.Contents.Any(lElement => lElement.Key == "new_oprindelse"))
 		{
 			return;
 		}
