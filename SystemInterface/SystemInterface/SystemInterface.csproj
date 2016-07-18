@@ -147,6 +147,7 @@
     <Compile Include="Mailrelay\FunctionReply\MailrelayBoolReply.cs" />
     <Compile Include="Mailrelay\Function\AbstractFunction.cs" />
     <Compile Include="Mailrelay\FunctionReply\AbstractMailrelayReply.cs" />
+    <Compile Include="Mailrelay\Function\CustomFields\addCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\getCustomFields.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\getCustomFieldsReply.cs" />
     <Compile Include="Mailrelay\Function\Groups\deleteGroup.cs" />
