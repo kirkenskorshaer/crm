@@ -59,6 +59,34 @@ namespace Utilities
 			return propertyInfo.PropertyType;
 		}
 
+		public static object GetValue(object holderObject, MemberInfo member)
+		{
+			switch (member.MemberType)
+			{
+				case MemberTypes.Constructor:
+					break;
+				case MemberTypes.Event:
+					break;
+				case MemberTypes.Field:
+					return ((FieldInfo)member).GetValue(holderObject);
+				case MemberTypes.Method:
+					break;
+				case MemberTypes.Property:
+					return ((PropertyInfo)member).GetValue(holderObject);
+				case MemberTypes.TypeInfo:
+					break;
+				case MemberTypes.Custom:
+					break;
+				case MemberTypes.NestedType:
+					break;
+				case MemberTypes.All:
+					break;
+				default:
+					break;
+			}
+			return null;
+		}
+
 		public static bool SetValue(object holderObject, string fieldOrPropertyName, object value)
 		{
 			Type holderType = holderObject.GetType();
