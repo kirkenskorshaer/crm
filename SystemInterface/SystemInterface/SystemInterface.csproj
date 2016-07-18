@@ -143,8 +143,13 @@
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
     <Compile Include="Mailrelay\Function\ToGetAttribute.cs" />
+    <Compile Include="Mailrelay\FunctionReply\MailrelayBoolReply.cs" />
     <Compile Include="Mailrelay\Function\AbstractFunction.cs" />
+    <Compile Include="Mailrelay\FunctionReply\AbstractMailrelayReply.cs" />
+    <Compile Include="Mailrelay\FunctionReply\MailrelayArrayReply.cs" />
+    <Compile Include="Mailrelay\FunctionReply\MailrelayObjectReply.cs" />
     <Compile Include="Mailrelay\MailrelayConnection.cs" />
+    <Compile Include="Mailrelay\FunctionReply\MailrelayIntReply.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
     <Compile Include="Service References\KKAdminService\Reference.cs">
