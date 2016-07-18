@@ -73,6 +73,7 @@
     <Compile Include="Dynamics\Crm\ByarbejdeTest.cs" />
     <Compile Include="Dynamics\Crm\CampaignTest.cs" />
     <Compile Include="Dynamics\Crm\ContactTest.cs" />
+    <Compile Include="Dynamics\Crm\DynamicFetchTest.cs" />
     <Compile Include="Dynamics\Crm\GroupTest.cs" />
     <Compile Include="Dynamics\Crm\MarketingListTest.cs" />
     <Compile Include="Dynamics\Crm\MaterialeTest.cs" />
