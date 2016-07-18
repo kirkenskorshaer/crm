@@ -53,7 +53,7 @@ namespace Utilities
 
 			if (propertyInfo == null)
 			{
-				throw new ArgumentException($"failed to get type from {holderObject}.{fieldOrPropertyName}");
+				return null;
 			}
 
 			return propertyInfo.PropertyType;
