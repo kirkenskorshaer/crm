@@ -337,6 +337,11 @@ namespace SystemInterface.Dynamics.Crm
 				string valueString = keyValue.Value;
 
 				Type targetType = Utilities.ReflectionHelper.GetType(crmObject, key);
+				if (targetType == null)
+				{
+					continue;
+				}
+
 				object value = Utilities.ReflectionHelper.StringToObject(valueString, targetType);
 
 				Utilities.ReflectionHelper.SetValue(crmObject, key, value);
