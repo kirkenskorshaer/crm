@@ -142,6 +142,7 @@
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
+    <Compile Include="Mailrelay\Function\CustomFields\AbstractCustomField.cs" />
     <Compile Include="Mailrelay\Function\ToGetAttribute.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayBoolReply.cs" />
     <Compile Include="Mailrelay\Function\AbstractFunction.cs" />
