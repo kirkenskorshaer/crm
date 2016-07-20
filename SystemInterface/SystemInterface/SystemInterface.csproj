@@ -145,6 +145,8 @@
     <Compile Include="Mailrelay\Function\CustomFields\AbstractCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\deleteCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\updateCustomField.cs" />
+    <Compile Include="Mailrelay\Function\Subscribers\getSubscribers.cs" />
+    <Compile Include="Mailrelay\Function\Subscribers\getSubscribersReply.cs" />
     <Compile Include="Mailrelay\Function\ToGetAttribute.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayBoolReply.cs" />
     <Compile Include="Mailrelay\Function\AbstractFunction.cs" />
@@ -249,7 +251,6 @@
     <Folder Include="Mailrelay\Function\MailingLists\" />
     <Folder Include="Mailrelay\Function\SMTP\" />
     <Folder Include="Mailrelay\Function\SpamReports\" />
-    <Folder Include="Mailrelay\Function\Subscribers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingshjaelper.xml">
