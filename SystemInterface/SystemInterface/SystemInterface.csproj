@@ -145,6 +145,7 @@
     <Compile Include="Mailrelay\Function\CustomFields\AbstractCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\deleteCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\updateCustomField.cs" />
+    <Compile Include="Mailrelay\Function\Subscribers\addSubscriber.cs" />
     <Compile Include="Mailrelay\Function\Subscribers\assignSubscribersToGroups.cs" />
     <Compile Include="Mailrelay\Function\Subscribers\assignSubscribersToGroupsReply.cs" />
     <Compile Include="Mailrelay\Function\Subscribers\getSubscribers.cs" />
