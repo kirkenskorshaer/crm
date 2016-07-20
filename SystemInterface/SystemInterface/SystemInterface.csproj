@@ -141,6 +141,7 @@
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
+    <Compile Include="Mailrelay\DateTimeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
     <Compile Include="Service References\KKAdminService\Reference.cs">
