@@ -153,6 +153,7 @@
     <Compile Include="Mailrelay\Function\Subscribers\getSubscribersReply.cs" />
     <Compile Include="Mailrelay\Function\Subscribers\unsubscribe.cs" />
     <Compile Include="Mailrelay\Function\Subscribers\updateSubscriber.cs" />
+    <Compile Include="Mailrelay\Function\Subscribers\updateSubscribers.cs" />
     <Compile Include="Mailrelay\Function\ToGetAttribute.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayBoolReply.cs" />
     <Compile Include="Mailrelay\Function\AbstractFunction.cs" />
