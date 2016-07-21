@@ -154,6 +154,8 @@
     <Compile Include="Mailrelay\Function\GeneralFunctions\sendMail.cs" />
     <Compile Include="Mailrelay\Function\LogFunctions\getDayLog.cs" />
     <Compile Include="Mailrelay\Function\LogFunctions\getDeliveryErrors.cs" />
+    <Compile Include="Mailrelay\Function\LogFunctions\getMailRcptInfo.cs" />
+    <Compile Include="Mailrelay\Function\LogFunctions\getMailRcptInfoReply.cs" />
     <Compile Include="Mailrelay\Function\LogFunctions\getPackages.cs" />
     <Compile Include="Mailrelay\Function\LogFunctions\getPackagesReply.cs" />
     <Compile Include="Mailrelay\Function\LogFunctions\getPackagesReplyUsage.cs" />
