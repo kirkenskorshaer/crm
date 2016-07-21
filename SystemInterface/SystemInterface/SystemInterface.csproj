@@ -142,6 +142,8 @@
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
+    <Compile Include="Mailrelay\Function\Campaigns\getCampaigns.cs" />
+    <Compile Include="Mailrelay\Function\Campaigns\getCampaignsReply.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\AbstractCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\deleteCustomField.cs" />
     <Compile Include="Mailrelay\Function\CustomFields\updateCustomField.cs" />
@@ -250,7 +252,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mailrelay\Function\CampaignFolders\" />
-    <Folder Include="Mailrelay\Function\Campaigns\" />
     <Folder Include="Mailrelay\Function\GeneralFunctions\" />
     <Folder Include="Mailrelay\Function\Import\" />
     <Folder Include="Mailrelay\Function\LogFunctions\" />
