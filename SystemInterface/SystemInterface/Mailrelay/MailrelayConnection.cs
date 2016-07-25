@@ -4,7 +4,7 @@ using SystemInterface.Mailrelay.FunctionReply;
 
 namespace SystemInterface.Mailrelay
 {
-	public class MailrelayConnection
+	public class MailrelayConnection : IMailrelayConnection
 	{
 		private string mailrelayUrl;
 		private string mailrelayApiKey;
