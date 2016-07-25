@@ -1,4 +1,5 @@
 ﻿using DataLayer;
+using SystemInterface.Mailrelay;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
 
 namespace Administration.Option
@@ -8,6 +9,7 @@ namespace Administration.Option
 		protected readonly MongoConnection Connection;
 		protected readonly DataLayer.MongoData.Config Config;
 		internal readonly DatabaseOptionType DatabaseOption;
+		protected IMailrelayConnection _mailrelayConnection;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{
@@ -15,9 +17,19 @@ namespace Administration.Option
 			Config = DataLayer.MongoData.Config.GetConfig(Connection);
 			Log.LogLevel = Config.LogLevel;
 			DatabaseOption = databaseOption;
+
+			string mailrelayUrl = Config.MailrelayUrl;
+			string apiKey = Config.MailrelayApiKey;
+
+			_mailrelayConnection = new MailrelayConnection(mailrelayUrl, apiKey);
 		}
 
 		protected abstract bool ExecuteOption();
+
+		public void ChangeMailrelayConnection(IMailrelayConnection newConnection)
+		{
+			_mailrelayConnection = newConnection;
+		}
 
 		public bool Execute()
 		{
