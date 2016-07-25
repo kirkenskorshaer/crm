@@ -12,6 +12,7 @@ using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 using System.Linq;
 using System.Data.SqlClient;
 using SystemInterface.Dynamics.Crm;
+using TestUtilities;
 
 namespace AdministrationTest
 {
@@ -21,6 +22,7 @@ namespace AdministrationTest
 		protected MongoConnection Connection;
 		protected SqlConnection _sqlConnection;
 		protected DynamicsCrmConnection DynamicsCrmConnection;
+		protected MailrelayConnectionTester _mailrelayConnectionTester;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -52,6 +54,8 @@ namespace AdministrationTest
 
 			UrlLogin urlLogin = UrlLogin.GetUrlLogin(Connection, "test");
 			DynamicsCrmConnection = DynamicsCrmConnection.GetConnection(urlLogin.Url, urlLogin.Username, urlLogin.Password);
+
+			_mailrelayConnectionTester = new MailrelayConnectionTester();
 		}
 
 		[TearDown]
@@ -166,6 +170,13 @@ namespace AdministrationTest
 			}
 
 			return stub;
+		}
+
+		protected void ExecuteWithFakeMailrelayConnection(Administration.Option.OptionBase option)
+		{
+			option.ChangeMailrelayConnection(_mailrelayConnectionTester);
+
+			option.Execute();
 		}
 	}
 }
