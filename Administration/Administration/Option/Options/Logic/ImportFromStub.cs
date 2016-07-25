@@ -147,6 +147,8 @@ namespace Administration.Option.Options.Logic
 				lead.owner = owner;
 				lead.Assign();
 			}
+
+			AddMailrelaySubscriberFromLead.CreateIfValid(Connection, $"Auto subscribe from {_databaseImportFromStub.Name}", _databaseImportFromStub.urlLoginName, lead.emailaddress1, webCampaign);
 		}
 
 		public static List<ImportFromStub> Find(MongoConnection connection)
