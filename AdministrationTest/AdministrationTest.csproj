@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="HeartTest.cs" />
     <Compile Include="LogTest.cs" />
+    <Compile Include="Option\Options\Logic\AddMailrelaySubscriberFromLeadTest.cs" />
     <Compile Include="Option\Options\Logic\AdjustDnsTest.cs" />
     <Compile Include="Option\Options\Logic\CreateImportFromStubTest.cs" />
     <Compile Include="Option\Options\Logic\ExposeDataTest.cs" />
@@ -94,6 +95,10 @@
     <ProjectReference Include="..\SystemInterface\SystemInterface\SystemInterface.csproj">
       <Project>{869cba0e-a4e8-4339-851e-1c4e8d70041b}</Project>
       <Name>SystemInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestUtilities\TestUtilities\TestUtilities.csproj">
+      <Project>{2eb7d9db-d20c-489a-b36c-c2d7ae8fa103}</Project>
+      <Name>TestUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
