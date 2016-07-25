@@ -129,6 +129,7 @@
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\Lead.cs" />
+    <Compile Include="Dynamics\Crm\MailrelayInformation.cs" />
     <Compile Include="Dynamics\Crm\MarketingList.cs" />
     <Compile Include="Dynamics\Crm\PagingInformation.cs" />
     <Compile Include="Dynamics\Crm\MaterialeBehovDefinition.cs" />
