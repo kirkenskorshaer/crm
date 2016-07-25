@@ -43,7 +43,14 @@ namespace SystemInterface.Dynamics.Crm
 
 			foreach (string key in keys)
 			{
-				Utilities.ReflectionHelper.SetValue(this, key, crmEntity.Attributes[key]);
+				object value = crmEntity.Attributes[key];
+
+				if (value is AliasedValue)
+				{
+					value = ((AliasedValue)value).Value;
+				}
+
+				Utilities.ReflectionHelper.SetValue(this, key, value);
 			}
 		}
 
