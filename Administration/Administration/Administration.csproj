@@ -93,6 +93,7 @@
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />
+    <Compile Include="Option\Options\Logic\AddMailrelaySubscriberFromLead.cs" />
     <Compile Include="Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="Option\Options\Logic\CreateImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\ExposeData.cs" />
