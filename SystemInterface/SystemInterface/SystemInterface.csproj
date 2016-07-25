@@ -191,6 +191,7 @@
     <Compile Include="Mailrelay\IMailrelayConnection.cs" />
     <Compile Include="Mailrelay\MailrelayConnection.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayIntReply.cs" />
+    <Compile Include="Mailrelay\MailrelayConnectionException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
     <Compile Include="Service References\KKAdminService\Reference.cs">

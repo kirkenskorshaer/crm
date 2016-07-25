@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using SystemInterface.Mailrelay.FunctionReply;
 
@@ -23,14 +24,31 @@ namespace SystemInterface.Mailrelay
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(target);
 			httpWebRequest.ContentType = "text/xml; encoding='utf-8'";
 			httpWebRequest.Method = "GET";
-			HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+			HttpWebResponse httpResponse;
+			try
+			{
+				httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+			}
+			catch (Exception exception)
+			{
+				throw new MailrelayConnectionException(functionToSend, mailrelayUrl, exception);
+			}
+
 			string reply;
 			using (StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream()))
 			{
 				reply = streamReader.ReadToEnd();
 			}
 
-			return functionToSend.GetMailrelayReply(reply);
+			AbstractMailrelayReply mailrelayReply = functionToSend.GetMailrelayReply(reply);
+
+			if (mailrelayReply.status == 0)
+			{
+				throw new MailrelayConnectionException(functionToSend, mailrelayReply, mailrelayUrl);
+			}
+
+			return mailrelayReply;
 		}
 	}
 }
