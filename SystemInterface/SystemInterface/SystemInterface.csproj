@@ -300,6 +300,9 @@
     <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingssted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Mailrelay\GetMailrelayFromLead.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Dynamics\Crm\FetchXml\MaterialeBehovDefinition\FindMaterialeBehovDefinitionPerMateriale.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

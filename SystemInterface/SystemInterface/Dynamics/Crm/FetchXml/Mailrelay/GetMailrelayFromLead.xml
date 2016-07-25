@@ -1,0 +1,25 @@
+﻿<fetch>
+	<entity name="lead" >
+		<attribute name="fullname" />
+		<attribute name="createdon" />
+		<filter>
+			<condition attribute="emailaddress1" operator="eq" value="test" />
+		</filter>
+		<link-entity name="campaign" from="campaignid" to="campaignid" >
+			<attribute name="new_mailrelaygroupid" alias="campaign_new_mailrelaygroupid" />
+			<filter type="and" >
+				<condition attribute="campaignid" operator="eq" value="ff052597-5538-e611-80ef-001c4215c4a0" />
+			</filter>
+		</link-entity>
+		<link-entity name="account" from="accountid" to="new_indsamler2016" link-type="outer" alias="Indsamlingssted2016" >
+			<attribute name="emailaddress1" alias="Indsamlingssted2016_emailaddress1" />
+			<attribute name="address1_composite" alias="Indsamlingssted2016_address1_composite" />
+			<attribute name="name" alias="Indsamlingssted2016_name" />
+			<link-entity name="contact" from="contactid" to="new_indsamlingskoordinatorid" link-type="outer" alias="Indsamlingskoordinator" >
+				<attribute name="fullname" alias="Indsamlingskoordinator_fullname" />
+				<attribute name="emailaddress1" alias="Indsamlingskoordinator_emailaddress1" />
+				<attribute name="mobilephone" alias="Indsamlingskoordinator_mobilephone" />
+			</link-entity>
+		</link-entity>
+	</entity>
+</fetch>
