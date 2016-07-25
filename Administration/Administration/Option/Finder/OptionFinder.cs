@@ -44,6 +44,8 @@ namespace Administration.Option.Finder
 			options.AddRange(CreateImportFromStub.Find(_connection));
 			options.AddRange(MaterialeBehovAssignment.Find(_connection));
 			options.AddRange(ExposeData.Find(_connection));
+			options.AddRange(AddMailrelaySubscriberFromLead.Find(_connection));
+
 			//options.AddRange(MaintainAllTables.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);
