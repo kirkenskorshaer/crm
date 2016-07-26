@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -88,6 +87,40 @@ namespace SystemInterface.Mailrelay
 			return false;
 		}
 
+		private bool AddCollectionType(string getName, object value, Dictionary<string, string> values)
+		{
+			if (value is IEnumerable<int>)
+			{
+				AddIEnumerableInt(value, getName, values);
+				return true;
+			}
+
+			if (value is IEnumerable<string>)
+			{
+				AddIEnumerableString(value, getName, values);
+				return true;
+			}
+
+			if (value.GetType() == typeof(Dictionary<string, string>))
+			{
+				AddDictionary(value, getName, values);
+				return true;
+			}
+
+			return false;
+		}
+
+		private void AddDictionary(object value, string getName, Dictionary<string, string> values)
+		{
+			Dictionary<string, string> valueDictionary = value as Dictionary<string, string>;
+
+			foreach (KeyValuePair<string, string> keyValuePair in valueDictionary)
+			{
+				string currentName = $"{getName}[{keyValuePair.Key}]";
+				values.Add(currentName, $"{keyValuePair.Value}");
+			}
+		}
+
 		private void AddDictionary(object value, string getName, StringBuilder objectAsGetStringBuilder)
 		{
 			Dictionary<string, string> valueDictionary = value as Dictionary<string, string>;
@@ -113,6 +146,42 @@ namespace SystemInterface.Mailrelay
 			{
 				string currentName = $"{getName}[{index}]";
 				AddUrlEncoded(objectAsGetStringBuilder, currentName, currentInt.ToString());
+				index++;
+			}
+		}
+
+		private void AddIEnumerableInt(object value, string getName, Dictionary<string, string> values)
+		{
+			IEnumerable<int> valueIEnumerable = value as IEnumerable<int>;
+
+			if (valueIEnumerable == null)
+			{
+				return;
+			}
+
+			int index = 0;
+			foreach (int currentInt in valueIEnumerable)
+			{
+				string currentName = $"{getName}[{index}]";
+				values.Add(currentName, currentInt.ToString());
+				index++;
+			}
+		}
+
+		private void AddIEnumerableString(object value, string getName, Dictionary<string, string> values)
+		{
+			IEnumerable<string> valueIEnumerable = value as IEnumerable<string>;
+
+			if (valueIEnumerable == null)
+			{
+				return;
+			}
+
+			int index = 0;
+			foreach (string currentString in valueIEnumerable)
+			{
+				string currentName = $"{getName}[{index}]";
+				values.Add(currentName, $"{currentString}");
 				index++;
 			}
 		}
@@ -185,9 +254,9 @@ namespace SystemInterface.Mailrelay
 			{
 				valueString = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss");
 			}
-			else if(valueType == typeof(bool) || valueType == typeof(bool?))
+			else if (valueType == typeof(bool) || valueType == typeof(bool?))
 			{
-				if((bool?)value == true)
+				if ((bool?)value == true)
 				{
 					valueString = "1";
 				}
@@ -223,6 +292,53 @@ namespace SystemInterface.Mailrelay
 		{
 			ASC = 1,
 			DESC = 2,
+		}
+
+		public Dictionary<string, string> GetValues()
+		{
+			Dictionary<string, string> values = new Dictionary<string, string>();
+
+			MemberInfo[] allMembers = GetType().GetMembers();
+			List<MemberInfo> members = allMembers.Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property).ToList();
+
+			string function = GetType().Name;
+
+			values.Add("function", function);
+
+			foreach (MemberInfo member in members)
+			{
+				ToGetAttribute toGetAttribute = (ToGetAttribute)member.GetCustomAttributes(typeof(ToGetAttribute)).SingleOrDefault();
+
+				if (toGetAttribute != null && toGetAttribute.type == ToGetAttribute.typeEnum.ignore)
+				{
+					continue;
+				}
+
+				string getName = FindGetName(member, toGetAttribute);
+
+				object value = Utilities.ReflectionHelper.GetValue(this, member);
+
+				if (value == null)
+				{
+					continue;
+				}
+
+				if (AddCollectionType(getName, value, values))
+				{
+					continue;
+				}
+
+				string valueString = FindGetValue(value, toGetAttribute);
+
+				if (string.IsNullOrWhiteSpace(valueString))
+				{
+					continue;
+				}
+
+				values.Add(getName, valueString);
+			}
+
+			return values;
 		}
 	}
 }
