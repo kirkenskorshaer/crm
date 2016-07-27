@@ -196,6 +196,18 @@ namespace SystemInterface.Dynamics.Crm
 			AfterUpdate(generatedEntity);
 		}
 
+		protected static void Update(DynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
+		{
+			CrmEntity crmEntity = new CrmEntity(entityName);
+
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>(entityIdName, entityId));
+			crmEntity.Attributes.AddRange(values);
+
+			crmEntity.Id = entityId;
+
+			dynamicsCrmConnection.Service.Update(crmEntity);
+		}
+
 		private void ReadCrmGeneratedFields(Entity entity)
 		{
 			foreach (string key in ColumnSetCrmGenerated.Columns)
