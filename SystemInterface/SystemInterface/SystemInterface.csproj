@@ -303,6 +303,9 @@
     <Content Include="Dynamics\Crm\FetchXml\Account\CountIndsamlingssted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dynamics\Crm\FetchXml\Mailrelay\GetMailrelayFromContact.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Dynamics\Crm\FetchXml\Mailrelay\GetMailrelayFromLead.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

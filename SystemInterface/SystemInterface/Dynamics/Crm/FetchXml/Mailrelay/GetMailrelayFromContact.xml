@@ -1,0 +1,23 @@
+﻿<fetch count="10">
+	<entity name="contact" >
+		<attribute name="fullname" />
+		<attribute name="createdon" />
+		<attribute name="contactid" />
+		<attribute name="new_mailrelaysubscriberid" />
+		<attribute name="new_mailrelaycheck" />
+		<attribute name="emailaddress1"/>
+		<filter>
+			<condition attribute="new_mailrelaysubscriberid" operator="not-null"/>
+		</filter>
+		<link-entity name="account" from="accountid" to="new_indsamler2016" link-type="outer" alias="Indsamlingssted2016" >
+			<attribute name="emailaddress1" alias="Indsamlingssted2016_emailaddress1" />
+			<attribute name="address1_composite" alias="Indsamlingssted2016_address1_composite" />
+			<attribute name="name" alias="Indsamlingssted2016_name" />
+			<link-entity name="contact" from="contactid" to="new_indsamlingskoordinatorid" link-type="outer" alias="Indsamlingskoordinator" >
+				<attribute name="fullname" alias="Indsamlingskoordinator_fullname" />
+				<attribute name="emailaddress1" alias="Indsamlingskoordinator_emailaddress1" />
+				<attribute name="mobilephone" alias="Indsamlingskoordinator_mobilephone" />
+			</link-entity>
+		</link-entity>
+	</entity>
+</fetch>
