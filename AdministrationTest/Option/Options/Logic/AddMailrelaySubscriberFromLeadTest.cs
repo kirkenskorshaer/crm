@@ -18,7 +18,7 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			DatabaseWebCampaign webCampaign = GetWebcampaign();
 
-			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, "test", "test", "test", webCampaign);
+			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, Guid.Empty, "test", "test", "test", webCampaign);
 			AddMailrelaySubscriberFromLead addMailrelaySubscriberFromLead = new AddMailrelaySubscriberFromLead(Connection, databaseAddMailrelaySubscriberFromLead);
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayArrayReply<getSubscribersReply>() { status = 1, data = new List<getSubscribersReply>() });
@@ -36,7 +36,7 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			DatabaseWebCampaign webCampaign = GetWebcampaign();
 
-			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, "test", "test", "test", webCampaign);
+			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, Guid.Empty, "test", "test", "test", webCampaign);
 			AddMailrelaySubscriberFromLead addMailrelaySubscriberFromLead = new AddMailrelaySubscriberFromLead(Connection, databaseAddMailrelaySubscriberFromLead);
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayArrayReply<getSubscribersReply>()

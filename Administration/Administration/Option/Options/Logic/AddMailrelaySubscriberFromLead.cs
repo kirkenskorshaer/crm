@@ -26,6 +26,7 @@ namespace Administration.Option.Options.Logic
 		{
 			string urlLoginName = _databaseAddMailrelaySubscriberFromLead.urlLoginName;
 			string email = _databaseAddMailrelaySubscriberFromLead.email;
+			Guid leadId = _databaseAddMailrelaySubscriberFromLead.leadId;
 
 			DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
 			DynamicsCrmConnection dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
@@ -48,16 +49,20 @@ namespace Administration.Option.Options.Logic
 
 			getSubscribersReply ExistingSubscriber = GetExistingSubscribers(email);
 
+			int subscriberId;
 			if (ExistingSubscriber == null)
 			{
 				addSubscriber add = GetSubscriberFromFetchXml(information, email);
 
-				SendSubscriberToMailrelay(add);
+				subscriberId = SendSubscriberToMailrelay(add);
 			}
 			else
 			{
+				subscriberId = int.Parse(ExistingSubscriber.id);
 				UdpateExistingSubscriberIfNeeded(information, ExistingSubscriber, email);
 			}
+
+			Lead.UpdateSubscriberId(dynamicsCrmConnection, leadId, subscriberId);
 
 			return true;
 		}
@@ -174,7 +179,7 @@ namespace Administration.Option.Options.Logic
 			return options.Select(option => new AddMailrelaySubscriberFromLead(connection, option)).ToList();
 		}
 
-		public static DatabaseAddMailrelaySubscriberFromLead CreateIfValid(MongoConnection connection, string name, string urlLoginName, string emailaddress1, DatabaseWebCampaign webCampaign)
+		public static DatabaseAddMailrelaySubscriberFromLead CreateIfValid(MongoConnection connection, Guid leadId, string name, string urlLoginName, string emailaddress1, DatabaseWebCampaign webCampaign)
 		{
 			if (string.IsNullOrWhiteSpace(emailaddress1))
 			{
@@ -191,6 +196,7 @@ namespace Administration.Option.Options.Logic
 				connection,
 				webCampaign,
 				urlLoginName,
+				leadId,
 				emailaddress1,
 				name,
 				new DataLayer.MongoData.Option.Schedule()
