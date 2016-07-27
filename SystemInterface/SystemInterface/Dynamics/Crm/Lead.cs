@@ -30,6 +30,7 @@ namespace SystemInterface.Dynamics.Crm
 		public string telephone3;
 		public string new_oprindelse;
 		public string new_oprindelseip;
+		public int? new_mailrelaysubscriberid;
 
 		public EntityReference campaignid;
 		public Guid? campaign { get { return GetEntityReferenceId(campaignid); } set { campaignid = SetEntityReferenceId(value, "campaign"); } }
@@ -66,6 +67,7 @@ namespace SystemInterface.Dynamics.Crm
 			"telephone3",
 			"new_oprindelse",
 			"new_oprindelseip",
+			"new_mailrelaysubscriberid",
 			"new_indsamler2016");
 
 		private static readonly ColumnSet ColumnSetLeadCrmGenerated = new ColumnSet("createdon", "modifiedon");
@@ -118,9 +120,18 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("telephone3", telephone3));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelse", new_oprindelse));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelseip", new_oprindelseip));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_mailrelaysubscriberid", new_mailrelaysubscriberid));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_indsamler2016", new_indsamler2016));
 
 			return crmEntity;
+		}
+
+		public static void UpdateSubscriberId(DynamicsCrmConnection dynamicsCrmConnection, Guid leadId, int subscriberId)
+		{
+			AbstractCrm.Update(dynamicsCrmConnection, "lead", "leadid", leadId, new Dictionary<string, object>()
+			{
+				{ "new_mailrelaysubscriberid", subscriberId },
+			});
 		}
 
 		public static List<Lead> ReadAllLeadIds(DynamicsCrmConnection dynamicsCrmConnection)
