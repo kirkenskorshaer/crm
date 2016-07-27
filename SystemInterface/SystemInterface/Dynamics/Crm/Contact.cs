@@ -49,6 +49,8 @@ namespace SystemInterface.Dynamics.Crm
 
 		public string new_oprindelse;
 		public string new_oprindelseip;
+		public int? new_mailrelaysubscriberid;
+		public string new_mailrelaycheck;
 
 		public List<Group> Groups = new List<Group>();
 		private static string _groupRelationshipName = "new_group_contact";
@@ -93,6 +95,8 @@ namespace SystemInterface.Dynamics.Crm
 			"lastname",
 			"new_oprindelse",
 			"new_oprindelseip",
+			"new_mailrelaysubscriberid",
+			"new_mailrelaycheck",
 			"statecode");
 
 		protected override string entityName { get { return "contact"; } }
@@ -165,6 +169,8 @@ namespace SystemInterface.Dynamics.Crm
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("birthdate", birthdate));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelse", new_oprindelse));
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_oprindelseip", new_oprindelseip));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_mailrelaysubscriberid", new_mailrelaysubscriberid));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_mailrelaycheck", new_mailrelaycheck));
 
 			return crmEntity;
 		}
