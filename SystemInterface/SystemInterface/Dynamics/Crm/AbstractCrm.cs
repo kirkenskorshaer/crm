@@ -37,7 +37,10 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Connection = connection;
 
-			Id = (Guid)crmEntity.Attributes[idName];
+			if (crmEntity.Attributes.ContainsKey(idName))
+			{
+				Id = (Guid)crmEntity.Attributes[idName];
+			}
 
 			IEnumerable<string> keys = crmEntity.Attributes.Keys.Where(key => key != idName);
 
