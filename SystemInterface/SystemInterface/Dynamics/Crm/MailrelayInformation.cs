@@ -13,12 +13,16 @@ namespace SystemInterface.Dynamics.Crm
 		public string fullname;
 		public DateTime createdon;
 		public int? campaign_new_mailrelaygroupid;
+		public string emailaddress1;
 		public string Indsamlingssted2016_emailaddress1;
 		public string Indsamlingssted2016_address1_composite;
 		public string Indsamlingssted2016_name;
 		public string Indsamlingskoordinator_fullname;
 		public string Indsamlingskoordinator_emailaddress1;
 		public string Indsamlingskoordinator_mobilephone;
+		public Guid? contactid;
+		public int? new_mailrelaysubscriberid;
+		public string new_mailrelaycheck;
 
 		protected override string entityName { get { return "lead"; } }
 
@@ -49,6 +53,27 @@ namespace SystemInterface.Dynamics.Crm
 			MailrelayInformation information = informations.OrderByDescending(lInformation => lInformation.createdon).FirstOrDefault();
 
 			return information;
+		}
+
+		public static List<MailrelayInformation> GetMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, PagingInformation pagingInformation, int pageSize, Guid? contactId)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			xDocument.Element("fetch").Attribute("count").Value = pageSize.ToString();
+
+			if (contactId.HasValue)
+			{
+				xDocument.Element("fetch").Element("entity").Element("filter").Add(new XElement("condition",
+					new XAttribute("attribute", "contactid"),
+					new XAttribute("operator", "eq"),
+					new XAttribute("value", contactId.Value)));
+			}
+
+			List<MailrelayInformation> informations = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, entity) => new MailrelayInformation(connection, entity), pagingInformation);
+
+			return informations;
 		}
 
 		protected override CrmEntity GetAsEntity(bool includeId)
