@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using SystemInterface.Dynamics.Crm;
 using DatabaseExposeData = DataLayer.MongoData.Option.Options.Logic.ExposeData;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
@@ -38,17 +39,18 @@ namespace Administration.Option.Options.Logic
 			JsonSerializerSettings settings = new JsonSerializerSettings()
 			{
 				NullValueHandling = NullValueHandling.Ignore,
+				StringEscapeHandling = StringEscapeHandling.EscapeNonAscii,
 			};
 
-			string json = JsonConvert.SerializeObject(dataList, Formatting.Indented, settings);
-			json = json.Replace("\\r\\n", Environment.NewLine);
+			string json = JsonConvert.SerializeObject(dataList, Formatting.None, settings);
+			json = json.Replace("\\r\\n", "\\n");
 
 			if (Directory.Exists(fullExposePath) == false)
 			{
 				Directory.CreateDirectory(fullExposePath);
 			}
 
-			File.WriteAllText(fullExposePath + "/" + exposeName, json, System.Text.Encoding.UTF8);
+			File.WriteAllText(fullExposePath + "/" + exposeName, json, Encoding.UTF8);
 
 			return true;
 		}
