@@ -84,6 +84,7 @@
     <Compile Include="Dynamics\Crm\SystemUserTest.cs" />
     <Compile Include="EmailTest.cs" />
     <Compile Include="MailrelayTest\AbstractFunctionTest.cs" />
+    <Compile Include="MailrelayTest\LogicTest\SubscriberTest.cs" />
     <Compile Include="MailrelayTest\MailrelayConnectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministrationTest.cs" />
