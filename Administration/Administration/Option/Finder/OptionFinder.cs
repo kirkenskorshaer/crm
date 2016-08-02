@@ -45,6 +45,7 @@ namespace Administration.Option.Finder
 			options.AddRange(MaterialeBehovAssignment.Find(_connection));
 			options.AddRange(ExposeData.Find(_connection));
 			options.AddRange(AddMailrelaySubscriberFromLead.Find(_connection));
+			options.AddRange(UpdateMailrelayFromContact.Find(_connection));
 
 			//options.AddRange(MaintainAllTables.Find(_connection));
 
