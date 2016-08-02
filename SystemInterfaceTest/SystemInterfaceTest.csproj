@@ -103,6 +103,10 @@
       <Project>{869cba0e-a4e8-4339-851e-1c4e8d70041b}</Project>
       <Name>SystemInterface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestUtilities\TestUtilities\TestUtilities.csproj">
+      <Project>{2eb7d9db-d20c-489a-b36c-c2d7ae8fa103}</Project>
+      <Name>TestUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
