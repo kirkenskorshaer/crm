@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\Xor.cs" />
     <Compile Include="LinqExtension.cs" />
     <Compile Include="Comparer\ListCompare.cs" />
     <Compile Include="Converter\DateTimeConverter.cs" />
