@@ -55,6 +55,14 @@ namespace SystemInterface.Dynamics.Crm
 			return information;
 		}
 
+		public void UpdateContactMailrelaycheck(DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			Update(dynamicsCrmConnection, "contact", "contactid", contactid.Value, new Dictionary<string, object>()
+			{
+				{ "new_mailrelaycheck", new_mailrelaycheck }
+			});
+		}
+
 		public static List<MailrelayInformation> GetMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, PagingInformation pagingInformation, int pageSize, Guid? contactId)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
