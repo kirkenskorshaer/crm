@@ -5,6 +5,7 @@ using System;
 using System.Data.SqlClient;
 using SystemInterface.Dynamics.Crm;
 using SystemInterface.Mailrelay;
+using TestUtilities;
 
 namespace SystemInterfaceTest
 {
@@ -16,7 +17,8 @@ namespace SystemInterfaceTest
 		protected DynamicsCrmConnection _dynamicsCrmConnection;
 		protected UrlLogin _urlLogin;
 		protected Config _config;
-		protected MailrelayConnection _mailrelayConnection;
+		protected IMailrelayConnection _mailrelayConnection;
+		protected MailrelayConnectionTester _mailrelayConnectionTester;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -27,6 +29,12 @@ namespace SystemInterfaceTest
 			_sqlConnection = SqlConnectionHolder.GetConnection(_mongoConnection, "sql");
 			_config = Config.GetConfig(_mongoConnection);
 			_mailrelayConnection = new MailrelayConnection(_config.MailrelayUrl, _config.MailrelayApiKey);
+		}
+
+		[SetUp]
+		public void SetUp()
+		{
+			_mailrelayConnectionTester = new MailrelayConnectionTester();
 		}
 
 		protected Contact CreateTestContact()
