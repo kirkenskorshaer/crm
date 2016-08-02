@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Web;
 using SystemInterface.Mailrelay;
@@ -13,6 +14,11 @@ namespace TestUtilities
 
 		public AbstractMailrelayReply Send(AbstractFunction functionToSend)
 		{
+			if (replies.Count == 0)
+			{
+				throw new Exception($"reply queue was empty when sending {HttpUtility.UrlDecode(functionToSend.ToGet())}");
+			}
+
 			sendFunctions.Add(functionToSend);
 
 			AbstractMailrelayReply reply = replies.Dequeue();
