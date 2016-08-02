@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using Utilities.Converter;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -111,6 +112,29 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			customFields.Add(key, value);
+		}
+
+		public bool RecalculateContactCheck()
+		{
+			string newCheck = string.Empty;
+
+			newCheck = Xor.XorString(newCheck, fullname);
+			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_emailaddress1);
+			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_address1_composite);
+			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_name);
+			newCheck = Xor.XorString(newCheck, Indsamlingskoordinator_fullname);
+			newCheck = Xor.XorString(newCheck, Indsamlingskoordinator_emailaddress1);
+			newCheck = Xor.XorString(newCheck, Indsamlingskoordinator_mobilephone);
+
+			newCheck = Md5Helper.MakeMd5(newCheck);
+
+			if (new_mailrelaycheck == newCheck)
+			{
+				return false;
+			}
+
+			new_mailrelaycheck = newCheck;
+			return true;
 		}
 	}
 }
