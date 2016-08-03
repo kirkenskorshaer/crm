@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="MongoConnectionTest.cs" />
     <Compile Include="MongoDataTest\ConfigTest.cs" />
+    <Compile Include="MongoDataTest\GenerateMongoData.cs" />
     <Compile Include="MongoDataTest\InputTest\WebCampaignTest.cs" />
     <Compile Include="MongoDataTest\LogTest.cs" />
     <Compile Include="MongoDataTest\MongoTestUtilities.cs" />
