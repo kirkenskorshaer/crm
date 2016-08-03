@@ -191,6 +191,8 @@
     <Compile Include="Mailrelay\Function\Statistics\getStatsReply.cs" />
     <Compile Include="Mailrelay\IMailrelayConnection.cs" />
     <Compile Include="Mailrelay\Logic\Subscriber.cs" />
+    <Compile Include="Mailrelay\Logic\UpdateReport.cs" />
+    <Compile Include="Mailrelay\Logic\UpdateResultEnum.cs" />
     <Compile Include="Mailrelay\MailrelayConnection.cs" />
     <Compile Include="Mailrelay\FunctionReply\MailrelayIntReply.cs" />
     <Compile Include="Mailrelay\MailrelayConnectionException.cs" />

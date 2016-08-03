@@ -32,28 +32,35 @@ namespace Administration.Option.Options.Logic
 
 			List<MailrelayInformation> mailrelayInformations = new List<MailrelayInformation>();
 
+			UpdateReport<int> report = new UpdateReport<int>();
+
 			while (pagingInformation.FirstRun || pagingInformation.MoreRecords)
 			{
 				mailrelayInformations = MailrelayInformation.GetMailrelayFromContact(dynamicsCrmConnection, Config.GetResourcePath, pagingInformation, pageSize, contactId);
-				mailrelayInformations.ForEach(information => UpdateIfNeeded(dynamicsCrmConnection, information));
+				mailrelayInformations.ForEach(information => UpdateIfNeeded(dynamicsCrmConnection, information, report));
 			}
+
+			Log.Write(Connection, report.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 
 			return true;
 		}
 
-		private void UpdateIfNeeded(DynamicsCrmConnection dynamicsCrmConnection, MailrelayInformation information)
+		private void UpdateIfNeeded(DynamicsCrmConnection dynamicsCrmConnection, MailrelayInformation information, UpdateReport<int> report)
 		{
 			bool needsUpdate = information.RecalculateContactCheck();
+			int id = information.new_mailrelaysubscriberid.Value;
 
 			if (needsUpdate == false)
 			{
+				report.CollectUpdate(UpdateResultEnum.AlreadyUpToDate, id);
 				return;
 			}
 
 			information.UpdateContactMailrelaycheck(dynamicsCrmConnection);
 
 			Subscriber subscriber = new Subscriber(_mailrelayConnection);
-			subscriber.UpdateIfNeeded(information.new_mailrelaysubscriberid.Value, information.fullname, information.emailaddress1, information.GetCustomFields());
+			UpdateResultEnum result = subscriber.UpdateIfNeeded(id, information.fullname, information.emailaddress1, information.GetCustomFields());
+			report.CollectUpdate(result, id);
 		}
 
 		public static List<UpdateMailrelayFromContact> Find(MongoConnection connection)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SystemInterface.Mailrelay.Function.Subscribers;
 using SystemInterface.Mailrelay.FunctionReply;
@@ -14,14 +15,19 @@ namespace SystemInterface.Mailrelay.Logic
 			_mailrelayConnection = mailrelayConnection;
 		}
 
-		public void UpdateIfNeeded(int id, string fullname, string email, Dictionary<string, string> customFields)
+		public UpdateResultEnum UpdateIfNeeded(int id, string fullname, string email, Dictionary<string, string> customFields)
 		{
-			UpdateIfNeeded(id, fullname, email, customFields, null);
+			return UpdateIfNeeded(id, fullname, email, customFields, null);
 		}
 
-		public void UpdateIfNeeded(int id, string fullname, string email, Dictionary<string, string> customFields, int? groupInCrm)
+		public UpdateResultEnum UpdateIfNeeded(int id, string fullname, string email, Dictionary<string, string> customFields, int? groupInCrm)
 		{
 			getSubscribersReply subscriberInMailrelay = GetMailrelaySubscribers(id);
+
+			if (subscriberInMailrelay == null)
+			{
+				return UpdateResultEnum.Failed;
+			}
 
 			Dictionary<string, string> customFieldsResult = new Dictionary<string, string>();
 			bool customFieldsChanged = FindNewCustomFields(subscriberInMailrelay, customFields, customFieldsResult);
@@ -44,7 +50,10 @@ namespace SystemInterface.Mailrelay.Logic
 			)
 			{
 				UpdateSubscriber(id, email, customFieldsResult, groups, fullname);
+				return UpdateResultEnum.Updated;
 			}
+
+			return UpdateResultEnum.AlreadyUpToDate;
 		}
 
 		private bool FindNewCustomFields(getSubscribersReply subscriberInMailrelay, Dictionary<string, string> customFieldsInCrm, Dictionary<string, string> customFieldsResult)
@@ -77,7 +86,7 @@ namespace SystemInterface.Mailrelay.Logic
 
 			MailrelayArrayReply<getSubscribersReply> reply = (MailrelayArrayReply<getSubscribersReply>)_mailrelayConnection.Send(getSubscribers);
 
-			return reply.data.Single();
+			return reply.data.FirstOrDefault();
 		}
 
 		private void UpdateSubscriber(int id, string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname)
