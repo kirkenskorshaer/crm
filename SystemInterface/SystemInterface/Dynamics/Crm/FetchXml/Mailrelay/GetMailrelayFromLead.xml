@@ -2,6 +2,15 @@
 	<entity name="lead" >
 		<attribute name="fullname" />
 		<attribute name="createdon" />
+		<attribute name="firstname"/>
+		<attribute name="middlename"/>
+		<attribute name="lastname"/>
+		<attribute name="address1_line1"/>
+		<attribute name="address1_line2"/>
+		<attribute name="address1_line3"/>
+		<attribute name="address1_postalcode"/>
+		<attribute name="address1_city"/>
+		<attribute name="mobilephone"/>
 		<filter>
 			<condition attribute="emailaddress1" operator="eq" value="test" />
 		</filter>
@@ -15,10 +24,21 @@
 			<attribute name="emailaddress1" alias="Indsamlingssted2016_emailaddress1" />
 			<attribute name="address1_composite" alias="Indsamlingssted2016_address1_composite" />
 			<attribute name="name" alias="Indsamlingssted2016_name" />
+			<attribute name="new_kkadminmedlemsnr" alias="Indsamlingssted2016_new_kkadminmedlemsnr"/>
+			<attribute name="new_rutpassword" alias="Indsamlingssted2016_new_rutpassword"/>
+			<attribute name="address1_line1" alias="Indsamlingssted2016_address1_line1"/>
+			<attribute name="address1_line2" alias="Indsamlingssted2016_address1_line2"/>
+			<attribute name="address1_line3" alias="Indsamlingssted2016_address1_line3"/>
+			<attribute name="address1_postalcode" alias="Indsamlingssted2016_address1_postalcode"/>
+			<attribute name="address1_city" alias="Indsamlingssted2016_address1_city"/>
 			<link-entity name="contact" from="contactid" to="new_indsamlingskoordinatorid" link-type="outer" alias="Indsamlingskoordinator" >
 				<attribute name="fullname" alias="Indsamlingskoordinator_fullname" />
 				<attribute name="emailaddress1" alias="Indsamlingskoordinator_emailaddress1" />
 				<attribute name="mobilephone" alias="Indsamlingskoordinator_mobilephone" />
+				<attribute name="firstname" alias="Indsamlingskoordinator_firstname"/>
+				<attribute name="middlename" alias="Indsamlingskoordinator_middlename"/>
+				<attribute name="lastname" alias="Indsamlingskoordinator_lastname"/>
+				<attribute name="telephone1" alias="Indsamlingskoordinator_telephone1"/>
 			</link-entity>
 		</link-entity>
 	</entity>
