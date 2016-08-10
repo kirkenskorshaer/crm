@@ -40,7 +40,7 @@ namespace Administration.Option.Options.Logic
 				mailrelayInformations.ForEach(information => UpdateIfNeeded(dynamicsCrmConnection, information, report));
 			}
 
-			Log.Write(Connection, report.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+			Log.Write(Connection, report.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 
 			return true;
 		}
