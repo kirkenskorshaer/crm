@@ -31,6 +31,7 @@
 			<attribute name="address1_line3" alias="Indsamlingssted2016_address1_line3"/>
 			<attribute name="address1_postalcode" alias="Indsamlingssted2016_address1_postalcode"/>
 			<attribute name="address1_city" alias="Indsamlingssted2016_address1_city"/>
+			<attribute name="new_rutbrugernavn" alias="Indsamlingssted2016_new_rutbrugernavn"/>
 			<link-entity name="contact" from="contactid" to="new_indsamlingskoordinatorid" link-type="outer" alias="Indsamlingskoordinator" >
 				<attribute name="fullname" alias="Indsamlingskoordinator_fullname" />
 				<attribute name="emailaddress1" alias="Indsamlingskoordinator_emailaddress1" />

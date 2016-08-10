@@ -35,6 +35,7 @@ namespace SystemInterface.Dynamics.Crm
 		public string Indsamlingssted2016_address1_line3;
 		public string Indsamlingssted2016_address1_postalcode;
 		public string Indsamlingssted2016_address1_city;
+		public string Indsamlingssted2016_new_rutbrugernavn;
 
 		public string Indsamlingskoordinator_fullname;
 		public string Indsamlingskoordinator_emailaddress1;
@@ -137,6 +138,7 @@ namespace SystemInterface.Dynamics.Crm
 			AddIfValueNotEmpty(customFields, "f_24", Indsamlingssted2016_address1_line3);
 			AddIfValueNotEmpty(customFields, "f_25", Indsamlingssted2016_address1_postalcode);
 			AddIfValueNotEmpty(customFields, "f_26", Indsamlingssted2016_address1_city);
+			AddIfValueNotEmpty(customFields, "f_32", Indsamlingssted2016_new_rutbrugernavn);
 
 			AddIfValueNotEmpty(customFields, "f_5", Indsamlingskoordinator_fullname);
 			AddIfValueNotEmpty(customFields, "f_6", Indsamlingskoordinator_emailaddress1);
@@ -195,6 +197,7 @@ namespace SystemInterface.Dynamics.Crm
 			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_address1_line3);
 			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_address1_postalcode);
 			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_address1_city);
+			newCheck = Xor.XorString(newCheck, Indsamlingssted2016_new_rutbrugernavn);
 
 			newCheck = Xor.XorString(newCheck, Indsamlingskoordinator_fullname);
 			newCheck = Xor.XorString(newCheck, Indsamlingskoordinator_emailaddress1);
