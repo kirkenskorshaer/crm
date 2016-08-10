@@ -23,6 +23,7 @@ namespace AdministrationTest
 		protected SqlConnection _sqlConnection;
 		protected DynamicsCrmConnection DynamicsCrmConnection;
 		protected MailrelayConnectionTester _mailrelayConnectionTester;
+		protected Random _random;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -56,6 +57,7 @@ namespace AdministrationTest
 			DynamicsCrmConnection = DynamicsCrmConnection.GetConnection(urlLogin.Url, urlLogin.Username, urlLogin.Password);
 
 			_mailrelayConnectionTester = new MailrelayConnectionTester();
+			_random = new Random();
 		}
 
 		[TearDown]
