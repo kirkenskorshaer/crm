@@ -60,6 +60,11 @@ namespace SystemInterface.Mailrelay.Logic
 		{
 			Dictionary<string, string> customFieldsInSubscriberInMailrelay = subscriberInMailrelay.fields;
 
+			if (customFieldsInSubscriberInMailrelay == null)
+			{
+				customFieldsInSubscriberInMailrelay = new Dictionary<string, string>();
+			}
+
 			List<string> allKeys = customFieldsInCrm.Keys.Union(customFieldsInSubscriberInMailrelay.Keys).ToList();
 
 			bool isChanged = false;
