@@ -106,6 +106,22 @@ namespace SystemInterface.Mailrelay.Logic
 			return reply.data.FirstOrDefault();
 		}
 
+		public MailrelayBoolReply UpdateFromReply(getSubscribersReply replyToUpdate)
+		{
+			updateSubscriber update = new updateSubscriber()
+			{
+				customFields = replyToUpdate.fields,
+				email = replyToUpdate.email,
+				name = replyToUpdate.name,
+				groups = replyToUpdate.groups.Select(groupString => int.Parse(groupString)).ToList(),
+				id = int.Parse(replyToUpdate.id),
+			};
+
+			AbstractMailrelayReply reply = _mailrelayConnection.Send(update);
+
+			return (MailrelayBoolReply)reply;
+		}
+
 		private void UpdateSubscriber(int id, string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname)
 		{
 			updateSubscriber update = new updateSubscriber()
