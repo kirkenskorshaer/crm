@@ -92,6 +92,7 @@
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeToCrm.cs" />
     <Compile Include="MongoData\Option\Options\Logic\UpdateMailrelayFromContact.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\UpdateMailrelayGroup.cs" />
     <Compile Include="MongoData\Progress.cs" />
     <Compile Include="MongoData\SqlConnectionString.cs" />
     <Compile Include="MongoData\Log.cs" />
