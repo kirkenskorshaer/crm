@@ -109,6 +109,7 @@
     <Compile Include="Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeToCrm.cs" />
     <Compile Include="Option\Options\Logic\UpdateMailrelayFromContact.cs" />
+    <Compile Include="Option\Options\Logic\UpdateMailrelayGroup.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
     <Compile Include="Option\Options\Service\ServiceDelete.cs" />
     <Compile Include="Option\Options\Service\ServiceStart.cs" />
