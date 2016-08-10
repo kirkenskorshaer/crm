@@ -67,7 +67,19 @@ namespace SystemInterface.Mailrelay.Logic
 			{
 				if (customFieldsInSubscriberInMailrelay.ContainsKey(key))
 				{
-					customFieldsResult.Add(key, customFieldsInSubscriberInMailrelay[key]);
+					if (customFieldsInCrm.ContainsKey(key) == false)
+					{
+						customFieldsResult.Add(key, customFieldsInSubscriberInMailrelay[key]);
+						continue;
+					}
+
+					customFieldsResult.Add(key, customFieldsInCrm[key]);
+
+					if (customFieldsInCrm[key] != customFieldsInSubscriberInMailrelay[key])
+					{
+						isChanged = true;
+					}
+
 					continue;
 				}
 				isChanged = true;
