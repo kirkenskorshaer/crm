@@ -144,6 +144,16 @@ namespace AdministrationTest
 			return account;
 		}
 
+		protected Contact CreateContact()
+		{
+			Contact contact = new Contact(DynamicsCrmConnection)
+			{
+				firstname = $"firstname {Guid.NewGuid()}",
+			};
+
+			return contact;
+		}
+
 		protected DatabaseStub CreateStub(DatabaseWebCampaign webcampaign)
 		{
 			return CreateStub(webcampaign, $"firstname {Guid.NewGuid()}", $"lastname {Guid.NewGuid()}");
