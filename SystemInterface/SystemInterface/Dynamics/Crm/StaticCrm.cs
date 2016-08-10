@@ -100,9 +100,15 @@ namespace SystemInterface.Dynamics.Crm
 		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		where AbstractCrmType : AbstractCrm
 		{
+			return ReadFromFetchXml(dynamicsCrmConnection, typeof(AbstractCrmType).Name.ToLower(), fields, keyContent, maxCount, CrmTypeConstructor, pagingInformation);
+		}
+
+		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		where AbstractCrmType : AbstractCrm
+		{
 			XDocument xDocument = new XDocument(
 				new XElement("fetch",
-					new XElement("entity", new XAttribute("name", typeof(AbstractCrmType).Name.ToLower()),
+					new XElement("entity", new XAttribute("name", entityName),
 						new XElement("filter"))));
 
 			if (maxCount.HasValue)
