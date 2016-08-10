@@ -37,6 +37,11 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Connection = connection;
 
+			InitializeFromEntity(crmEntity);
+		}
+
+		public void InitializeFromEntity(Entity crmEntity)
+		{
 			if (crmEntity.Attributes.ContainsKey(idName))
 			{
 				Id = (Guid)crmEntity.Attributes[idName];
