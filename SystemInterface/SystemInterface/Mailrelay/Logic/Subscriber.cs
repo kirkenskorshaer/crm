@@ -122,6 +122,39 @@ namespace SystemInterface.Mailrelay.Logic
 			return (MailrelayBoolReply)reply;
 		}
 
+		public IEnumerable<getSubscribersReply> GetMailrelaySubscribers(getSubscribers getSubscribersFunction, int subscribersPerPage)
+		{
+			getSubscribersFunction.sortField = "id";
+			getSubscribersFunction.sortOrder = "ASC";
+
+			bool allDone = false;
+			int currentPage = 0;
+
+			Queue<getSubscribersReply> replyBuffer = new Queue<getSubscribersReply>();
+
+			while (allDone == false)
+			{
+				getSubscribersFunction.offset = subscribersPerPage * currentPage;
+				getSubscribersFunction.count = subscribersPerPage;
+
+				MailrelayArrayReply<getSubscribersReply> reply = (MailrelayArrayReply<getSubscribersReply>)_mailrelayConnection.Send(getSubscribersFunction);
+
+				if (reply.data.Count < subscribersPerPage)
+				{
+					allDone = true;
+				}
+
+				reply.data.ForEach(replyBuffer.Enqueue);
+
+				while (replyBuffer.Any())
+				{
+					yield return replyBuffer.Dequeue();
+				}
+
+				currentPage++;
+			}
+		}
+
 		private void UpdateSubscriber(int id, string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname)
 		{
 			updateSubscriber update = new updateSubscriber()
