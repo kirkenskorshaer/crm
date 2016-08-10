@@ -27,6 +27,7 @@ namespace DataLayer.MongoData
 			HeartMessage = 2,
 			OptionError = 4,
 			OptionMessage = 8,
+			OptionReport = 16,
 		}
 
 		public static Config GetConfig(MongoConnection connection)
