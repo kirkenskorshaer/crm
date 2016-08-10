@@ -24,13 +24,13 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			MarketingList marketingListInserted = InsertMarketingList();
 
-			MarketingList marketingListRead = MarketingList.Read(_connection, marketingListInserted.listid);
+			MarketingList marketingListRead = MarketingList.Read(_connection, marketingListInserted.Id);
 
-			marketingListInserted.Delete(_connection);
+			marketingListInserted.Delete();
 
-			Assert.AreEqual(marketingListInserted.createdfromcode, marketingListRead.createdfromcode);
+			Assert.AreEqual(marketingListInserted.createdfrom, marketingListRead.createdfrom);
 			Assert.AreEqual(marketingListInserted.listname, marketingListRead.listname);
-			Assert.AreEqual(marketingListInserted.listid, marketingListRead.listid);
+			Assert.AreEqual(marketingListInserted.Id, marketingListRead.Id);
 			Assert.AreEqual(marketingListInserted.query, marketingListRead.query);
 		}
 
@@ -39,16 +39,16 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		{
 			MarketingList marketingListInserted = InsertMarketingList();
 
-			marketingListInserted.Delete(_connection);
+			marketingListInserted.Delete();
 
-			TestDelegate readTest = () => MarketingList.Read(_connection, marketingListInserted.listid);
+			TestDelegate readTest = () => MarketingList.Read(_connection, marketingListInserted.Id);
 
 			Assert.Throws(Is.InstanceOf(typeof(Exception)), readTest);
 		}
 
 		private MarketingList InsertMarketingList()
 		{
-			MarketingList marketingListInserted = new MarketingList();
+			MarketingList marketingListInserted = new MarketingList(_connection);
 
 			marketingListInserted.listname = $"testList_{DateTime.Now.ToString("yyyyMMdd_HH:mm:ss")}";
 
@@ -76,7 +76,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 					</entity>
 				</fetch>";
 
-			marketingListInserted.Insert(_connection);
+			marketingListInserted.InsertWithoutRead();
 			return marketingListInserted;
 		}
 	}
