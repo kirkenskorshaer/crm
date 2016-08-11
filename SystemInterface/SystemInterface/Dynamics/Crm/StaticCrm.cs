@@ -103,6 +103,14 @@ namespace SystemInterface.Dynamics.Crm
 			return ReadFromFetchXml(dynamicsCrmConnection, typeof(AbstractCrmType).Name.ToLower(), fields, keyContent, maxCount, CrmTypeConstructor, pagingInformation);
 		}
 
+		public static IEnumerable<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? pageSize, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor)
+		where AbstractCrmType : AbstractCrm
+		{
+			IEnumerable<AbstractCrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, pageSize, CrmTypeConstructor, pagingInfo));
+
+			return returnedIEnumerable;
+		}
+
 		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		where AbstractCrmType : AbstractCrm
 		{
@@ -124,12 +132,45 @@ namespace SystemInterface.Dynamics.Crm
 			return crmObjects;
 		}
 
+		public static IEnumerable<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int pageSize, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor)
+		where AbstractCrmType : AbstractCrm
+		{
+			IEnumerable<AbstractCrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, entityName, fields, keyContent, pageSize, CrmTypeConstructor, pagingInfo));
+
+			return returnedIEnumerable;
+		}
+
 		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		where AbstractCrmType : AbstractCrm
 		{
 			XDocument xDocument = XDocument.Load(path);
 
 			return ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInformation);
+		}
+
+		public static IEnumerable<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor)
+		where AbstractCrmType : AbstractCrm
+		{
+			IEnumerable<AbstractCrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, path, CrmTypeConstructor, pagingInfo));
+
+			return returnedIEnumerable;
+		}
+
+		public static IEnumerable<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(Func<PagingInformation, List<AbstractCrmType>> getBuffer)
+		where AbstractCrmType : AbstractCrm
+		{
+			PagingInformation pagingInformation = new PagingInformation();
+			List<AbstractCrmType> bufferList;
+
+			while (pagingInformation.FirstRun == true || pagingInformation.MoreRecords == true)
+			{
+				bufferList = getBuffer(pagingInformation);
+
+				for (int bufferIndex = 0; bufferIndex < bufferList.Count; bufferIndex++)
+				{
+					yield return bufferList.ElementAt(bufferIndex);
+				}
+			}
 		}
 
 		public static List<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor, PagingInformation pagingInformation)
@@ -164,6 +205,14 @@ namespace SystemInterface.Dynamics.Crm
 			pagingInformation.Page++;
 
 			return crmEntities;
+		}
+
+		public static IEnumerable<AbstractCrmType> ReadFromFetchXml<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor)
+		where AbstractCrmType : AbstractCrm
+		{
+			IEnumerable<AbstractCrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInfo));
+
+			return returnedIEnumerable;
 		}
 
 		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Type entityType)
