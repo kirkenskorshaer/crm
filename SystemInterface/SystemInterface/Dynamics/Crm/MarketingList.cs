@@ -23,6 +23,38 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected override string idName { get { return "listid"; } }
 
+		private string targetEntityName
+		{
+			get
+			{
+				switch (createdfrom)
+				{
+					case createdfromcodeEnum.Account:
+						return "account";
+					case createdfromcodeEnum.Contact:
+						return "contact";
+					default:
+						throw new ArgumentException($"unknown code {createdfrom}");
+				}
+			}
+		}
+
+		private string targetIdName
+		{
+			get
+			{
+				switch (createdfrom)
+				{
+					case createdfromcodeEnum.Account:
+						return "accountid";
+					case createdfromcodeEnum.Contact:
+						return "contactid";
+					default:
+						throw new ArgumentException($"unknown code {createdfrom}");
+				}
+			}
+		}
+
 		protected override ColumnSet ColumnSetCrmGenerated { get { throw new NotImplementedException(); } }
 
 		public MarketingList(DynamicsCrmConnection connection) : base(connection)
@@ -41,6 +73,7 @@ namespace SystemInterface.Dynamics.Crm
 				"listname",
 				"query",
 				"new_mailrelaycheck",
+				"createdfromcode",
 			};
 
 			Dictionary<string, string> search = new Dictionary<string, string>()
@@ -93,29 +126,22 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			XDocument xDocument = XDocument.Parse(query);
 
-			string targetEntityName = "contact";
-			string targetIdName = "contactid";
+			XmlHelper.RemoveAllAttributes(xDocument);
 
-			string keyName = "contactid";
-			string valueName = "new_mailrelaysubscriberid";
+			XmlHelper.AddAliasedValue(xDocument, "contactid", "key");
+			XmlHelper.AddAliasedValue(xDocument, "new_mailrelaysubscriberid", "value");
 
-			xDocument.Descendants().Where(descendant => descendant.Name == "attribute").Remove();
-
-			xDocument.Element("fetch").Element("entity").Add(new XElement("attribute", new XAttribute("name", keyName), new XAttribute("alias", "key")));
-			xDocument.Element("fetch").Element("entity").Add(new XElement("attribute", new XAttribute("name", valueName), new XAttribute("alias", "value")));
-
-			XElement filterElement = xDocument.Element("fetch").Element("entity").Element("filter");
-
-			if (filterElement == null)
-			{
-				xDocument.Element("fetch").Element("entity").Add(new XElement("filter"));
-			}
-
-			xDocument.Element("fetch").Element("entity").Element("filter").Add(new XElement("condition", new XAttribute("attribute", "new_mailrelaysubscriberid"), new XAttribute("operator", "not-null")));
+			XmlHelper.AddCondition(xDocument, "new_mailrelaysubscriberid", "not-null");
 
 			List<KeyValueEntity<Guid, int?>> keyValueEntities = StaticCrm.ReadFromFetchXml(Connection, xDocument, (dynamicsCrmConnection, entity) => new KeyValueEntity<Guid, int?>(dynamicsCrmConnection, entity, targetEntityName, targetIdName), new PagingInformation());
 
 			return keyValueEntities;
+
+
+
+
+
+
 		}
 
 		public bool RecalculateMarketingListCheck()
