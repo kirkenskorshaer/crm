@@ -62,6 +62,7 @@
     <Compile Include="Option\Options\Logic\AddMailrelaySubscriberFromLeadTest.cs" />
     <Compile Include="Option\Options\Logic\AdjustDnsTest.cs" />
     <Compile Include="Option\Options\Logic\CreateImportFromStubTest.cs" />
+    <Compile Include="Option\Options\Logic\ExportContactToMailrelayTest.cs" />
     <Compile Include="Option\Options\Logic\ExposeDataTest.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStubTest.cs" />
     <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
