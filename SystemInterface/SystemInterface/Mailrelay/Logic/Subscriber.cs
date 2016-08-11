@@ -139,6 +139,21 @@ namespace SystemInterface.Mailrelay.Logic
 			return (MailrelayBoolReply)reply;
 		}
 
+		public int AddNewSubscriber(string name, string email, List<int> groups, Dictionary<string, string> customFields)
+		{
+			addSubscriber addSubscriberFunction = new addSubscriber()
+			{
+				name = name,
+				email = email,
+				groups = groups,
+				customFields = customFields,
+			};
+
+			MailrelayIntReply reply = (MailrelayIntReply)_mailrelayConnection.Send(addSubscriberFunction);
+
+			return reply.data;
+		}
+
 		public IEnumerable<getSubscribersReply> GetMailrelaySubscribers(getSubscribers getSubscribersFunction, int subscribersPerPage)
 		{
 			getSubscribersFunction.sortField = "id";
