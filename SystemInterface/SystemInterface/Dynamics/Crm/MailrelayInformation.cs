@@ -98,10 +98,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			if (contactId.HasValue)
 			{
-				xDocument.Element("fetch").Element("entity").Element("filter").Add(new XElement("condition",
-					new XAttribute("attribute", "contactid"),
-					new XAttribute("operator", "eq"),
-					new XAttribute("value", contactId.Value)));
+				XmlHelper.AddCondition(xDocument, "contactid", "eq", contactId.Value.ToString());
 			}
 
 			XmlHelper.AddCondition(xDocument, "new_mailrelaysubscriberid", "not-null");
