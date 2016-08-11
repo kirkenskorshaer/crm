@@ -104,6 +104,8 @@ namespace SystemInterface.Dynamics.Crm
 					new XAttribute("value", contactId.Value)));
 			}
 
+			XmlHelper.AddCondition(xDocument, "new_mailrelaysubscriberid", "not-null");
+
 			List<MailrelayInformation> informations = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, entity) => new MailrelayInformation(connection, entity), pagingInformation);
 
 			return informations;
