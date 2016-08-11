@@ -122,6 +122,20 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
+		private IEnumerable<Guid> _contentIdsForNonMailrelaySubscribers = null;
+		public IEnumerable<Guid> ContentIdsForNonMailrelaySubscribers
+		{
+			get
+			{
+				if (_contentIdsForNonMailrelaySubscribers == null)
+				{
+					_contentIdsForNonMailrelaySubscribers = GetContentIdsForNonMailrelaySubscribers();
+				}
+
+				return _contentIdsForNonMailrelaySubscribers;
+			}
+		}
+
 		private List<KeyValueEntity<Guid, int?>> GetCrmIdsAndSubscriberIds()
 		{
 			XDocument xDocument = XDocument.Parse(query);
@@ -136,12 +150,25 @@ namespace SystemInterface.Dynamics.Crm
 			List<KeyValueEntity<Guid, int?>> keyValueEntities = StaticCrm.ReadFromFetchXml(Connection, xDocument, (dynamicsCrmConnection, entity) => new KeyValueEntity<Guid, int?>(dynamicsCrmConnection, entity, targetEntityName, targetIdName), new PagingInformation());
 
 			return keyValueEntities;
+		}
 
+		private IEnumerable<Guid> GetContentIdsForNonMailrelaySubscribers()
+		{
+			XDocument xDocument = XDocument.Parse(query);
 
+			XmlHelper.RemoveAllAttributes(xDocument);
 
+			XmlHelper.AddAliasedValue(xDocument, "contactid", "value");
 
+			XmlHelper.AddCondition(xDocument, "new_mailrelaysubscriberid", "null");
 
+			XmlHelper.AddCondition(xDocument, "emailaddress1", "not-null");
 
+			XmlHelper.SetCount(xDocument, 100);
+
+			IEnumerable<Guid> contentIds = StaticCrm.ReadFromFetchXml(Connection, xDocument, (dynamicsCrmConnection, entity) => new SingleValueEntity<Guid>(dynamicsCrmConnection, entity, targetEntityName, targetIdName)).Select(valueEntity => valueEntity.value);
+
+			return contentIds;
 		}
 
 		public bool RecalculateMarketingListCheck()
