@@ -113,7 +113,7 @@ namespace SystemInterface.Dynamics.Crm
 
 			if (maxCount.HasValue)
 			{
-				xDocument.Element("fetch").Add(new XAttribute("count", maxCount.Value));
+				XmlHelper.SetCount(xDocument, maxCount.Value);
 			}
 
 			xDocument.Element("fetch").Element("entity").Add(GetAttributeElements(fields.ToList()));
