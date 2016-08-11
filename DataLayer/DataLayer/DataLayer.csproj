@@ -82,6 +82,7 @@
     <Compile Include="MongoData\Option\Options\Logic\AddMailrelaySubscriberFromLead.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="MongoData\Option\Options\Logic\CreateImportFromStub.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\ExportContactToMailrelay.cs" />
     <Compile Include="MongoData\Option\Options\Logic\ExposeData.cs" />
     <Compile Include="MongoData\Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaintainProgress.cs" />
