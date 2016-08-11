@@ -96,6 +96,7 @@
     <Compile Include="Option\Options\Logic\AddMailrelaySubscriberFromLead.cs" />
     <Compile Include="Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="Option\Options\Logic\CreateImportFromStub.cs" />
+    <Compile Include="Option\Options\Logic\ExportContactToMailrelay.cs" />
     <Compile Include="Option\Options\Logic\ExposeData.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
