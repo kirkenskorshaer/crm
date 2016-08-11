@@ -88,6 +88,27 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
+		public void UpdateContactMailrelaySubscriberid(DynamicsCrmConnection dynamicsCrmConnection)
+		{
+			Update(dynamicsCrmConnection, "contact", "contactid", contactid.Value, new Dictionary<string, object>()
+			{
+				{ "new_mailrelaysubscriberid", new_mailrelaysubscriberid }
+			});
+		}
+
+		public static MailrelayInformation GetInformationNotInMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, Guid contactId)
+		{
+			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
+
+			XDocument xDocument = XDocument.Load(path);
+
+			XmlHelper.AddCondition(xDocument, "contactid", "eq", contactId.ToString());
+
+			List<MailrelayInformation> informations = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (connection, entity) => new MailrelayInformation(connection, entity), new PagingInformation());
+
+			return informations.Single();
+		}
+
 		public static List<MailrelayInformation> GetMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, PagingInformation pagingInformation, int pageSize, Guid? contactId)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
