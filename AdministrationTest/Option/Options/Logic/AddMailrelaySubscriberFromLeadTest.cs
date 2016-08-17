@@ -57,8 +57,11 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			DatabaseWebCampaign webCampaign = GetWebcampaign();
 
-			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, Guid.Empty, "test", "test", "test", webCampaign);
+			string email = "test";
+			DatabaseAddMailrelaySubscriberFromLead databaseAddMailrelaySubscriberFromLead = AddMailrelaySubscriberFromLead.CreateIfValid(Connection, _lead.Id, "test", "test", email, webCampaign);
 			AddMailrelaySubscriberFromLead addMailrelaySubscriberFromLead = new AddMailrelaySubscriberFromLead(Connection, databaseAddMailrelaySubscriberFromLead);
+
+			int randomId = new Random().Next(0, int.MaxValue);
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayArrayReply<getSubscribersReply>()
 			{
@@ -67,6 +70,8 @@ namespace AdministrationTest.Option.Options.Logic
 				{
 					new getSubscribersReply()
 					{
+						email = email,
+						id = randomId.ToString(),
 						fields = new Dictionary<string, string>(),
 						groups = new List<string>(),
 					},
@@ -78,7 +83,10 @@ namespace AdministrationTest.Option.Options.Logic
 
 			Console.Out.WriteLine(_mailrelayConnectionTester);
 
-			Assert.IsTrue(_mailrelayConnectionTester.sendFunctions.Any(function => function is updateSubscriber));
+			updateSubscriber updateSubscriberFunction = (updateSubscriber)_mailrelayConnectionTester.sendFunctions.Single(function => function is updateSubscriber);
+
+			Assert.AreEqual(email, updateSubscriberFunction.email);
+			Assert.AreEqual(randomId, updateSubscriberFunction.id);
 		}
 
 		private DatabaseWebCampaign GetWebcampaign()
