@@ -59,7 +59,7 @@ namespace Administration.Option.Options.Logic
 			else
 			{
 				subscriberId = int.Parse(ExistingSubscriber.id);
-				UdpateExistingSubscriberIfNeeded(information, ExistingSubscriber, email);
+				UdpateExistingSubscriberIfNeeded(information, ExistingSubscriber, email, subscriberId);
 			}
 
 			Lead.UpdateSubscriberId(dynamicsCrmConnection, leadId, subscriberId);
@@ -67,7 +67,7 @@ namespace Administration.Option.Options.Logic
 			return true;
 		}
 
-		private void UdpateExistingSubscriberIfNeeded(MailrelayInformation information, getSubscribersReply ExistingSubscriber, string email)
+		private void UdpateExistingSubscriberIfNeeded(MailrelayInformation information, getSubscribersReply ExistingSubscriber, string email, int subscriberId)
 		{
 			Dictionary<string, string> customFieldsResult = new Dictionary<string, string>();
 
@@ -87,14 +87,15 @@ namespace Administration.Option.Options.Logic
 
 			if (isChanged)
 			{
-				UpdateSubscriber(email, customFieldsResult, groups, information.fullname);
+				UpdateSubscriber(email, customFieldsResult, groups, information.fullname, subscriberId);
 			}
 		}
 
-		private void UpdateSubscriber(string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname)
+		private void UpdateSubscriber(string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname, int subscriberId)
 		{
 			updateSubscriber update = new updateSubscriber()
 			{
+				id = subscriberId,
 				customFields = customFieldsResult,
 				email = email,
 				name = fullname,
