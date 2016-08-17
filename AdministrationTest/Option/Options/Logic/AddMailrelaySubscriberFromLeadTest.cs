@@ -7,12 +7,33 @@ using System.Linq;
 using SystemInterface.Mailrelay.Function.Subscribers;
 using SystemInterface.Mailrelay.FunctionReply;
 using System.Collections.Generic;
+using SystemInterface.Dynamics.Crm;
 
 namespace AdministrationTest.Option.Options.Logic
 {
 	[TestFixture]
 	public class AddMailrelaySubscriberFromLeadTest : TestBase
 	{
+		Lead _lead;
+
+		[SetUp]
+		new public void SetUp()
+		{
+			base.SetUp();
+
+			_lead = new Lead(DynamicsCrmConnection);
+
+			_lead.InsertWithoutRead();
+		}
+
+		[TearDown]
+		new public void TearDown()
+		{
+			base.TearDown();
+
+			_lead.Delete();
+		}
+
 		[Test]
 		public void AddMailrelaySubscriberFromLeadTestAddsASubscriber()
 		{
