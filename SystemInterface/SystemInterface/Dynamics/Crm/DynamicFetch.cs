@@ -9,7 +9,7 @@ namespace SystemInterface.Dynamics.Crm
 {
 	public class DynamicFetch
 	{
-		public static List<dynamic> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, PagingInformation pagingInformation)
+		public static List<dynamic> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, PagingInformation pagingInformation)
 		{
 			XDocument xDocument = new XDocument(
 				new XElement("fetch",
@@ -29,14 +29,14 @@ namespace SystemInterface.Dynamics.Crm
 			return crmObjects;
 		}
 
-		public static List<dynamic> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path, PagingInformation pagingInformation)
+		public static List<dynamic> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, string path, PagingInformation pagingInformation)
 		{
 			XDocument xDocument = XDocument.Load(path);
 
 			return ReadFromFetchXml(dynamicsCrmConnection, xDocument, pagingInformation);
 		}
 
-		public static List<dynamic> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, PagingInformation pagingInformation)
+		public static List<dynamic> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, PagingInformation pagingInformation)
 		{
 			if (pagingInformation.FirstRun == false)
 			{
@@ -76,7 +76,14 @@ namespace SystemInterface.Dynamics.Crm
 
 			foreach (KeyValuePair<string, object> attribute in entity.Attributes)
 			{
-				dynamicAsDictionary[attribute.Key] = attribute.Value;
+				if (attribute.Value is AliasedValue)
+				{
+					dynamicAsDictionary[attribute.Key] = ((AliasedValue)attribute.Value).Value;
+				}
+				else
+				{
+					dynamicAsDictionary[attribute.Key] = attribute.Value;
+				}
 			}
 
 			return dynamicFromEntity;
