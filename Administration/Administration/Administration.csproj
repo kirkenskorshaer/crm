@@ -100,6 +100,7 @@
     <Compile Include="Option\Options\Logic\ExposeData.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
+    <Compile Include="Option\Options\Logic\SendTableFromMailrelay.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedReference.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ReferenceGetAndSet.cs" />
     <Compile Include="Option\Options\Logic\StressTestCrm.cs" />
