@@ -42,11 +42,11 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "new_materialebehov"; } }
 		protected override string idName { get { return "new_materialebehovid"; } }
 
-		public MaterialeBehov(DynamicsCrmConnection connection) : base(connection)
+		public MaterialeBehov(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public MaterialeBehov(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public MaterialeBehov(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 		}
 

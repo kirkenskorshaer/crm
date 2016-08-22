@@ -15,7 +15,7 @@ namespace SystemInterface.Dynamics.Crm
 		protected abstract string idName { get; }
 		protected abstract ColumnSet ColumnSetCrmGenerated { get; }
 
-		protected DynamicsCrmConnection Connection { get; private set; }
+		protected IDynamicsCrmConnection Connection { get; private set; }
 
 		protected virtual void AfterInsert(Entity generatedEntity) { }
 		protected virtual void AfterUpdate(Entity generatedEntity) { }
@@ -28,12 +28,12 @@ namespace SystemInterface.Dynamics.Crm
 		public EntityReference owningbusinessunit;
 		public Guid? owningbusinessunitGuid { get { return GetEntityReferenceId(owningbusinessunit); } set { owningbusinessunit = SetEntityReferenceId(value, "businessunit"); } }
 
-		public AbstractCrm(DynamicsCrmConnection connection)
+		public AbstractCrm(IDynamicsCrmConnection connection)
 		{
 			Connection = connection;
 		}
 
-		public AbstractCrm(DynamicsCrmConnection connection, Entity crmEntity)
+		public AbstractCrm(IDynamicsCrmConnection connection, Entity crmEntity)
 		{
 			Connection = connection;
 
@@ -204,7 +204,7 @@ namespace SystemInterface.Dynamics.Crm
 			AfterUpdate(generatedEntity);
 		}
 
-		protected static void Update(DynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
+		protected static void Update(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
 		{
 			CrmEntity crmEntity = new CrmEntity(entityName);
 
@@ -356,7 +356,7 @@ namespace SystemInterface.Dynamics.Crm
 			return new OptionSetValue((int)value.Value);
 		}
 
-		protected static void CreateFromContent(DynamicsCrmConnection dynamicsCrmConnection, AbstractCrm crmObject, Dictionary<string, string> allContent)
+		protected static void CreateFromContent(IDynamicsCrmConnection dynamicsCrmConnection, AbstractCrm crmObject, Dictionary<string, string> allContent)
 		{
 			foreach (KeyValuePair<string, string> keyValue in allContent)
 			{

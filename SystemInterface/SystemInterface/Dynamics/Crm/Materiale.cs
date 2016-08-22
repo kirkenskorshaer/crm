@@ -43,11 +43,11 @@ namespace SystemInterface.Dynamics.Crm
 
 		private string _materialePakkeRelationshipName = "new_materiale_materialepakke_Materiale";
 
-		public Materiale(DynamicsCrmConnection connection) : base(connection)
+		public Materiale(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Materiale(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public Materiale(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 		}
 
@@ -90,7 +90,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static Materiale ReadCalculationNeed(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		public static Materiale ReadCalculationNeed(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Materiale/MaterialeNeedingUpdate.xml");
 

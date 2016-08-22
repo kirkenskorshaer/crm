@@ -6,7 +6,7 @@ namespace SystemInterface.Dynamics.Crm
 	{
 		public ValueType value;
 
-		public SingleValueEntity(DynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection, crmEntity, entityName, idName)
+		public SingleValueEntity(IDynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection, crmEntity, entityName, idName)
 		{
 		}
 	}

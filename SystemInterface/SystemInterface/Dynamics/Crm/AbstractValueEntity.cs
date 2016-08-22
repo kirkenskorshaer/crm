@@ -10,7 +10,7 @@ namespace SystemInterface.Dynamics.Crm
 		private string _entityName;
 		private string _idName;
 
-		public AbstractValueEntity(DynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection)
+		public AbstractValueEntity(IDynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection)
 		{
 			_idName = idName;
 			_entityName = entityName;
@@ -18,12 +18,12 @@ namespace SystemInterface.Dynamics.Crm
 			InitializeFromEntity(crmEntity);
 		}
 
-		public AbstractValueEntity(DynamicsCrmConnection connection) : base(connection)
+		public AbstractValueEntity(IDynamicsCrmConnection connection) : base(connection)
 		{
 			throw new NotImplementedException();
 		}
 
-		public AbstractValueEntity(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public AbstractValueEntity(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 			throw new NotImplementedException();
 		}

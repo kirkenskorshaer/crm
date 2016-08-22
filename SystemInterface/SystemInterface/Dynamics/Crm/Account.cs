@@ -102,11 +102,11 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "account"; } }
 		protected override string idName { get { return "accountid"; } }
 
-		public Account(DynamicsCrmConnection connection) : base(connection)
+		public Account(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Account(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public Account(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 			if (entity.Attributes.Any(attribute => attribute.Key == "statecode"))
 			{
@@ -418,7 +418,7 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
-		public static List<Account> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAccounts = null)
+		public static List<Account> ReadLatest(IDynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAccounts = null)
 		{
 			List<Account> accounts = StaticCrm.ReadLatest(connection, "account", ColumnSetAccount, lastSearchDate, (lConnection, entity) => new Account(lConnection, entity), maximumNumberOfAccounts);
 
@@ -470,7 +470,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static Account Read(DynamicsCrmConnection connection, Guid accountid)
+		public static Account Read(IDynamicsCrmConnection connection, Guid accountid)
 		{
 			Entity accountEntity = connection.Service.Retrieve("account", accountid, ColumnSetAccount);
 
@@ -479,7 +479,7 @@ namespace SystemInterface.Dynamics.Crm
 			return account;
 		}
 
-		public static List<Account> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
+		public static List<Account> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Account(connection, contactEntity), new PagingInformation());
 		}
@@ -620,28 +620,28 @@ namespace SystemInterface.Dynamics.Crm
 			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
 		}
 
-		public static int CountIndsamlingssteder(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		public static int CountIndsamlingssteder(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountIndsamlingssted.xml");
 
 			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
 		}
 
-		public static int CountForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		public static int CountForventetAntalIndsamlere2016(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountForventetAntalIndsamlere2016.xml");
 
 			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
 		}
 
-		public static int CountIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
+		public static int CountIndsamlingshjaelper(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/CountIndsamlingshjaelper.xml");
 
 			return StaticCrm.CountByFetchXml(dynamicsCrmConnection, path, "accounts");
 		}
 
-		public static List<Account> GetIndsamlingsSted(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
+		public static List<Account> GetIndsamlingsSted(IDynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingssted.xml");
 
@@ -658,7 +658,7 @@ namespace SystemInterface.Dynamics.Crm
 			return accounts;
 		}
 
-		public static List<Account> GetForventetAntalIndsamlere2016(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
+		public static List<Account> GetForventetAntalIndsamlere2016(IDynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetForventetAntalIndsamlere2016.xml");
 
@@ -675,7 +675,7 @@ namespace SystemInterface.Dynamics.Crm
 			return accounts;
 		}
 
-		public static List<Account> GetIndsamlingshjaelper(DynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
+		public static List<Account> GetIndsamlingshjaelper(IDynamicsCrmConnection dynamicsCrmConnection, int maxCount, Guid owningbusinessunit, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Account/GetIndsamlingshjaelper.xml");
 

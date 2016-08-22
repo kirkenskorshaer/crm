@@ -55,15 +55,15 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected override ColumnSet ColumnSetCrmGenerated { get { throw new NotImplementedException(); } }
 
-		public MailrelayInformation(DynamicsCrmConnection connection) : base(connection)
+		public MailrelayInformation(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public MailrelayInformation(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public MailrelayInformation(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 		}
 
-		public static MailrelayInformation GetMailrelayFromLead(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, string email, Guid campaignId)
+		public static MailrelayInformation GetMailrelayFromLead(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, string email, Guid campaignId)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromLead.xml");
 
@@ -80,7 +80,7 @@ namespace SystemInterface.Dynamics.Crm
 			return information;
 		}
 
-		public void UpdateContactMailrelaycheck(DynamicsCrmConnection dynamicsCrmConnection)
+		public void UpdateContactMailrelaycheck(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Update(dynamicsCrmConnection, "contact", "contactid", contactid.Value, new Dictionary<string, object>()
 			{
@@ -88,7 +88,7 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
-		public void UpdateContactMailrelaySubscriberid(DynamicsCrmConnection dynamicsCrmConnection)
+		public void UpdateContactMailrelaySubscriberid(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Update(dynamicsCrmConnection, "contact", "contactid", contactid.Value, new Dictionary<string, object>()
 			{
@@ -96,7 +96,7 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
-		public static MailrelayInformation GetInformationNotInMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, Guid contactId)
+		public static MailrelayInformation GetInformationNotInMailrelayFromContact(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, Guid contactId)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
 
@@ -109,7 +109,7 @@ namespace SystemInterface.Dynamics.Crm
 			return informations.Single();
 		}
 
-		public static List<MailrelayInformation> GetMailrelayFromContact(DynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, PagingInformation pagingInformation, int pageSize, Guid? contactId)
+		public static List<MailrelayInformation> GetMailrelayFromContact(IDynamicsCrmConnection dynamicsCrmConnection, Func<string, string> getResourcePath, PagingInformation pagingInformation, int pageSize, Guid? contactId)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/Mailrelay/GetMailrelayFromContact.xml");
 

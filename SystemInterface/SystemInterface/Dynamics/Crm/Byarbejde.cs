@@ -28,11 +28,11 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "new_byarbejde"; } }
 		protected override string idName { get { return "new_byarbejdeid"; } }
 
-		public Byarbejde(DynamicsCrmConnection dynamicsCrmConnection) : base(dynamicsCrmConnection)
+		public Byarbejde(IDynamicsCrmConnection dynamicsCrmConnection) : base(dynamicsCrmConnection)
 		{
 		}
 
-		public Byarbejde(DynamicsCrmConnection dynamicsCrmConnection, Entity entity) : base(dynamicsCrmConnection, entity)
+		public Byarbejde(IDynamicsCrmConnection dynamicsCrmConnection, Entity entity) : base(dynamicsCrmConnection, entity)
 		{
 		}
 
@@ -51,7 +51,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static Byarbejde Read(DynamicsCrmConnection dynamicsCrmConnection, Guid byarbejdeid)
+		public static Byarbejde Read(IDynamicsCrmConnection dynamicsCrmConnection, Guid byarbejdeid)
 		{
 			Entity contactEntity = dynamicsCrmConnection.Service.Retrieve("new_byarbejde", byarbejdeid, ColumnSetByarbejde);
 
@@ -60,7 +60,7 @@ namespace SystemInterface.Dynamics.Crm
 			return byarbejde;
 		}
 
-		public static List<Byarbejde> Read(DynamicsCrmConnection connection, string name)
+		public static List<Byarbejde> Read(IDynamicsCrmConnection connection, string name)
 		{
 			ConditionExpression equalsNameExpression = new ConditionExpression
 			{

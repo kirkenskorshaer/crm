@@ -11,11 +11,11 @@ namespace SystemInterface.Dynamics.Crm
 	{
 		public string domainname;
 
-		public SystemUser(DynamicsCrmConnection connection) : base(connection)
+		public SystemUser(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public SystemUser(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public SystemUser(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 		}
 
@@ -41,7 +41,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static SystemUser Read(DynamicsCrmConnection connection, Guid userid)
+		public static SystemUser Read(IDynamicsCrmConnection connection, Guid userid)
 		{
 			Entity userEntity = connection.Service.Retrieve("systemuser", userid, ColumnSetUser);
 
@@ -50,14 +50,14 @@ namespace SystemInterface.Dynamics.Crm
 			return contact;
 		}
 
-		public static SystemUser ReadByDomainname(DynamicsCrmConnection connection, string domainname)
+		public static SystemUser ReadByDomainname(IDynamicsCrmConnection connection, string domainname)
 		{
 			List<SystemUser> users = StaticCrm.ReadByAttribute(connection, "systemuser", ColumnSetUser, "domainname", domainname, (lConnection, entity) => new SystemUser(lConnection, entity));
 
 			return users.Single();
 		}
 
-		public static List<SystemUser> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
+		public static List<SystemUser> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new SystemUser(connection, contactEntity), new PagingInformation());
 		}

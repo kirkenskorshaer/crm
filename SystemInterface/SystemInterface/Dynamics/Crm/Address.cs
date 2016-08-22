@@ -37,7 +37,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static Address Read(DynamicsCrmConnection connection, Guid addressid)
+		public static Address Read(IDynamicsCrmConnection connection, Guid addressid)
 		{
 			Entity contactEntity = connection.Service.Retrieve("customeraddress", addressid, ColumnSetAddress);
 
@@ -46,14 +46,14 @@ namespace SystemInterface.Dynamics.Crm
 			return address;
 		}
 
-		public void Update(DynamicsCrmConnection connection)
+		public void Update(IDynamicsCrmConnection connection)
 		{
 			CrmEntity crmEntity = GetAddressAsEntity(true);
 
 			connection.Service.Update(crmEntity);
 		}
 
-		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid addressId)
+		public static List<string> GetAllAttributeNames(IDynamicsCrmConnection connection, Guid addressId)
 		{
 			List<string> attributeNames = new List<string>();
 

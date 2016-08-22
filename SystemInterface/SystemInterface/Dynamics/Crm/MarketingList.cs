@@ -57,15 +57,15 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected override ColumnSet ColumnSetCrmGenerated { get { throw new NotImplementedException(); } }
 
-		public MarketingList(DynamicsCrmConnection connection) : base(connection)
+		public MarketingList(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public MarketingList(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public MarketingList(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 		}
 
-		public static MarketingList GetListForMailrelayUpdate(DynamicsCrmConnection dynamicsCrmConnection, PagingInformation pagingInformation, Guid? crmListId)
+		public static MarketingList GetListForMailrelayUpdate(IDynamicsCrmConnection dynamicsCrmConnection, PagingInformation pagingInformation, Guid? crmListId)
 		{
 			List<string> fields = new List<string>()
 			{
@@ -212,7 +212,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public void UpdateMailrelaycheck(DynamicsCrmConnection dynamicsCrmConnection)
+		public void UpdateMailrelaycheck(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Update(dynamicsCrmConnection, entityName, idName, Id, new Dictionary<string, object>()
 			{
@@ -220,7 +220,7 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
-		public void UpdateMailrelaygroupid(DynamicsCrmConnection dynamicsCrmConnection)
+		public void UpdateMailrelaygroupid(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			Update(dynamicsCrmConnection, entityName, idName, Id, new Dictionary<string, object>()
 			{
@@ -228,7 +228,7 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
-		public static MarketingList Read(DynamicsCrmConnection connection, Guid marketinglistId)
+		public static MarketingList Read(IDynamicsCrmConnection connection, Guid marketinglistId)
 		{
 			Entity marketingListEntity = connection.Service.Retrieve("list", marketinglistId, ColumnSetMarketinglist);
 

@@ -32,11 +32,11 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "new_materialebehovdefinition"; } }
 		protected override string idName { get { return "new_materialebehovdefinitionid"; } }
 
-		public MaterialeBehovDefinition(DynamicsCrmConnection connection) : base(connection)
+		public MaterialeBehovDefinition(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public MaterialeBehovDefinition(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public MaterialeBehovDefinition(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 		}
 
@@ -65,7 +65,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static List<MaterialeBehovDefinition> FindMaterialeBehovDefinitionPerMateriale(DynamicsCrmConnection dynamicsCrmConnection, Guid materialeId, Func<string, string> getResourcePath, PagingInformation pagingInformation)
+		public static List<MaterialeBehovDefinition> FindMaterialeBehovDefinitionPerMateriale(IDynamicsCrmConnection dynamicsCrmConnection, Guid materialeId, Func<string, string> getResourcePath, PagingInformation pagingInformation)
 		{
 			string path = getResourcePath("Dynamics/Crm/FetchXml/MaterialeBehovDefinition/FindMaterialeBehovDefinitionPerMateriale.xml");
 

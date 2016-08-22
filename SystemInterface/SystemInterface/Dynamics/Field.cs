@@ -18,11 +18,11 @@ namespace SystemInterface.Dynamics.Crm
 
 		private static readonly ColumnSet ColumnSetFieldCrmGenerated = new ColumnSet("createdon", "modifiedon");
 
-		public Field(DynamicsCrmConnection connection) : base(connection)
+		public Field(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Field(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public Field(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 		}
 
@@ -46,7 +46,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static List<Field> ReadAllFields(DynamicsCrmConnection dynamicsCrmConnection)
+		public static List<Field> ReadAllFields(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "new_fieldid", "new_entity" }, new Dictionary<string, string>(), null, (connection, entity) => new Field(connection, entity), new PagingInformation());
 		}

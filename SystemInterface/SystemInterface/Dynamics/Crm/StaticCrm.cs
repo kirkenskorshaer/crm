@@ -14,11 +14,11 @@ namespace SystemInterface.Dynamics.Crm
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
 		public static List<AbstractCrmType> ReadLatest<AbstractCrmType>
 		(
-			DynamicsCrmConnection connection
+			IDynamicsCrmConnection connection
 			, string entityName
 			, ColumnSet ColumnSetCrmType
 			, DateTime lastSearchDate
-			, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor
+			, Func<IDynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor
 			, int? maximumNumberOfEntities = null
 		)
 		where AbstractCrmType : AbstractCrm
@@ -59,12 +59,12 @@ namespace SystemInterface.Dynamics.Crm
 
 		public static List<AbstractCrmType> ReadByAttribute<AbstractCrmType>
 		(
-			DynamicsCrmConnection connection
+			IDynamicsCrmConnection connection
 			, string entityName
 			, ColumnSet ColumnSetCrmType
 			, string attributeName
 			, object attributeValue
-			, Func<DynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor
+			, Func<IDynamicsCrmConnection, Entity, AbstractCrmType> CrmTypeConstructor
 			, int? maximumNumberOfEntities = null
 		)
 		where AbstractCrmType : AbstractCrm
@@ -97,19 +97,19 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntities;
 		}
 
-		public static List<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		public static List<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		{
 			return ReadFromFetchXml(dynamicsCrmConnection, typeof(CrmType).Name.ToLower(), fields, keyContent, maxCount, CrmTypeConstructor, pagingInformation);
 		}
 
-		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? pageSize, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
+		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? pageSize, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
 		{
 			IEnumerable<CrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, pageSize, CrmTypeConstructor, pagingInfo));
 
 			return returnedIEnumerable;
 		}
 
-		public static List<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		public static List<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		{
 			XDocument xDocument = new XDocument(
 				new XElement("fetch",
@@ -129,21 +129,21 @@ namespace SystemInterface.Dynamics.Crm
 			return crmObjects;
 		}
 
-		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int pageSize, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
+		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, List<string> fields, Dictionary<string, string> keyContent, int pageSize, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
 		{
 			IEnumerable<CrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, entityName, fields, keyContent, pageSize, CrmTypeConstructor, pagingInfo));
 
 			return returnedIEnumerable;
 		}
 
-		public static List<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		public static List<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, string path, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		{
 			XDocument xDocument = XDocument.Load(path);
 
 			return ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInformation);
 		}
 
-		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, string path, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
+		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, string path, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
 		{
 			IEnumerable<CrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, path, CrmTypeConstructor, pagingInfo));
 
@@ -166,7 +166,7 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
-		public static List<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
+		public static List<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		{
 			if (pagingInformation.FirstRun == false)
 			{
@@ -199,14 +199,14 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntities;
 		}
 
-		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<DynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
+		public static IEnumerable<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor)
 		{
 			IEnumerable<CrmType> returnedIEnumerable = ReadFromFetchXml(pagingInfo => ReadFromFetchXml(dynamicsCrmConnection, xDocument, CrmTypeConstructor, pagingInfo));
 
 			return returnedIEnumerable;
 		}
 
-		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Type entityType)
+		public static List<string> GetAllAttributeNames(IDynamicsCrmConnection connection, Type entityType)
 		{
 			RetrieveEntityRequest retrieveBankAccountEntityRequest = new RetrieveEntityRequest
 			{
@@ -220,14 +220,14 @@ namespace SystemInterface.Dynamics.Crm
 			return attributeNames;
 		}
 
-		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path, string aliasName)
+		public static int CountByFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, string path, string aliasName)
 		{
 			XDocument xDocument = XDocument.Load(path);
 
 			return CountByFetchXml(dynamicsCrmConnection, xDocument, aliasName);
 		}
 
-		public static int CountByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, string aliasName)
+		public static int CountByFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument, string aliasName)
 		{
 			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
 
@@ -252,14 +252,14 @@ namespace SystemInterface.Dynamics.Crm
 			return (int)aliasedValue.Value;
 		}
 
-		public static bool ExistsByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, string path)
+		public static bool ExistsByFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, string path)
 		{
 			XDocument xDocument = XDocument.Load(path);
 
 			return ExistsByFetchXml(dynamicsCrmConnection, xDocument);
 		}
 
-		public static bool ExistsByFetchXml(DynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument)
+		public static bool ExistsByFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, XDocument xDocument)
 		{
 			FetchExpression fetchExpression = new FetchExpression(xDocument.ToString());
 
@@ -270,7 +270,7 @@ namespace SystemInterface.Dynamics.Crm
 			return collectionCount >= 1;
 		}
 
-		public static bool Exists<AbstractCrmType>(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> keyContent)
+		public static bool Exists<AbstractCrmType>(IDynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> keyContent)
 		{
 			XDocument xDocument = new XDocument(
 				new XElement("fetch", new XAttribute("count", 1),

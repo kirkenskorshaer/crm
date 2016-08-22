@@ -7,7 +7,7 @@ namespace SystemInterface.Dynamics.Crm
 		public KeyType key;
 		public ValueType value;
 
-		public KeyValueEntity(DynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection, crmEntity, entityName, idName)
+		public KeyValueEntity(IDynamicsCrmConnection connection, Entity crmEntity, string entityName, string idName) : base(connection, crmEntity, entityName, idName)
 		{
 		}
 	}

@@ -27,11 +27,11 @@ namespace SystemInterface.Dynamics.Crm
 
 		private static readonly ColumnSet ColumnSetCampaignCrmGenerated = new ColumnSet("createdon", "modifiedon");
 
-		public Campaign(DynamicsCrmConnection connection) : base(connection)
+		public Campaign(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Campaign(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public Campaign(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 		}
 
@@ -61,12 +61,12 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static List<Campaign> ReadAllCampaignIds(DynamicsCrmConnection dynamicsCrmConnection)
+		public static List<Campaign> ReadAllCampaignIds(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
 		}
 
-		public static List<Campaign> ReadCampaignsToImportStubDataTo(DynamicsCrmConnection dynamicsCrmConnection)
+		public static List<Campaign> ReadCampaignsToImportStubDataTo(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid", "new_redirecttarget", "new_collecttype", "name", "ownerid" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
 		}

@@ -32,11 +32,11 @@ namespace SystemInterface.Dynamics.Crm
 		private static readonly ColumnSet ColumnSetAnnotationCrmGenerated = new ColumnSet("createdon", "modifiedon", "modifiedby");
 		protected override ColumnSet ColumnSetCrmGenerated { get { return ColumnSetAnnotationCrmGenerated; } }
 
-		public Annotation(DynamicsCrmConnection connection) : base(connection)
+		public Annotation(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Annotation(DynamicsCrmConnection connection, Entity annotationEntity) : base(connection, annotationEntity)
+		public Annotation(IDynamicsCrmConnection connection, Entity annotationEntity) : base(connection, annotationEntity)
 		{
 		}
 
@@ -69,7 +69,7 @@ namespace SystemInterface.Dynamics.Crm
 		}
 
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
-		public static List<Annotation> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAnnotations = null)
+		public static List<Annotation> ReadLatest(IDynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfAnnotations = null)
 		{
 			List<Annotation> annotations = StaticCrm.ReadLatest(connection, "annotation", ColumnSetAnnotation, lastSearchDate, (lConnection, entity) => new Annotation(lConnection, entity), maximumNumberOfAnnotations);
 

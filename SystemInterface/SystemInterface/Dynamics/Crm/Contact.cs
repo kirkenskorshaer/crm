@@ -105,11 +105,11 @@ namespace SystemInterface.Dynamics.Crm
 		private static readonly ColumnSet ColumnSetContactCrmGenerated = new ColumnSet("address1_addressid", "createdon", "modifiedon", "modifiedby", "address3_addressid", "address2_addressid", "statecode");
 		protected override ColumnSet ColumnSetCrmGenerated { get { return ColumnSetContactCrmGenerated; } }
 
-		public Contact(DynamicsCrmConnection connection) : base(connection)
+		public Contact(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Contact(DynamicsCrmConnection connection, Entity contactEntity) : base(connection, contactEntity)
+		public Contact(IDynamicsCrmConnection connection, Entity contactEntity) : base(connection, contactEntity)
 		{
 			if (contactEntity.Attributes.Any(attribute => attribute.Key == "statecode"))
 			{
@@ -176,7 +176,7 @@ namespace SystemInterface.Dynamics.Crm
 		}
 
 		private static readonly DateTime _minimumSearchDate = new DateTime(1900, 1, 1);
-		public static List<Contact> ReadLatest(DynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfContacts = null)
+		public static List<Contact> ReadLatest(IDynamicsCrmConnection connection, DateTime lastSearchDate, int? maximumNumberOfContacts = null)
 		{
 			List<Contact> contacts = StaticCrm.ReadLatest(connection, "contact", ColumnSetContact, lastSearchDate, (lConnection, entity) => new Contact(lConnection, entity), maximumNumberOfContacts);
 
@@ -198,7 +198,7 @@ namespace SystemInterface.Dynamics.Crm
 			SynchronizeNNRelationship(currentEntity, _annotationRelationshipName, "annotation", "annotationid", annotationIds, SynchronizeActionEnum.Delete);
 		}
 
-		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid contactId)
+		public static List<string> GetAllAttributeNames(IDynamicsCrmConnection connection, Guid contactId)
 		{
 			List<string> attributeNames = new List<string>();
 
@@ -211,7 +211,7 @@ namespace SystemInterface.Dynamics.Crm
 			return attributeNames;
 		}
 
-		public static Contact Read(DynamicsCrmConnection connection, Guid contactid)
+		public static Contact Read(IDynamicsCrmConnection connection, Guid contactid)
 		{
 			Entity contactEntity = connection.Service.Retrieve("contact", contactid, ColumnSetContact);
 
@@ -355,19 +355,19 @@ namespace SystemInterface.Dynamics.Crm
 			Connection.Service.Execute(setStateRequest);
 		}
 
-		public static bool Exists(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> keyContent)
+		public static bool Exists(IDynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.Exists<Contact>(dynamicsCrmConnection, keyContent);
 		}
 
-		public static Contact Create(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
+		public static Contact Create(IDynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
 		{
 			Contact contact = new Contact(dynamicsCrmConnection);
 			CreateFromContent(dynamicsCrmConnection, contact, allContent);
 			return contact;
 		}
 
-		public static List<Contact> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
+		public static List<Contact> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Contact(connection, contactEntity), new PagingInformation());
 		}

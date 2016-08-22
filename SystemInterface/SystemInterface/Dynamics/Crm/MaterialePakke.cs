@@ -27,11 +27,11 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "new_materialepakke"; } }
 		protected override string idName { get { return "new_materialepakkeid"; } }
 
-		public MaterialePakke(DynamicsCrmConnection connection) : base(connection)
+		public MaterialePakke(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public MaterialePakke(DynamicsCrmConnection connection, Entity entity) : base(connection, entity)
+		public MaterialePakke(IDynamicsCrmConnection connection, Entity entity) : base(connection, entity)
 		{
 		}
 

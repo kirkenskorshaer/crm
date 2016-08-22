@@ -56,7 +56,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static Group Read(DynamicsCrmConnection connection, Guid groupid)
+		public static Group Read(IDynamicsCrmConnection connection, Guid groupid)
 		{
 			Entity contactEntity = connection.Service.Retrieve("new_group", groupid, ColumnSetGroup);
 
@@ -65,7 +65,7 @@ namespace SystemInterface.Dynamics.Crm
 			return group;
 		}
 
-		public static List<Group> Read(DynamicsCrmConnection connection, string name)
+		public static List<Group> Read(IDynamicsCrmConnection connection, string name)
 		{
 			ConditionExpression equalsNameExpression = new ConditionExpression
 			{
@@ -90,7 +90,7 @@ namespace SystemInterface.Dynamics.Crm
 			return groups;
 		}
 
-		public static Group ReadOrCreate(DynamicsCrmConnection connection, string name)
+		public static Group ReadOrCreate(IDynamicsCrmConnection connection, string name)
 		{
 			List<Group> groups = Read(connection, name);
 			Group group = groups.FirstOrDefault(lGroup => lGroup.Name == name);
@@ -110,26 +110,26 @@ namespace SystemInterface.Dynamics.Crm
 			return group;
 		}
 
-		public void Delete(DynamicsCrmConnection connection)
+		public void Delete(IDynamicsCrmConnection connection)
 		{
 			connection.Service.Delete("new_group", GroupId);
 		}
 
-		public void Insert(DynamicsCrmConnection connection)
+		public void Insert(IDynamicsCrmConnection connection)
 		{
 			CrmEntity crmEntity = GetGroupAsEntity(false);
 
 			GroupId = connection.Service.Create(crmEntity);
 		}
 
-		public void Update(DynamicsCrmConnection connection)
+		public void Update(IDynamicsCrmConnection connection)
 		{
 			CrmEntity crmEntity = GetGroupAsEntity(true);
 
 			connection.Service.Update(crmEntity);
 		}
 
-		public static List<string> GetAllAttributeNames(DynamicsCrmConnection connection, Guid groupId)
+		public static List<string> GetAllAttributeNames(IDynamicsCrmConnection connection, Guid groupId)
 		{
 			List<string> attributeNames = new List<string>();
 

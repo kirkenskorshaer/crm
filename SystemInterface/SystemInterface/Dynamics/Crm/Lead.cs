@@ -72,11 +72,11 @@ namespace SystemInterface.Dynamics.Crm
 
 		private static readonly ColumnSet ColumnSetLeadCrmGenerated = new ColumnSet("createdon", "modifiedon");
 
-		public Lead(DynamicsCrmConnection connection) : base(connection)
+		public Lead(IDynamicsCrmConnection connection) : base(connection)
 		{
 		}
 
-		public Lead(DynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
+		public Lead(IDynamicsCrmConnection connection, Entity crmEntity) : base(connection, crmEntity)
 		{
 		}
 
@@ -126,7 +126,7 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		public static void UpdateSubscriberId(DynamicsCrmConnection dynamicsCrmConnection, Guid leadId, int subscriberId)
+		public static void UpdateSubscriberId(IDynamicsCrmConnection dynamicsCrmConnection, Guid leadId, int subscriberId)
 		{
 			AbstractCrm.Update(dynamicsCrmConnection, "lead", "leadid", leadId, new Dictionary<string, object>()
 			{
@@ -134,17 +134,17 @@ namespace SystemInterface.Dynamics.Crm
 			});
 		}
 
-		public static List<Lead> ReadAllLeadIds(DynamicsCrmConnection dynamicsCrmConnection)
+		public static List<Lead> ReadAllLeadIds(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "leadid" }, new Dictionary<string, string>(), null, (connection, entity) => new Lead(connection, entity), new PagingInformation());
 		}
 
-		public static List<Lead> ReadFromFetchXml(DynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
+		public static List<Lead> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Lead(connection, contactEntity), new PagingInformation());
 		}
 
-		public static Lead Create(DynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
+		public static Lead Create(IDynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
 		{
 			Lead lead = new Lead(dynamicsCrmConnection);
 			CreateFromContent(dynamicsCrmConnection, lead, allContent);
