@@ -68,7 +68,14 @@ namespace Administration.Option.Options.Logic
 				UdpateExistingSubscriberIfNeeded(information, ExistingSubscriber, email, subscriberId);
 			}
 
-			Lead.UpdateSubscriberId(dynamicsCrmConnection, leadId, subscriberId);
+			try
+			{
+				Lead.UpdateSubscriberId(dynamicsCrmConnection, leadId, subscriberId);
+			}
+			catch (Exception exception)
+			{
+				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+			}
 
 			return true;
 		}
