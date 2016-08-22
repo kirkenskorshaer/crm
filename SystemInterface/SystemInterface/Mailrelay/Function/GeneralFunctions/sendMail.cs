@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SystemInterface.Mailrelay.FunctionReply;
 
-namespace SystemInterface.Mailrelay.Function.SMTP
+namespace SystemInterface.Mailrelay.Function.GeneralFunctions
 {
 	public class sendMail : AbstractFunction
 	{

@@ -11,6 +11,7 @@ using SystemInterface.Mailrelay.Function.SMTP;
 using SystemInterface.Mailrelay.Function.LogFunctions;
 using SystemInterface.Mailrelay.Function.Mailboxes;
 using SystemInterface.Mailrelay.Function.Campaigns;
+using SystemInterface.Mailrelay.Function.GeneralFunctions;
 
 namespace SystemInterfaceTest.MailrelayTest
 {
