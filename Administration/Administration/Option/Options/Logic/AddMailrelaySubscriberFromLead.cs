@@ -41,6 +41,12 @@ namespace Administration.Option.Options.Logic
 
 			MailrelayInformation information = GetInformationFromFetchXml(dynamicsCrmConnection, webCampaign, email);
 
+			if (information == null)
+			{
+				Log.Write(Connection, $"Information for lead {leadId} on {email} could not be found", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+				return true;
+			}
+
 			if (information.campaign_new_mailrelaygroupid.HasValue == false)
 			{
 				Log.Write(Connection, $"Subscriber not added, campaign {webCampaign.FormId} has no group", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
