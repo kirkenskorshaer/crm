@@ -118,46 +118,46 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Dictionary<string, string> customFields = new Dictionary<string, string>();
 
-			AddIfValueNotEmpty(customFields, "f_11", firstname);
-			AddIfValueNotEmpty(customFields, "f_12", middlename);
-			AddIfValueNotEmpty(customFields, "f_13", lastname);
-			AddIfValueNotEmpty(customFields, "f_14", address1_line1);
-			AddIfValueNotEmpty(customFields, "f_15", address1_line2);
-			AddIfValueNotEmpty(customFields, "f_16", address1_line3);
-			AddIfValueNotEmpty(customFields, "f_17", address1_postalcode);
-			AddIfValueNotEmpty(customFields, "f_18", address1_city);
-			AddIfValueNotEmpty(customFields, "f_19", mobilephone);
+			AddValue(customFields, "f_11", firstname);
+			AddValue(customFields, "f_12", middlename);
+			AddValue(customFields, "f_13", lastname);
+			AddValue(customFields, "f_14", address1_line1);
+			AddValue(customFields, "f_15", address1_line2);
+			AddValue(customFields, "f_16", address1_line3);
+			AddValue(customFields, "f_17", address1_postalcode);
+			AddValue(customFields, "f_18", address1_city);
+			AddValue(customFields, "f_19", mobilephone);
 
-			AddIfValueNotEmpty(customFields, "f_3", Indsamlingssted2016_emailaddress1);
-			AddIfValueNotEmpty(customFields, "f_4", Indsamlingssted2016_address1_composite);
-			AddIfValueNotEmpty(customFields, "f_1", Indsamlingssted2016_name);
+			AddValue(customFields, "f_3", Indsamlingssted2016_emailaddress1);
+			AddValue(customFields, "f_4", Indsamlingssted2016_address1_composite);
+			AddValue(customFields, "f_1", Indsamlingssted2016_name);
 			AddIfValueNotEmpty(customFields, "f_20", Indsamlingssted2016_new_kkadminmedlemsnr);
-			AddIfValueNotEmpty(customFields, "f_21", Indsamlingssted2016_new_rutpassword);
-			AddIfValueNotEmpty(customFields, "f_22", Indsamlingssted2016_address1_line1);
-			AddIfValueNotEmpty(customFields, "f_23", Indsamlingssted2016_address1_line2);
-			AddIfValueNotEmpty(customFields, "f_24", Indsamlingssted2016_address1_line3);
-			AddIfValueNotEmpty(customFields, "f_25", Indsamlingssted2016_address1_postalcode);
-			AddIfValueNotEmpty(customFields, "f_26", Indsamlingssted2016_address1_city);
-			AddIfValueNotEmpty(customFields, "f_32", Indsamlingssted2016_new_rutbrugernavn);
+			AddValue(customFields, "f_21", Indsamlingssted2016_new_rutpassword);
+			AddValue(customFields, "f_22", Indsamlingssted2016_address1_line1);
+			AddValue(customFields, "f_23", Indsamlingssted2016_address1_line2);
+			AddValue(customFields, "f_24", Indsamlingssted2016_address1_line3);
+			AddValue(customFields, "f_25", Indsamlingssted2016_address1_postalcode);
+			AddValue(customFields, "f_26", Indsamlingssted2016_address1_city);
+			AddValue(customFields, "f_32", Indsamlingssted2016_new_rutbrugernavn);
 
-			AddIfValueNotEmpty(customFields, "f_5", Indsamlingskoordinator_fullname);
-			AddIfValueNotEmpty(customFields, "f_6", Indsamlingskoordinator_emailaddress1);
-			AddIfValueNotEmpty(customFields, "f_7", Indsamlingskoordinator_mobilephone);
-			AddIfValueNotEmpty(customFields, "f_27", Indsamlingskoordinator_firstname);
-			AddIfValueNotEmpty(customFields, "f_28", Indsamlingskoordinator_middlename);
-			AddIfValueNotEmpty(customFields, "f_29", Indsamlingskoordinator_lastname);
-			AddIfValueNotEmpty(customFields, "f_30", Indsamlingskoordinator_telephone1);
+			AddValue(customFields, "f_5", Indsamlingskoordinator_fullname);
+			AddValue(customFields, "f_6", Indsamlingskoordinator_emailaddress1);
+			AddValue(customFields, "f_7", Indsamlingskoordinator_mobilephone);
+			AddValue(customFields, "f_27", Indsamlingskoordinator_firstname);
+			AddValue(customFields, "f_28", Indsamlingskoordinator_middlename);
+			AddValue(customFields, "f_29", Indsamlingskoordinator_lastname);
+			AddValue(customFields, "f_30", Indsamlingskoordinator_telephone1);
 
 			return customFields;
 		}
 
-		private void AddIfValueNotEmpty(Dictionary<string, string> customFields, string key, string value)
+		private void AddValue(Dictionary<string, string> customFields, string key, string value)
 		{
-			if (string.IsNullOrWhiteSpace(value))
+			if (value == null)
 			{
+				customFields.Add(key, string.Empty);
 				return;
 			}
-
 			customFields.Add(key, value);
 		}
 
