@@ -129,6 +129,7 @@
     <Compile Include="Dynamics\Crm\DynamicFetch.cs" />
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
+    <Compile Include="Dynamics\Crm\IDynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\SingleValueEntity.cs" />
     <Compile Include="Dynamics\Crm\KeyValueEntity.cs" />
     <Compile Include="Dynamics\Crm\Lead.cs" />

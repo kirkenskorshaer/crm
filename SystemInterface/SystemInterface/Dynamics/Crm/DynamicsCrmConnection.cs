@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Client.Services;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
-	public class DynamicsCrmConnection
+	public class DynamicsCrmConnection : IDynamicsCrmConnection
 	{
 		private static List<DynamicsCrmConnection> _connections = new List<DynamicsCrmConnection>();
-		public OrganizationService Service;
-		public OrganizationServiceContext Context;
+		public IOrganizationService Service { get; }
+		public OrganizationServiceContext Context { get; }
 
 		private string url;
 		private string username;
