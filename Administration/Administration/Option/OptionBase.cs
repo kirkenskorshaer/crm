@@ -1,7 +1,9 @@
 ﻿using DataLayer;
 using System;
+using SystemInterface.Dynamics.Crm;
 using SystemInterface.Mailrelay;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
+using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
 namespace Administration.Option
 {
@@ -11,6 +13,7 @@ namespace Administration.Option
 		protected readonly DataLayer.MongoData.Config Config;
 		internal readonly DatabaseOptionType DatabaseOption;
 		protected IMailrelayConnection _mailrelayConnection;
+		protected IDynamicsCrmConnection _dynamicsCrmConnection;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{
@@ -29,6 +32,23 @@ namespace Administration.Option
 		}
 
 		protected abstract bool ExecuteOption();
+
+		protected void SetDynamicsCrmConnectionIfEmpty(string urlLoginName)
+		{
+			if (_dynamicsCrmConnection == null)
+			{
+				DatabaseUrlLogin login = DatabaseUrlLogin.GetUrlLogin(Connection, urlLoginName);
+				_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(login.Url, login.Username, login.Password);
+			}
+		}
+
+		public void SetDynamicsCrmConnectionIfEmpty(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			if (_dynamicsCrmConnection == null)
+			{
+				_dynamicsCrmConnection = dynamicsCrmConnection;
+			}
+		}
 
 		public void ChangeMailrelayConnection(IMailrelayConnection newConnection)
 		{
