@@ -123,6 +123,18 @@ namespace SystemInterface.Mailrelay.Logic
 			return reply.data.FirstOrDefault();
 		}
 
+		public getSubscribersReply GetMailrelaySubscribers(string email)
+		{
+			getSubscribers getSubscribers = new getSubscribers()
+			{
+				email = email,
+			};
+
+			MailrelayArrayReply<getSubscribersReply> reply = (MailrelayArrayReply<getSubscribersReply>)_mailrelayConnection.Send(getSubscribers);
+
+			return reply.data.FirstOrDefault(subscriber => subscriber.email == email);
+		}
+
 		public MailrelayBoolReply UpdateFromReply(getSubscribersReply replyToUpdate)
 		{
 			updateSubscriber update = new updateSubscriber()
