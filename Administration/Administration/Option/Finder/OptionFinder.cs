@@ -48,6 +48,7 @@ namespace Administration.Option.Finder
 			options.AddRange(UpdateMailrelayFromContact.Find(_connection));
 			options.AddRange(UpdateMailrelayGroup.Find(_connection));
 			options.AddRange(ExportContactToMailrelay.Find(_connection));
+			options.AddRange(SendTableFromMailrelay.Find(_connection));
 
 			//options.AddRange(MaintainAllTables.Find(_connection));
 
