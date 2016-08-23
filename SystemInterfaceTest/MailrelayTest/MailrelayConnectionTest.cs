@@ -34,6 +34,27 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
+		public void MailrelayWillNotBeCalledTooOften()
+		{
+			getGroups function = new getGroups() { offset = 0, count = 1, sortOrder = AbstractFunction.sortOrderEnum.ASC };
+
+			TimeSpan waitTime = TimeSpan.FromSeconds(15);
+
+			((MailrelayConnection)_mailrelayConnection).sendInterval = waitTime;
+
+			DateTime beforeCall = DateTime.Now;
+
+			_mailrelayConnection.Send(function);
+			_mailrelayConnection.Send(function);
+
+			DateTime after2Calls = DateTime.Now;
+
+			TimeSpan timeToMake2Calls = after2Calls - beforeCall;
+
+			Assert.Greater(timeToMake2Calls, waitTime);
+		}
+
+		[Test]
 		[Ignore]
 		public void addGroup()
 		{

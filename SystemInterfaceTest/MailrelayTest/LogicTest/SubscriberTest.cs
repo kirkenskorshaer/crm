@@ -137,6 +137,16 @@ namespace SystemInterfaceTest.MailrelayTest.LogicTest
 			Console.Out.WriteLine(_mailrelayConnectionTester);
 		}
 
+		[Test]
+		[Ignore]
+		public void GetMailrelaySubscribersAlwaysIncludeGroups()
+		{
+			Subscriber subscriber = new Subscriber(_mailrelayConnection);
+			getSubscribersReply reply = subscriber.GetMailrelaySubscribers("svend.l.kirkenskorshaer@gmail.com");
+
+			Assert.AreEqual(1, reply.groups.Count);
+		}
+
 		private void EnqueueSubscribersReply(Dictionary<string, string> customFields, List<string> groups, int replies)
 		{
 			List<getSubscribersReply> data = new List<getSubscribersReply>();

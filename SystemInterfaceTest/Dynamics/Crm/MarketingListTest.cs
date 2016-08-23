@@ -2,6 +2,8 @@
 using DataLayer.MongoData;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using SystemInterface.Dynamics.Crm;
 
 namespace SystemInterfaceTest.Dynamics.Crm
@@ -44,6 +46,49 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			TestDelegate readTest = () => MarketingList.Read(_connection, marketingListInserted.Id);
 
 			Assert.Throws(Is.InstanceOf(typeof(Exception)), readTest);
+		}
+
+		[Test]
+		[Ignore]
+		public void CrmIdsAndSubscriberIdsForTestList()
+		{
+			MarketingList list = MarketingList.Read(_connection, Guid.Parse("b70001ba-1569-e611-80f7-001c4215c4a0"));
+
+			foreach (KeyValueEntity<Guid, int?> crmAndSubscriber in list.CrmIdsAndSubscriberIds)
+			{
+				Contact contact = Contact.ReadFromFetchXml(_connection, new List<string>() { "emailaddress1", "new_mailrelaysubscriberid" }, new Dictionary<string, string>() { { "contactid", crmAndSubscriber.key.ToString() } }).Single();
+				Console.Out.WriteLine($"{contact.emailaddress1} - {contact.new_mailrelaysubscriberid}");
+			}
+		}
+
+		[Test]
+		[Ignore]
+		public void ContentIdsForNonMailrelaySubscribersTestList()
+		{
+			MarketingList list = MarketingList.Read(_connection, Guid.Parse("b70001ba-1569-e611-80f7-001c4215c4a0"));
+
+			foreach (Guid crmId in list.ContentIdsForNonMailrelaySubscribers)
+			{
+				Contact contact = Contact.ReadFromFetchXml(_connection, new List<string>() { "emailaddress1", "new_mailrelaysubscriberid" }, new Dictionary<string, string>() { { "contactid", crmId.ToString() } }).Single();
+				Console.Out.WriteLine($"{contact.emailaddress1} - {contact.new_mailrelaysubscriberid}");
+			}
+		}
+
+		[Test]
+		[Ignore]
+		public void GetListForMailrelayUpdateOnlyReturnsListThatShouldBeImported()
+		{
+			PagingInformation pagingInformation = new PagingInformation();
+
+			while (pagingInformation.FirstRun || pagingInformation.MoreRecords)
+			{
+				MarketingList marketingList = MarketingList.GetListForMailrelayUpdate(_connection, pagingInformation, null);
+
+				if (marketingList != null)
+				{
+					Console.Out.WriteLine($" {marketingList.Id} {marketingList.new_controlmailrelaygroup} - {marketingList.new_mailrelaygroupid} - {marketingList.new_mailrelaycheck}");
+				}
+			}
 		}
 
 		private MarketingList InsertMarketingList()
