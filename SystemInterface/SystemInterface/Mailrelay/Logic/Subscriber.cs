@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SystemInterface.Mailrelay.Function.Groups;
 using SystemInterface.Mailrelay.Function.Subscribers;
 using SystemInterface.Mailrelay.FunctionReply;
 
@@ -92,6 +93,22 @@ namespace SystemInterface.Mailrelay.Logic
 			}
 
 			return isChanged;
+		}
+
+		public static int CreateGroup(IMailrelayConnection _mailrelayConnection, string name, string description)
+		{
+			addGroup addGroupFunction = new addGroup()
+			{
+				description = description,
+				enable = true,
+				name = name,
+				position = 1,
+				visible = true,
+			};
+
+			MailrelayIntReply reply = (MailrelayIntReply)_mailrelayConnection.Send(addGroupFunction);
+
+			return reply.data;
 		}
 
 		private getSubscribersReply GetMailrelaySubscribers(int id)
