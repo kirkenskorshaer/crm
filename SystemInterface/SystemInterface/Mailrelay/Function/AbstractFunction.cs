@@ -283,9 +283,16 @@ namespace SystemInterface.Mailrelay
 
 		public AbstractMailrelayReply GetMailrelayReply(string replyString)
 		{
-			AbstractMailrelayReply reply = JsonConvert.DeserializeObject(replyString, ReturnType, new DateTimeConverter()) as AbstractMailrelayReply;
+			try
+			{
+				AbstractMailrelayReply reply = JsonConvert.DeserializeObject(replyString, ReturnType, new DateTimeConverter()) as AbstractMailrelayReply;
 
-			return reply;
+				return reply;
+			}
+			catch (Exception exception)
+			{
+				throw new Exception($"Failed DeserializeObject {replyString}", exception);
+			}
 		}
 
 		public enum sortOrderEnum
