@@ -1,4 +1,5 @@
 ﻿using DataLayer;
+using System;
 using SystemInterface.Mailrelay;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
 
@@ -21,7 +22,10 @@ namespace Administration.Option
 			string mailrelayUrl = Config.MailrelayUrl;
 			string apiKey = Config.MailrelayApiKey;
 
-			_mailrelayConnection = new MailrelayConnection(mailrelayUrl, apiKey);
+			_mailrelayConnection = new MailrelayConnection(mailrelayUrl, apiKey)
+			{
+				sendInterval = TimeSpan.FromMilliseconds(Config.MailrelaySendIntervalMilliseconds),
+			};
 		}
 
 		protected abstract bool ExecuteOption();

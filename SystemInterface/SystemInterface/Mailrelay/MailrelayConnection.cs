@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using SystemInterface.Mailrelay.FunctionReply;
 
@@ -12,6 +13,8 @@ namespace SystemInterface.Mailrelay
 	{
 		private string mailrelayUrl;
 		private string mailrelayApiKey;
+		private DateTime lastSend = DateTime.MinValue;
+		public TimeSpan sendInterval = TimeSpan.FromMilliseconds(500);
 
 		public MailrelayConnection(string url, string apiKey)
 		{
@@ -31,6 +34,12 @@ namespace SystemInterface.Mailrelay
 			using (HttpClient client = new HttpClient())
 			{
 				FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+				if (DateTime.Now < lastSend + sendInterval)
+				{
+					Thread.Sleep(sendInterval);
+				}
+				lastSend = DateTime.Now;
 
 				try
 				{

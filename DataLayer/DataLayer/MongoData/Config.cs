@@ -19,6 +19,7 @@ namespace DataLayer.MongoData
 		public string ResourcePath { get; set; }
 		public string MailrelayUrl { get; set; }
 		public string MailrelayApiKey { get; set; }
+		public double MailrelaySendIntervalMilliseconds { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
