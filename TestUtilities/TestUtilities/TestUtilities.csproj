@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicsCrmConnectionTester.cs" />
+    <Compile Include="GetTestData.cs" />
     <Compile Include="MailrelayConnectionTester.cs" />
     <Compile Include="OrganizationServiceTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\..\SystemInterface\SystemInterface\SystemInterface.csproj">
       <Project>{869cba0e-a4e8-4339-851e-1c4e8d70041b}</Project>
       <Name>SystemInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Utilities\Utilities\Utilities.csproj">
+      <Project>{fda4e213-1c38-4a3f-beb0-0e8ee9c79d6c}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
