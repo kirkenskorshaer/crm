@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace DataLayer.MongoData
 {
+	[BsonIgnoreExtraElements]
 	public class Config
 	{
 		public ObjectId _id { get; set; }
