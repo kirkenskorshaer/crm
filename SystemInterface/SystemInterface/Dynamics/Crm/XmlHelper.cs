@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace SystemInterface.Dynamics.Crm
@@ -43,6 +44,18 @@ namespace SystemInterface.Dynamics.Crm
 			else
 			{
 				xDocument.Element("fetch").Attribute("count").Value = count.ToString();
+			}
+		}
+
+		public static void SetAttributeValue(XDocument xDocument, string elementName, string attributeName, object value)
+		{
+			if (xDocument.Element(elementName).Attribute(attributeName) == null)
+			{
+				xDocument.Element(elementName).Add(new XAttribute(attributeName, value));
+			}
+			else
+			{
+				xDocument.Element(elementName).Attribute(attributeName).Value = value.ToString();
 			}
 		}
 	}

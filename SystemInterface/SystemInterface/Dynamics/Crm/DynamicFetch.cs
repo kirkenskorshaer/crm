@@ -45,8 +45,8 @@ namespace SystemInterface.Dynamics.Crm
 					return new List<dynamic>();
 				}
 
-				xDocument.Element("fetch").Add(new XAttribute("paging-cookie", pagingInformation.PagingCookie));
-				xDocument.Element("fetch").Add(new XAttribute("page", pagingInformation.Page));
+				XmlHelper.SetAttributeValue(xDocument, "fetch", "paging-cookie", pagingInformation.PagingCookie);
+				XmlHelper.SetAttributeValue(xDocument, "fetch", "page", pagingInformation.Page);
 			}
 
 			pagingInformation.FirstRun = false;
