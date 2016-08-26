@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.IO;
 using System.Reflection;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DataLayer.MongoData
 {
@@ -21,6 +22,7 @@ namespace DataLayer.MongoData
 		public string MailrelayUrl { get; set; }
 		public string MailrelayApiKey { get; set; }
 		public double MailrelaySendIntervalMilliseconds { get; set; }
+		public bool? EnableTest { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
