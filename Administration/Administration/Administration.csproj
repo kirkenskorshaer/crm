@@ -74,6 +74,7 @@
     <Compile Include="Mapping\Contact\ContactCsvMapping.cs" />
     <Compile Include="Mapping\RandomData\RandomContact.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
+    <Compile Include="Option\Options\AbstractReportingDataOptionBase.cs" />
     <Compile Include="Option\Options\Csv\CsvDelete.cs" />
     <Compile Include="Option\Options\Csv\CsvRead.cs" />
     <Compile Include="Option\Options\Csv\CsvUpdate.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Option\Options\Logic\SynchronizeToCrm.cs" />
     <Compile Include="Option\Options\Logic\UpdateMailrelayFromContact.cs" />
     <Compile Include="Option\Options\Logic\UpdateMailrelayGroup.cs" />
+    <Compile Include="Option\Options\OptionReport.cs" />
     <Compile Include="Option\Options\Service\ServiceCreate.cs" />
     <Compile Include="Option\Options\Service\ServiceDelete.cs" />
     <Compile Include="Option\Options\Service\ServiceStart.cs" />

@@ -15,7 +15,7 @@ using DatabaseSendTableFromMailrelay = DataLayer.MongoData.Option.Options.Logic.
 
 namespace Administration.Option.Options.Logic
 {
-	public class SendTableFromMailrelay : AbstractDataOptionBase
+	public class SendTableFromMailrelay : AbstractReportingDataOptionBase
 	{
 		private DatabaseSendTableFromMailrelay _databaseSendTableFromMailrelay;
 		private CultureInfo cultureInfo = new CultureInfo("da-DK");
@@ -25,7 +25,7 @@ namespace Administration.Option.Options.Logic
 			_databaseSendTableFromMailrelay = (DatabaseSendTableFromMailrelay)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseSendTableFromMailrelay.urlLoginName;
 			Guid? contactid = _databaseSendTableFromMailrelay.contactid;
@@ -75,7 +75,8 @@ namespace Administration.Option.Options.Logic
 
 				if (receiver == null)
 				{
-					return true;
+					report.Success = true;
+					return;
 				}
 
 				IDictionary<string, object> receiverDictionary = (IDictionary<string, object>)receiver;
@@ -84,6 +85,8 @@ namespace Administration.Option.Options.Logic
 				{
 					continue;
 				}
+
+				report.Workload++;
 
 				string fullname = receiver.fullname;
 				string emailaddress1 = receiver.emailaddress1;
@@ -153,6 +156,8 @@ namespace Administration.Option.Options.Logic
 					}
 				}
 
+				report.SubWorkload += receiver.RowCount;
+
 				string htmlWithRowsAndFields = InsertFilledFields(htmlWithRows, receiverDictionary, headerDateFormat);
 
 				bool mailSent = TrySendMail(htmlWithRowsAndFields, fullname, emailaddress1, subject, packageid, mailboxfromid, mailboxreplyid, mailboxreportid);
@@ -163,7 +168,7 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			return true;
+			report.Success = true;
 		}
 
 		private int FindRowCountInPeriod(List<dynamic> rowDynamicList, string limitOnDateName, DateTime from, DateTime to)
