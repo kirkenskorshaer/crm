@@ -11,7 +11,7 @@ namespace SystemInterface.Mailrelay
 		}
 
 		public MailrelayConnectionException(AbstractFunction senderFunction, AbstractMailrelayReply reply, string targetUrl, Exception inner)
-			: base(GetMessage(senderFunction, reply, targetUrl), inner)
+			: base($"Error:	{inner.Message}" + GetMessage(senderFunction, reply, targetUrl), inner)
 		{
 		}
 
@@ -21,7 +21,7 @@ namespace SystemInterface.Mailrelay
 		}
 
 		public MailrelayConnectionException(AbstractFunction senderFunction, string targetUrl, Exception inner)
-			: base(GetMessage(senderFunction, targetUrl), inner)
+			: base($"Error:	{inner.Message}" + GetMessage(senderFunction, targetUrl), inner)
 		{
 		}
 

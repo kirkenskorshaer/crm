@@ -49,6 +49,10 @@ namespace SystemInterface.Mailrelay
 				}
 				catch (Exception exception)
 				{
+					while (exception.InnerException != null)
+					{
+						exception = exception.InnerException;
+					}
 					throw new MailrelayConnectionException(functionToSend, mailrelayUrl, exception);
 				}
 			}
