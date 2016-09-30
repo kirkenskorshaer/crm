@@ -160,7 +160,7 @@ namespace Administration.Option.Options.Logic
 
 			MailrelayArrayReply<getSubscribersReply> reply = (MailrelayArrayReply<getSubscribersReply>)_mailrelayConnection.Send(getSubscribers);
 
-			return reply.data.Where(data => data.email == email).SingleOrDefault();
+			return reply.data.Where(data => data.email.ToLower() == email.ToLower()).SingleOrDefault();
 		}
 
 		private addSubscriber GetSubscriberFromFetchXml(MailrelayInformation information, string email)
