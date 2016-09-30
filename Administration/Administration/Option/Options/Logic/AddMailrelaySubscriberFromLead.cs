@@ -66,7 +66,7 @@ namespace Administration.Option.Options.Logic
 			else
 			{
 				subscriberId = int.Parse(ExistingSubscriber.id);
-				UdpateExistingSubscriberIfNeeded(information, ExistingSubscriber, email, subscriberId);
+				UdpateExistingSubscriber(information, ExistingSubscriber, email, subscriberId);
 			}
 
 			try
@@ -81,7 +81,7 @@ namespace Administration.Option.Options.Logic
 			report.Success = true;
 		}
 
-		private void UdpateExistingSubscriberIfNeeded(MailrelayInformation information, getSubscribersReply ExistingSubscriber, string email, int subscriberId)
+		private void UdpateExistingSubscriber(MailrelayInformation information, getSubscribersReply ExistingSubscriber, string email, int subscriberId)
 		{
 			Dictionary<string, string> customFieldsResult = new Dictionary<string, string>();
 
@@ -99,10 +99,8 @@ namespace Administration.Option.Options.Logic
 				isChanged = true;
 			}
 
-			if (isChanged)
-			{
-				UpdateSubscriber(email, customFieldsResult, groups, information.fullname, subscriberId);
-			}
+			UpdateSubscriber(email, customFieldsResult, new List<int>() { 1 }, information.fullname, subscriberId);
+			UpdateSubscriber(email, customFieldsResult, groups, information.fullname, subscriberId);
 		}
 
 		private void UpdateSubscriber(string email, Dictionary<string, string> customFieldsResult, List<int> groups, string fullname, int subscriberId)
