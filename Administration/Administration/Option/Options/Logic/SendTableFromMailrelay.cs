@@ -47,6 +47,14 @@ namespace Administration.Option.Options.Logic
 			int mailboxreportid = _databaseSendTableFromMailrelay.mailboxreportid;
 			int packageid = _databaseSendTableFromMailrelay.packageid;
 
+			string smtpHost = _databaseSendTableFromMailrelay.smtpHost;
+			string fromEmail = _databaseSendTableFromMailrelay.fromEmail;
+			int port = _databaseSendTableFromMailrelay.port;
+			string smtpUsername = _databaseSendTableFromMailrelay.smtpUsername;
+			string smtpPassword = _databaseSendTableFromMailrelay.smtpPassword;
+
+			DatabaseSendTableFromMailrelay.SendTypeEnum sendType = _databaseSendTableFromMailrelay.sendType;
+
 			SetDynamicsCrmConnectionIfEmpty(urlLoginName);
 
 			PagingInformation pagingInformation = new PagingInformation();
@@ -160,7 +168,18 @@ namespace Administration.Option.Options.Logic
 
 				string htmlWithRowsAndFields = InsertFilledFields(htmlWithRows, receiverDictionary, headerDateFormat);
 
-				bool mailSent = TrySendMail(htmlWithRowsAndFields, fullname, emailaddress1, subject, packageid, mailboxfromid, mailboxreplyid, mailboxreportid);
+				bool mailSent = false;
+
+				if (sendType == DatabaseSendTableFromMailrelay.SendTypeEnum.Api)
+				{
+					mailSent = TrySendMail(htmlWithRowsAndFields, fullname, emailaddress1, subject, packageid, mailboxfromid, mailboxreplyid, mailboxreportid);
+				}
+
+				if (sendType == DatabaseSendTableFromMailrelay.SendTypeEnum.Smtp)
+				{
+					mailSent = TrySendSmtpMail(htmlWithRowsAndFields, fullname, fromEmail, emailaddress1, subject, smtpHost, port, smtpUsername, smtpPassword);
+				}
+
 				if (mailSent == false)
 				{
 					Log.Write(Connection, $"failed sending email to {emailaddress1} sleeping {sleepTimeOnFailiure}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
@@ -169,6 +188,22 @@ namespace Administration.Option.Options.Logic
 			}
 
 			report.Success = true;
+		}
+
+		private bool TrySendSmtpMail(string htmlWithRowsAndFields, string fullname, string fromEmail, string emailaddress1, string subject, string smtpHost, int port, string smtpUsername, string smtpPassword)
+		{
+			SystemInterface.Email emailSender = new SystemInterface.Email();
+
+			try
+			{
+				emailSender.Send(htmlWithRowsAndFields, true, subject, fromEmail, emailaddress1, smtpHost, port, smtpUsername, smtpPassword);
+				return true;
+			}
+			catch (Exception exception)
+			{
+				Log.Write(Connection, exception.Message, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				return false;
+			}
 		}
 
 		private int FindRowCountInPeriod(List<dynamic> rowDynamicList, string limitOnDateName, DateTime from, DateTime to)

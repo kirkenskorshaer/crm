@@ -113,6 +113,27 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void MailCanBeSendtOnSmtp()
+		{
+			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
+			databaseSendTableFromMailrelay.limitOnDateName = "createdon";
+			databaseSendTableFromMailrelay.sendType = DatabaseSendTableFromMailrelay.SendTypeEnum.Smtp;
+			databaseSendTableFromMailrelay.fromEmail = "svend.l@kirkenskorshaer.dk";
+
+			SendTableFromMailrelay sendTableFromMailrelay = new SendTableFromMailrelay(Connection, databaseSendTableFromMailrelay);
+			sendTableFromMailrelay.ChangeMailrelayConnection(_mailrelayConnectionTester);
+
+			sendTableFromMailrelay.SetDynamicsCrmConnectionIfEmpty(_dynamicsCrmConnectionTester);
+			EnqueueCrmResponse(new List<DateTime>() { new DateTime(2000, 1, 1), DateTime.Now, new DateTime(2000, 1, 2), new DateTime(2000, 1, 3), DateTime.Now.AddDays(-1) });
+
+			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply());
+			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
+			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
+
+			sendTableFromMailrelay.Execute();
+		}
+
+		[Test]
 		public void MailWillNotBeSentIfLimitedOnDate()
 		{
 			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
@@ -314,6 +335,8 @@ namespace AdministrationTest.Option.Options.Logic
 				tableDateFormat = "dd/MM/yyyy",
 				requireDataOnDaysFromToday = new List<int>() { -1 },
 				sleepTimeOnFailiure = TimeSpan.FromSeconds(1),
+				port = 465,
+				sendType = DatabaseSendTableFromMailrelay.SendTypeEnum.Api,
 			};
 		}
 
