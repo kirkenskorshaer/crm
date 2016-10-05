@@ -26,6 +26,20 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		public int mailboxreportid { get; set; }
 		public int packageid { get; set; }
 
+		public string smtpHost { get; set; }
+		public string fromEmail { get; set; }
+		public int port { get; set; }
+		public string smtpUsername { get; set; }
+		public string smtpPassword { get; set; }
+
+		public SendTypeEnum sendType { get; set; }
+
+		public enum SendTypeEnum
+		{
+			Api = 1,
+			Smtp = 2
+		}
+
 		public static SendTableFromMailrelay Create
 		(
 			MongoConnection mongoConnection,
