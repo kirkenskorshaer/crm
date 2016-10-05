@@ -1,5 +1,6 @@
 ﻿using DataLayer;
 using System;
+using System.IO;
 using SystemInterface.Dynamics.Crm;
 using SystemInterface.Mailrelay;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
@@ -29,6 +30,22 @@ namespace Administration.Option
 			{
 				sendInterval = TimeSpan.FromMilliseconds(Config.MailrelaySendIntervalMilliseconds),
 			};
+
+			if (Config.EnableTest == true)
+			{
+				string path = Config.GetResourcePath("emailtest");
+				if (Directory.Exists(path) == false)
+				{
+					Directory.CreateDirectory(path);
+				}
+
+				SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
+				SystemInterface.Email.PickupDirectoryLocation = path;
+			}
+			else
+			{
+				SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+			}
 		}
 
 		protected abstract bool ExecuteOption();
