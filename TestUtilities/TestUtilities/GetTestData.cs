@@ -59,7 +59,7 @@ namespace TestUtilities
 
 		public static string GetEmail()
 		{
-			return GetName() + "@korsnet.dk";
+			return GetName().Replace("æ", "ae").Replace("ø", "oe").Replace("å", "aa") + "@korsnet.dk";
 		}
 
 		public static string GetPhone()
