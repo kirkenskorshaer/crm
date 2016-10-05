@@ -18,7 +18,7 @@ namespace SystemInterfaceTest
 
 			Config config = Config.GetConfig(connection);
 
-			email.Send("test", "test", config.Email, "svend.l@kirkenskorshaer.dk", config.EmailSmtpHost, config.EmailSmtpPort, config.Email, config.EmailPassword);
+			email.Send("test", false, "test", config.Email, "svend.l@kirkenskorshaer.dk", config.EmailSmtpHost, config.EmailSmtpPort, config.Email, config.EmailPassword);
 		}
 	}
 }
