@@ -89,7 +89,7 @@ namespace Administration.Option.Options.Logic
 
 				IDictionary<string, object> receiverDictionary = (IDictionary<string, object>)receiver;
 
-				if (receiverDictionary.ContainsKey("fullname") == false || receiverDictionary.ContainsKey("emailaddress1") == false)
+				if (receiverDictionary.ContainsKey("emailaddress1") == false)
 				{
 					continue;
 				}
