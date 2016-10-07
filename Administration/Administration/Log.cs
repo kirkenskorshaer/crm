@@ -15,10 +15,20 @@ namespace Administration
 
 		public static void Write(MongoConnection connection, string message, Config.LogLevelEnum logLevel)
 		{
-			Write(connection, message, string.Empty, logLevel);
+			WriteLocation(connection, message, string.Empty, string.Empty, logLevel);
+		}
+
+		public static void WriteLocation(MongoConnection connection, string message, string location, Config.LogLevelEnum logLevel)
+		{
+			WriteLocation(connection, message, location, string.Empty, logLevel);
 		}
 
 		public static void Write(MongoConnection connection, string message, string stackTrace, Config.LogLevelEnum logLevel)
+		{
+			WriteLocation(connection, message, string.Empty, string.Empty, logLevel);
+		}
+
+		public static void WriteLocation(MongoConnection connection, string message, string location, string stackTrace, Config.LogLevelEnum logLevel)
 		{
 			if (LogLevel.HasFlag(logLevel))
 			{
@@ -26,6 +36,7 @@ namespace Administration
 				{
 					CreatedTime = DateTime.Now,
 					Message = message,
+					Location = location,
 					StackTrace = stackTrace,
 					LogLevel = logLevel,
 				};

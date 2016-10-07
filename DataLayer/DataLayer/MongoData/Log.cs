@@ -11,16 +11,18 @@ namespace DataLayer.MongoData
 		public ObjectId _id { get; set; }
 		public string Message { get; set; }
 		public string StackTrace { get; set; }
+		public string Location { get; set; }
 		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
 		public DateTime CreatedTime { get; set; }
 		public Config.LogLevelEnum LogLevel { get; set; }
 
-		public static void Write(MongoConnection connection, string message, string stackTrace, Config.LogLevelEnum logLevel)
+		public static void Write(MongoConnection connection, string message, string location, string stackTrace, Config.LogLevelEnum logLevel)
 		{
 			Log log = new Log()
 			{
 				CreatedTime = DateTime.Now,
 				Message = message,
+				Location = location,
 				StackTrace = stackTrace,
 				LogLevel = logLevel,
 			};
@@ -41,7 +43,7 @@ namespace DataLayer.MongoData
 
 			SortDefinitionBuilder<Log> sortBuilder = new SortDefinitionBuilder<Log>();
 			SortDefinition<Log> sortDefinition = sortBuilder.Descending(log => log.CreatedTime);
-			
+
 			IFindFluent<Log, Log> logFind = logs.Find(log => true).Sort(sortDefinition);
 			Task<Log> logTask = logFind.FirstAsync();
 

@@ -25,11 +25,11 @@ namespace DataLayerTest.MongoDataTest
 		[Test]
 		public void ReadLatestTest()
 		{
-			Log.Write(_connection, "test1", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Log.Write(_connection, "test1", "LogTest", string.Empty, Config.LogLevelEnum.OptionMessage);
 			Thread.Sleep(50);
-			Log.Write(_connection, "test2", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Log.Write(_connection, "test2", "LogTest", string.Empty, Config.LogLevelEnum.OptionMessage);
 			Thread.Sleep(50);
-			Log.Write(_connection, "test3", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Log.Write(_connection, "test3", "LogTest", string.Empty, Config.LogLevelEnum.OptionMessage);
 
 			Log log = Log.ReadLatest(_connection);
 
