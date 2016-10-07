@@ -31,7 +31,7 @@ namespace Administration
 		public void Run()
 		{
 			_startTime = DateTime.Now;
-			Log.Write(_connection, $"starting", Config.LogLevelEnum.HeartMessage);
+			Log.WriteLocation(_connection, $"starting", "Heart", Config.LogLevelEnum.HeartMessage);
 
 			while (_run)
 			{
@@ -48,7 +48,7 @@ namespace Administration
 			DateTime endTime = DateTime.Now;
 			TimeSpan runtime = endTime - _startTime;
 
-			Log.Write(_connection, $"stopping, ran from {_startTime.ToString("yyyyMMdd HH:mm:ss")} to {endTime.ToString("yyyyMMdd HH:mm:ss")}, running time = {Math.Round(runtime.TotalSeconds, 0)} Seconds", Config.LogLevelEnum.HeartMessage);
+			Log.WriteLocation(_connection, $"stopping, ran from {_startTime.ToString("yyyyMMdd HH:mm:ss")} to {endTime.ToString("yyyyMMdd HH:mm:ss")}, running time = {Math.Round(runtime.TotalSeconds, 0)} Seconds", "Heart", Config.LogLevelEnum.HeartMessage);
 		}
 
 		private void WriteException(Exception exception, Config.LogLevelEnum logLevel)
