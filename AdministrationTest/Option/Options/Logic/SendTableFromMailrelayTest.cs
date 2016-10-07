@@ -134,6 +134,26 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void MailCanBeSendtToBykoordinator()
+		{
+			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay(mailTypeEnum.bykoordinator);
+			databaseSendTableFromMailrelay.limitOnDateName = "createdon";
+			databaseSendTableFromMailrelay.sendType = DatabaseSendTableFromMailrelay.SendTypeEnum.Smtp;
+			databaseSendTableFromMailrelay.fromEmail = "svend.l@kirkenskorshaer.dk";
+
+			SendTableFromMailrelay sendTableFromMailrelay = new SendTableFromMailrelay(Connection, databaseSendTableFromMailrelay);
+			sendTableFromMailrelay.ChangeMailrelayConnection(_mailrelayConnectionTester);
+
+			//sendTableFromMailrelay.SetDynamicsCrmConnectionIfEmpty(_dynamicsCrmConnectionTester);
+			//EnqueueCrmResponse(new List<DateTime>() { new DateTime(2000, 1, 1), DateTime.Now, new DateTime(2000, 1, 2), new DateTime(2000, 1, 3), DateTime.Now.AddDays(-1) });
+
+			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
+			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
+
+			sendTableFromMailrelay.Execute();
+		}
+
+		[Test]
 		public void MailWillNotBeSentIfLimitedOnDate()
 		{
 			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
@@ -231,7 +251,7 @@ namespace AdministrationTest.Option.Options.Logic
 				queryCreateTable: GetQueryCreateTable(),
 				queryFindContacts: GetQueryFindContacts(),
 				subject: "subject",
-				tablerow: GetTablerow(),
+				tablerow: GetTablerow(mailTypeEnum.indsamlingskoordinator),
 				urlLoginName: "test",
 				schedule: new DataLayer.MongoData.Option.Schedule()
 				{
@@ -313,17 +333,20 @@ namespace AdministrationTest.Option.Options.Logic
 			Assert.AreEqual(expected, output);
 		}
 
-		private DatabaseSendTableFromMailrelay CreateDatabaseSendTableFromMailrelay()
+		private enum mailTypeEnum
 		{
-			return new DatabaseSendTableFromMailrelay()
+			indsamlingskoordinator = 1,
+			bykoordinator = 2,
+		}
+
+		private DatabaseSendTableFromMailrelay CreateDatabaseSendTableFromMailrelay(mailTypeEnum mailType = mailTypeEnum.indsamlingskoordinator)
+		{
+			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = new DatabaseSendTableFromMailrelay()
 			{
-				html = GetHtml(),
 				Name = "test",
-				matchidname = "new_indsamler2016",
-				queryCreateTable = GetQueryCreateTable(),
-				queryFindContacts = GetQueryFindContacts(),
+				matchidname = GetMatchidname(mailType),
 				subject = "subject",
-				tablerow = GetTablerow(),
+				tablerow = GetTablerow(mailType),
 				urlLoginName = "test",
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
 				packageid = 1,
@@ -338,6 +361,39 @@ namespace AdministrationTest.Option.Options.Logic
 				port = 465,
 				sendType = DatabaseSendTableFromMailrelay.SendTypeEnum.Api,
 			};
+
+			switch (mailType)
+			{
+				case mailTypeEnum.indsamlingskoordinator:
+					databaseSendTableFromMailrelay.queryCreateTable = GetQueryCreateTable();
+					databaseSendTableFromMailrelay.queryFindContacts = GetQueryFindContacts();
+					databaseSendTableFromMailrelay.html = GetHtml();
+                    break;
+				case mailTypeEnum.bykoordinator:
+					databaseSendTableFromMailrelay.queryCreateTable = GetQueryCreateTableBykoordinator();
+					databaseSendTableFromMailrelay.queryFindContacts = GetQueryFindContactsBykoordinator();
+					databaseSendTableFromMailrelay.html = GetHtmlBykoordinator();
+					break;
+				default:
+					break;
+			}
+
+			return databaseSendTableFromMailrelay;
+		}
+
+		private static string GetMatchidname(mailTypeEnum mailType)
+		{
+			switch (mailType)
+			{
+				case mailTypeEnum.indsamlingskoordinator:
+					return "new_indsamler2016";
+				case mailTypeEnum.bykoordinator:
+					return "new_bykoordinatorid";
+				default:
+					break;
+			}
+
+			throw new Exception($"unknown mailtype {mailType}");
 		}
 
 		private string GetHtml()
@@ -371,9 +427,61 @@ namespace AdministrationTest.Option.Options.Logic
 			return htmlBuilder.ToString();
 		}
 
-		private string GetTablerow()
+		private string GetHtmlBykoordinator()
 		{
-			return "<tr><td>{!createdon;}</td><td>{!firstname;}</td><td>{!lastname;}</td><td>{!emailaddress1;}</td><td>{!mobilephone;}</td></tr>";
+			StringBuilder htmlBuilder = new StringBuilder();
+			htmlBuilder.Append("<html>");
+			htmlBuilder.Append("<body>");
+			htmlBuilder.Append("Kære {!fullname;koordinator}<br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("I går den {!Yesterday;} er der blevet tilmeldt {!RowCountDay-1;0} ny(e) indsamler(e) ) til de indsamlingssteder du er by- eller områdekoordinator for.<br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("Nedenfor kan du se en samlet oversigt over de {!RowCount;0} indsamlere, der indtil videre har tilmeldt sig de enkelte indsamlingssteder i dit område via danmarkmodfattigdom.dk. <br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("\t<table frame=\"box\" border=\"1\" frame=\"hsides\" rules=\"all\" cellpadding=\"7\">");
+			htmlBuilder.Append("\t<tr>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("Dato</th>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("Indsamlingssted</th>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("Fornavn</th>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("Efternavn</th>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("E-mail</th>");
+			htmlBuilder.Append("<th>");
+			htmlBuilder.Append("Mobil</th>");
+			htmlBuilder.Append("</tr>");
+			htmlBuilder.Append("{rows}\t</table>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("Husk at alle indsamlere skal kontaktes før den 27. november, så de ved, hvornår de skal møde op på indsamlingsstedet for at få udleveret indsamlingsbøsse og rute.<br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("Har du spørgsmål, er du altid velkommen til at kontakte os, enten ved at skrive til landsindsamling@kirkenskorshaer.dk eller ringe til 3312 1600.<br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("Med venlig hilsen<br/>");
+			htmlBuilder.Append("<br/>");
+			htmlBuilder.Append("Kirkens Korshær<br/>");
+			htmlBuilder.Append("Landsindsamlingen<br/>");
+			htmlBuilder.Append("</body>");
+			htmlBuilder.Append("</html>");
+
+			return htmlBuilder.ToString();
+		}
+
+		private string GetTablerow(mailTypeEnum mailType)
+		{
+			switch (mailType)
+			{
+				case mailTypeEnum.indsamlingskoordinator:
+					return "<tr><td>{!createdon;}</td><td>{!firstname;}</td><td>{!lastname;}</td><td>{!emailaddress1;}</td><td>{!mobilephone;}</td></tr>";
+				case mailTypeEnum.bykoordinator:
+					return "<tr><td>{!createdon;}</td><td>{!address1_line1_;}</td><td>{!firstname;}</td><td>{!lastname;}</td><td>{!emailaddress1;}</td><td>{!mobilephone;}</td></tr>";
+				default:
+					break;
+			}
+
+			throw new Exception($"unknown mailtype: {mailType}");
 		}
 
 		private string GetQueryFindContacts()
@@ -405,6 +513,32 @@ namespace AdministrationTest.Option.Options.Logic
 			return xDocument.ToString();
 		}
 
+		private string GetQueryFindContactsBykoordinator()
+		{
+			XDocument xDocument = new XDocument();
+
+			xDocument.Add(
+				new XElement("fetch",
+					new XElement("entity", new XAttribute("name", "contact"),
+						new XElement("attribute", new XAttribute("name", "fullname"), new XAttribute("alias", "fullname")),
+						new XElement("attribute", new XAttribute("name", "contactid"), new XAttribute("alias", "matchid")),
+						new XElement("attribute", new XAttribute("name", "emailaddress1"), new XAttribute("alias", "emailaddress1")),
+						new XElement("filter",
+							new XElement("condition", new XAttribute("attribute", "emailaddress1"), new XAttribute("operator", "not-null")),
+							new XElement("condition", new XAttribute("attribute", "fullname"), new XAttribute("operator", "not-null"))
+						),
+						new XElement("link-entity", new XAttribute("name", "account"), new XAttribute("from", "new_bykoordinatorid"), new XAttribute("to", "contactid"), new XAttribute("link-type", "inner"),
+							new XElement("filter",
+								new XElement("condition", new XAttribute("attribute", "new_erindsamlingssted"), new XAttribute("operator", "eq"), new XAttribute("value", "100000000"))
+							)
+						)
+					)
+				)
+			);
+
+			return xDocument.ToString();
+		}
+
 		private string GetQueryCreateTable()
 		{
 			XDocument xDocument = new XDocument();
@@ -420,6 +554,33 @@ namespace AdministrationTest.Option.Options.Logic
 							new XElement("attribute", new XAttribute("name", "createdon"), new XAttribute("alias", "createdon"), new XAttribute("aggregate", "max")),
 							new XElement("filter",
 								new XElement("condition", new XAttribute("attribute", "campaignid"), new XAttribute("operator", "eq"), new XAttribute("value", "ff052597-5538-e611-80ef-001c4215c4a0"))
+							)
+						)
+					)
+				)
+			);
+
+			return xDocument.ToString();
+		}
+
+		private string GetQueryCreateTableBykoordinator()
+		{
+			XDocument xDocument = new XDocument();
+
+			xDocument.Add(
+				new XElement("fetch", new XAttribute("aggregate", "true"),
+					new XElement("entity", new XAttribute("name", "account"),
+						new XElement("attribute", new XAttribute("name", "address1_line1"), new XAttribute("alias", "address1_line1_"), new XAttribute("groupby", "true")),
+						new XElement("link-entity", new XAttribute("name", "contact"), new XAttribute("from", "new_indsamler2016"), new XAttribute("to", "accountid"), new XAttribute("link-type", "inner"),
+							new XElement("attribute", new XAttribute("name", "firstname"), new XAttribute("alias", "firstname"), new XAttribute("groupby", "true")),
+							new XElement("attribute", new XAttribute("name", "lastname"), new XAttribute("alias", "lastname"), new XAttribute("groupby", "true")),
+							new XElement("attribute", new XAttribute("name", "emailaddress1"), new XAttribute("alias", "emailaddress1"), new XAttribute("groupby", "true")),
+							new XElement("attribute", new XAttribute("name", "mobilephone"), new XAttribute("alias", "mobilephone"), new XAttribute("groupby", "true")),
+							new XElement("link-entity", new XAttribute("name", "lead"), new XAttribute("from", "parentcontactid"), new XAttribute("to", "contactid"), new XAttribute("link-type", "outer"),
+								new XElement("attribute", new XAttribute("name", "createdon"), new XAttribute("alias", "createdon"), new XAttribute("aggregate", "max")),
+								new XElement("filter",
+									new XElement("condition", new XAttribute("attribute", "campaignid"), new XAttribute("operator", "eq"), new XAttribute("value", "ff052597-5538-e611-80ef-001c4215c4a0"))
+								)
 							)
 						)
 					)
