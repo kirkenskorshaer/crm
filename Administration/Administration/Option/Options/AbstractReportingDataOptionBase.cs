@@ -18,11 +18,11 @@ namespace Administration.Option.Options
 			try
 			{
 				ExecuteOption(report);
-				Log.Write(Connection, report.ToString(), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
+				report.WriteLog(Connection);
 			}
 			catch (Exception)
 			{
-				Log.Write(Connection, report.ToString(), DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				report.WriteLog(Connection);
 				throw;
 			}
 
