@@ -185,6 +185,8 @@ namespace Administration.Option.Options.Logic
 					Log.Write(Connection, $"failed sending email to {emailaddress1} sleeping {sleepTimeOnFailiure}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 					Thread.Sleep(sleepTimeOnFailiure);
 				}
+
+				report.TextBuilder.AppendLine($"Sent to {emailaddress1} - Rows {receiver.RowCount}");
 			}
 
 			report.Success = true;
