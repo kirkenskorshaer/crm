@@ -88,5 +88,17 @@ namespace DataLayer.MongoData
 
 			return Directory.GetCurrentDirectory() + "/" + path;
 		}
+
+		public string GetOrCreateResourcePath(string path)
+		{
+			string fullPath = GetResourcePath(path);
+
+			if (Directory.Exists(fullPath) == false)
+			{
+				Directory.CreateDirectory(fullPath);
+			}
+
+			return fullPath;
+		}
 	}
 }
