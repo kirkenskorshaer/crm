@@ -59,6 +59,36 @@ namespace Utilities
 			return propertyInfo.PropertyType;
 		}
 
+		public static bool IsNullOrWhiteSpace(object value)
+		{
+			if (value == null)
+			{
+				return true;
+			}
+
+			if (value is string)
+			{
+				return string.IsNullOrWhiteSpace((string)value);
+			}
+
+			return false;
+		}
+
+		public static Type GetType(MemberInfo memberInfo)
+		{
+			if (memberInfo is PropertyInfo)
+			{
+				return ((PropertyInfo)memberInfo).PropertyType;
+			}
+
+			if (memberInfo is FieldInfo)
+			{
+				return ((FieldInfo)memberInfo).FieldType;
+			}
+
+			return null;
+		}
+
 		public static object GetValue(object holderObject, MemberInfo member)
 		{
 			switch (member.MemberType)
