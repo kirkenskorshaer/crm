@@ -64,6 +64,7 @@
     <Compile Include="Option\Options\Logic\CreateImportFromStubTest.cs" />
     <Compile Include="Option\Options\Logic\ExportContactToMailrelayTest.cs" />
     <Compile Include="Option\Options\Logic\ExposeDataTest.cs" />
+    <Compile Include="Option\Options\Logic\ImportDanskeBankTest.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStubTest.cs" />
     <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignmentTest.cs" />
