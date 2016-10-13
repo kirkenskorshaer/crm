@@ -99,6 +99,8 @@
     <Compile Include="Option\Options\Logic\CreateImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\ExportContactToMailrelay.cs" />
     <Compile Include="Option\Options\Logic\ExposeData.cs" />
+    <Compile Include="Option\Options\Logic\ImportDanskeBankData\Iso20022Document.cs" />
+    <Compile Include="Option\Options\Logic\ImportDanskeBankData\Iso20022Ntry.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
     <Compile Include="Option\Options\Logic\SendTableFromMailrelay.cs" />
