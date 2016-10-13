@@ -7,9 +7,6 @@
       <SubArea Entity="contact" Id="Contact" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
-      <SubArea Entity="campaign" Id="Campaign" AvailableOffline="false" PassParams="false">
-        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
-      </SubArea>
       <SubArea Entity="list" Id="List" Title="Lists" AvailableOffline="false" PassParams="false">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
@@ -44,6 +41,18 @@
       <SubArea Id="nav_leads" Entity="lead" DescriptionResourceId="Lead_SubArea_Description" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html">
         <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
       </SubArea>
+    </Group>
+    <Group Id="Sms" Description="Sms" Title="Sms" IsProfile="false">
+      <SubArea Entity="new_sms" Id="Sms" Title="Sms" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+      <SubArea Entity="new_smstemplate" Id="Sms_Template" Description="Sms Template" Title="Sms Template" AvailableOffline="false" PassParams="false">
+        <Privilege Entity="new_priviledge_landsarbejde" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Bank" Description="Bank" Title="Bank" IsProfile="false">
+      <SubArea Entity="new_konto" Id="Konto" Description="Konto" Title="Konto" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="new_indbetaling" Id="Indbetaling" Description="Indbetaling" Title="Indbetaling" AvailableOffline="false" PassParams="false" />
     </Group>
   </Area>
   <Area Id="Fundraising" Icon="/_imgs/wm_1022.gif" Description="Fundraising" Title="Fundraising" ShowGroups="true">
