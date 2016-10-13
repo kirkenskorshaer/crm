@@ -75,13 +75,13 @@ namespace DataLayer.MongoData
 
 		public string GetResourcePath(string path)
 		{
-			if(string.IsNullOrWhiteSpace(ResourcePath) == false)
+			if (string.IsNullOrWhiteSpace(ResourcePath) == false)
 			{
 				return ResourcePath + "/" + path;
 			}
 
 			Assembly entryAssembly = Assembly.GetEntryAssembly();
-			if(entryAssembly != null)
+			if (entryAssembly != null)
 			{
 				return entryAssembly.Location + "/" + path;
 			}
