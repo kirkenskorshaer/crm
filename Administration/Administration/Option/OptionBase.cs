@@ -41,10 +41,13 @@ namespace Administration.Option
 
 				SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
 				SystemInterface.Email.PickupDirectoryLocation = path;
+
+				SystemInterface.DanskeBank.DanskeBankHandler.Environment = SystemInterface.DanskeBank.ApplicationRequest.EnvironmentEnum.TEST;
 			}
 			else
 			{
 				SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+				SystemInterface.DanskeBank.DanskeBankHandler.Environment = SystemInterface.DanskeBank.ApplicationRequest.EnvironmentEnum.PRODUCTION;
 			}
 		}
 
