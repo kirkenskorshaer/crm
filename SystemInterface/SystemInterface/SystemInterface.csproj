@@ -103,6 +103,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -115,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Csv\ColumnDefinition.cs" />
     <Compile Include="Csv\Csv.cs" />
+    <Compile Include="DanskeBank\TrippleDESDocumentEncryption.cs" />
     <Compile Include="DnsHelper.cs" />
     <Compile Include="DsiNext\Contact.cs" />
     <Compile Include="DsiNext\Group.cs" />
