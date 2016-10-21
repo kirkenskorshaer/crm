@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using SystemInterface;
 using NUnit.Framework;
+using System;
+using System.Text;
 
 namespace SystemInterfaceTest
 {
@@ -56,6 +58,27 @@ namespace SystemInterfaceTest
 			string after = File.ReadAllText(pathAfter);
 
 			Assert.AreEqual(before, after);
+		}
+
+		[Test]
+		public void AStringCanBeCompressed()
+		{
+			string uncompressed = "qwertyuiopåasdfghjklæø'¨1234567890+´`<zxcvbnm,.->;:_*^!`\"#¤%&/()=?";
+			Zip zip = new Zip();
+
+			byte[] compressed = zip.CompressString(uncompressed);
+
+			Assert.AreNotEqual(compressed, uncompressed);
+
+			string decompressed = zip.DecompressString(compressed);
+
+			Assert.AreEqual(uncompressed, decompressed);
+
+			Console.Out.WriteLine(uncompressed);
+			StringBuilder reportStringBuilder = new StringBuilder();
+			compressed.ToList().ForEach(compressByte => reportStringBuilder.Append(compressByte.ToString() + ","));
+			Console.Out.WriteLine(reportStringBuilder.ToString());
+			Console.Out.WriteLine(decompressed);
 		}
 	}
 }
