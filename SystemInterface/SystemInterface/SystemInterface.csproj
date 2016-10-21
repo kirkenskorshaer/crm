@@ -207,6 +207,11 @@
     <Compile Include="Mailrelay\MailrelayConnectionException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAdministration.cs" />
+    <Compile Include="Service References\DanskeBankEdiService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\KKAdminService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -216,6 +221,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DanskeBank\Wsdl\BankCorporateFileService.wsdl" />
+    <None Include="DanskeBank\Wsdl\PKIFactory.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DanskeBank\Wsdl\PKIService.wsdl" />
+    <None Include="DanskeBank\Wsdl\xml_id.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="DsiNext\wsdl\KbhKKAdminServiceWsdl.wsdl" />
     <None Include="DsiNext\wsdl\KbhKKAdminServiceWsdl0.wsdl" />
     <None Include="DsiNext\wsdl\KbhKKAdminServiceXsd0.xsd">
@@ -239,6 +252,37 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\DanskeBankEdiService\BankCorporateFileService.wsdl" />
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.DeleteFileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.deleteFileResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.DownloadFileListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.downloadFileListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.DownloadFileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.downloadFileResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.GetUserInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.getUserInfoResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.UploadFileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\SystemInterface.DanskeBankEdiService.uploadFileResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\KKAdminService\KKAdminService.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -264,6 +308,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DanskeBankEdiService\" />
     <WCFMetadataStorage Include="Service References\KKAdminService\" />
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +379,12 @@
     <Content Include="Dynamics\Crm\FetchXml\Materiale\MaterialeNeedingUpdate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\DanskeBankEdiService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\DanskeBankEdiService\configuration.svcinfo" />
+    <None Include="Service References\DanskeBankEdiService\configuration91.svcinfo" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
