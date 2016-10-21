@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsvTest\CsvTest.cs" />
+    <Compile Include="DanskeBank\DanskeBankHandlerTest.cs" />
     <Compile Include="DsiNext\KKAdminServiceTest.cs" />
     <Compile Include="DnsHelperTest.cs" />
     <Compile Include="Dynamics\Crm\AbstractCrmTest.cs" />
