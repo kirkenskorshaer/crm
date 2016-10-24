@@ -6,6 +6,8 @@ using SystemInterface.DanskeBankEdiService;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel.Channels;
+using System.ServiceModel;
 
 namespace SystemInterface.DanskeBank
 {
@@ -20,10 +22,15 @@ namespace SystemInterface.DanskeBank
 		{
 			_customerUserId = customerUserId;
 			_certificate = certificate;
-			//_client = new CorporateFileServicePortTypeClient();
+
+			Binding binding = new BasicHttpBinding(BasicHttpSecurityMode.Transport);
+			//EndpointAddress endpointAddress = new EndpointAddress("https://businessws.danskebank.com/financialservice/edifileservice.asmx");
+			EndpointAddress endpointAddress = new EndpointAddress("https://localhost/TestService.asmx");
+
+			_client = new CorporateFileServicePortTypeClient(binding, endpointAddress);
 		}
 
-		public XDocument DownloadNextIso20022()
+		public XDocument DownloadNextIso20022(string fileReference, string softwareId)
 		{
 			string[] files = DownloadFileList();
 
@@ -31,15 +38,15 @@ namespace SystemInterface.DanskeBank
 
 			string firstFileName = filesSortedByDate.First();
 
-			XDocument iso20022File = DownloadIso20022();//firstFileName
+			XDocument iso20022File = DownloadIso20022(fileReference, softwareId);//firstFileName
 
 			return iso20022File;
 		}
 
-		public XDocument DownloadIso20022()
+		public XDocument DownloadIso20022(string fileReference, string softwareId)
 		{
 			DownloadFileRequest downloadFileRequest = new DownloadFileRequest();
-			//downloadFileRequest.ApplicationRequest = GetDownloadFileApplicationRequest();
+			downloadFileRequest.ApplicationRequest = GetDownloadFileApplicationRequest(fileReference, softwareId);
 			downloadFileRequest.RequestHeader = GetRequestHeader();
 
 			DownloadFileResponse downloadFileResponse = _client.downloadFile(downloadFileRequest);
@@ -178,10 +185,12 @@ namespace SystemInterface.DanskeBank
 
 			string xml = document.ToString();
 
-			throw new NotImplementedException();
-			//return applicationRequest.ToByteArray();
-		}
+			//return Convert.ToBase64String(plainTextBytes);
 
+			byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(xml);
+
+			return encodedBytes;
+		}
 
 		public XDocument GetDownloadFileApplicationRequestXml(string fileReference, string softwareId)
 		{
