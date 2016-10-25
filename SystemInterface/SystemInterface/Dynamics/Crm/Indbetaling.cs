@@ -30,6 +30,12 @@ namespace SystemInterface.Dynamics.Crm
 		public OptionSetValue new_kilde;
 		public kildeEnum? kilde { get { return GetOptionSet<kildeEnum>(new_kilde); } set { new_kilde = SetOptionSet((int?)value); } }
 
+		public EntityReference new_bykoordinatorid;
+		public Guid? bykoordinatorid { get { return GetEntityReferenceId(new_bykoordinatorid); } set { new_bykoordinatorid = SetEntityReferenceId(value, "contact"); } }
+
+		public EntityReference new_omraadekoordinatorid;
+		public Guid? omraadekoordinatorid { get { return GetEntityReferenceId(new_omraadekoordinatorid); } set { new_omraadekoordinatorid = SetEntityReferenceId(value, "contact"); } }
+
 		public void SetMoney(decimal amount)
 		{
 			new_amount = new Money(amount);
@@ -76,6 +82,30 @@ namespace SystemInterface.Dynamics.Crm
 							new XElement("filter", new XAttribute("type", "and"),
 								new XElement("condition", new XAttribute("attribute", "new_iban"), new XAttribute("operator", "eq"), new XAttribute("value", iban))
 							)
+						)
+					)
+				)
+			);
+
+			IEnumerable<Indbetaling> indbetalingCollection = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (lDynamicsCrmConnection, entity) => new Indbetaling(lDynamicsCrmConnection, entity));
+
+			return indbetalingCollection;
+		}
+
+		public static IEnumerable<Indbetaling> GetIndbetalingValue(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			XDocument xDocument = new XDocument(
+				new XElement("fetch",
+					new XElement("entity", new XAttribute("name", "new_indbetaling"),
+						new XElement("attribute", new XAttribute("name", "new_amount")),
+						new XElement("attribute", new XAttribute("name", "new_byarbejdeid")),
+						new XElement("attribute", new XAttribute("name", "new_campaignid")),
+						new XElement("attribute", new XAttribute("name", "new_indsamlingsstedid")),
+						new XElement("attribute", new XAttribute("name", "new_kontoid")),
+						new XElement("attribute", new XAttribute("name", "new_kilde")),
+						new XElement("link-entity", new XAttribute("name", "account"), new XAttribute("from", "accountid"), new XAttribute("to", "new_indsamlingsstedid"), new XAttribute("link-type", "outer"),
+							new XElement("attribute", new XAttribute("name", "new_bykoordinatorid"), new XAttribute("alias", "new_bykoordinatorid")),
+							new XElement("attribute", new XAttribute("name", "new_omraadekoordinatorid"), new XAttribute("alias", "new_omraadekoordinatorid"))
 						)
 					)
 				)
