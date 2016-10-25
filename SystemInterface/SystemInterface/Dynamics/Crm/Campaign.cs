@@ -77,5 +77,50 @@ namespace SystemInterface.Dynamics.Crm
 
 			return fields.Select(field => field.new_name).ToList();
 		}
+
+		public static void WriteIndbetalingsum(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_indbetalingsum");
+		}
+
+		public static void WriteIndbetalingsumBy(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_indbetalingsumby");
+		}
+
+		public static void WriteIndbetalingsumKreds(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_indbetalingsumkreds");
+		}
+
+		private static void WriteMoneyByName(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount, string name)
+		{
+			Update(dynamicsCrmConnection, "campaign", "campaignid", id, new Dictionary<string, object>()
+			{
+				{ name, new Money(amount) }
+			});
+		}
+
+		public static void WriteIndbetalingSums
+		(
+			IDynamicsCrmConnection dynamicsCrmConnection, Guid campaignid,
+			decimal indbetalingsum, decimal indbetalingsumBy, decimal indbetalingsumKreds,
+			decimal? indbetalingsumBankoverfoersel, decimal? indbetalingsumGiro, decimal? indbetalingsumKontant, decimal? indbetalingsumMobilePay, decimal? indbetalingsumSms, decimal? indbetalingsumSwipp, decimal? indbetalingsumUkendt
+		)
+		{
+			Update(dynamicsCrmConnection, "campaign", "campaignid", campaignid, new Dictionary<string, object>()
+			{
+				{ "new_indbetalingsum", new Money(indbetalingsum) },
+				{ "new_indbetalingsumby", new Money(indbetalingsumBy) },
+				{ "new_indbetalingsumkreds", new Money(indbetalingsumKreds) },
+				{ "new_indbetalingsumbankoverfoersel", new Money(indbetalingsumBankoverfoersel.GetValueOrDefault(0)) },
+				{ "new_indbetalingsumgiro", new Money(indbetalingsumGiro.GetValueOrDefault(0)) },
+				{ "new_indbetalingsummobilepay", new Money(indbetalingsumMobilePay.GetValueOrDefault(0)) },
+				{ "new_indbetalingsumsms", new Money(indbetalingsumSms.GetValueOrDefault(0)) },
+				{ "new_indbetalingsumkontant", new Money(indbetalingsumKontant.GetValueOrDefault(0)) },
+				{ "new_indbetalingsumswipp", new Money(indbetalingsumSwipp.GetValueOrDefault(0)) },
+				{ "new_indbetalingsumukendt", new Money(indbetalingsumUkendt.GetValueOrDefault(0)) },
+			});
+		}
 	}
 }

@@ -54,5 +54,13 @@ namespace SystemInterface.Dynamics.Crm
 
 			return konto;
 		}
+
+		public static void WriteIndbetalingsum(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			Update(dynamicsCrmConnection, "new_konto", "new_kontoid", id, new Dictionary<string, object>()
+			{
+				{ "new_indbetalingsum", new Money(amount) }
+			});
+		}
 	}
 }

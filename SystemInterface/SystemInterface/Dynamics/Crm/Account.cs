@@ -127,6 +127,14 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
+		public static void WriteIndbetalingsum(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			Update(dynamicsCrmConnection, "account", "accountid", id, new Dictionary<string, object>()
+			{
+				{ "new_indbetalingsum", new Money(amount) }
+			});
+		}
+
 		public enum StateEnum
 		{
 			Active = 0,

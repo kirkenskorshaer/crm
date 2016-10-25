@@ -84,5 +84,13 @@ namespace SystemInterface.Dynamics.Crm
 
 			return byarbejder;
 		}
+
+		public static void WriteIndbetalingsum(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			Update(dynamicsCrmConnection, "new_byarbejde", "new_byarbejdeid", id, new Dictionary<string, object>()
+			{
+				{ "new_indbetalingsum", new Money(amount) }
+			});
+		}
 	}
 }
