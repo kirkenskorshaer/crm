@@ -36,6 +36,14 @@ namespace Administration.Option.Options.Logic
 
 			files.ToList().ForEach(file => MoveFileToImported(file, folder));
 
+			DataLayer.MongoData.Option.Schedule recalculateSchedule = new DataLayer.MongoData.Option.Schedule()
+			{
+				NextAllowedExecution = DateTime.Now,
+				Recurring = false,
+				TimeBetweenAllowedExecutions = TimeSpan.FromSeconds(60)
+			};
+			DataLayer.MongoData.Option.Options.Logic.SumIndbetaling.Create(Connection, urlLoginName, "Auto Generated indbetaling calculation", recalculateSchedule);
+
 			report.Success = true;
 		}
 
