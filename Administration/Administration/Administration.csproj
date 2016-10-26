@@ -63,6 +63,7 @@
     <Compile Include="Conversion\Campaign.cs" />
     <Compile Include="Conversion\Contact.cs" />
     <Compile Include="Heart.cs" />
+    <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Mapping\Account\AccountCrmMapping.cs" />
     <Compile Include="Mapping\RandomData\AbstractRandom.cs" />
