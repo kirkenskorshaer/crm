@@ -92,6 +92,7 @@
     <Compile Include="MongoData\Option\Options\Logic\SendTableFromMailrelay.cs" />
     <Compile Include="MongoData\Option\Options\Logic\Squash.cs" />
     <Compile Include="MongoData\Option\Options\Logic\StressTestCrm.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\SumOptalt.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeFromCrm.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SynchronizeToCrm.cs" />
