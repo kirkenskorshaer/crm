@@ -725,5 +725,61 @@ namespace SystemInterface.Dynamics.Crm
 
 			return total;
 		}
+
+		public static decimal GetOptaltbeloebSumKreds(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			XElement filter = new XElement("filter", new XAttribute("type", "and"),
+				new XElement("condition", new XAttribute("attribute", "new_omraadekoordinatorid"), new XAttribute("operator", "not-null"))
+			);
+
+			return GetOptaltbeloebSum(dynamicsCrmConnection, filter);
+		}
+
+		public static decimal GetOptaltbeloebSumBy(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			XElement filter = new XElement("filter", new XAttribute("type", "and"),
+				new XElement("condition", new XAttribute("attribute", "new_bykoordinatorid"), new XAttribute("operator", "not-null"))
+			);
+
+			return GetOptaltbeloebSum(dynamicsCrmConnection, filter);
+		}
+
+		public static decimal GetOptaltbeloebSum(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			return GetOptaltbeloebSum(dynamicsCrmConnection, null);
+		}
+
+		private static decimal GetOptaltbeloebSum(IDynamicsCrmConnection dynamicsCrmConnection, XElement filter)
+		{
+			XDocument xDocument = new XDocument
+			(
+				new XElement("fetch", new XAttribute("aggregate", "true"),
+					new XElement("entity", new XAttribute("name", "account"),
+						new XElement("attribute", new XAttribute("name", "new_optaltbeloeb"), new XAttribute("alias", "value"), new XAttribute("aggregate", "sum"))
+					)
+				)
+			);
+
+			if (filter != null)
+			{
+				xDocument.Element("fetch").Element("entity").Add(filter);
+			}
+
+			IEnumerable<Money> sums = StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, xDocument, (lDynamicsCrmConnection, entity) => new SingleValueEntity<Money>(lDynamicsCrmConnection, entity, "account", "accountid")).Select(valueEntity => valueEntity.value);
+
+			if (sums.Any() == false)
+			{
+				return 0;
+			}
+
+			Money sum = sums.SingleOrDefault();
+
+			if (sum == null)
+			{
+				return 0;
+			}
+
+			return sum.Value;
+		}
 	}
 }
