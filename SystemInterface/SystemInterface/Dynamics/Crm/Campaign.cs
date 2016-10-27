@@ -93,6 +93,21 @@ namespace SystemInterface.Dynamics.Crm
 			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_indbetalingsumkreds");
 		}
 
+		public static void WriteOptaltsumBy(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_optaltsumby");
+		}
+
+		public static void WriteOptaltsumKreds(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_optaltsumkreds");
+		}
+
+		public static void WriteOptaltsum(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount)
+		{
+			WriteMoneyByName(dynamicsCrmConnection, id, amount, "new_optaltsum");
+		}
+
 		private static void WriteMoneyByName(IDynamicsCrmConnection dynamicsCrmConnection, Guid id, decimal amount, string name)
 		{
 			Update(dynamicsCrmConnection, "campaign", "campaignid", id, new Dictionary<string, object>()
