@@ -51,6 +51,7 @@ namespace Administration.Option.Finder
 			options.AddRange(SendTableFromMailrelay.Find(_connection));
 			options.AddRange(ImportDanskeBank.Find(_connection));
 			options.AddRange(SumIndbetaling.Find(_connection));
+			options.AddRange(SumOptalt.Find(_connection));
 			//options.AddRange(MaintainAllTables.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);

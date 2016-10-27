@@ -114,6 +114,7 @@
     <Compile Include="Option\Options\Logic\SquashData\ModifiedField.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetalingData\IndbetalingSumCollection.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetalingData\IndbetalingSumPart.cs" />
+    <Compile Include="Option\Options\Logic\SumOptalt.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCrm.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsv.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeToCrm.cs" />
