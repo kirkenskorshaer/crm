@@ -72,6 +72,7 @@
     <Compile Include="Option\Options\Logic\SquashTest.cs" />
     <Compile Include="Option\Options\Logic\StressTestCrmTest.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetalingTest.cs" />
+    <Compile Include="Option\Options\Logic\SumOptaltTest.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCrmTest.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeFromCsvTest.cs" />
     <Compile Include="Option\Options\Logic\SynchronizeToCrmTest.cs" />
