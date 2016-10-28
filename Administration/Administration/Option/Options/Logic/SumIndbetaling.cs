@@ -71,26 +71,38 @@ namespace Administration.Option.Options.Logic
 
 		private void WriteCampaignAmount(IndbetalingSumCollection campaignCollection, IndbetalingSumCollection campaignCollectionBy, IndbetalingSumCollection campaignCollectionKreds)
 		{
-			IEnumerable<IGrouping<Guid, IndbetalingSumPart>> campaignById = campaignCollection.indbetalingParts.Where(part => part.Kilde == null).GroupBy(part => part.Id);
+			IEnumerable<Guid> campaignIdTotal = campaignCollection.indbetalingParts.Select(part => part.Id);
+			IEnumerable<Guid> campaignIdBy = campaignCollectionBy.indbetalingParts.Select(part => part.Id);
+			IEnumerable<Guid> campaignIdKreds = campaignCollectionKreds.indbetalingParts.Select(part => part.Id);
 
-			foreach (IGrouping<Guid, IndbetalingSumPart> campaignGroup in campaignById)
+			List<Guid> campaignids = campaignIdTotal.Union(campaignIdBy).Union(campaignIdKreds).ToList();
+
+			foreach (Guid campaignid in campaignids)
 			{
-				Campaign.WriteIndbetalingsum(_dynamicsCrmConnection, campaignGroup.Key, campaignGroup.Single().Amount);
+				decimal indbetalingsum = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == null).Single().Amount;
+				decimal indbetalingsumBy = campaignCollectionBy.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == null).Single().Amount;
+				decimal indbetalingsumKreds = campaignCollectionKreds.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == null).Single().Amount;
+
+				decimal? indbetalingsumBankoverfoersel = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Bankoverfoersel).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumGiro = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Giro).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumKontant = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Kontant).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumMobilePay = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.MobilePay).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumSms = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Sms).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumSwipp = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Swipp).SingleOrDefault()?.Amount;
+				decimal? indbetalingsumUkendt = campaignCollection.indbetalingParts.Where(part => part.Id == campaignid && part.Kilde == Indbetaling.kildeEnum.Ukendt).SingleOrDefault()?.Amount;
+
+				Campaign.WriteIndbetalingSums
+				(
+					_dynamicsCrmConnection, campaignid,
+					indbetalingsum, indbetalingsumBy, indbetalingsumKreds,
+					indbetalingsumBankoverfoersel, indbetalingsumGiro, indbetalingsumKontant, indbetalingsumMobilePay, indbetalingsumSms, indbetalingsumSwipp, indbetalingsumUkendt
+				);
 			}
+		}
 
-			IEnumerable<IGrouping<Guid, IndbetalingSumPart>> campaignByById = campaignCollectionBy.indbetalingParts.Where(part => part.Kilde == null).GroupBy(part => part.Id);
+		private void WriteCampaignAmount(IndbetalingSumCollection campaignCollection, Action<DynamicsCrmConnection, Guid, decimal> writeMethod)
+		{
 
-			foreach (IGrouping<Guid, IndbetalingSumPart> campaignGroup in campaignByById)
-			{
-				Campaign.WriteIndbetalingsumBy(_dynamicsCrmConnection, campaignGroup.Key, campaignGroup.Single().Amount);
-			}
-
-			IEnumerable<IGrouping<Guid, IndbetalingSumPart>> campaignKredsById = campaignCollectionKreds.indbetalingParts.Where(part => part.Kilde == null).GroupBy(part => part.Id);
-
-			foreach (IGrouping<Guid, IndbetalingSumPart> campaignGroup in campaignKredsById)
-			{
-				Campaign.WriteIndbetalingsumKreds(_dynamicsCrmConnection, campaignGroup.Key, campaignGroup.Single().Amount);
-			}
 		}
 
 		private void WriteIndsamlingsstedAmount(IndbetalingSumCollection indsamlingsstedCollection, Dictionary<Guid, IndbetalingSumCollection> indsamlingsstedByCampaign)
