@@ -16,23 +16,29 @@ public partial class Stub : System.Web.UI.Page
 	{
 		string errorRedirect = "http://kirkenskorshaer.dk";
 
-		if (Request.HttpMethod != "POST")
+		NameValueCollection input = Request.Form;
+
+		if (Request.HttpMethod == "POST")
 		{
-			result.InnerHtml = "ikke en post";
+			input = Request.Form;
 			//Response.Redirect(errorRedirect);
+		}
+		else
+		{
+			input = Request.QueryString;
 		}
 
 		string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
 		MongoConnection mongoConnection = MongoConnection.GetConnection(databaseName);
 
 		Guid formId = Guid.Empty;
-		Guid.TryParse(Request.Form["formId"], out formId);
+		Guid.TryParse(input["formId"], out formId);
 
 		DatabaseWebCampaign webCampaign = DatabaseWebCampaign.ReadSingleOrDefault(mongoConnection, formId);
 
 		DatabaseStub stub = CreateStub(webCampaign);
 
-		CollectFields(stub);
+		CollectFields(stub, input);
 
 		AddOprindelseIp(stub);
 
@@ -58,14 +64,14 @@ public partial class Stub : System.Web.UI.Page
 		return stub;
 	}
 
-	private void CollectFields(DatabaseStub stub)
+	private void CollectFields(DatabaseStub stub, NameValueCollection input)
 	{
-		foreach (string key in Request.Form)
+		foreach (string key in input)
 		{
 			DatabaseStubElement element = new DatabaseStubElement()
 			{
 				Key = HttpUtility.HtmlDecode(key),
-				Value = HttpUtility.HtmlDecode(Request.Form[key]),
+				Value = HttpUtility.HtmlDecode(input[key]),
 			};
 
 			stub.Contents.Add(element);
