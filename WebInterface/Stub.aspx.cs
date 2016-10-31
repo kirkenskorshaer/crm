@@ -7,14 +7,15 @@ using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 using System.Configuration;
 using DataLayer;
 using System.Linq;
+using System.Collections.Specialized;
 
 public partial class Stub : System.Web.UI.Page
 {
-	private string _defaultRedirect = "http://kirkenskorshaer.dk";
+	//private string _defaultRedirect = "http://kirkenskorshaer.dk";
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		string errorRedirect = "http://kirkenskorshaer.dk";
+		//string errorRedirect = "http://kirkenskorshaer.dk";
 
 		NameValueCollection input = Request.Form;
 
@@ -112,17 +113,20 @@ public partial class Stub : System.Web.UI.Page
 
 	private void Redirect(DatabaseWebCampaign webCampaign)
 	{
-		string redirectTarget = _defaultRedirect;
+		//string redirectTarget = _defaultRedirect;
 		if (webCampaign == null)
 		{
 			result.InnerHtml = "kunne ikke finde formId";
+			return;
 		}
-		if (webCampaign != null)
+		//redirectTarget = webCampaign.RedirectTarget;
+
+		if (string.IsNullOrWhiteSpace(webCampaign.RedirectTarget))
 		{
-			redirectTarget = webCampaign.RedirectTarget;
 			result.InnerHtml = "OK";
+			return;
 		}
 
-		//Response.Redirect(redirectTarget);
+		Response.Redirect(webCampaign.RedirectTarget);
 	}
 }
