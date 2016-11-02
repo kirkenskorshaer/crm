@@ -10,6 +10,8 @@ namespace SystemInterface.Dynamics.Crm
 		public string new_bankid;
 		public Money new_amount;
 		public string new_name;
+		public string new_bankkildekode;
+		public string new_message;
 		public DateTime? new_valdt;
 
 		public EntityReference new_byarbejdeid;
@@ -116,7 +118,7 @@ namespace SystemInterface.Dynamics.Crm
 			return indbetalingCollection;
 		}
 
-		public static Indbetaling CreateAndInsert(IDynamicsCrmConnection dynamicsCrmConnection, string iban, decimal amt, string bankid, string prtry, DateTime valDt, Guid kontoId, Guid campaignId, kildeEnum kilde, Guid? byarbejdeid, Guid? indsamlingsstedid, Guid? indsamlingskoordinatorid, Guid owner)
+		public static Indbetaling CreateAndInsert(IDynamicsCrmConnection dynamicsCrmConnection, string iban, decimal amt, string bankid, string prtry, DateTime valDt, Guid kontoId, Guid campaignId, kildeEnum kilde, Guid? byarbejdeid, Guid? indsamlingsstedid, Guid? indsamlingskoordinatorid, string message, string bankkildekode, Guid owner)
 		{
 			Indbetaling indbetaling = new Indbetaling(dynamicsCrmConnection);
 
@@ -130,6 +132,8 @@ namespace SystemInterface.Dynamics.Crm
 			indbetaling.new_bankid = bankid;
 			indbetaling.new_valdt = valDt;
 			indbetaling.new_name = "Auto oprettet indbetaling";
+			indbetaling.new_bankkildekode = bankkildekode;
+			indbetaling.new_message = message;
 			indbetaling.InsertWithoutRead();
 
 			indbetaling.owner = owner;

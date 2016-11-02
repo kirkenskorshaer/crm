@@ -184,7 +184,9 @@ namespace Administration.Option.Options.Logic
 
 		private void CreateIndbetaling(Iso20022Document iso20022Document, Iso20022Ntry ntry, Guid kontoId, Guid campaignId, Indbetaling.kildeEnum kilde, Guid? byarbejdeid, Guid? indsamlingsstedid, Guid? indsamlingskoordinatorid, Guid owner)
 		{
-			Indbetaling indbetaling = Indbetaling.CreateAndInsert(_dynamicsCrmConnection, iso20022Document.IBAN, ntry.Amt, ntry.BankId, ntry.Prtry, ntry.ValDt, kontoId, campaignId, kilde, byarbejdeid, indsamlingsstedid, indsamlingskoordinatorid, owner);
+			string bankkildekode = $"{ntry.BkTxCdDomnCd} / {ntry.BkTxCdDomnFmlyCd} / {ntry.BkTxCdDomnFmlySubFmlyCd}";
+
+			Indbetaling indbetaling = Indbetaling.CreateAndInsert(_dynamicsCrmConnection, iso20022Document.IBAN, ntry.Amt, ntry.BankId, ntry.Prtry, ntry.ValDt, kontoId, campaignId, kilde, byarbejdeid, indsamlingsstedid, indsamlingskoordinatorid, ntry.BkTxCdPrtryCd, bankkildekode, owner);
 		}
 
 		private void VerifyIndbetaling(Iso20022Document iso20022Document, Iso20022Ntry ntry, Indbetaling indbetaling)
