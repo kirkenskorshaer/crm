@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
+using Utilities.Converter;
 
 namespace Administration.Option.Options.Logic.ImportDanskeBankData
 {
@@ -41,9 +42,15 @@ namespace Administration.Option.Options.Logic.ImportDanskeBankData
 
 			foreach (XElement Ntry in Ntrys)
 			{
+				string bankId = Ntry.Element(_namespace + "AddtlInfInd")?.Element(_namespace + "MsgNmId")?.Value;
+				if (string.IsNullOrWhiteSpace(bankId))
+				{
+					bankId = Md5Helper.MakeMd5(Ntry.ToString());
+				}
+
 				Iso20022Ntry ntry = new Iso20022Ntry()
 				{
-					BankId = Ntry.Element(_namespace + "AddtlInfInd").Element(_namespace + "MsgNmId").Value,
+					BankId = bankId,
 					ValDt = XmlConvert.ToDateTime(Ntry.Element(_namespace + "ValDt").Element(_namespace + "Dt").Value, XmlDateTimeSerializationMode.Unspecified),
 					Amt = decimal.Parse(Ntry.Element(_namespace + "Amt").Value, new CultureInfo("en-US")),
 					Ccy = Ntry.Element(_namespace + "Amt").Attribute("Ccy").Value,
