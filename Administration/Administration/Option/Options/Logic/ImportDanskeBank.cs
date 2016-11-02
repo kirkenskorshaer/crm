@@ -84,7 +84,7 @@ namespace Administration.Option.Options.Logic
 
 				if (currentIndbetaling == null)
 				{
-					int? new_kkadminmedlemsnr = GetKkadminNr(ntry.Prtry);
+					long? new_kkadminmedlemsnr = GetKkadminNr(ntry.BkTxCdPrtryCd);
 
 					Account indsamlingssted = GetIndsamlingssted(new_kkadminmedlemsnr);
 
@@ -102,7 +102,7 @@ namespace Administration.Option.Options.Logic
 			}
 		}
 
-		private Account GetIndsamlingssted(int? new_kkadminmedlemsnr)
+		private Account GetIndsamlingssted(long? new_kkadminmedlemsnr)
 		{
 			if (new_kkadminmedlemsnr.HasValue == false)
 			{
@@ -127,22 +127,15 @@ namespace Administration.Option.Options.Logic
 			return indsamlingssted;
 		}
 
-		private int? GetKkadminNr(string comment)
+		private long? GetKkadminNr(string comment)
 		{
 			if (string.IsNullOrWhiteSpace(comment))
 			{
 				return null;
 			}
 
-			if (comment.StartsWith("0019/") == false)
-			{
-				return null;
-			}
-
-			string maybeAKkadminMedlemsNr = comment.Substring(5);
-
-			int parsedNumber;
-			bool isParsed = int.TryParse(maybeAKkadminMedlemsNr, out parsedNumber);
+			long parsedNumber;
+			bool isParsed = long.TryParse(comment, out parsedNumber);
 
 			if (isParsed)
 			{
@@ -152,7 +145,7 @@ namespace Administration.Option.Options.Logic
 			return null;
 		}
 
-		private Indbetaling.kildeEnum GetKilde(Iso20022Ntry ntry, int? new_kkadminmedlemsnr)
+		private Indbetaling.kildeEnum GetKilde(Iso20022Ntry ntry, long? new_kkadminmedlemsnr)
 		{
 			if (ntry.BkTxCdDomnCd == "PMNT" && ntry.BkTxCdDomnFmlyCd == "MCRD" && ntry.BkTxCdDomnFmlySubFmlyCd == "POSP")
 			{
