@@ -162,6 +162,11 @@ namespace Administration.Option.Options.Logic
 				return Indbetaling.kildeEnum.Bankoverfoersel;
 			}
 
+			if (ntry.BkTxCdDomnCd == "PMNT" && ntry.BkTxCdDomnFmlyCd == "CNTR" && ntry.BkTxCdDomnFmlySubFmlyCd == "CDPT")
+			{
+				return Indbetaling.kildeEnum.Kontant;
+			}
+
 			if (new_kkadminmedlemsnr.HasValue)
 			{
 				return Indbetaling.kildeEnum.Kontant;
