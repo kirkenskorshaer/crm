@@ -58,6 +58,7 @@ namespace Administration.Option.Options.Logic.ImportDanskeBankData
 					BkTxCdDomnCd = Ntry.Element(_namespace + "BkTxCd")?.Element(_namespace + "Domn")?.Element(_namespace + "Cd")?.Value,
 					BkTxCdDomnFmlyCd = Ntry.Element(_namespace + "BkTxCd")?.Element(_namespace + "Domn")?.Element(_namespace + "Fmly")?.Element(_namespace + "Cd")?.Value,
 					BkTxCdDomnFmlySubFmlyCd = Ntry.Element(_namespace + "BkTxCd")?.Element(_namespace + "Domn")?.Element(_namespace + "Fmly")?.Element(_namespace + "SubFmlyCd")?.Value,
+					BkTxCdPrtryCd = Ntry.Element(_namespace + "BkTxCd")?.Element(_namespace + "Prtry")?.Element(_namespace + "Cd")?.Value,
 				};
 
 				Ntries.Add(ntry);

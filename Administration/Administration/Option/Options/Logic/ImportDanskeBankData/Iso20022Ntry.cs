@@ -12,5 +12,6 @@ namespace Administration.Option.Options.Logic.ImportDanskeBankData
 		public string BkTxCdDomnCd;
 		public string BkTxCdDomnFmlyCd;
 		public string BkTxCdDomnFmlySubFmlyCd;
+		public string BkTxCdPrtryCd;
     }
 }
