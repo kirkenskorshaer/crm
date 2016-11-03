@@ -69,6 +69,7 @@
     <Compile Include="Option\Options\Logic\MaintainProgressTest.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignmentTest.cs" />
     <Compile Include="Option\Options\Logic\SendTableFromMailrelayTest.cs" />
+    <Compile Include="Option\Options\Logic\SetMissingCampaignLeadtargetTest.cs" />
     <Compile Include="Option\Options\Logic\SquashTest.cs" />
     <Compile Include="Option\Options\Logic\StressTestCrmTest.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetalingTest.cs" />
