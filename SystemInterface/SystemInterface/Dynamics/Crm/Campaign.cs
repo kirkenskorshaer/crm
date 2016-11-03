@@ -62,9 +62,21 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
+		public void SetLeadtarget(string newUrl)
+		{
+			Update(Connection, entityName, idName, Id, new Dictionary<string, object>(){
+				{ "new_leadtarget", newUrl }
+			});
+		}
+
 		public static List<Campaign> ReadAllCampaignIds(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
+		}
+
+		public static List<Campaign> ReadAllCampaignsWithIdAndLeadtarget(IDynamicsCrmConnection dynamicsCrmConnection)
+		{
+			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid", "new_leadtarget" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
 		}
 
 		public static List<Campaign> ReadCampaignsToImportStubDataTo(IDynamicsCrmConnection dynamicsCrmConnection)
