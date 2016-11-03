@@ -13,6 +13,7 @@ namespace SystemInterface.Dynamics.Crm
 		public string new_redirecttarget;
 		public DateTime createdon;
 		public DateTime modifiedon;
+		public string new_leadtarget;
 
 		private string _keyFieldsRelationshipName = "new_campaign_field_key";
 
