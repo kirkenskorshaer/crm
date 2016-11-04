@@ -14,6 +14,7 @@ namespace SystemInterface.Dynamics.Crm
 		public DateTime createdon;
 		public DateTime modifiedon;
 		public string new_leadtarget;
+		public int? new_mailrelaygroupid;
 
 		private string _keyFieldsRelationshipName = "new_campaign_field_key";
 
@@ -81,7 +82,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public static List<Campaign> ReadCampaignsToImportStubDataTo(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
-			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid", "new_redirecttarget", "new_collecttype", "name", "ownerid" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
+			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "campaignid", "new_redirecttarget", "new_collecttype", "new_mailrelaygroupid", "name", "ownerid" }, new Dictionary<string, string>(), null, (connection, entity) => new Campaign(connection, entity), new PagingInformation());
 		}
 
 		public List<string> GetKeyFields()

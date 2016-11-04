@@ -148,7 +148,10 @@ namespace Administration.Option.Options.Logic
 				lead.Assign();
 			}
 
-			AddMailrelaySubscriberFromLead.CreateIfValid(Connection, lead.Id, $"Auto subscribe from {_databaseImportFromStub.Name}", _databaseImportFromStub.urlLoginName, lead.emailaddress1, webCampaign);
+			if (webCampaign != null && webCampaign.mailrelaygroupid.HasValue)
+			{
+				AddMailrelaySubscriberFromLead.CreateIfValid(Connection, lead.Id, $"Auto subscribe from {_databaseImportFromStub.Name}", _databaseImportFromStub.urlLoginName, lead.emailaddress1, webCampaign);
+			}
 		}
 
 		public static List<ImportFromStub> Find(MongoConnection connection)

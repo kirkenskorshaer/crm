@@ -58,6 +58,7 @@ namespace Administration.Option.Options.Logic
 				FormOwner = campaign.owner.Value,
 				KeyFields = keyFields,
 				RedirectTarget = campaign.new_redirecttarget,
+				mailrelaygroupid = campaign.new_mailrelaygroupid,
 			};
 
 			if (webCampaign == null)

@@ -17,6 +17,7 @@ namespace DataLayer.MongoData.Input
 		public string RedirectTarget;
 		public List<string> KeyFields;
 		public CollectTypeEnum CollectType;
+		public int? mailrelaygroupid;
 
 		public enum CollectTypeEnum
 		{
@@ -84,7 +85,8 @@ namespace DataLayer.MongoData.Input
 				FormId == compareWebCampaign.FormId &&
 				FormOwner == compareWebCampaign.FormOwner &&
 				Utilities.Comparer.ListCompare.ListEquals(KeyFields, compareWebCampaign.KeyFields, (a, b) => a.Equals(b)) &&
-				RedirectTarget == compareWebCampaign.RedirectTarget;
+				RedirectTarget == compareWebCampaign.RedirectTarget &&
+				mailrelaygroupid == compareWebCampaign.mailrelaygroupid;
 		}
 
 		public override int GetHashCode()
