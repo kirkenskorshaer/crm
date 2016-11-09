@@ -60,6 +60,7 @@
     <Compile Include="GuidConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionHelperTest.cs" />
+    <Compile Include="TextMergerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

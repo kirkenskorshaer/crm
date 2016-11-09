@@ -64,6 +64,7 @@
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="StaticData\PostalCity.cs" />
     <Compile Include="Clock.cs" />
+    <Compile Include="TextMerger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

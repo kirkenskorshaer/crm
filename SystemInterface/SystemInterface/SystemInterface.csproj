@@ -96,6 +96,10 @@
       <HintPath>..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Crm\packages\RestSharp.105.2.2\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -112,6 +116,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Twilio.Api, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Crm\packages\Twilio.4.7.2\lib\3.5\Twilio.Api.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Csv\ColumnDefinition.cs" />
@@ -149,10 +157,12 @@
     <Compile Include="Dynamics\Crm\MaterialePakke.cs" />
     <Compile Include="Dynamics\Crm\MaterialeBehov.cs" />
     <Compile Include="Dynamics\Crm\MaterialeProcessState.cs" />
+    <Compile Include="Dynamics\Crm\Sms.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Dynamics\Crm\Materiale.cs" />
     <Compile Include="Dynamics\Crm\Team.cs" />
+    <Compile Include="Dynamics\Crm\SmsTemplate.cs" />
     <Compile Include="Dynamics\Crm\XmlHelper.cs" />
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
@@ -222,6 +232,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Twilio\ITwilioConnection.cs" />
+    <Compile Include="Twilio\MessageInfo.cs" />
+    <Compile Include="Twilio\TwilioConnection.cs" />
+    <Compile Include="Unwire\IUnwireConnection.cs" />
+    <Compile Include="Unwire\Sms.cs" />
+    <Compile Include="Unwire\UnwireConnection.cs" />
     <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +318,10 @@
     <None Include="Service References\KKAdminService\SystemInterface.KKAdminService.Stamdata.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <Content Include="Unwire\core-1.2.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Utilities\Utilities\Utilities.csproj">

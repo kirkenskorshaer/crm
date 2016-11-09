@@ -62,7 +62,6 @@ namespace TestUtilities
 
 		public void Update(Entity entity)
 		{
-			throw new NotImplementedException();
 		}
 	}
 }

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:um="http://www.unwire.com/UM/core/v1.2" targetNamespace="http://www.unwire.com/UM/core/v1.2" elementFormDefault="qualified">
+	<xs:element name="messages" type="um:messagesType"/>
+	<xs:complexType name="messagesType">
+		<xs:sequence>
+			<xs:element ref="um:defaultvalues" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="um:sms" minOccurs="1" maxOccurs="1024"/>
+		</xs:sequence>
+		<xs:attribute name="service" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="mt"/>
+					<xs:enumeration value="mo"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="count" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minExclusive value="0"/>
+					<xs:maxInclusive value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sessionid" type="xs:string" use="required"/>
+		<xs:attribute name="callbackurl" type="xs:anyURI" use="optional"/>
+	</xs:complexType>
+	<xs:element name="defaultvalues">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="um:shortcode" minOccurs="0"/>
+				<xs:element ref="um:content" minOccurs="0"/>
+				<xs:element ref="um:operator" minOccurs="0"/>
+				<xs:element ref="um:mediacode" minOccurs="0"/>
+				<xs:element ref="um:price" minOccurs="0"/>
+				<xs:element ref="um:from" minOccurs="0"/>
+				<xs:element ref="um:obfuscate" minOccurs="0"/>
+				<xs:element ref="um:agelimit" minOccurs="0"/>
+				<xs:element ref="um:priority" minOccurs="0"/>
+				<xs:element ref="um:validity" minOccurs="0"/>
+			</xs:all>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="text"/>
+						<xs:enumeration value="wappush"/>
+						<xs:enumeration value="raw"/>
+						<xs:enumeration value="ringtone"/>
+						<xs:enumeration value="logo"/>
+						<xs:enumeration value="flash"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>			
+		</xs:complexType>	
+	</xs:element>
+	<xs:element name="sms">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="um:msisdn"/>
+				<xs:element ref="um:shortcode" minOccurs="0"/>
+				<xs:element ref="um:content" minOccurs="0"/>
+				<xs:element ref="um:operator" minOccurs="0"/>
+				<xs:element ref="um:timestamp" minOccurs="0"/>
+				<xs:element ref="um:mediacode" minOccurs="0"/>
+				<xs:element ref="um:price" minOccurs="0"/>
+				<xs:element ref="um:from" minOccurs="0"/>
+				<xs:element ref="um:obfuscate" minOccurs="0"/>
+				<xs:element ref="um:agelimit" minOccurs="0"/>
+				<xs:element ref="um:priority" minOccurs="0"/>
+				<xs:element ref="um:validity" minOccurs="0"/>
+				<xs:element ref="um:destaddr" minOccurs="0"/>
+			</xs:all>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="text"/>
+						<xs:enumeration value="wappush"/>
+						<xs:enumeration value="raw"/>
+						<xs:enumeration value="ringtone"/>
+						<xs:enumeration value="logo"/>
+						<xs:enumeration value="flash"/>						
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="msisdn" type="xs:long"/>
+	<xs:element name="operator" type="xs:string"/>
+	<xs:element name="shortcode" type="xs:string"/>
+	<xs:element name="content">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="um:text"/>
+				<xs:element ref="um:cmd"/>
+				<xs:element ref="um:wappush"/>
+				<xs:element ref="um:raw"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="timestamp" type="xs:dateTime"/>
+	<xs:element name="mediacode" type="xs:string"/>
+	<xs:element name="price">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:decimal">
+					<xs:attribute name="currency" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[A-Z]{3}" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="vat" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:minInclusive value="0.00" />
+								<xs:maxExclusive value="1.00" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="from">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="([+])?(.){0,15}" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="obfuscate" type="xs:boolean"/>
+	<xs:element name="agelimit">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:enumeration value="0" />
+				<xs:enumeration value="16"/>
+				<xs:enumeration value="18"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>	
+	<xs:element name="priority">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="low"/>
+				<xs:enumeration value="normal"/>
+				<xs:enumeration value="high"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="validity">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">	
+				<xs:minExclusive value="0" />
+				<xs:maxInclusive value="4320" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="destaddr" type="xs:string"/>	
+	<xs:element name="raw">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="udh" type="xs:string" />
+				<xs:element ref="um:text" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="wappush">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="wapurl" type="xs:anyURI"/>
+				<xs:element ref="um:text"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="text" type="xs:string"/>
+	<xs:element name="cmd">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="charging-only"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+</xs:schema>

@@ -50,6 +50,7 @@
     <Compile Include="MailrelayConnectionTester.cs" />
     <Compile Include="OrganizationServiceTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwilioConnectionTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SystemInterface\SystemInterface\SystemInterface.csproj">

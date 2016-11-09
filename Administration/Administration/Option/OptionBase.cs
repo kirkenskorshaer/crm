@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
 using SystemInterface.Mailrelay;
+using SystemInterface.Twilio;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
@@ -15,6 +16,7 @@ namespace Administration.Option
 		internal readonly DatabaseOptionType DatabaseOption;
 		protected IMailrelayConnection _mailrelayConnection;
 		protected IDynamicsCrmConnection _dynamicsCrmConnection;
+		protected ITwilioConnection _twilioConnection;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{
@@ -67,6 +69,22 @@ namespace Administration.Option
 			if (_dynamicsCrmConnection == null)
 			{
 				_dynamicsCrmConnection = dynamicsCrmConnection;
+			}
+		}
+
+		protected void SetTwilioConnectionIfEmpty(string fromNumber, string accountSid, string authToken, string statusCallback)
+		{
+			if (_twilioConnection == null)
+			{
+				_twilioConnection = new TwilioConnection(fromNumber, accountSid, authToken, statusCallback);
+			}
+		}
+
+		public void SetTwilioConnectionIfEmpty(ITwilioConnection newConnection)
+		{
+			if (_twilioConnection == null)
+			{
+				_twilioConnection = newConnection;
 			}
 		}
 

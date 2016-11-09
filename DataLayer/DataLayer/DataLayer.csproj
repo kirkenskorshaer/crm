@@ -89,6 +89,7 @@
     <Compile Include="MongoData\Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaintainProgress.cs" />
     <Compile Include="MongoData\Option\Options\Logic\MaterialeBehovAssignment.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\SendSms.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SendTableFromMailrelay.cs" />
     <Compile Include="MongoData\Option\Options\Logic\Squash.cs" />
     <Compile Include="MongoData\Option\Options\Logic\StressTestCrm.cs" />
