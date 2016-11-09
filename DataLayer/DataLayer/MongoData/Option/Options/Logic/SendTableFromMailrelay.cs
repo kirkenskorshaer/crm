@@ -19,6 +19,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		public List<int> requireDataOnDaysFromToday { get; set; }
 		public TimeSpan sleepTimeOnFailiure { get; set; }
 		public string orderbyDescending { get; set; }
+		public string orderby { get; set; }
 		public string headerDateFormat { get; set; }
 		public string tableDateFormat { get; set; }
 

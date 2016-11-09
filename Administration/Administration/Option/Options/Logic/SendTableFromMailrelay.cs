@@ -40,6 +40,7 @@ namespace Administration.Option.Options.Logic
 			List<int> requireDataOnDaysFromToday = _databaseSendTableFromMailrelay.requireDataOnDaysFromToday;
 			TimeSpan sleepTimeOnFailiure = _databaseSendTableFromMailrelay.sleepTimeOnFailiure;
 			string orderbyDescending = _databaseSendTableFromMailrelay.orderbyDescending;
+			string orderby = _databaseSendTableFromMailrelay.orderby;
 			string headerDateFormat = _databaseSendTableFromMailrelay.headerDateFormat;
 			string tableDateFormat = _databaseSendTableFromMailrelay.tableDateFormat;
 
@@ -109,6 +110,19 @@ namespace Administration.Option.Options.Logic
 
 				StringBuilder rowBuilder = new StringBuilder();
 
+				if (string.IsNullOrWhiteSpace(orderby) == false)
+				{
+					tableRowList = tableRowList.OrderBy(row =>
+					{
+						IDictionary<string, object> rowDictionary = (IDictionary<string, object>)row;
+						object sortObject = null;
+						if (rowDictionary.ContainsKey(orderby))
+						{
+							sortObject = rowDictionary[orderby];
+						}
+						return sortObject;
+					}).ToList();
+				}
 				if (string.IsNullOrWhiteSpace(orderbyDescending) == false)
 				{
 					tableRowList = tableRowList.OrderByDescending(row =>
