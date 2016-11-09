@@ -29,6 +29,7 @@ namespace Administration.Option.Options.Logic
 		{
 			string urlLoginName = _databaseSendTableFromMailrelay.urlLoginName;
 			Guid? contactid = _databaseSendTableFromMailrelay.contactid;
+			string contactIdName = _databaseSendTableFromMailrelay.contactidName;
 			string queryFindContacts = _databaseSendTableFromMailrelay.queryFindContacts;
 			string queryCreateTable = _databaseSendTableFromMailrelay.queryCreateTable;
 			string subject = _databaseSendTableFromMailrelay.subject;
@@ -64,7 +65,7 @@ namespace Administration.Option.Options.Logic
 
 			if (contactid.HasValue)
 			{
-				XmlHelper.AddCondition(xDocument, "new_indsamlingskoordinatorid", "eq", contactid.ToString());
+				XmlHelper.AddCondition(xDocument, contactIdName, "eq", contactid.ToString());
 			}
 
 			if (string.IsNullOrWhiteSpace(headerDateFormat))

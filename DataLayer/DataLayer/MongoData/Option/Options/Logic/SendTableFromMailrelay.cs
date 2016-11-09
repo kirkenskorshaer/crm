@@ -8,6 +8,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 		public string urlLoginName { get; set; }
 
 		public Guid? contactid { get; set; }
+		public string contactidName { get; set; }
 		public string queryFindContacts { get; set; }
 		public string queryCreateTable { get; set; }
 		public string subject { get; set; }
