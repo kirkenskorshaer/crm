@@ -2,8 +2,8 @@
 using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
+using SystemInterface.Inmobile;
 using SystemInterface.Mailrelay;
-using SystemInterface.Twilio;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
@@ -16,7 +16,7 @@ namespace Administration.Option
 		internal readonly DatabaseOptionType DatabaseOption;
 		protected IMailrelayConnection _mailrelayConnection;
 		protected IDynamicsCrmConnection _dynamicsCrmConnection;
-		protected ITwilioConnection _twilioConnection;
+		protected AbstractInMobileConnection _inMobileConnection;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{
@@ -72,19 +72,24 @@ namespace Administration.Option
 			}
 		}
 
-		protected void SetTwilioConnectionIfEmpty(string fromNumber, string accountSid, string authToken, string statusCallback)
+		protected void SetInMobileConnectionIfEmpty()
 		{
-			if (_twilioConnection == null)
+			if (_inMobileConnection == null)
 			{
-				_twilioConnection = new TwilioConnection(fromNumber, accountSid, authToken, statusCallback);
+				string apiKey = Config.InMobileApiKey;
+				string getMessagesGetUrl = Config.InMobileGetMessagesGetUrl;
+				string messageStatusCallbackUrl = Config.InMobileMessageStatusCallbackUrl;
+				string postUrl = Config.InMobilePostUrl;
+
+				_inMobileConnection = new InMobileConnection(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl);
 			}
 		}
 
-		public void SetTwilioConnectionIfEmpty(ITwilioConnection newConnection)
+		public void SetInMobileConnectionIfEmpty(AbstractInMobileConnection newConnection)
 		{
-			if (_twilioConnection == null)
+			if (_inMobileConnection == null)
 			{
-				_twilioConnection = newConnection;
+				_inMobileConnection = newConnection;
 			}
 		}
 

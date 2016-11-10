@@ -100,6 +100,9 @@
       <HintPath>..\..\Crm\packages\RestSharp.105.2.2\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Sms.ApiClient">
+      <HintPath>..\..\..\..\InMobile\Sms.ApiClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -166,6 +169,9 @@
     <Compile Include="Dynamics\Crm\XmlHelper.cs" />
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
+    <Compile Include="Inmobile\AbstractInMobileConnection.cs" />
+    <Compile Include="Inmobile\InMobileConnection.cs" />
+    <Compile Include="Inmobile\InMobileSms.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
     <Compile Include="Mailrelay\Function\Campaigns\getCampaigns.cs" />

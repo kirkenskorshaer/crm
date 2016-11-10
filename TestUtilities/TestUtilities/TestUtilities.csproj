@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="DynamicsCrmConnectionTester.cs" />
     <Compile Include="GetTestData.cs" />
+    <Compile Include="InMobileConnectionTester.cs" />
     <Compile Include="MailrelayConnectionTester.cs" />
     <Compile Include="OrganizationServiceTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

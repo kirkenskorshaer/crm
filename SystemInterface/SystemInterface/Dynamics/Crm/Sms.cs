@@ -8,6 +8,8 @@ namespace SystemInterface.Dynamics.Crm
 	public class Sms : AbstractValueEntity
 	{
 		public string mobilephone;
+		public DateTime? new_sendtime;
+		public DateTime? new_operatorsendtime;
 
 		public EntityReference new_toid;
 		public Guid? toid { get { return GetEntityReferenceId(new_toid); } set { new_toid = SetEntityReferenceId(value, "contact"); } }
@@ -22,10 +24,12 @@ namespace SystemInterface.Dynamics.Crm
 				new XElement("fetch",
 					new XElement("entity", new XAttribute("name", "new_sms"),
 						new XElement("attribute", new XAttribute("name", "new_smsid")),
+						new XElement("attribute", new XAttribute("name", "new_sendtime")),
 						new XElement("attribute", new XAttribute("name", "new_toid")),
 						new XElement("link-entity", new XAttribute("name", "new_sms"), new XAttribute("from", "new_smstemplateid"), new XAttribute("to", "new_smstemplateid"), new XAttribute("link-type", "inner"),
 							new XElement("filter", new XAttribute("type", "and"),
 								new XElement("condition", new XAttribute("attribute", "new_actualsenttime"), new XAttribute("operator", "null")),
+								new_direction
 								new XElement("filter", new XAttribute("type", "or"),
 									new XElement("condition", new XAttribute("attribute", "new_sendtime"), new XAttribute("operator", "null")),
 									new XElement("condition", new XAttribute("attribute", "new_sendtime"), new XAttribute("operator", "le"), new XAttribute("value", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")))
