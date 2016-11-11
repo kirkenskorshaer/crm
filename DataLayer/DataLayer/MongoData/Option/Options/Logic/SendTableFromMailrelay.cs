@@ -30,6 +30,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 
 		public string smtpHost { get; set; }
 		public string fromEmail { get; set; }
+		public string toEmail { get; set; }
 		public int port { get; set; }
 		public string smtpUsername { get; set; }
 		public string smtpPassword { get; set; }

@@ -51,6 +51,7 @@ namespace Administration.Option.Options.Logic
 
 			string smtpHost = _databaseSendTableFromMailrelay.smtpHost;
 			string fromEmail = _databaseSendTableFromMailrelay.fromEmail;
+			string toEmail = _databaseSendTableFromMailrelay.toEmail;
 			int port = _databaseSendTableFromMailrelay.port;
 			string smtpUsername = _databaseSendTableFromMailrelay.smtpUsername;
 			string smtpPassword = _databaseSendTableFromMailrelay.smtpPassword;
@@ -101,6 +102,11 @@ namespace Administration.Option.Options.Logic
 				string fullname = receiver.fullname;
 				string emailaddress1 = receiver.emailaddress1;
 				Guid matchid = receiver.matchid;
+
+				if (string.IsNullOrWhiteSpace(toEmail) == false)
+				{
+					emailaddress1 = toEmail;
+				}
 
 				XDocument tableDocument = XDocument.Parse(queryCreateTable);
 
