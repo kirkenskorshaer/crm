@@ -64,12 +64,12 @@ namespace Administration.Option.Options.Logic
 
 			XDocument xDocument = XDocument.Parse(queryFindContacts);
 			XmlHelper.SetCount(xDocument, 1);
-
+			/*
 			if (contactid.HasValue)
 			{
 				XmlHelper.AddCondition(xDocument, contactIdName, "eq", contactid.ToString());
 			}
-
+			*/
 			if (string.IsNullOrWhiteSpace(headerDateFormat))
 			{
 				headerDateFormat = "yyyy-MM-dd";
@@ -91,6 +91,14 @@ namespace Administration.Option.Options.Logic
 				}
 
 				IDictionary<string, object> receiverDictionary = (IDictionary<string, object>)receiver;
+
+				if (contactid.HasValue)
+				{
+					if ((Guid)receiverDictionary[contactIdName] != contactid)
+					{
+						continue;
+					}
+				}
 
 				if (receiverDictionary.ContainsKey("emailaddress1") == false)
 				{

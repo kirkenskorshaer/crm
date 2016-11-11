@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace DataLayer.MongoData.Option.Options.Logic
@@ -7,6 +9,7 @@ namespace DataLayer.MongoData.Option.Options.Logic
 	{
 		public string urlLoginName { get; set; }
 
+		[BsonRepresentation(BsonType.String)]
 		public Guid? contactid { get; set; }
 		public string contactidName { get; set; }
 		public string queryFindContacts { get; set; }
