@@ -113,6 +113,25 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
+		public void MailCanBeLimitedOnId()
+		{
+			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
+			databaseSendTableFromMailrelay.sendType = DatabaseSendTableFromMailrelay.SendTypeEnum.Smtp;
+			databaseSendTableFromMailrelay.contactid = Guid.Parse("b238f6be-5510-e611-80e9-001c42fd47a5");
+			databaseSendTableFromMailrelay.contactidName = "accountid";
+			databaseSendTableFromMailrelay.toEmail = "svend.l_@kirkenskorshaer.dk";
+			databaseSendTableFromMailrelay.fromEmail = "svend.l@kirkenskorshaer.dk";
+
+			SendTableFromMailrelay sendTableFromMailrelay = new SendTableFromMailrelay(Connection, databaseSendTableFromMailrelay);
+			sendTableFromMailrelay.ChangeMailrelayConnection(_mailrelayConnectionTester);
+
+			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
+			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
+
+			sendTableFromMailrelay.Execute();
+		}
+
+		[Test]
 		public void MailCanBeSendtOnSmtp()
 		{
 			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
