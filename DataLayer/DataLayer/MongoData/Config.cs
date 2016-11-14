@@ -23,6 +23,10 @@ namespace DataLayer.MongoData
 		public string MailrelayApiKey { get; set; }
 		public double MailrelaySendIntervalMilliseconds { get; set; }
 		public bool? EnableTest { get; set; }
+		public string InMobileApiKey { get; set; }
+		public string InMobileGetMessagesGetUrl { get; set; }
+		public string InMobileMessageStatusCallbackUrl { get; set; }
+		public string InMobilePostUrl { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
