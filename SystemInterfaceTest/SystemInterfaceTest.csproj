@@ -81,6 +81,7 @@
     <Compile Include="Dynamics\Crm\MailrelayInformationTest.cs" />
     <Compile Include="Dynamics\Crm\MarketingListTest.cs" />
     <Compile Include="Dynamics\Crm\MaterialeTest.cs" />
+    <Compile Include="Dynamics\Crm\SmsTest.cs" />
     <Compile Include="Dynamics\Crm\StaticCrmTest.cs" />
     <Compile Include="Dynamics\Crm\SystemUserTest.cs" />
     <Compile Include="EmailTest.cs" />
@@ -108,6 +109,10 @@
     <ProjectReference Include="..\TestUtilities\TestUtilities\TestUtilities.csproj">
       <Project>{2eb7d9db-d20c-489a-b36c-c2d7ae8fa103}</Project>
       <Name>TestUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities\Utilities.csproj">
+      <Project>{fda4e213-1c38-4a3f-beb0-0e8ee9c79d6c}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
