@@ -18,17 +18,23 @@ namespace SystemInterface.Dynamics.Crm
 		public static SmsTemplate GetWaitingTemplate(IDynamicsCrmConnection _dynamicsCrmConnection)
 		{
 			XDocument xDocument = new XDocument(
-				new XElement("fetch",
-					new XElement("entity", new XAttribute("name", "new_smstemplate"), new XAttribute("count", 1),
+				new XElement("fetch", new XAttribute("count", 1),
+					new XElement("entity", new XAttribute("name", "new_smstemplate"),
 						new XElement("attribute", new XAttribute("name", "new_text")),
 						new XElement("attribute", new XAttribute("name", "new_smstemplateid")),
 						new XElement("attribute", new XAttribute("name", "new_fetchxml")),
 						new XElement("link-entity", new XAttribute("name", "new_sms"), new XAttribute("from", "new_smstemplateid"), new XAttribute("to", "new_smstemplateid"), new XAttribute("link-type", "inner"),
 							new XElement("filter", new XAttribute("type", "and"),
-								new XElement("condition", new XAttribute("attribute", "new_actualsenttime"), new XAttribute("operator", "null")),
+								new XElement("condition", new XAttribute("attribute", "new_direction"), new XAttribute("operator", "eq"), new XAttribute("value", "0")),
+								new XElement("condition", new XAttribute("attribute", "new_sendstatus"), new XAttribute("operator", "eq"), new XAttribute("value", "100000000")),
 								new XElement("filter", new XAttribute("type", "or"),
 									new XElement("condition", new XAttribute("attribute", "new_sendtime"), new XAttribute("operator", "null")),
 									new XElement("condition", new XAttribute("attribute", "new_sendtime"), new XAttribute("operator", "le"), new XAttribute("value", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")))
+								)
+							),
+							new XElement("link-entity", new XAttribute("name", "contact"), new XAttribute("from", "contactid"), new XAttribute("to", "new_contactid"), new XAttribute("link-type", "inner"),
+								new XElement("filter", new XAttribute("type", "and"),
+									new XElement("condition", new XAttribute("attribute", "mobilephone"), new XAttribute("operator", "not-null"))
 								)
 							)
 						)

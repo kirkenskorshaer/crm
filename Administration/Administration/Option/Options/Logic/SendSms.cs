@@ -6,7 +6,6 @@ using SystemInterface.Dynamics.Crm;
 using SystemInterface.Inmobile;
 using Utilities;
 using DatabaseSendSms = DataLayer.MongoData.Option.Options.Logic.SendSms;
-using TwilioMessageInfo = SystemInterface.Twilio.MessageInfo;
 
 namespace Administration.Option.Options.Logic
 {
@@ -22,14 +21,20 @@ namespace Administration.Option.Options.Logic
 		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseSendSms.urlLoginName;
-			string fromNumber = _databaseSendSms.fromNumber;
 
 			SetDynamicsCrmConnectionIfEmpty(urlLoginName);
 
 			SmsTemplate template = SmsTemplate.GetWaitingTemplate(_dynamicsCrmConnection);
 
+			if (template == null)
+			{
+				report.Success = true;
+				return;
+			}
+
 			SetInMobileConnectionIfEmpty();
 			IEnumerable<Sms> smsCollection = Sms.GetWaitingSmsOnTemplate(_dynamicsCrmConnection, template.Id);
+			//List<Sms> smsList = smsCollection.ToList();
 
 			TextMerger textMerger = new TextMerger(template.new_text);
 
@@ -41,15 +46,41 @@ namespace Administration.Option.Options.Logic
 			{
 				report.SubWorkload++;
 
-				string text = GetText(textMerger, template, sms.toid.Value);
+				string text = GetText(textMerger, template, sms.contactid.Value);
 
 				string msisdn = InMobileSms.GetMsisdn(sms.mobilephone);
-				InMobileSms inMobileSms = new InMobileSms(text, "", sms.new_sendtime);
+				InMobileSms inMobileSms = new InMobileSms(text, "Kirkens Korshær", sms.new_operatorsendtime ?? sms.new_sendtime);
 
-				AddToSmsByNumberList(msisdn, inMobileSms);
+				inMobileSms.LocalSms = sms;
+
+				AddToSmsByNumberList(msisdn, inMobileSms, smsByNumberList);
 			}
 
+			smsByNumberList.ForEach(_inMobileConnection.Send);
+
+			smsByNumberList.ForEach(inMobileSms =>
+				inMobileSms.ToList().ForEach(smsByNumber =>
+					((Sms)smsByNumber.Value.LocalSms).MarkAsSent(smsByNumber.Value.Text, smsByNumber.Value.MessageId)));
+
 			report.Success = true;
+		}
+
+		private void AddToSmsByNumberList(string msisdn, InMobileSms inMobileSms, List<Dictionary<string, InMobileSms>> smsByNumberList)
+		{
+			foreach (Dictionary<string, InMobileSms> msisdnDictionary in smsByNumberList)
+			{
+				if (msisdnDictionary.ContainsKey(msisdn) == false)
+				{
+					msisdnDictionary.Add(msisdn, inMobileSms);
+					return;
+				}
+			}
+
+			Dictionary<string, InMobileSms> msisdnDictionaryCreated = new Dictionary<string, InMobileSms>();
+
+			msisdnDictionaryCreated.Add(msisdn, inMobileSms);
+
+			smsByNumberList.Add(msisdnDictionaryCreated);
 		}
 
 		private string GetText(TextMerger textMerger, SmsTemplate smsTemplate, Guid contactId)

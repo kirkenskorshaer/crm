@@ -24,8 +24,8 @@ namespace AdministrationTest
 		protected DynamicsCrmConnection DynamicsCrmConnection;
 		protected MailrelayConnectionTester _mailrelayConnectionTester;
 		protected DynamicsCrmConnectionTester _dynamicsCrmConnectionTester;
-		protected TwilioConnectionTester _twilioConnectionTester;
-        protected Random _random;
+		protected InMobileConnectionTester _inMobileConnectionTester;
+		protected Random _random;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -60,7 +60,7 @@ namespace AdministrationTest
 
 			_mailrelayConnectionTester = new MailrelayConnectionTester();
 			_dynamicsCrmConnectionTester = new DynamicsCrmConnectionTester();
-			_twilioConnectionTester = new TwilioConnectionTester();
+			_inMobileConnectionTester = new InMobileConnectionTester("apiKey", "getMessageGetUrl", "messageStatusCallbackUrl", "postUrl");
 			_random = new Random();
 		}
 

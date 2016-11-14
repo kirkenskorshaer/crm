@@ -27,7 +27,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 			//Console.Out.WriteLine(sms.Id);
 			//Console.Out.WriteLine(sms.toid);
 
-			IDictionary<string, object> fields = template.GetFields(sms.toid.Value);
+			IDictionary<string, object> fields = template.GetFields(sms.contactid.Value);
 
 			/*
 			foreach (KeyValuePair<string, object> content in fields)

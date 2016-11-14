@@ -14,7 +14,7 @@ namespace AdministrationTest.Option.Options.Logic
 		{
 			base.TearDown();
 
-			Console.Out.WriteLine(_twilioConnectionTester);
+			Console.Out.WriteLine(_inMobileConnectionTester);
 		}
 
 		[Test]
@@ -28,32 +28,33 @@ namespace AdministrationTest.Option.Options.Logic
 			EnqueueCrmSmsResponse();
 			EnqueueCrmContactResponse();
 
-			sendSms.SetTwilioConnectionIfEmpty(_twilioConnectionTester);
-			EnqueueSms();
+			sendSms.SetInMobileConnectionIfEmpty(_inMobileConnectionTester);
 
 			sendSms.Execute();
 		}
 
-		private void EnqueueSms()
+		[Test]
+		public void SendFromCrm()
 		{
-			_twilioConnectionTester.EnqueueSendReply(new SystemInterface.Twilio.MessageInfo());
+			DatabaseSendSms databaseSendSms = CreateDatabaseSendSms();
+			SendSms sendSms = new SendSms(Connection, databaseSendSms);
+
+			sendSms.SetInMobileConnectionIfEmpty(_inMobileConnectionTester);
+
+			sendSms.Execute();
 		}
 
 		private DatabaseSendSms CreateDatabaseSendSms()
 		{
 			DatabaseSendSms databaseSendSms = new DatabaseSendSms()
 			{
-				accountSid = "",
-				authToken = "",
-				fromNumber = "",
 				Name = "test",
 				Schedule = CreateScheduleAlwaysOnDoOnce(),
-				statusCallback = "",
-				urlLoginName = "",
+				urlLoginName = "test",
 			};
 
 			return databaseSendSms;
-        }
+		}
 
 		private void EnqueueCrmSmsTemplateResponse()
 		{
@@ -72,8 +73,10 @@ namespace AdministrationTest.Option.Options.Logic
 			Dictionary<string, object> contactDictionary = new Dictionary<string, object>()
 			{
 				{ "new_smsid", Guid.NewGuid() },
-				{ "toid", Guid.NewGuid() },
+				{ "contactid", Guid.NewGuid() },
 				{ "mobilephone", "12 34 56 78" },
+				{ "new_sendtime", new DateTime(2000, 1, 1) },
+				{ "new_operatorsendtime", new DateTime(2000, 1, 2) },
 			};
 
 			_dynamicsCrmConnectionTester.EnqueueRetrieveMultiple("new_sms", new List<Dictionary<string, object>>() { contactDictionary });

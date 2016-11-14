@@ -1,5 +1,6 @@
 ﻿using Sms.ApiClient.V2.SendMessages;
 using System;
+using System.Text;
 
 namespace SystemInterface.Inmobile
 {
@@ -9,6 +10,8 @@ namespace SystemInterface.Inmobile
 		public string SenderName { get; private set; }
 		public string MessageId { get; set; }
 		public DateTime? SendTime { get; private set; }
+
+		public object LocalSms;
 
 		public InMobileSms(string text, string senderName, DateTime? sendTime)
 		{
@@ -23,10 +26,10 @@ namespace SystemInterface.Inmobile
 
 			if (trimmedNumber.Length == 8)
 			{
-				return "45" + crmNumber;
+				return "45" + trimmedNumber;
 			}
 
-			return crmNumber;
+			return trimmedNumber;
 		}
 
 		internal ISmsMessage ToInmobileSms(string msisdn)
@@ -34,6 +37,11 @@ namespace SystemInterface.Inmobile
 			ISmsMessage message = new SmsMessage(msisdn, Text, SenderName, SmsEncoding.Utf8, MessageId, SendTime, false);
 
 			return message;
+		}
+
+		public override string ToString()
+		{
+			return $"Text:{Text} SenderName:{SenderName} MessageId:{MessageId} SendTime:{SendTime?.ToString("yyyy-MM-dd HH:mm:ss")}";
 		}
 	}
 }

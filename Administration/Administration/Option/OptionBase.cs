@@ -1,4 +1,5 @@
-﻿using DataLayer;
+﻿using Administration.TestToLog;
+using DataLayer;
 using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
@@ -45,6 +46,8 @@ namespace Administration.Option
 				SystemInterface.Email.PickupDirectoryLocation = path;
 
 				SystemInterface.DanskeBank.DanskeBankHandler.Environment = SystemInterface.DanskeBank.ApplicationRequest.EnvironmentEnum.TEST;
+
+				SetInMobileConnectionToLogWriter();
 			}
 			else
 			{
@@ -91,6 +94,18 @@ namespace Administration.Option
 			{
 				_inMobileConnection = newConnection;
 			}
+		}
+
+		private void SetInMobileConnectionToLogWriter()
+		{
+			string apiKey = Config.InMobileApiKey;
+			string getMessagesGetUrl = Config.InMobileGetMessagesGetUrl;
+			string messageStatusCallbackUrl = Config.InMobileMessageStatusCallbackUrl;
+			string postUrl = Config.InMobilePostUrl;
+
+			InMobileConnectionTestToLog inMobileConnection = new InMobileConnectionTestToLog(Connection, apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl);
+
+			_inMobileConnection = inMobileConnection;
 		}
 
 		public void ChangeMailrelayConnection(IMailrelayConnection newConnection)
