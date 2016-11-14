@@ -152,10 +152,12 @@
     <Compile Include="Dynamics\Crm\MaterialePakke.cs" />
     <Compile Include="Dynamics\Crm\MaterialeBehov.cs" />
     <Compile Include="Dynamics\Crm\MaterialeProcessState.cs" />
+    <Compile Include="Dynamics\Crm\Sms.cs" />
     <Compile Include="Dynamics\Crm\StaticCrm.cs" />
     <Compile Include="Dynamics\Crm\SystemUser.cs" />
     <Compile Include="Dynamics\Crm\Materiale.cs" />
     <Compile Include="Dynamics\Crm\Team.cs" />
+    <Compile Include="Dynamics\Crm\SmsTemplate.cs" />
     <Compile Include="Dynamics\Crm\XmlHelper.cs" />
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
