@@ -160,6 +160,8 @@
     <Compile Include="Dynamics\Field.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="Inmobile\AbstractInMobileConnection.cs" />
+    <Compile Include="Inmobile\InMobileConnection.cs" />
+    <Compile Include="Inmobile\InMobileSms.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
     <Compile Include="Mailrelay\Function\Campaigns\getCampaigns.cs" />
