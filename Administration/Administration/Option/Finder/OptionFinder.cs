@@ -53,6 +53,7 @@ namespace Administration.Option.Finder
 			options.AddRange(SumIndbetaling.Find(_connection));
 			options.AddRange(SumOptalt.Find(_connection));
 			options.AddRange(SetMissingCampaignLeadtarget.Find(_connection));
+			options.AddRange(SendSms.Find(_connection));
 			//options.AddRange(MaintainAllTables.Find(_connection));
 
 			Sleep sleep = new Sleep(_connection);

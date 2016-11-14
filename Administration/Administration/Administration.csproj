@@ -106,6 +106,7 @@
     <Compile Include="Option\Options\Logic\ImportDanskeBankData\Iso20022Ntry.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
+    <Compile Include="Option\Options\Logic\SendSms.cs" />
     <Compile Include="Option\Options\Logic\SendTableFromMailrelay.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedReference.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ReferenceGetAndSet.cs" />
@@ -146,6 +147,7 @@
       <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
