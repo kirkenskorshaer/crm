@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
+using SystemInterface.Inmobile;
 using SystemInterface.Mailrelay;
 using DatabaseOptionType = DataLayer.MongoData.Option.OptionBase;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
@@ -15,6 +16,7 @@ namespace Administration.Option
 		internal readonly DatabaseOptionType DatabaseOption;
 		protected IMailrelayConnection _mailrelayConnection;
 		protected IDynamicsCrmConnection _dynamicsCrmConnection;
+		protected AbstractInMobileConnection _inMobileConnection;
 
 		protected OptionBase(MongoConnection connection, DatabaseOptionType databaseOption)
 		{
@@ -67,6 +69,27 @@ namespace Administration.Option
 			if (_dynamicsCrmConnection == null)
 			{
 				_dynamicsCrmConnection = dynamicsCrmConnection;
+			}
+		}
+
+		protected void SetInMobileConnectionIfEmpty()
+		{
+			if (_inMobileConnection == null)
+			{
+				string apiKey = Config.InMobileApiKey;
+				string getMessagesGetUrl = Config.InMobileGetMessagesGetUrl;
+				string messageStatusCallbackUrl = Config.InMobileMessageStatusCallbackUrl;
+				string postUrl = Config.InMobilePostUrl;
+
+				_inMobileConnection = new InMobileConnection(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl);
+			}
+		}
+
+		public void SetInMobileConnectionIfEmpty(AbstractInMobileConnection newConnection)
+		{
+			if (_inMobileConnection == null)
+			{
+				_inMobileConnection = newConnection;
 			}
 		}
 
