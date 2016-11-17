@@ -80,26 +80,74 @@ namespace Administration.Option.Options.Logic
 			{
 				//Console.Out.WriteLine($"{ntry.BankId}: {ntry.ValDt} : {ntry.Amt} {ntry.Ccy} - {ntry.Prtry} - {GetKilde(ntry, 0)} - ({ntry.BkTxCdDomnCd}_{ntry.BkTxCdDomnFmlyCd}_{ntry.BkTxCdDomnFmlySubFmlyCd})");
 
-				Indbetaling currentIndbetaling = existingIndbetalings.SingleOrDefault(indbetaling => indbetaling.new_bankid == ntry.BankId);
+				Dictionary<string, int> crmIndbetalingCountByBankId = CreateIndbetalingCountByBankId(existingIndbetalings);
+				Dictionary<string, int> fileIndbetalingCountByBankId = new Dictionary<string, int>();
 
-				if (currentIndbetaling == null)
+				bool createNewIndbetaling = CalculateCreateNewIndsamling(crmIndbetalingCountByBankId, fileIndbetalingCountByBankId, ntry.BankId);
+
+				if (createNewIndbetaling == false)
 				{
-					long? new_kkadminmedlemsnr = GetKkadminNr(ntry.BkTxCdPrtryCd);
+					continue;
+				}
 
-					Account indsamlingssted = GetIndsamlingssted(new_kkadminmedlemsnr);
+				long? new_kkadminmedlemsnr = GetKkadminNr(ntry.BkTxCdPrtryCd);
 
-					Indbetaling.kildeEnum kilde = GetKilde(ntry, new_kkadminmedlemsnr);
-					Guid? byarbejdeid = indsamlingssted?.byarbejdeid;
-					Guid? indsamlingsstedid = indsamlingssted?.Id;
-					Guid? indsamlingskoordinatorid = indsamlingssted?.indsamlingskoordinatorid;
+				Account indsamlingssted = GetIndsamlingssted(new_kkadminmedlemsnr);
 
-					CreateIndbetaling(iso20022Document, ntry, konto.Id, campaignId.Value, kilde, byarbejdeid, indsamlingsstedid, indsamlingskoordinatorid, owner.Value);
+				Indbetaling.kildeEnum kilde = GetKilde(ntry, new_kkadminmedlemsnr);
+				Guid? byarbejdeid = indsamlingssted?.byarbejdeid;
+				Guid? indsamlingsstedid = indsamlingssted?.Id;
+				Guid? indsamlingskoordinatorid = indsamlingssted?.indsamlingskoordinatorid;
+
+				CreateIndbetaling(iso20022Document, ntry, konto.Id, campaignId.Value, kilde, byarbejdeid, indsamlingsstedid, indsamlingskoordinatorid, owner.Value);
+			}
+		}
+
+		private bool CalculateCreateNewIndsamling(Dictionary<string, int> crmIndbetalingCountByBankId, Dictionary<string, int> fileIndbetalingCountByBankId, string bankId)
+		{
+			if (fileIndbetalingCountByBankId.ContainsKey(bankId))
+			{
+				fileIndbetalingCountByBankId[bankId]++;
+			}
+			else
+			{
+				fileIndbetalingCountByBankId.Add(bankId, 1);
+			}
+
+			int crmCount = 0;
+
+			if (crmIndbetalingCountByBankId.ContainsKey(bankId))
+			{
+				crmCount = crmIndbetalingCountByBankId[bankId];
+			}
+
+			int fileCount = fileIndbetalingCountByBankId[bankId];
+
+			if (crmCount < fileCount)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private Dictionary<string, int> CreateIndbetalingCountByBankId(List<Indbetaling> indbetalings)
+		{
+			Dictionary<string, int> countByBankId = new Dictionary<string, int>();
+
+			foreach (Indbetaling indbetaling in indbetalings)
+			{
+				if (countByBankId.ContainsKey(indbetaling.new_bankid))
+				{
+					countByBankId[indbetaling.new_bankid]++;
 				}
 				else
 				{
-					VerifyIndbetaling(iso20022Document, ntry, currentIndbetaling);
+					countByBankId.Add(indbetaling.new_bankid, 1);
 				}
 			}
+
+			return countByBankId;
 		}
 
 		private Account GetIndsamlingssted(long? new_kkadminmedlemsnr)
@@ -192,14 +240,6 @@ namespace Administration.Option.Options.Logic
 			string bankkildekode = $"{ntry.BkTxCdDomnCd} / {ntry.BkTxCdDomnFmlyCd} / {ntry.BkTxCdDomnFmlySubFmlyCd}";
 
 			Indbetaling indbetaling = Indbetaling.CreateAndInsert(_dynamicsCrmConnection, iso20022Document.IBAN, ntry.Amt, ntry.BankId, ntry.Prtry, ntry.ValDt, kontoId, campaignId, kilde, byarbejdeid, indsamlingsstedid, indsamlingskoordinatorid, ntry.BkTxCdPrtryCd, bankkildekode, owner);
-		}
-
-		private void VerifyIndbetaling(Iso20022Document iso20022Document, Iso20022Ntry ntry, Indbetaling indbetaling)
-		{
-			if (indbetaling.GetMoney() != ntry.Amt)
-			{
-				Log.WriteLocation(Connection, $"Account {iso20022Document.IBAN} entry {ntry.BankId} had amount {ntry.Amt} crm amount was {indbetaling.GetMoney()}", "ImportDanskeBank", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
-			}
 		}
 
 		private List<XDocument> GetBankXml(string[] files)
