@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using SystemInterface.Inmobile;
 using DatabaseSendSms = DataLayer.MongoData.Option.Options.Logic.SendSms;
 
 namespace AdministrationTest.Option.Options.Logic
@@ -29,6 +30,25 @@ namespace AdministrationTest.Option.Options.Logic
 			EnqueueCrmContactResponse();
 
 			sendSms.SetInMobileConnectionIfEmpty(_inMobileConnectionTester);
+
+			sendSms.Execute();
+		}
+
+		[Test]
+		public void SendToPostTest()
+		{
+			DatabaseSendSms databaseSendSms = CreateDatabaseSendSms();
+			SendSms sendSms = new SendSms(Connection, databaseSendSms);
+
+			sendSms.SetDynamicsCrmConnectionIfEmpty(_dynamicsCrmConnectionTester);
+			EnqueueCrmSmsTemplateResponse();
+			EnqueueCrmSmsResponse();
+			EnqueueCrmContactResponse();
+			InMobileConnection.UseFacade = true;
+            string postUrl = "http://localhost:81/PostTest.aspx";
+			InMobileConnection inmobileConnection = new InMobileConnection("apiKey", "getMessagesGetUrl", "messageStatusCallbackUrl", postUrl, postUrl);
+
+			sendSms.SetInMobileConnectionIfEmpty(inmobileConnection);
 
 			sendSms.Execute();
 		}

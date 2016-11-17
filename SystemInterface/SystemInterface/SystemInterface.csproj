@@ -97,7 +97,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Sms.ApiClient">
-      <HintPath>..\..\..\..\InMobile\Sms.ApiClient.dll\Sms.ApiClient.dll</HintPath>
+      <HintPath>..\..\..\..\InMobile\Sms.ApiClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

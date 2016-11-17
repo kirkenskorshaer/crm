@@ -175,8 +175,8 @@ namespace SystemInterface.Dynamics.Crm
 					return new List<CrmType>();
 				}
 
-				xDocument.Element("fetch").Add(new XAttribute("paging-cookie", pagingInformation.PagingCookie));
-				xDocument.Element("fetch").Add(new XAttribute("page", pagingInformation.Page));
+				XmlHelper.SetAttributeValue(xDocument, "fetch", "paging-cookie", pagingInformation.PagingCookie);
+				XmlHelper.SetAttributeValue(xDocument, "fetch", "page", pagingInformation.Page);
 			}
 
 			pagingInformation.FirstRun = false;
@@ -185,16 +185,16 @@ namespace SystemInterface.Dynamics.Crm
 
 			EntityCollection entityCollection = dynamicsCrmConnection.Service.RetrieveMultiple(fetchExpression);
 
+			pagingInformation.MoreRecords = entityCollection.MoreRecords;
+			pagingInformation.PagingCookie = entityCollection.PagingCookie;
+			pagingInformation.Page++;
+
 			if (entityCollection.Entities.Count == 0)
 			{
 				return new List<CrmType>();
 			}
 
 			List<CrmType> crmEntities = entityCollection.Entities.Select(entity => CrmTypeConstructor(dynamicsCrmConnection, entity)).ToList();
-
-			pagingInformation.MoreRecords = entityCollection.MoreRecords;
-			pagingInformation.PagingCookie = entityCollection.PagingCookie;
-			pagingInformation.Page++;
 
 			return crmEntities;
 		}

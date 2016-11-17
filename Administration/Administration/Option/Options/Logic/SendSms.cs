@@ -55,13 +55,35 @@ namespace Administration.Option.Options.Logic
 				AddToSmsByNumberList(msisdn, inMobileSms, smsByNumberList);
 			}
 
-			smsByNumberList.ForEach(_inMobileConnection.Send);
+			try
+			{
+				smsByNumberList.ForEach(_inMobileConnection.Send);
+			}
+			catch (Exception exception)
+			{
+				Log.WriteLocation(Connection, exception.Message, "SendSms", exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+			}
 
+			/*
 			smsByNumberList.ForEach(inMobileSms =>
 				inMobileSms.ToList().ForEach(smsByNumber =>
 					((Sms)smsByNumber.Value.LocalSms).MarkAsSent(smsByNumber.Value.Text, smsByNumber.Value.MessageId)));
+			*/
+
+			smsByNumberList.ForEach(inMobileSms =>
+				inMobileSms.ToList().ForEach(smsByNumber =>
+					MarkSms((Sms)smsByNumber.Value.LocalSms, smsByNumber)));
 
 			report.Success = true;
+		}
+
+		private void MarkSms(Sms sms, KeyValuePair<string, InMobileSms> smsByNumber)
+		{
+			InMobileSms inMobileSms = smsByNumber.Value;
+
+			string messageId = smsByNumber.Value.MessageId;
+
+			sms.MarkAsSent(inMobileSms.Text, messageId);
 		}
 
 		private void AddToSmsByNumberList(string msisdn, InMobileSms inMobileSms, List<Dictionary<string, InMobileSms>> smsByNumberList)

@@ -8,7 +8,7 @@ namespace TestUtilities
 {
 	public class InMobileConnectionTester : AbstractInMobileConnection
 	{
-		public InMobileConnectionTester(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl) : base(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl)
+		public InMobileConnectionTester(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl, string hostRootUrl) : base(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl, hostRootUrl)
 		{
 		}
 

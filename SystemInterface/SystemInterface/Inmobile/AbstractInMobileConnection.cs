@@ -9,13 +9,15 @@ namespace SystemInterface.Inmobile
 		public string GetMessagesGetUrl { get; private set; }
 		public string MessageStatusCallbackUrl { get; private set; }
 		public string PostUrl { get; private set; }
+		public string HostRootUrl { get; private set; }
 
-		public AbstractInMobileConnection(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl)
+		public AbstractInMobileConnection(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl, string hostRootUrl)
 		{
 			ApiKey = apiKey;
 			GetMessagesGetUrl = getMessagesGetUrl;
 			MessageStatusCallbackUrl = messageStatusCallbackUrl;
 			PostUrl = postUrl;
+			HostRootUrl = hostRootUrl;
 		}
 
 		public abstract void Send(Dictionary<string, InMobileSms> inMobileSmsMessages);

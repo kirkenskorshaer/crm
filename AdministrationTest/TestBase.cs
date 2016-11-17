@@ -60,7 +60,7 @@ namespace AdministrationTest
 
 			_mailrelayConnectionTester = new MailrelayConnectionTester();
 			_dynamicsCrmConnectionTester = new DynamicsCrmConnectionTester();
-			_inMobileConnectionTester = new InMobileConnectionTester("apiKey", "getMessageGetUrl", "messageStatusCallbackUrl", "postUrl");
+			_inMobileConnectionTester = new InMobileConnectionTester("apiKey", "getMessageGetUrl", "messageStatusCallbackUrl", "postUrl", "hostRootUrl");
 			_random = new Random();
 		}
 

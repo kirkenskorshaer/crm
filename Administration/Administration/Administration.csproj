@@ -106,6 +106,7 @@
     <Compile Include="Option\Options\Logic\ImportDanskeBankData\Iso20022Ntry.cs" />
     <Compile Include="Option\Options\Logic\ImportFromStub.cs" />
     <Compile Include="Option\Options\Logic\MaterialeBehovAssignment.cs" />
+    <Compile Include="Option\Options\Logic\ReceiveSms.cs" />
     <Compile Include="Option\Options\Logic\SendSms.cs" />
     <Compile Include="Option\Options\Logic\SendTableFromMailrelay.cs" />
     <Compile Include="Option\Options\Logic\SquashData\ModifiedReference.cs" />

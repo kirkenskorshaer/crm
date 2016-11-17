@@ -9,7 +9,9 @@ namespace SystemInterface.Inmobile
 {
 	public class InMobileConnection : AbstractInMobileConnection
 	{
-		public InMobileConnection(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl) : base(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl)
+		public static bool UseFacade = false;
+
+		public InMobileConnection(string apiKey, string getMessagesGetUrl, string messageStatusCallbackUrl, string postUrl, string hostRootUrl) : base(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl, hostRootUrl)
 		{
 		}
 
@@ -18,7 +20,17 @@ namespace SystemInterface.Inmobile
 			List<ISmsMessage> messages = inMobileSmsMessages.Select(message => message.Value.ToInmobileSms(message.Key)).ToList();
 
 			SendMessagesRequestBuilder requestBuilder = new SendMessagesRequestBuilder();
-			SendMessagesClient client = new SendMessagesClient(ApiKey, PostUrl, requestBuilder);
+
+			ISendMessagesClient client;
+			if (UseFacade)
+			{
+				client = new FacadeSmsClient(HostRootUrl, ApiKey);
+			}
+			else
+			{
+				client = new SendMessagesClient(ApiKey, PostUrl, requestBuilder);
+			}
+
 
 			SendMessagesResponse response = client.SendMessages(messages, MessageStatusCallbackUrl);
 

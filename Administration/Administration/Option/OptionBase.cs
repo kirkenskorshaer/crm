@@ -45,11 +45,15 @@ namespace Administration.Option
 				SystemInterface.Email.PickupDirectoryLocation = path;
 
 				SystemInterface.DanskeBank.DanskeBankHandler.Environment = SystemInterface.DanskeBank.ApplicationRequest.EnvironmentEnum.TEST;
+
+				InMobileConnection.UseFacade = true;
 			}
 			else
 			{
 				SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
 				SystemInterface.DanskeBank.DanskeBankHandler.Environment = SystemInterface.DanskeBank.ApplicationRequest.EnvironmentEnum.PRODUCTION;
+
+				InMobileConnection.UseFacade = false;
 			}
 		}
 
@@ -80,8 +84,9 @@ namespace Administration.Option
 				string getMessagesGetUrl = Config.InMobileGetMessagesGetUrl;
 				string messageStatusCallbackUrl = Config.InMobileMessageStatusCallbackUrl;
 				string postUrl = Config.InMobilePostUrl;
+				string hostRootUrl = Config.InMobileHostRootUrl;
 
-				_inMobileConnection = new InMobileConnection(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl);
+				_inMobileConnection = new InMobileConnection(apiKey, getMessagesGetUrl, messageStatusCallbackUrl, postUrl, hostRootUrl);
 			}
 		}
 

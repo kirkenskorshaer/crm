@@ -27,6 +27,7 @@ namespace DataLayer.MongoData
 		public string InMobileGetMessagesGetUrl { get; set; }
 		public string InMobileMessageStatusCallbackUrl { get; set; }
 		public string InMobilePostUrl { get; set; }
+		public string InMobileHostRootUrl { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
