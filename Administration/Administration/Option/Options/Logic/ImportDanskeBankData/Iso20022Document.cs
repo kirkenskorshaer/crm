@@ -45,6 +45,12 @@ namespace Administration.Option.Options.Logic.ImportDanskeBankData
 				string bankId = Ntry.Element(_namespace + "AddtlInfInd")?.Element(_namespace + "MsgNmId")?.Value;
 				if (string.IsNullOrWhiteSpace(bankId))
 				{
+					XElement NtryRef = Ntry.Element(_namespace + "NtryRef");
+					if (NtryRef != null)
+					{
+						NtryRef.Remove();
+					}
+
 					bankId = Md5Helper.MakeMd5(Ntry.ToString());
 				}
 
