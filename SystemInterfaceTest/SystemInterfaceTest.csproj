@@ -81,6 +81,7 @@
     <Compile Include="Dynamics\Crm\MailrelayInformationTest.cs" />
     <Compile Include="Dynamics\Crm\MarketingListTest.cs" />
     <Compile Include="Dynamics\Crm\MaterialeTest.cs" />
+    <Compile Include="Dynamics\Crm\SavedQueryTest.cs" />
     <Compile Include="Dynamics\Crm\StaticCrmTest.cs" />
     <Compile Include="Dynamics\Crm\SystemUserTest.cs" />
     <Compile Include="EmailTest.cs" />

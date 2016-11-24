@@ -155,6 +155,7 @@
     <Compile Include="Dynamics\Crm\Team.cs" />
     <Compile Include="Dynamics\Crm\XmlHelper.cs" />
     <Compile Include="Dynamics\Field.cs" />
+    <Compile Include="Dynamics\Crm\SavedQuery.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Mailrelay\DateTimeConverter.cs" />
