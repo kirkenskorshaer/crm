@@ -204,7 +204,7 @@ namespace SystemInterface.Dynamics.Crm
 			AfterUpdate(generatedEntity);
 		}
 
-		protected static void Update(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
+		public static void Update(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
 		{
 			CrmEntity crmEntity = new CrmEntity(entityName);
 
