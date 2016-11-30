@@ -23,6 +23,9 @@ namespace DataLayer.MongoData
 		public string MailrelayApiKey { get; set; }
 		public double MailrelaySendIntervalMilliseconds { get; set; }
 		public bool? EnableTest { get; set; }
+		public string DynamicsCrmUsername { get; set; }
+		public string DynamicsCrmPassword { get; set; }
+		public string DynamicsCrmUrl { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
