@@ -211,7 +211,6 @@
     <Compile Include="Mailrelay\FunctionReply\MailrelayIntReply.cs" />
     <Compile Include="Mailrelay\MailrelayConnectionException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteAdministration.cs" />
     <Compile Include="Service References\DanskeBankEdiService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
