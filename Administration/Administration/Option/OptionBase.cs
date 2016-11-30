@@ -62,6 +62,18 @@ namespace Administration.Option
 			}
 		}
 
+		protected void SetDynamicsCrmConnectionIfEmpty()
+		{
+			if (_dynamicsCrmConnection == null)
+			{
+				string dynamicsCrmUrl = Config.DynamicsCrmUrl;
+				string dynamicsCrmUsername = Config.DynamicsCrmUsername;
+				string dynamicsCrmPassword = Config.DynamicsCrmPassword;
+
+				_dynamicsCrmConnection = DynamicsCrmConnection.GetConnection(dynamicsCrmUrl, dynamicsCrmUsername, dynamicsCrmPassword);
+			}
+		}
+
 		public void SetDynamicsCrmConnectionIfEmpty(IDynamicsCrmConnection dynamicsCrmConnection)
 		{
 			if (_dynamicsCrmConnection == null)
