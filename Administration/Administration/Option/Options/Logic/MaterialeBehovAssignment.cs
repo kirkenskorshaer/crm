@@ -1,6 +1,4 @@
-﻿using Administration.Option.Options.Data;
-using DataLayer;
-using System;
+﻿using DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
@@ -10,7 +8,7 @@ using SystemInterface.Dynamics.Crm;
 
 namespace Administration.Option.Options.Logic
 {
-	public class MaterialeBehovAssignment : AbstractDataOptionBase
+	public class MaterialeBehovAssignment : OptionBase
 	{
 		private DatabaseMaterialeBehovAssignment _databaseMaterialeBehovAssignment;
 

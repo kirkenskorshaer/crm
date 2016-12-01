@@ -1,7 +1,5 @@
-﻿using Administration.Option.Options.Data;
-using DataLayer;
+﻿using DataLayer;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +10,7 @@ using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
 namespace Administration.Option.Options.Logic
 {
-	public class ExposeData : AbstractDataOptionBase
+	public class ExposeData : OptionBase
 	{
 		private DatabaseExposeData _databaseExposeData;
 

@@ -1,10 +1,8 @@
-﻿using Administration.Option.Options.Data;
-using DataLayer;
+﻿using DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemInterface.Dynamics.Crm;
-using SystemInterface.Mailrelay;
 using SystemInterface.Mailrelay.Function.Subscribers;
 using SystemInterface.Mailrelay.FunctionReply;
 using DatabaseAddMailrelaySubscriberFromLead = DataLayer.MongoData.Option.Options.Logic.AddMailrelaySubscriberFromLead;
@@ -13,7 +11,7 @@ using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 
 namespace Administration.Option.Options.Logic
 {
-	public class AddMailrelaySubscriberFromLead : AbstractDataOptionBase
+	public class AddMailrelaySubscriberFromLead : OptionBase
 	{
 		private DatabaseAddMailrelaySubscriberFromLead _databaseAddMailrelaySubscriberFromLead;
 

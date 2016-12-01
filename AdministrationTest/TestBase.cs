@@ -5,7 +5,6 @@ using DataLayer;
 using DataLayer.MongoData;
 using DataLayer.MongoData.Option;
 using NUnit.Framework;
-using DatabaseChangeProvider = DataLayer.SqlData.ChangeProvider;
 using DatabaseStub = DataLayer.MongoData.Input.Stub;
 using DatabaseStubElement = DataLayer.MongoData.Input.StubElement;
 using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
@@ -33,13 +32,10 @@ namespace AdministrationTest
 			Connection = MongoConnection.GetConnection(databaseName);
 		}
 
-		private List<DatabaseChangeProvider> _changeProviders = new List<DatabaseChangeProvider>();
-
 		[SetUp]
 		public void SetUp()
 		{
 			Connection.CleanDatabase();
-			_sqlConnection = DataLayer.SqlConnectionHolder.GetConnection(Connection, "sql");
 
 			if (Config.Exists(Connection) == false)
 			{
@@ -65,7 +61,6 @@ namespace AdministrationTest
 		[TearDown]
 		public void TearDown()
 		{
-			_changeProviders.ForEach(changeProvider => changeProvider.Delete(_sqlConnection));
 		}
 
 		protected Schedule CreateSchedule()
@@ -94,33 +89,6 @@ namespace AdministrationTest
 				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
 			};
 			return schedule;
-		}
-
-		protected DatabaseChangeProvider FindOrCreateChangeProvider(SqlConnection sqlConnection, string providerName)
-		{
-			List<DatabaseChangeProvider> changeProviders = DatabaseChangeProvider.ReadAll(sqlConnection);
-
-			Func<DatabaseChangeProvider, bool> findChangeProvider = lChangeProvider => lChangeProvider.Name == providerName;
-
-			DatabaseChangeProvider changeProvider;
-
-			if (changeProviders.Any(findChangeProvider))
-			{
-				changeProvider = changeProviders.Single(findChangeProvider);
-			}
-			else
-			{
-				changeProvider = new DatabaseChangeProvider()
-				{
-					Name = providerName,
-				};
-
-				changeProvider.Insert(sqlConnection);
-			}
-
-			_changeProviders.Add(changeProvider);
-
-			return changeProvider;
 		}
 
 		protected Campaign CreateCampaign()

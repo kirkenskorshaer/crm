@@ -44,7 +44,6 @@ namespace DataLayer
 			{
 				"system.indexes",
 				typeof(MongoData.Server).Name,
-				typeof(MongoData.SqlConnectionString).Name,
 				typeof(MongoData.UrlLogin).Name,
 				typeof(MongoData.Config).Name,
 			};

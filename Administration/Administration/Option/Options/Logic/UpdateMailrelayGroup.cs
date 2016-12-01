@@ -1,10 +1,8 @@
-﻿using Administration.Option.Options.Data;
-using DataLayer;
+﻿using DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using SystemInterface.Dynamics.Crm;
-using SystemInterface.Mailrelay.Function.Groups;
 using SystemInterface.Mailrelay.Function.Subscribers;
 using SystemInterface.Mailrelay.FunctionReply;
 using SystemInterface.Mailrelay.Logic;
@@ -13,7 +11,7 @@ using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
 namespace Administration.Option.Options.Logic
 {
-	public class UpdateMailrelayGroup : AbstractDataOptionBase
+	public class UpdateMailrelayGroup : OptionBase
 	{
 		private DatabaseUpdateMailrelayGroup _databaseUpdateMailrelayGroup;
 

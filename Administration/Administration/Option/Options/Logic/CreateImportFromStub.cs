@@ -1,5 +1,4 @@
-﻿using Administration.Option.Options.Data;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DatabaseCreateImportFromStub = DataLayer.MongoData.Option.Options.Logic.CreateImportFromStub;
 using DatabaseImportFromStub = DataLayer.MongoData.Option.Options.Logic.ImportFromStub;
@@ -12,7 +11,7 @@ using System;
 
 namespace Administration.Option.Options.Logic
 {
-	public class CreateImportFromStub : AbstractDataOptionBase
+	public class CreateImportFromStub : OptionBase
 	{
 		private DatabaseCreateImportFromStub _databaseCreateImportFromStub;
 

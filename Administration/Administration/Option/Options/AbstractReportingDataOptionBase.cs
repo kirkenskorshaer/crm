@@ -1,11 +1,10 @@
-﻿using Administration.Option.Options.Data;
-using System;
+﻿using System;
 using DataLayer;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 
 namespace Administration.Option.Options
 {
-	public abstract class AbstractReportingDataOptionBase : AbstractDataOptionBase
+	public abstract class AbstractReportingDataOptionBase : OptionBase
 	{
 		public AbstractReportingDataOptionBase(MongoConnection connection, DatabaseOptionBase databaseOption) : base(connection, databaseOption)
 		{

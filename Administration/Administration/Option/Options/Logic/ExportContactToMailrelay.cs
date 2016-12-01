@@ -1,5 +1,4 @@
-﻿using Administration.Option.Options.Data;
-using DataLayer;
+﻿using DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 
 namespace Administration.Option.Options.Logic
 {
-	public class ExportContactToMailrelay : AbstractDataOptionBase
+	public class ExportContactToMailrelay : OptionBase
 	{
 		private DatabaseExportContactToMailrelay _databaseExportContactToMailrelay;
 
