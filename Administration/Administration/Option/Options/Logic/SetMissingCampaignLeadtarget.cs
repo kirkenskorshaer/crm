@@ -49,12 +49,5 @@ namespace Administration.Option.Options.Logic
 
 			report.Success = true;
 		}
-
-		public static List<SetMissingCampaignLeadtarget> Find(MongoConnection connection)
-		{
-			List<DatabaseSetMissingCampaignLeadtarget> options = DatabaseSetMissingCampaignLeadtarget.ReadAllowed<DatabaseSetMissingCampaignLeadtarget>(connection);
-
-			return options.Select(option => new SetMissingCampaignLeadtarget(connection, option)).ToList();
-		}
 	}
 }

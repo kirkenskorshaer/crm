@@ -78,12 +78,5 @@ namespace Administration.Option.Options.Logic
 
 			return webCampaign;
 		}
-
-		public static List<CreateImportFromStub> Find(MongoConnection connection)
-		{
-			List<DatabaseCreateImportFromStub> options = DatabaseCreateImportFromStub.ReadAllowed<DatabaseCreateImportFromStub>(connection);
-
-			return options.Select(option => new CreateImportFromStub(connection, option)).ToList();
-		}
 	}
 }

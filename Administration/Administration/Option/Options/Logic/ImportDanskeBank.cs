@@ -261,12 +261,5 @@ namespace Administration.Option.Options.Logic
 
 			return bankXmlFiles;
 		}
-
-		public static List<ImportDanskeBank> Find(MongoConnection connection)
-		{
-			List<DatabaseImportDanskeBank> options = DatabaseImportDanskeBank.ReadAllowed<DatabaseImportDanskeBank>(connection);
-
-			return options.Select(option => new ImportDanskeBank(connection, option)).ToList();
-		}
 	}
 }

@@ -50,12 +50,5 @@ namespace Administration.Option.Options.Logic
 
 			report.Success = true;
 		}
-
-		public static List<SumOptalt> Find(MongoConnection connection)
-		{
-			List<DatabaseSumOptalt> options = DatabaseSumOptalt.ReadAllowed<DatabaseSumOptalt>(connection);
-
-			return options.Select(option => new SumOptalt(connection, option)).ToList();
-		}
 	}
 }

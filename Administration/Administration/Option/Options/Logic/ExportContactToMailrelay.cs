@@ -106,12 +106,5 @@ namespace Administration.Option.Options.Logic
 
 			return UpdateResultEnum.Updated;
 		}
-
-		public static List<ExportContactToMailrelay> Find(MongoConnection connection)
-		{
-			List<DatabaseExportContactToMailrelay> options = DatabaseExportContactToMailrelay.ReadAllowed<DatabaseExportContactToMailrelay>(connection);
-
-			return options.Select(option => new ExportContactToMailrelay(connection, option)).ToList();
-		}
 	}
 }

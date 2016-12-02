@@ -155,12 +155,5 @@ namespace Administration.Option.Options.Logic
 				AddMailrelaySubscriberFromLead.CreateIfValid(Connection, lead.Id, $"Auto subscribe from {_databaseImportFromStub.Name}", _databaseImportFromStub.urlLoginName, lead.emailaddress1, webCampaign);
 			}
 		}
-
-		public static List<ImportFromStub> Find(MongoConnection connection)
-		{
-			List<DatabaseImportFromStub> options = DatabaseImportFromStub.ReadAllowed<DatabaseImportFromStub>(connection);
-
-			return options.Select(option => new ImportFromStub(connection, option)).ToList();
-		}
 	}
 }

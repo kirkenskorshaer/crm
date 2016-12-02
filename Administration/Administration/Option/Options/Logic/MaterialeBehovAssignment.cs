@@ -17,13 +17,6 @@ namespace Administration.Option.Options.Logic
 			_databaseMaterialeBehovAssignment = (DatabaseMaterialeBehovAssignment)databaseOption;
 		}
 
-		public static List<MaterialeBehovAssignment> Find(MongoConnection connection)
-		{
-			List<DatabaseMaterialeBehovAssignment> options = DatabaseOptionBase.ReadAllowed<DatabaseMaterialeBehovAssignment>(connection);
-
-			return options.Select(option => new MaterialeBehovAssignment(connection, option)).ToList();
-		}
-
 		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseMaterialeBehovAssignment.urlLoginName;

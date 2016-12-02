@@ -319,12 +319,5 @@ namespace Administration.Option.Options.Logic
 
 			return originalString;
 		}
-
-		public static List<SendTableFromMailrelay> Find(MongoConnection connection)
-		{
-			List<DatabaseSendTableFromMailrelay> options = DatabaseSendTableFromMailrelay.ReadAllowed<DatabaseSendTableFromMailrelay>(connection);
-
-			return options.Select(option => new SendTableFromMailrelay(connection, option)).ToList();
-		}
 	}
 }

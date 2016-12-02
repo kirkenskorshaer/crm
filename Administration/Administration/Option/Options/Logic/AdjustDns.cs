@@ -29,12 +29,5 @@ namespace Administration.Option.Options.Logic
 
 			return;
 		}
-
-		public static List<AdjustDns> Find(MongoConnection connection)
-		{
-			List<DatabaseAdjustDns> options = DatabaseAdjustDns.ReadAllowed<DatabaseAdjustDns>(connection);
-
-			return options.Select(option => new AdjustDns(connection, option)).ToList();
-		}
 	}
 }

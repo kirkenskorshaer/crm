@@ -171,12 +171,5 @@ namespace Administration.Option.Options.Logic
 			}
 			indsamlingsstedByCampaign[campaignid.Value].Add(indbetaling);
 		}
-
-		public static List<SumIndbetaling> Find(MongoConnection connection)
-		{
-			List<DatabaseSumIndbetaling> options = DatabaseSumIndbetaling.ReadAllowed<DatabaseSumIndbetaling>(connection);
-
-			return options.Select(option => new SumIndbetaling(connection, option)).ToList();
-		}
 	}
 }

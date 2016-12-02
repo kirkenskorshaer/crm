@@ -143,12 +143,5 @@ namespace Administration.Option.Options.Logic
 				report.CollectUpdate(result, idPair.value.Value);
 			}
 		}
-
-		public static List<UpdateMailrelayGroup> Find(MongoConnection connection)
-		{
-			List<DatabaseUpdateMailrelayGroup> options = DatabaseUpdateMailrelayGroup.ReadAllowed<DatabaseUpdateMailrelayGroup>(connection);
-
-			return options.Select(option => new UpdateMailrelayGroup(connection, option)).ToList();
-		}
 	}
 }

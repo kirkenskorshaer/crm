@@ -187,13 +187,6 @@ namespace Administration.Option.Options.Logic
 			return intReply.data;
 		}
 
-		public static List<AddMailrelaySubscriberFromLead> Find(MongoConnection connection)
-		{
-			List<DatabaseAddMailrelaySubscriberFromLead> options = DatabaseAddMailrelaySubscriberFromLead.ReadAllowed<DatabaseAddMailrelaySubscriberFromLead>(connection);
-
-			return options.Select(option => new AddMailrelaySubscriberFromLead(connection, option)).ToList();
-		}
-
 		public static DatabaseAddMailrelaySubscriberFromLead CreateIfValid(MongoConnection connection, Guid leadId, string name, string urlLoginName, string emailaddress1, DatabaseWebCampaign webCampaign)
 		{
 			if (string.IsNullOrWhiteSpace(emailaddress1))

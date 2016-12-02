@@ -54,12 +54,5 @@ namespace Administration.Option.Options.Logic
 
 			return;
 		}
-
-		public static List<ExposeData> Find(MongoConnection connection)
-		{
-			List<DatabaseExposeData> options = DatabaseExposeData.ReadAllowed<DatabaseExposeData>(connection);
-
-			return options.Select(option => new ExposeData(connection, option)).ToList();
-		}
 	}
 }

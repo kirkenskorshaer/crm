@@ -62,12 +62,5 @@ namespace Administration.Option.Options.Logic
 			UpdateResultEnum result = subscriber.UpdateIfNeeded(id, information.fullname, information.emailaddress1, information.GetCustomFields());
 			report.CollectUpdate(result, id);
 		}
-
-		public static List<UpdateMailrelayFromContact> Find(MongoConnection connection)
-		{
-			List<DatabaseUpdateMailrelayFromContact> options = DataLayer.MongoData.Option.OptionBase.ReadAllowed<DatabaseUpdateMailrelayFromContact>(connection);
-
-			return options.Select(option => new UpdateMailrelayFromContact(connection, option)).ToList();
-		}
 	}
 }

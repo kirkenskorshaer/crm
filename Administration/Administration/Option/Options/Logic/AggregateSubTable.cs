@@ -94,12 +94,5 @@ namespace Administration.Option.Options.Logic
 
 			return objects.SingleOrDefault();
 		}
-
-		public static List<AggregateSubTable> Find(MongoConnection connection)
-		{
-			List<DatabaseAggregateSubTable> options = DatabaseAggregateSubTable.ReadAllowed<DatabaseAggregateSubTable>(connection);
-
-			return options.Select(option => new AggregateSubTable(connection, option)).ToList();
-		}
 	}
 }
