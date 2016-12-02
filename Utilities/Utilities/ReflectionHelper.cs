@@ -59,6 +59,17 @@ namespace Utilities
 			return propertyInfo.PropertyType;
 		}
 
+		public static List<Type> GetChildTypes(Type parentType)
+		{
+			Assembly assembly = parentType.Assembly;
+
+			Type[] allTypes = assembly.GetTypes();
+
+			List<Type> typesInheritingFromParent = allTypes.Where(type => parentType.IsAssignableFrom(type) && type != parentType).ToList();
+
+			return typesInheritingFromParent;
+		}
+
 		public static bool IsNullOrWhiteSpace(object value)
 		{
 			if (value == null)
