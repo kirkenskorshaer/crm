@@ -33,14 +33,12 @@ namespace Administration.Option.Options.Logic
 
 			while (pagingInformation.FirstRun || pagingInformation.MoreRecords)
 			{
-				UpdateReport<int> report = new UpdateReport<int>();
-
 				MarketingList marketingList = MarketingList.GetListForMailrelayUpdate(dynamicsCrmConnection, pagingInformation, crmListId);
 
 				if (marketingList != null)
 				{
 					UpdateReport<int> result = UpdateMailrelayGroupFromList(dynamicsCrmConnection, marketingList);
-					Log.Write(Connection, report.AsLogText($"UpdateMailrelayGroup {marketingList.new_mailrelaygroupid.Value}"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
+					Log.Write(Connection, result.AsLogText($"UpdateMailrelayGroup {marketingList.new_mailrelaygroupid.Value}"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 				}
 			}
 

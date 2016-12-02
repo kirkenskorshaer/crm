@@ -31,15 +31,15 @@ namespace Administration.Option.Options.Logic
 
 			List<MailrelayInformation> mailrelayInformations = new List<MailrelayInformation>();
 
-			UpdateReport<int> report = new UpdateReport<int>();
+			UpdateReport<int> intReport = new UpdateReport<int>();
 
 			while (pagingInformation.FirstRun || pagingInformation.MoreRecords)
 			{
 				mailrelayInformations = MailrelayInformation.GetMailrelayFromContact(dynamicsCrmConnection, Config.GetResourcePath, pagingInformation, pageSize, contactId);
-				mailrelayInformations.ForEach(information => UpdateIfNeeded(dynamicsCrmConnection, information, report));
+				mailrelayInformations.ForEach(information => UpdateIfNeeded(dynamicsCrmConnection, information, intReport));
 			}
 
-			Log.Write(Connection, report.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
+			Log.Write(Connection, intReport.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 
 			return true;
 		}
