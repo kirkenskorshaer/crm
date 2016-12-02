@@ -1,4 +1,5 @@
-﻿using DataLayer;
+﻿using Administration.Option.Options;
+using DataLayer;
 using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
@@ -51,7 +52,25 @@ namespace Administration.Option
 			}
 		}
 
-		protected abstract bool ExecuteOption();
+		protected bool ExecuteOption()
+		{
+			OptionReport report = new OptionReport(GetType().Name);
+
+			try
+			{
+				ExecuteOption(report);
+				report.WriteLog(Connection);
+			}
+			catch (Exception)
+			{
+				report.WriteLog(Connection);
+				throw;
+			}
+
+			return report.Success;
+		}
+
+		protected abstract void ExecuteOption(OptionReport report);
 
 		protected void SetDynamicsCrmConnectionIfEmpty(string urlLoginName)
 		{

@@ -18,7 +18,7 @@ namespace Administration.Option.Options.Logic
 			_databaseUpdateMailrelayFromContact = (DatabaseUpdateMailrelayFromContact)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseUpdateMailrelayFromContact.urlLoginName;
 			int pageSize = _databaseUpdateMailrelayFromContact.pageSize;
@@ -41,7 +41,8 @@ namespace Administration.Option.Options.Logic
 
 			Log.Write(Connection, intReport.AsLogText("UpdateMailrelayFromContact"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 
-			return true;
+			report.Success = true;
+			return;
 		}
 
 		private void UpdateIfNeeded(DynamicsCrmConnection dynamicsCrmConnection, MailrelayInformation information, UpdateReport<int> report)

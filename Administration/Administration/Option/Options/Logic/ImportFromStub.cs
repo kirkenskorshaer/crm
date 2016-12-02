@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseImportFromStub = (DatabaseImportFromStub)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseImportFromStub.urlLoginName;
 
@@ -45,21 +45,24 @@ namespace Administration.Option.Options.Logic
 
 			if (stub == null)
 			{
-				return true;
+				report.Success = true;
+				return;
 			}
 
 			try
 			{
 				ImportStub(dynamicsCrmConnection, stub, webCampaign, collectType);
 				stub.Delete(Connection);
-				return true;
+				report.Success = true;
+				return;
 			}
 			catch (Exception exception)
 			{
 				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				stub.ImportAttempt++;
 				stub.Update(Connection);
-				return false;
+				report.Success = false;
+				return;
 			}
 		}
 

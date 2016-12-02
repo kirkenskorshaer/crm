@@ -16,7 +16,7 @@ namespace Administration.Option.Options.Logic
 			_databaseAdjustDns = (DatabaseAdjustDns)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string dns = _databaseAdjustDns.dnsIp;
 			string name = _databaseAdjustDns.adapterName;
@@ -25,9 +25,9 @@ namespace Administration.Option.Options.Logic
 
 			List<IPAddress> addresses = DnsHelper.GetActiveEthernetIpv4DnsAddresses();
 
-			bool success = addresses.Any(address => address.ToString() == dns);
+			report.Success = addresses.Any(address => address.ToString() == dns);
 
-			return success;
+			return;
 		}
 
 		public static List<AdjustDns> Find(MongoConnection connection)

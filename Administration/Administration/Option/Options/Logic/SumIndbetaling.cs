@@ -8,7 +8,7 @@ using DatabaseSumIndbetaling = DataLayer.MongoData.Option.Options.Logic.SumIndbe
 
 namespace Administration.Option.Options.Logic
 {
-	public class SumIndbetaling : AbstractReportingDataOptionBase
+	public class SumIndbetaling : OptionBase
 	{
 		private DatabaseSumIndbetaling _databaseSumIndbetaling;
 

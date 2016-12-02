@@ -7,7 +7,7 @@ using DatabaseSumOptalt = DataLayer.MongoData.Option.Options.Logic.SumOptalt;
 
 namespace Administration.Option.Options.Logic
 {
-	public class SumOptalt : AbstractReportingDataOptionBase
+	public class SumOptalt : OptionBase
 	{
 		private DatabaseSumOptalt _databaseSumOptalt;
 

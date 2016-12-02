@@ -24,7 +24,7 @@ namespace Administration.Option.Options.Logic
 			return options.Select(option => new MaterialeBehovAssignment(connection, option)).ToList();
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseMaterialeBehovAssignment.urlLoginName;
 			int updateProgressFrequency = _databaseMaterialeBehovAssignment.updateProgressFrequency;
@@ -36,7 +36,8 @@ namespace Administration.Option.Options.Logic
 
 			if (materiale == null)
 			{
-				return true;
+				report.Success = true;
+				return;
 			}
 
 			materiale.FindBehovDefinitioner(Config.GetResourcePath);
@@ -70,7 +71,8 @@ namespace Administration.Option.Options.Logic
 			materiale.new_beregningsstatus = null;
 			materiale.Update();
 
-			return true;
+			report.Success = true;
+			return;
 		}
 
 		private void updateProgress(Materiale materiale, int current, int total)

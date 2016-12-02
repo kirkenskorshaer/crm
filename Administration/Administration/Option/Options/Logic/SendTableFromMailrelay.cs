@@ -14,7 +14,7 @@ using DatabaseSendTableFromMailrelay = DataLayer.MongoData.Option.Options.Logic.
 
 namespace Administration.Option.Options.Logic
 {
-	public class SendTableFromMailrelay : AbstractReportingDataOptionBase
+	public class SendTableFromMailrelay : OptionBase
 	{
 		private DatabaseSendTableFromMailrelay _databaseSendTableFromMailrelay;
 		private CultureInfo cultureInfo = new CultureInfo("da-DK");

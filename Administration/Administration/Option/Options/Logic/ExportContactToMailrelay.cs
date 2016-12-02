@@ -19,7 +19,7 @@ namespace Administration.Option.Options.Logic
 			_databaseExportContactToMailrelay = (DatabaseExportContactToMailrelay)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseExportContactToMailrelay.urlLoginName;
 
@@ -41,7 +41,9 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			return true;
+			report.Success = true;
+
+			return;
 		}
 
 		private UpdateReport<Guid> ExportMailrelayContactFromList(DynamicsCrmConnection dynamicsCrmConnection, MarketingList marketingList)

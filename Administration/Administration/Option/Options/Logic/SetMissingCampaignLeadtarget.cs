@@ -7,7 +7,7 @@ using DatabaseSetMissingCampaignLeadtarget = DataLayer.MongoData.Option.Options.
 
 namespace Administration.Option.Options.Logic
 {
-	public class SetMissingCampaignLeadtarget : AbstractReportingDataOptionBase
+	public class SetMissingCampaignLeadtarget : OptionBase
 	{
 		private DatabaseSetMissingCampaignLeadtarget _databaseSetMissingCampaignLeadtarget;
 

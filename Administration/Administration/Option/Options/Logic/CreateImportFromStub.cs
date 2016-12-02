@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseCreateImportFromStub = (DatabaseCreateImportFromStub)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseCreateImportFromStub.urlLoginName;
 			DatabaseSchedule ImportFromStubSchedule = _databaseCreateImportFromStub.ImportFromStubSchedule;
@@ -41,7 +41,9 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			return true;
+			report.Success = true;
+
+			return;
 		}
 
 		private DatabaseWebCampaign ReadOrCreateWebCampaign(Campaign campaign)

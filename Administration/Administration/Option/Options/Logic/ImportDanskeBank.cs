@@ -10,7 +10,7 @@ using SystemInterface.Dynamics.Crm;
 
 namespace Administration.Option.Options.Logic
 {
-	public class ImportDanskeBank : AbstractReportingDataOptionBase
+	public class ImportDanskeBank : OptionBase
 	{
 		private DatabaseImportDanskeBank _databaseImportDanskeBank;
 

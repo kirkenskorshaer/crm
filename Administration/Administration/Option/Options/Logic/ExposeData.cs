@@ -19,7 +19,7 @@ namespace Administration.Option.Options.Logic
 			_databaseExposeData = (DatabaseExposeData)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseExposeData.urlLoginName;
 			string fetchXmlPath = _databaseExposeData.fetchXmlPath;
@@ -50,7 +50,9 @@ namespace Administration.Option.Options.Logic
 
 			File.WriteAllText(fullExposePath + "/" + exposeName, json, Encoding.UTF8);
 
-			return true;
+			report.Success = true;
+
+			return;
 		}
 
 		public static List<ExposeData> Find(MongoConnection connection)

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Administration.Option.Options.Logic
 {
-	public class AggregateSubTable : AbstractReportingDataOptionBase
+	public class AggregateSubTable : OptionBase
 	{
 		private DatabaseAggregateSubTable _databaseAggregateSubTable;
 

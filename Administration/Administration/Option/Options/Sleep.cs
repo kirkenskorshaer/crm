@@ -11,10 +11,11 @@ namespace Administration.Option.Options
 		{
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			Thread.Sleep(SleepTime);
-			return true;
+			report.Success = true;
+			return;
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseAddMailrelaySubscriberFromLead = (DatabaseAddMailrelaySubscriberFromLead)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseAddMailrelaySubscriberFromLead.urlLoginName;
 			string email = _databaseAddMailrelaySubscriberFromLead.email;
@@ -34,7 +34,8 @@ namespace Administration.Option.Options.Logic
 			if (webCampaign == null)
 			{
 				Log.Write(Connection, $"Could not find campaign for {_databaseAddMailrelaySubscriberFromLead.Name}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
-				return false;
+				report.Success = false;
+				return;
 			}
 
 			MailrelayInformation information = GetInformationFromFetchXml(dynamicsCrmConnection, webCampaign, email);
@@ -42,13 +43,15 @@ namespace Administration.Option.Options.Logic
 			if (information == null)
 			{
 				Log.Write(Connection, $"Information for lead {leadId} on {email} could not be found", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
-				return true;
+				report.Success = true;
+				return;
 			}
 
 			if (information.campaign_new_mailrelaygroupid.HasValue == false)
 			{
 				Log.Write(Connection, $"Subscriber not added, campaign {webCampaign.FormId} has no group", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
-				return true;
+				report.Success = true;
+				return;
 			}
 
 			getSubscribersReply ExistingSubscriber = GetExistingSubscribers(email);
@@ -75,7 +78,7 @@ namespace Administration.Option.Options.Logic
 				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 			}
 
-			return true;
+			report.Success = true;
 		}
 
 		private void UdpateExistingSubscriberIfNeeded(MailrelayInformation information, getSubscribersReply ExistingSubscriber, string email, int subscriberId)

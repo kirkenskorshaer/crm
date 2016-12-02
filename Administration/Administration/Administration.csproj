@@ -65,7 +65,6 @@
     <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
-    <Compile Include="Option\Options\AbstractReportingDataOptionBase.cs" />
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />
     <Compile Include="Option\Finder\OptionFinder.cs" />

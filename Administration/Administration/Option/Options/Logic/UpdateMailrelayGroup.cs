@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseUpdateMailrelayGroup = (DatabaseUpdateMailrelayGroup)databaseOption;
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseUpdateMailrelayGroup.urlLoginName;
 
@@ -42,7 +42,8 @@ namespace Administration.Option.Options.Logic
 				}
 			}
 
-			return true;
+			report.Success = true;
+			return;
 		}
 
 		private UpdateReport<int> UpdateMailrelayGroupFromList(DynamicsCrmConnection dynamicsCrmConnection, MarketingList marketingList)

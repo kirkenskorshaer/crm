@@ -24,13 +24,13 @@ namespace Administration.Option.Options
 			}).ToList();
 		}
 
-		protected override bool ExecuteOption()
+		protected override void ExecuteOption(OptionReport report)
 		{
 			SystemInterface.Email emailSender = new SystemInterface.Email();
 			emailSender.Send(_databaseEmail.MessageBody, false, _databaseEmail.Subject, Config.Email, _databaseEmail.To, Config.EmailSmtpHost, Config.EmailSmtpPort, Config.Email, Config.EmailPassword);
 			Log.Write(Connection, $"Email sendt to {_databaseEmail.To}", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 
-			return true;
+			report.Success = true;
 		}
 	}
 }
