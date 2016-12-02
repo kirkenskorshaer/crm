@@ -63,6 +63,7 @@
     <Compile Include="MongoData\Config.cs" />
     <Compile Include="MongoConnection.cs" />
     <Compile Include="MongoData\IntProgress.cs" />
+    <Compile Include="MongoData\Option\Finder\OptionFinder.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AddMailrelaySubscriberFromLead.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AggregateSubTable.cs" />
