@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Reflection;
 
 namespace DataLayer.MongoData.Option
 {
@@ -32,7 +33,22 @@ namespace DataLayer.MongoData.Option
 			return optionTask.Result;
 		}
 
-		protected abstract void Execute(MongoConnection connection, bool recurring);
+		public void Execute(MongoConnection connection, bool recurring)
+		{
+			MethodInfo method;
+
+			if (recurring)
+			{
+				method = typeof(AbstractMongoData).GetMethod("Update");
+			}
+			else
+			{
+				method = typeof(AbstractMongoData).GetMethod("Delete");
+			}
+
+			MethodInfo generic = method.MakeGenericMethod(GetType());
+			generic.Invoke(this, new object[] { connection });
+		}
 
 		public void Execute(MongoConnection connection)
 		{

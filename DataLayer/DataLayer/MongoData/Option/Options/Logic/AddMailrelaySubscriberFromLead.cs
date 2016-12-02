@@ -34,18 +34,6 @@ namespace DataLayer.MongoData.Option.Options.Logic
 			return addMailrelaySubscriberFromLead;
 		}
 
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<AddMailrelaySubscriberFromLead>(connection);
-			}
-			else
-			{
-				Delete<AddMailrelaySubscriberFromLead>(connection);
-			}
-		}
-
 		public byte[] WebCampaignIdValue()
 		{
 			return WebCampaignId.ToByteArray();

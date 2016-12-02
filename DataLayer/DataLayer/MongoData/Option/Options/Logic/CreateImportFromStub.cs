@@ -17,17 +17,5 @@
 
 			return createImportFromStub;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<CreateImportFromStub>(connection);
-			}
-			else
-			{
-				Delete<CreateImportFromStub>(connection);
-			}
-		}
 	}
 }

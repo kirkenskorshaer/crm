@@ -26,18 +26,6 @@ namespace DataLayer.MongoData.Option.Options.Logic
 			return importFromStub;
 		}
 
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<ImportFromStub>(connection);
-			}
-			else
-			{
-				Delete<ImportFromStub>(connection);
-			}
-		}
-
 		public static List<ImportFromStub> ReadByWebCampaign(MongoConnection connection, WebCampaign webCampaign)
 		{
 			return ReadByWebCampaignId(connection, webCampaign._id);

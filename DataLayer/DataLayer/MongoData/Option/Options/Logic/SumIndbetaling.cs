@@ -15,17 +15,5 @@
 
 			return sumIndbetaling;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<SumIndbetaling>(connection);
-			}
-			else
-			{
-				Delete<SumIndbetaling>(connection);
-			}
-		}
 	}
 }

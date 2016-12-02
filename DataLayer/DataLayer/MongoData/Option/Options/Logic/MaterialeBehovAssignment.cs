@@ -16,17 +16,5 @@
 
 			return materialeBehovAssignment;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<MaterialeBehovAssignment>(connection);
-			}
-			else
-			{
-				Delete<MaterialeBehovAssignment>(connection);
-			}
-		}
 	}
 }

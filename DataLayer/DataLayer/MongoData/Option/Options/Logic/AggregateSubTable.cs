@@ -17,17 +17,5 @@
 			sum = 1,
 			count = 2,
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<AggregateSubTable>(connection);
-			}
-			else
-			{
-				Delete<AggregateSubTable>(connection);
-			}
-		}
 	}
 }

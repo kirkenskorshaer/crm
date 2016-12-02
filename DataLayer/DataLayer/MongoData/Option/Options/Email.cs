@@ -37,17 +37,5 @@ namespace DataLayer.MongoData.Option.Options
 		{
 			Delete<Email>(connection);
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update(connection);
-			}
-			else
-			{
-				Delete(connection);
-			}
-		}
 	}
 }

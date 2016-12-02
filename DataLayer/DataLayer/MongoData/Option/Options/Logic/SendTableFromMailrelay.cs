@@ -100,17 +100,5 @@ namespace DataLayer.MongoData.Option.Options.Logic
 
 			return sendMailFromMailrelay;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<SendTableFromMailrelay>(connection);
-			}
-			else
-			{
-				Delete<SendTableFromMailrelay>(connection);
-			}
-		}
 	}
 }

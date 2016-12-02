@@ -18,17 +18,5 @@
 
 			return exposeIndsamlingssteder;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<ExposeData>(connection);
-			}
-			else
-			{
-				Delete<ExposeData>(connection);
-			}
-		}
 	}
 }

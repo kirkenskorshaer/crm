@@ -23,17 +23,5 @@ namespace DataLayer.MongoData.Option.Options.Logic
 
 			return updateMailrelayGroup;
 		}
-
-		protected override void Execute(MongoConnection connection, bool recurring)
-		{
-			if (recurring)
-			{
-				Update<UpdateMailrelayGroup>(connection);
-			}
-			else
-			{
-				Delete<UpdateMailrelayGroup>(connection);
-			}
-		}
 	}
 }
