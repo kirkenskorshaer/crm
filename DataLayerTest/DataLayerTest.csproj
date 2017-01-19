@@ -67,6 +67,7 @@
     <Compile Include="MongoDataTest\Option\Options\EmailTest.cs" />
     <Compile Include="MongoDataTest\Option\Options\LogicTest\MaterialeBehovAssignmentTest.cs" />
     <Compile Include="MongoDataTest\Option\ScheduleTest.cs" />
+    <Compile Include="MongoDataTest\Option\Status\OptionResultTest.cs" />
     <Compile Include="MongoDataTest\ProgressTest.cs" />
     <Compile Include="MongoDataTest\ServerTest.cs" />
     <Compile Include="MongoDataTest\SignalTest.cs" />
