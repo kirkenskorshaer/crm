@@ -10,6 +10,7 @@ namespace Administration
 	{
 		public static Config.LogLevelEnum LogLevel = Config.LogLevelEnum.HeartError | Config.LogLevelEnum.OptionError;
 		private static List<DataLayer.MongoData.Log> _logCache = new List<DataLayer.MongoData.Log>();
+		private static object _cacheLock = new object();
 		public static int MaxLookbackCacheSize = 20;
 		public static int MaxSecondsToDiscardIdenticalLogMessages = 60 * 5;
 
@@ -50,19 +51,22 @@ namespace Administration
 
 		private static bool IsRepeatedMessage(DataLayer.MongoData.Log log)
 		{
-			if (_logCache.Any(cachedLog => IsSameAndNew(cachedLog, log)))
+			lock (_cacheLock)
 			{
-				return true;
+				if (_logCache.Any(cachedLog => IsSameAndNew(cachedLog, log)))
+				{
+					return true;
+				}
+
+				if (_logCache.Count >= MaxLookbackCacheSize)
+				{
+					_logCache.RemoveAt(0);
+				}
+
+				_logCache.Add(log);
+
+				return false;
 			}
-
-			if (_logCache.Count >= MaxLookbackCacheSize)
-			{
-				_logCache.RemoveAt(0);
-			}
-
-			_logCache.Add(log);
-
-			return false;
 		}
 
 		private static bool IsSameAndNew(DataLayer.MongoData.Log cachedLog, DataLayer.MongoData.Log log)
