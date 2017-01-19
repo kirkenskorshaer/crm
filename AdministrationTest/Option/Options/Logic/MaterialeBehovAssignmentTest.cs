@@ -20,7 +20,9 @@ namespace AdministrationTest.Option.Options.Logic
 
 			MaterialeBehovAssignment materialeBehovAssignment = new MaterialeBehovAssignment(Connection, databaseMaterialeBehovAssignment);
 
-			bool isSuccess = materialeBehovAssignment.Execute();
+			Administration.Option.Options.OptionReport report = new Administration.Option.Options.OptionReport("test");
+			materialeBehovAssignment.ExecuteOption(report);
+			bool isSuccess = report.Success;
 
 			Assert.IsTrue(isSuccess);
 		}

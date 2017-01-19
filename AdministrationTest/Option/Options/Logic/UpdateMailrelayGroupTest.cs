@@ -43,7 +43,7 @@ namespace AdministrationTest.Option.Options.Logic
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayIntReply() { status = 1, data = _groupId });
 			EnqueueGetSubscribersReply(_contact.new_mailrelaysubscriberid.Value);
 
-			updateMailrelayGroup.Execute();
+			updateMailrelayGroup.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			Assert.AreEqual(0, _mailrelayConnectionTester.sendFunctions.Count(function => function.GetType() == typeof(updateSubscriber)));
 		}
@@ -60,7 +60,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			EnqueueGetSubscribersReply(_contact.new_mailrelaysubscriberid.Value);
 
-			updateMailrelayGroup.Execute();
+			updateMailrelayGroup.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -76,7 +76,7 @@ namespace AdministrationTest.Option.Options.Logic
 			EnqueueGetSubscribersReply(_contact.new_mailrelaysubscriberid.Value);
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply() { status = 1, data = true });
 
-			updateMailrelayGroup.Execute();
+			updateMailrelayGroup.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			Assert.AreEqual(1, _mailrelayConnectionTester.sendFunctions.Count(function => function.GetType() == typeof(updateSubscriber)));
 		}
@@ -94,7 +94,7 @@ namespace AdministrationTest.Option.Options.Logic
 			EnqueueGetSubscribersReply(_contact.new_mailrelaysubscriberid.Value, idFromMailrelay);
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply() { status = 1, data = true });
 
-			updateMailrelayGroup.Execute();
+			updateMailrelayGroup.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			updateSubscriber updateSubscriberFunction = (updateSubscriber)_mailrelayConnectionTester.sendFunctions.Single(function => function.GetType() == typeof(updateSubscriber));
 

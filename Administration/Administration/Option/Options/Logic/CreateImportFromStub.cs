@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseCreateImportFromStub = (DatabaseCreateImportFromStub)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseCreateImportFromStub.urlLoginName;
 			DatabaseSchedule ImportFromStubSchedule = _databaseCreateImportFromStub.ImportFromStubSchedule;

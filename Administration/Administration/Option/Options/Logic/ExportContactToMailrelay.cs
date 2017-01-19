@@ -19,7 +19,7 @@ namespace Administration.Option.Options.Logic
 			_databaseExportContactToMailrelay = (DatabaseExportContactToMailrelay)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseExportContactToMailrelay.urlLoginName;
 

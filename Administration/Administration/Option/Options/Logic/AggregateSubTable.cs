@@ -17,7 +17,7 @@ namespace Administration.Option.Options.Logic
 			_databaseAggregateSubTable = (DatabaseAggregateSubTable)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			SetDynamicsCrmConnectionIfEmpty();
 

@@ -14,7 +14,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			AggregateSubTable aggregateSubTable = new AggregateSubTable(Connection, databaseAggregateSubTable);
 
-			aggregateSubTable.Execute();
+			aggregateSubTable.ExecuteOption(new Administration.Option.Options.OptionReport("test"));
 		}
 
 		[Test]
@@ -24,7 +24,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			AggregateSubTable aggregateSubTable = new AggregateSubTable(Connection, databaseAggregateSubTable);
 
-			aggregateSubTable.Execute();
+			aggregateSubTable.ExecuteOption(new Administration.Option.Options.OptionReport("test"));
 		}
 
 		private DatabaseAggregateSubTable CreateDatabaseAggregateSubTableCount()

@@ -18,7 +18,7 @@ namespace Administration.Option.Options.Logic
 			_databaseUpdateMailrelayFromContact = (DatabaseUpdateMailrelayFromContact)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseUpdateMailrelayFromContact.urlLoginName;
 			int pageSize = _databaseUpdateMailrelayFromContact.pageSize;
