@@ -21,9 +21,8 @@ namespace AdministrationTest.Option.Finder
 
 			List<OptionBase> options = finder.Find();
 
-			Assert.True(options.Count == 2);
+			Assert.True(options.Count == 1);
 			Assert.True(options.Any(option => option.GetType() == typeof(ExposeData)));
-			Assert.True(options.Any(option => option.GetType() == typeof(Sleep)));
 		}
 	}
 }
