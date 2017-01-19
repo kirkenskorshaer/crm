@@ -17,7 +17,7 @@ namespace AdministrationTest.Option.Finder
 		{
 			OptionFinder finder = new OptionFinder(Connection);
 
-			DatabaseExposeData.Create(Connection, "test", "test", CreateScheduleAlwaysOnDoOnce(), CreateScheduleAlwaysOnDoOnce());
+			DatabaseExposeData.Create(Connection, "test", "test", CreateScheduleAlwaysOnDoOnce());
 
 			List<OptionBase> options = finder.Find();
 

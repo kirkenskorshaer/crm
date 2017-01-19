@@ -7,7 +7,7 @@
 		public string exposePath { get; set; }
 		public string exposeName { get; set; }
 
-		public static ExposeData Create(MongoConnection mongoConnection, string urlLoginName, string name, Schedule schedule, Schedule importFromStubSchedule)
+		public static ExposeData Create(MongoConnection mongoConnection, string urlLoginName, string name, Schedule schedule)
 		{
 			ExposeData exposeIndsamlingssteder = new ExposeData()
 			{
