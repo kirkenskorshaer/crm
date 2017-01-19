@@ -85,6 +85,7 @@
     <Compile Include="Option\Options\Logic\UpdateMailrelayGroup.cs" />
     <Compile Include="Option\Options\OptionReport.cs" />
     <Compile Include="Option\Status\OptionStatus.cs" />
+    <Compile Include="Option\ThreadHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
