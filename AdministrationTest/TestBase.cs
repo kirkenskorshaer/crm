@@ -87,6 +87,7 @@ namespace AdministrationTest
 				Recurring = false,
 				NextAllowedExecution = DateTime.Now,
 				TimeBetweenAllowedExecutions = TimeSpan.FromMinutes(1),
+				Enabled = true,
 			};
 			return schedule;
 		}
