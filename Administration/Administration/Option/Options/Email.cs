@@ -14,7 +14,7 @@ namespace Administration.Option.Options
 
 		private DatabaseEmail _databaseEmail;
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			SystemInterface.Email emailSender = new SystemInterface.Email();
 			emailSender.Send(_databaseEmail.MessageBody, false, _databaseEmail.Subject, Config.Email, _databaseEmail.To, Config.EmailSmtpHost, Config.EmailSmtpPort, Config.Email, Config.EmailPassword);

@@ -105,7 +105,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply());
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			sendMail sendMailFunction = (sendMail)_mailrelayConnectionTester.sendFunctions.Single(function => function is sendMail);
 
@@ -128,7 +128,7 @@ namespace AdministrationTest.Option.Options.Logic
 			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
 			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -149,7 +149,7 @@ namespace AdministrationTest.Option.Options.Logic
 			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
 			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -169,7 +169,7 @@ namespace AdministrationTest.Option.Options.Logic
 			SystemInterface.Email.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
 			SystemInterface.Email.PickupDirectoryLocation = "c:\\test\\email";
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -186,7 +186,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply());
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			sendMail sendMailFunction = (sendMail)_mailrelayConnectionTester.sendFunctions.SingleOrDefault(function => function is sendMail);
 
@@ -207,7 +207,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply());
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			sendMail sendMailFunction = (sendMail)_mailrelayConnectionTester.sendFunctions.Single(function => function is sendMail);
 
@@ -221,7 +221,7 @@ namespace AdministrationTest.Option.Options.Logic
 			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();
 			//databaseSendTableFromMailrelay.limitOnDateName = "createdon";
 			SendTableFromMailrelay sendTableFromMailrelay = new SendTableFromMailrelay(Connection, databaseSendTableFromMailrelay);
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -238,7 +238,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayBoolReply());
 
-			sendTableFromMailrelay.Execute();
+			sendTableFromMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		[Test]
@@ -253,7 +253,9 @@ namespace AdministrationTest.Option.Options.Logic
 			sendTableFromMailrelay.SetDynamicsCrmConnectionIfEmpty(_dynamicsCrmConnectionTester);
 			EnqueueCrmResponse(new List<DateTime>() { new DateTime(2000, 1, 1), new DateTime(2000, 1, 2), DateTime.Now.Date.AddHours(-3) });
 
-			bool succeded = sendTableFromMailrelay.Execute();
+			Administration.Option.Options.OptionReport report = new Administration.Option.Options.OptionReport("test");
+			sendTableFromMailrelay.ExecuteOption(report);
+			bool succeded = report.Success;
 
 			Assert.IsTrue(succeded);
 		}

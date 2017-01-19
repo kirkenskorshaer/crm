@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			_databaseAddMailrelaySubscriberFromLead = (DatabaseAddMailrelaySubscriberFromLead)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseAddMailrelaySubscriberFromLead.urlLoginName;
 			string email = _databaseAddMailrelaySubscriberFromLead.email;

@@ -25,7 +25,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			EnqueueGetSubscriberUpdateSubscriberReply();
 
-			UpdateMailrelayFromContact.Execute();
+			UpdateMailrelayFromContact.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			Console.Out.WriteLine(_mailrelayConnectionTester);
 
@@ -44,13 +44,13 @@ namespace AdministrationTest.Option.Options.Logic
 
 			EnqueueGetSubscriberUpdateSubscriberReply();
 
-			UpdateMailrelayFromContact.Execute();
+			UpdateMailrelayFromContact.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			_mailrelayConnectionTester = new TestUtilities.MailrelayConnectionTester();
 
 			EnqueueGetSubscribers();
 
-			UpdateMailrelayFromContact.Execute();
+			UpdateMailrelayFromContact.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			Console.Out.WriteLine(_mailrelayConnectionTester);
 
@@ -69,7 +69,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			EnqueueGetSubscriberUpdateSubscriberReply();
 
-			UpdateMailrelayFromContact.Execute();
+			UpdateMailrelayFromContact.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 
 			Contact contactRead = Contact.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "new_mailrelaysubscriberid", "new_mailrelaycheck" }, new Dictionary<string, string>() { { "contactid", contact.Id.ToString() } }).Single();
 

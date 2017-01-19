@@ -17,7 +17,7 @@ namespace Administration.Option.Options.Logic
 			_databaseSumIndbetaling = (DatabaseSumIndbetaling)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseSumIndbetaling.urlLoginName;
 

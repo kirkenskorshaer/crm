@@ -19,7 +19,7 @@ namespace Administration.Option.Options.Logic
 			_databaseImportDanskeBank = (DatabaseImportDanskeBank)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseImportDanskeBank.urlLoginName;
 			string importFolder = _databaseImportDanskeBank.importFolder;

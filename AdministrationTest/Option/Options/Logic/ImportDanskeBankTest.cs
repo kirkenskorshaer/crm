@@ -19,7 +19,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportDanskeBank importDanskeBank = new ImportDanskeBank(Connection, databaseImportDanskeBank);
 
-			importDanskeBank.Execute();
+			importDanskeBank.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		private DatabaseImportDanskeBank CreateDatabaseImportDanskeBank()

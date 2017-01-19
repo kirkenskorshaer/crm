@@ -16,7 +16,7 @@ namespace Administration.Option.Options.Logic
 			_databaseAdjustDns = (DatabaseAdjustDns)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string dns = _databaseAdjustDns.dnsIp;
 			string name = _databaseAdjustDns.adapterName;

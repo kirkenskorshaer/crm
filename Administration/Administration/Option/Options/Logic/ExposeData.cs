@@ -19,7 +19,7 @@ namespace Administration.Option.Options.Logic
 			_databaseExposeData = (DatabaseExposeData)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseExposeData.urlLoginName;
 			string fetchXmlPath = _databaseExposeData.fetchXmlPath;

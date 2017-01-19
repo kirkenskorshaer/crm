@@ -16,7 +16,7 @@ namespace Administration.Option.Options.Logic
 			_databaseSetMissingCampaignLeadtarget = (DatabaseSetMissingCampaignLeadtarget)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseSetMissingCampaignLeadtarget.urlLoginName;
 

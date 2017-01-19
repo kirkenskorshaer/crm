@@ -20,7 +20,7 @@ namespace Administration.Option.Options.Logic
 			SetDynamicsCrmConnectionIfEmpty(urlLoginName);
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			decimal kreds = Account.GetOptaltbeloebSumKreds(_dynamicsCrmConnection);
 			decimal by = Account.GetOptaltbeloebSumBy(_dynamicsCrmConnection);

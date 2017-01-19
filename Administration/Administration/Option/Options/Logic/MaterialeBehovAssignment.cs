@@ -17,7 +17,7 @@ namespace Administration.Option.Options.Logic
 			_databaseMaterialeBehovAssignment = (DatabaseMaterialeBehovAssignment)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseMaterialeBehovAssignment.urlLoginName;
 			int updateProgressFrequency = _databaseMaterialeBehovAssignment.updateProgressFrequency;

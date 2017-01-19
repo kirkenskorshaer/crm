@@ -24,7 +24,7 @@ namespace Administration.Option.Options.Logic
 			_databaseSendTableFromMailrelay = (DatabaseSendTableFromMailrelay)databaseOption;
 		}
 
-		protected override void ExecuteOption(OptionReport report)
+		public override void ExecuteOption(OptionReport report)
 		{
 			string urlLoginName = _databaseSendTableFromMailrelay.urlLoginName;
 			Guid? contactid = _databaseSendTableFromMailrelay.contactid;

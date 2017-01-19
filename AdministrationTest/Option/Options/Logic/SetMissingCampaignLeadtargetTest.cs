@@ -14,7 +14,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			SetMissingCampaignLeadtarget setMissingCampaignLeadtarget = new SetMissingCampaignLeadtarget(Connection, databaseSetMissingCampaignLeadtarget);
 
-			setMissingCampaignLeadtarget.Execute();
+			setMissingCampaignLeadtarget.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 
 		private DatabaseSetMissingCampaignLeadtarget CreateDatabaseSetMissingCampaignLeadtarget()
