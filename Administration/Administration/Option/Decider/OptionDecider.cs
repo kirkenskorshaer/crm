@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DataLayer;
-using DataLayer.MongoData;
+using Administration.Option.Status;
+using System;
+using DatabaseOptionStatusLine = DataLayer.MongoData.Option.Status.OptionStatusLine;
 
 namespace Administration.Option.Decider
 {
 	public class OptionDecider
 	{
 		private readonly MongoConnection _connection;
+		private OptionStatus _optionStatus;
 
-		public OptionDecider(MongoConnection connection)
+		public OptionDecider(MongoConnection connection, OptionStatus optionStatus)
 		{
 			_connection = connection;
+			_optionStatus = optionStatus;
 		}
 
 		public OptionBase Decide(List<OptionBase> options)
@@ -21,54 +25,61 @@ namespace Administration.Option.Decider
 				return options.First(option => option.GetType().Name == "Email");
 			}
 
-			options = options.OrderByDescending(option => SignalStrength(option)).ToList();
+			options = options.OrderByDescending(option => FindPrioityIndex(option)).ToList();
 
 			return options.First();
 		}
 
-		private double SignalStrength(OptionBase option)
+		public void DelayOptionFromFails(OptionBase option)
 		{
-			string name = option.GetType().Name;
+			DatabaseOptionStatusLine line = _optionStatus.GetDatabaseOptionStatusLineOnOption(option);
 
-			if (name == "Sleep")
+			int failsThisHour = 0;
+
+			if (line != null)
 			{
-				return 0d;
+				failsThisHour = line.Fail1Hour;
 			}
 
-			Signal failSignal = Signal.ReadSignal(_connection, option.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Fail);
-			Signal successSignal = Signal.ReadSignal(_connection, option.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Success);
-
-			if (failSignal.Strength >= 1)
-			{
-				return -1;
-			}
-
-			return 1-successSignal.Strength;
-		}
-
-		public void MarkAsSuccess(OptionBase bestOption)
-		{
-			if (bestOption.DatabaseOption == null)
+			if (failsThisHour == 0)
 			{
 				return;
 			}
 
-			Signal.IncreaseSignal(_connection, bestOption.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Success, 1d);
+			double minutesExtraDouble = 10.0 * Math.Log(failsThisHour);
+
+			TimeSpan minutesExtra = TimeSpan.FromMinutes(minutesExtraDouble);
+
+			option.DatabaseOption.Schedule.NextAllowedExecution += minutesExtra;
 		}
 
-		public void MarkAsFailiure(OptionBase bestOption)
+		private double FindPrioityIndex(OptionBase option)
 		{
-			if (bestOption.DatabaseOption == null)
+			DatabaseOptionStatusLine line = _optionStatus.GetDatabaseOptionStatusLineOnOption(option);
+
+			double priority = 1;
+
+			if (line?.Fail10Minute > 0)
 			{
-				return;
+				priority *= 0.5;
+			}
+			else if (line?.Fail1Hour > 0)
+			{
+				priority *= 0.75;
+			}
+			else if (line?.Fail24Hour > 0)
+			{
+				priority *= 0.85;
 			}
 
-			Signal.IncreaseSignal(_connection, bestOption.DatabaseOption.GetType().Name, Signal.SignalTypeEnum.Fail, 25d);
-		}
+			int? failsOnCurrentOption = option?.DatabaseOption?.Schedule?.Fails;
 
-		public void Decrease()
-		{
-			Signal.DecreaseAll(_connection, 1.2d);
+			if (failsOnCurrentOption != null)
+			{
+				priority *= 0.5;
+			}
+
+			return priority;
 		}
 	}
 }
