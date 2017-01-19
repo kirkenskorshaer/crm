@@ -38,7 +38,7 @@ namespace DataLayer.MongoData
 			find.Limit(1);
 
 			SortDefinitionBuilder<TDataType> sortBuilder = new SortDefinitionBuilder<TDataType>();
-			SortDefinition<TDataType> sortDefinition = sortBuilder.Descending(document => document.Id);
+			SortDefinition<TDataType> sortDefinition = sortBuilder.Descending(document => document._id);
 
 			find.Sort(sortDefinition);
 			Task<TDataType> dataTask = find.SingleOrDefaultAsync();
