@@ -84,7 +84,6 @@
     <Compile Include="Option\Options\Logic\UpdateMailrelayFromContact.cs" />
     <Compile Include="Option\Options\Logic\UpdateMailrelayGroup.cs" />
     <Compile Include="Option\Options\OptionReport.cs" />
-    <Compile Include="Option\Options\Sleep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
