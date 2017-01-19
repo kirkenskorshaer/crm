@@ -158,7 +158,7 @@ namespace AdministrationTest
 		{
 			option.ChangeMailrelayConnection(_mailrelayConnectionTester);
 
-			option.Execute();
+			option.ExecuteOption(new Administration.Option.Options.OptionReport(""));
 		}
 	}
 }
