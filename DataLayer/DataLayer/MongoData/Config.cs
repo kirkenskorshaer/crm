@@ -26,6 +26,11 @@ namespace DataLayer.MongoData
 		public string DynamicsCrmUsername { get; set; }
 		public string DynamicsCrmPassword { get; set; }
 		public string DynamicsCrmUrl { get; set; }
+		public int Threads { get; set; }
+		public int StatusWriteIntervalSeconds { get; set; }
+		public int HeartSleepMilliseconds { get; set; }
+		public int AsumeWorkerIsDeadIfIdleForMinutes { get; set; }
+		public int TimeToWaitBetweenChecksForDeadWorkersMinutes { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
