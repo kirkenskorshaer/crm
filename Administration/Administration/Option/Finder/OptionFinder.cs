@@ -3,6 +3,7 @@ using DataLayer;
 using Utilities;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
 using DatabaseOptionFinder = DataLayer.MongoData.Option.Finder.OptionFinder;
+using DatabaseWorker = DataLayer.MongoData.Worker;
 using System;
 using System.Linq;
 
@@ -21,9 +22,23 @@ namespace Administration.Option.Finder
 
 		public List<OptionBase> Find()
 		{
+			return Find(null);
+		}
+
+		public List<OptionBase> Find(DatabaseWorker worker)
+		{
 			List<OptionBase> options = new List<OptionBase>();
 
-			List<DatabaseOptionBase> databaseOptions = _databaseOptionFinder.Find();
+			List<DatabaseOptionBase> databaseOptions;
+
+			if (worker == null)
+			{
+				databaseOptions = _databaseOptionFinder.Find();
+			}
+			else
+			{
+				databaseOptions = _databaseOptionFinder.Find(worker);
+			}
 
 			List<Type> optionTypes = ReflectionHelper.GetChildTypes(typeof(OptionBase));
 
