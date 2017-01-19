@@ -61,5 +61,23 @@ namespace Administration.Option.Finder
 
 			return options;
 		}
+
+		public void DistributeOptions(List<ThreadHolder> threadHolders)
+		{
+			if (threadHolders.Any() == false)
+			{
+				return;
+			}
+
+			List<DatabaseOptionBase> databaseOptions = _databaseOptionFinder.Find();
+
+			foreach (DatabaseOptionBase option in databaseOptions)
+			{
+				ThreadHolder threadHolder = threadHolders.OrderBy(worker => worker.EstimatedOptionCount).FirstOrDefault();
+
+				option.AssignWorkerIfNoWorkerAssigned(threadHolder.DatabaseWorker, _connection);
+				threadHolder.EstimatedOptionCount++;
+			}
+		}
 	}
 }
