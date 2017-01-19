@@ -90,6 +90,7 @@
     <Compile Include="MongoData\Statistics\AbstractStatistics.cs" />
     <Compile Include="MongoData\Statistics\StringStatistics\StringIntStatistics.cs" />
     <Compile Include="MongoData\UrlLogin.cs" />
+    <Compile Include="MongoData\Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
