@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Administration.Option.Options;
 using DataLayer;
 using Utilities;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
@@ -44,9 +43,6 @@ namespace Administration.Option.Finder
 
 				options.Add(option);
 			}
-
-			Sleep sleep = new Sleep(_connection);
-			options.Add(sleep);
 
 			return options;
 		}
