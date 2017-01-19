@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace DataLayer.MongoData.Option
 {
@@ -13,6 +14,16 @@ namespace DataLayer.MongoData.Option
 		public List<int> HoursOfDayToSkip { get; set; }
 		public List<DayOfWeek> DaysOfWeekToSkip { get; set; }
 		public List<int> DaysOfMonthToSkip { get; set; }
+		public ObjectId? WorkerId { get; set; }
+		public int? Fails { get; set; }
+		public ActionOnFailEnum ActionOnFail { get; set; }
+		public bool Enabled { get; set; }
+
+		public enum ActionOnFailEnum
+		{
+			TryAgain = 1,
+			Disable = 2,
+		}
 
 		public void MoveNext()
 		{

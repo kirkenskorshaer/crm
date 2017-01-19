@@ -16,6 +16,11 @@ namespace DataLayer.MongoData.Option.Finder
 
 		public List<OptionBase> Find()
 		{
+			return Find(null);
+		}
+
+		public List<OptionBase> Find(Worker worker)
+		{
 			List<Type> optionTypes = ReflectionHelper.GetChildTypes(typeof(OptionBase));
 
 			List<OptionBase> options = new List<OptionBase>();
@@ -24,7 +29,10 @@ namespace DataLayer.MongoData.Option.Finder
 			{
 				MethodInfo method = typeof(OptionBase).GetMethod("ReadAllowed");
 				MethodInfo generic = method.MakeGenericMethod(optionType);
-				IEnumerable optionsOnCurrentType = (IEnumerable)generic.Invoke(null, new object[] { _connection });
+
+				IEnumerable optionsOnCurrentType = null;
+
+				optionsOnCurrentType = (IEnumerable)generic.Invoke(null, new object[] { _connection, worker });
 
 				foreach (object option in optionsOnCurrentType)
 				{
