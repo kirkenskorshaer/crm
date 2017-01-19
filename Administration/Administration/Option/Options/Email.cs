@@ -14,16 +14,6 @@ namespace Administration.Option.Options
 
 		private DatabaseEmail _databaseEmail;
 
-		public static List<Email> Find(MongoConnection connection)
-		{
-			List<DatabaseEmail> databaseEmails = DatabaseOptionBase.ReadAllowed<DatabaseEmail>(connection);
-
-			return databaseEmails.Select(databaseEmail => new Email(connection, databaseEmail)
-			{
-				_databaseEmail = databaseEmail,
-			}).ToList();
-		}
-
 		protected override void ExecuteOption(OptionReport report)
 		{
 			SystemInterface.Email emailSender = new SystemInterface.Email();
