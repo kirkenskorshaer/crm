@@ -34,6 +34,7 @@ namespace Administration
 			_connection = MongoConnection.GetConnection(databaseName);
 			_optionFinder = new OptionFinder(_connection);
 			_config = Config.GetConfig(_connection);
+			Log.LogLevel = _config.LogLevel;
 
 			TimeSpan StatusWriteInterval = TimeSpan.FromSeconds(_config.StatusWriteIntervalSeconds);
 			_heartSleep = TimeSpan.FromMilliseconds(_config.HeartSleepMilliseconds);
