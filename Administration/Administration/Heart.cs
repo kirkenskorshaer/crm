@@ -30,11 +30,15 @@ namespace Administration
 
 		public Heart()
 		{
+			//Log.FileWrite(GetType().Name, "Start Initialize");
+
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
 			_connection = MongoConnection.GetConnection(databaseName);
 			_optionFinder = new OptionFinder(_connection);
 			_config = Config.GetConfig(_connection);
 			Log.LogLevel = _config.LogLevel;
+
+			//Log.FileWrite(GetType().Name, "Config read");
 
 			TimeSpan StatusWriteInterval = TimeSpan.FromSeconds(_config.StatusWriteIntervalSeconds);
 			_heartSleep = TimeSpan.FromMilliseconds(_config.HeartSleepMilliseconds);
@@ -42,6 +46,8 @@ namespace Administration
 			_timeToWaitBetweenChecksForDeadWorkers = TimeSpan.FromMinutes(_config.TimeToWaitBetweenChecksForDeadWorkersMinutes);
 
 			_optionStatus = new OptionStatus(_connection, StatusWriteInterval);
+
+			//Log.FileWrite(GetType().Name, "End Initialize");
 		}
 
 		private bool _run = true;
@@ -58,6 +64,7 @@ namespace Administration
 
 			while (_run)
 			{
+				//Log.FileWrite(GetType().Name, "Heartbeat...");
 				try
 				{
 					HeartBeat();

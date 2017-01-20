@@ -2,6 +2,7 @@
 using DataLayer.MongoData;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Administration
@@ -13,6 +14,17 @@ namespace Administration
 		private static object _cacheLock = new object();
 		public static int MaxLookbackCacheSize = 20;
 		public static int MaxSecondsToDiscardIdenticalLogMessages = 60 * 5;
+		public static object fileLock = new object();
+
+		public static void FileWrite(string location, string message)
+		{
+			string filename = $"C:/kkSystem/log/log_{DateTime.Now.ToString("yyyy_MM_dd")}.txt";
+
+			lock (fileLock)
+			{
+				File.AppendAllText(filename, $"[{location}] [{DateTime.Now.ToString("HH:mm:ss")}] {message}{Environment.NewLine}");
+			}
+		}
 
 		public static void Write(MongoConnection connection, string message, Config.LogLevelEnum logLevel)
 		{
