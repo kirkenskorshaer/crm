@@ -7,6 +7,7 @@ using DatabaseOptionStatusLine = DataLayer.MongoData.Option.Status.OptionStatusL
 using DatabaseOptionResult = DataLayer.MongoData.Option.Status.OptionResult;
 using DatabaseWorker = DataLayer.MongoData.Worker;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Administration.Option.Status
 {
@@ -123,6 +124,10 @@ namespace Administration.Option.Status
 		{
 			lock (_statusLock)
 			{
+				Process currentProcess = Process.GetCurrentProcess();
+
+				_databaseOptionStatus.MainMemory = currentProcess.WorkingSet64;
+
 				_databaseOptionStatus.UpdateStatisticsFromResults(_mongoConnection);
 
 				_databaseOptionStatus.UpdateStatus(_mongoConnection);
