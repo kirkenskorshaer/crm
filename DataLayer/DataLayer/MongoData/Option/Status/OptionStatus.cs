@@ -13,6 +13,7 @@ namespace DataLayer.MongoData.Option.Status
 
 		public Dictionary<string, OptionStatusLine> options = new Dictionary<string, OptionStatusLine>();
 		public Dictionary<string, long> optionLastMemory = new Dictionary<string, long>();
+		public long MainMemory { get; set; }
 
 		public Dictionary<string, ActiveOption> ActiveOptions = new Dictionary<string, ActiveOption>();
 
