@@ -23,7 +23,13 @@ namespace Administration
 		private TimeSpan _heartSleep = TimeSpan.FromMilliseconds(500);
 		private TimeSpan _timeToWaitForWorkers = TimeSpan.FromHours(1);
 		private TimeSpan _timeToWaitBetweenChecksForDeadWorkers = TimeSpan.FromMinutes(10);
+		private TimeSpan _statusWriteInterval = TimeSpan.FromSeconds(5);
+
+		private TimeSpan _reloadConfigInterval;
+
+		private DateTime _lastReloadConfig = DateTime.MinValue;
 		private DateTime _lastCheckForDeadWorkers = DateTime.MinValue;
+
 		private Config _config;
 
 		private DateTime _startTime;
@@ -35,19 +41,40 @@ namespace Administration
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];
 			_connection = MongoConnection.GetConnection(databaseName);
 			_optionFinder = new OptionFinder(_connection);
+
+			_optionStatus = new OptionStatus(_connection, _statusWriteInterval);
+
+			//Log.FileWrite(GetType().Name, "End Initialize");
+		}
+
+		private void ReloadConfig()
+		{
+			if (_lastReloadConfig + _reloadConfigInterval > Clock.Now)
+			{
+				return;
+			}
+
 			_config = Config.GetConfig(_connection);
 			Log.LogLevel = _config.LogLevel;
 
-			//Log.FileWrite(GetType().Name, "Config read");
+			//Log.FileWrite(GetType().Name, "Config read start");
 
-			TimeSpan StatusWriteInterval = TimeSpan.FromSeconds(_config.StatusWriteIntervalSeconds);
+			TimeSpan NewStatusWriteInterval = TimeSpan.FromSeconds(_config.StatusWriteIntervalSeconds);
+			if (_statusWriteInterval.CompareTo(NewStatusWriteInterval) != 0)
+			{
+				_statusWriteInterval = NewStatusWriteInterval;
+				_optionStatus.SetWriteInterval(_statusWriteInterval);
+			}
+
 			_heartSleep = TimeSpan.FromMilliseconds(_config.HeartSleepMilliseconds);
 			_timeToWaitForWorkers = TimeSpan.FromMinutes(_config.AsumeWorkerIsDeadIfIdleForMinutes);
 			_timeToWaitBetweenChecksForDeadWorkers = TimeSpan.FromMinutes(_config.TimeToWaitBetweenChecksForDeadWorkersMinutes);
 
-			_optionStatus = new OptionStatus(_connection, StatusWriteInterval);
+			_reloadConfigInterval = TimeSpan.FromMinutes(_config.ReloadConfigIntervalMinutes);
 
-			//Log.FileWrite(GetType().Name, "End Initialize");
+			_lastReloadConfig = Clock.Now;
+
+			//Log.FileWrite(GetType().Name, "Config read done");
 		}
 
 		private bool _run = true;
@@ -106,6 +133,8 @@ namespace Administration
 		public void HeartBeat()
 		{
 			Log.Write(_connection, "heartbeat", Config.LogLevelEnum.HeartMessage);
+
+			ReloadConfig();
 
 			AdjustThreadHolderCount();
 
