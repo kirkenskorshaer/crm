@@ -34,9 +34,27 @@ namespace DataLayer.MongoData.Option.Status
 			return optionResult;
 		}
 
-		public static Dictionary<string, OptionStatusLine> GetOptionStatus(MongoConnection _mongoConnection)
+		public static long ClearOldResults(MongoConnection mongoConnection, DateTime maxAllowedEndDate)
 		{
-			IMongoCollection<OptionResult> datas = _mongoConnection.Database.GetCollection<OptionResult>(typeof(OptionResult).Name);
+			IMongoCollection<OptionResult> datas = mongoConnection.Database.GetCollection<OptionResult>(typeof(OptionResult).Name);
+
+			FilterDefinition<OptionResult> deleteFilter = Builders<OptionResult>.Filter.Lt(optionResult => optionResult.EndTime, maxAllowedEndDate);
+
+			Task<DeleteResult> deleteTask = datas.DeleteManyAsync(deleteFilter);
+
+			DeleteResult deleteResult = MongoDataHelper.GetValueOrThrowTimeout(deleteTask);
+
+			if (deleteResult.IsAcknowledged == false)
+			{
+				return 0;
+			}
+
+			return deleteResult.DeletedCount;
+		}
+
+		public static Dictionary<string, OptionStatusLine> GetOptionStatus(MongoConnection mongoConnection)
+		{
+			IMongoCollection<OptionResult> datas = mongoConnection.Database.GetCollection<OptionResult>(typeof(OptionResult).Name);
 
 			BsonDocument projectionDocument = GetOptionResultProjectionBsonDocument();
 			BsonDocument groupingDocument = GetOptionResultGroupingBsonDocument();
