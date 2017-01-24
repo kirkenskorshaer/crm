@@ -31,6 +31,8 @@ namespace DataLayer.MongoData
 		public int HeartSleepMilliseconds { get; set; }
 		public int AsumeWorkerIsDeadIfIdleForMinutes { get; set; }
 		public int TimeToWaitBetweenChecksForDeadWorkersMinutes { get; set; }
+		public int ClearOptionResultsOlderThanHours { get; set; }
+		public int ClearOptionResultsIntervalHours { get; set; }
 
 		[Flags]
 		public enum LogLevelEnum
