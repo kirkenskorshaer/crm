@@ -16,9 +16,9 @@ namespace DataLayer.MongoData.Option.Status
 		public DateTime EndTime;
 		public string Name;
 		public bool Success;
-		public long VirtualMemorySize64;
+		public long Memory;
 
-		public static OptionResult Create(MongoConnection mongoConnection, DateTime beginTime, DateTime endTime, string name, bool success, long VirtualMemorySize64)
+		public static OptionResult Create(MongoConnection mongoConnection, DateTime beginTime, DateTime endTime, string name, bool success, long Memory)
 		{
 			OptionResult optionResult = new OptionResult()
 			{
@@ -26,7 +26,7 @@ namespace DataLayer.MongoData.Option.Status
 				EndTime = endTime,
 				Name = name,
 				Success = success,
-				VirtualMemorySize64 = VirtualMemorySize64,
+				Memory = Memory,
 			};
 
 			Create(mongoConnection, optionResult);
@@ -113,7 +113,7 @@ namespace DataLayer.MongoData.Option.Status
 
 			Task<OptionResult> memoryTask = memoryFind.SingleOrDefaultAsync();
 
-			long memory = memoryTask.Result.VirtualMemorySize64;
+			long memory = memoryTask.Result.Memory;
 
 			return memory;
 		}

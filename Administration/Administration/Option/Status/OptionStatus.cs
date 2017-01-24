@@ -71,17 +71,17 @@ namespace Administration.Option.Status
 
 				if (report != null)
 				{
-					DatabaseOptionResult.Create(_mongoConnection, report.BeginTime, report.EndTime, report.Name, report.Success, report.VirtualMemorySize64);
+					DatabaseOptionResult.Create(_mongoConnection, report.BeginTime, report.EndTime, report.Name, report.Success, report.Memory);
 
 					UpdateEstimatedStatistics(report);
 
-					if (_databaseOptionStatus.optionLastVirtualMemorySize64.ContainsKey(report.Name))
+					if (_databaseOptionStatus.optionLastMemory.ContainsKey(report.Name))
 					{
-						_databaseOptionStatus.optionLastVirtualMemorySize64[report.Name] = report.VirtualMemorySize64;
+						_databaseOptionStatus.optionLastMemory[report.Name] = report.Memory;
 					}
 					else
 					{
-						_databaseOptionStatus.optionLastVirtualMemorySize64.Add(report.Name, report.VirtualMemorySize64);
+						_databaseOptionStatus.optionLastMemory.Add(report.Name, report.Memory);
 					}
 				}
 			}

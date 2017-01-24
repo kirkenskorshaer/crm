@@ -12,7 +12,7 @@ namespace DataLayer.MongoData.Option.Status
 		public DateTime LastUpdateTime { get; set; }
 
 		public Dictionary<string, OptionStatusLine> options = new Dictionary<string, OptionStatusLine>();
-		public Dictionary<string, long> optionLastVirtualMemorySize64 = new Dictionary<string, long>();
+		public Dictionary<string, long> optionLastMemory = new Dictionary<string, long>();
 
 		public Dictionary<string, ActiveOption> ActiveOptions = new Dictionary<string, ActiveOption>();
 
@@ -38,7 +38,7 @@ namespace DataLayer.MongoData.Option.Status
 
 		public void UpdateStatisticsFromResults(MongoConnection _mongoConnection)
 		{
-			optionLastVirtualMemorySize64 = OptionResult.GetMemoryStatistics(_mongoConnection);
+			optionLastMemory = OptionResult.GetMemoryStatistics(_mongoConnection);
 
 			options = OptionResult.GetOptionStatus(_mongoConnection);
 		}

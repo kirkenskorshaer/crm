@@ -14,7 +14,7 @@ namespace Administration.Option.Options
 		public DateTime BeginTime;
 		public DateTime EndTime;
 		public int ProcessId;
-		public long VirtualMemorySize64;
+		public long Memory;
 
 		public OptionReport(string name)
 		{
@@ -43,7 +43,7 @@ namespace Administration.Option.Options
 			Process currentProcess = Process.GetCurrentProcess();
 
 			ProcessId = currentProcess.Id;
-			VirtualMemorySize64 = currentProcess.VirtualMemorySize64;
+			Memory = currentProcess.WorkingSet64;
 		}
 	}
 }
