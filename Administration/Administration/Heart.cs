@@ -11,6 +11,7 @@ using Utilities;
 using System.Linq;
 using DatabaseWorker = DataLayer.MongoData.Worker;
 using DatabaseOptionBase = DataLayer.MongoData.Option.OptionBase;
+using DatabaseOptionResult = DataLayer.MongoData.Option.Status.OptionResult;
 
 namespace Administration
 {
@@ -23,11 +24,15 @@ namespace Administration
 		private TimeSpan _heartSleep = TimeSpan.FromMilliseconds(500);
 		private TimeSpan _timeToWaitForWorkers = TimeSpan.FromHours(1);
 		private TimeSpan _timeToWaitBetweenChecksForDeadWorkers = TimeSpan.FromMinutes(10);
+
+		private TimeSpan _clearOptionResultsOlderThan;
+		private TimeSpan _clearOptionResultsInterval;
 		private TimeSpan _statusWriteInterval = TimeSpan.FromSeconds(5);
 
 		private TimeSpan _reloadConfigInterval;
 
 		private DateTime _lastReloadConfig = DateTime.MinValue;
+		private DateTime _lastClearOptionResults = DateTime.MinValue;
 		private DateTime _lastCheckForDeadWorkers = DateTime.MinValue;
 
 		private Config _config;
@@ -69,6 +74,8 @@ namespace Administration
 			_heartSleep = TimeSpan.FromMilliseconds(_config.HeartSleepMilliseconds);
 			_timeToWaitForWorkers = TimeSpan.FromMinutes(_config.AsumeWorkerIsDeadIfIdleForMinutes);
 			_timeToWaitBetweenChecksForDeadWorkers = TimeSpan.FromMinutes(_config.TimeToWaitBetweenChecksForDeadWorkersMinutes);
+			_clearOptionResultsOlderThan = TimeSpan.FromHours(_config.ClearOptionResultsOlderThanHours);
+			_clearOptionResultsInterval = TimeSpan.FromHours(_config.ClearOptionResultsIntervalHours);
 
 			_reloadConfigInterval = TimeSpan.FromMinutes(_config.ReloadConfigIntervalMinutes);
 
@@ -136,6 +143,8 @@ namespace Administration
 
 			ReloadConfig();
 
+			ClearOldOptionResults();
+
 			AdjustThreadHolderCount();
 
 			_optionFinder.DistributeOptions(_threadHolders);
@@ -145,6 +154,20 @@ namespace Administration
 			_threadHolders.ForEach(threadHolder => threadHolder.HeartBeat());
 
 			Thread.Sleep(_heartSleep);
+		}
+
+		private void ClearOldOptionResults()
+		{
+			if (_lastClearOptionResults + _clearOptionResultsInterval > Clock.Now)
+			{
+				return;
+			}
+
+			DateTime maxAllowedEndDate = Clock.Now - _clearOptionResultsOlderThan;
+
+			DatabaseOptionResult.ClearOldResults(_connection, maxAllowedEndDate);
+
+			_lastClearOptionResults = Clock.Now;
 		}
 
 		public bool IsAnyThreadHolderBusy()
