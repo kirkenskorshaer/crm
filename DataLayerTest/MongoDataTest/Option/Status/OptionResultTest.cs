@@ -58,6 +58,21 @@ namespace DataLayerTest.MongoDataTest.Option.Status
 			Assert.AreEqual(3, optionStatus["name1"].SuccessTotal);
 		}
 
+		[Test]
+		public void ClearOldResultsDeletesOldResults()
+		{
+			DateTime originTime = new DateTime(2000, 1, 1);
+
+			OptionResult.Create(_mongoConnection, originTime, originTime.AddDays(-10), "before 1", true, 0);
+			OptionResult.Create(_mongoConnection, originTime, originTime.AddDays(-5), "before 2", true, 0);
+
+			OptionResult.Create(_mongoConnection, originTime, originTime.AddDays(5), "after 1", true, 0);
+
+			long deleted = OptionResult.ClearOldResults(_mongoConnection, originTime);
+
+			Assert.AreEqual(2, deleted);
+		}
+
 		private bool GetSuccess()
 		{
 			return _random.Next(0, 2) == 1;
