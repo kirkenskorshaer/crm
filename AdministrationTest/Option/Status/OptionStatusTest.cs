@@ -14,10 +14,11 @@ namespace AdministrationTest.Option.Status
 		public void test()
 		{
 			System.Diagnostics.Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
-			//long totalBytesOfMemoryUsed = currentProcess.WorkingSet64;
 
 			Console.Out.WriteLine($"Id: {currentProcess.Id}");
 			Console.Out.WriteLine($"VirtualMemorySize64: {currentProcess.VirtualMemorySize64 / (1024 * 1024)} MB");
+			Console.Out.WriteLine($"WorkingSet64: {currentProcess.WorkingSet64 / (1024 * 1024)} MB");
+			Console.Out.WriteLine($"PeakWorkingSet64: {currentProcess.PeakWorkingSet64 / (1024 * 1024)} MB");
 		}
 	}
 }
