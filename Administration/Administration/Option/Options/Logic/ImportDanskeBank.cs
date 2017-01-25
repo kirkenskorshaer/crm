@@ -32,6 +32,12 @@ namespace Administration.Option.Options.Logic
 
 			List<XDocument> bankXmlFiles = GetBankXml(files);
 
+			if (bankXmlFiles.Any() == false)
+			{
+				report.Success = true;
+				return;
+			}
+
 			bankXmlFiles.ForEach(ImportXml);
 
 			files.ToList().ForEach(file => MoveFileToImported(file, folder));
