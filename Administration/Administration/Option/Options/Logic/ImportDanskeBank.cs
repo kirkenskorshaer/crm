@@ -40,7 +40,9 @@ namespace Administration.Option.Options.Logic
 			{
 				NextAllowedExecution = DateTime.Now,
 				Recurring = false,
-				TimeBetweenAllowedExecutions = TimeSpan.FromSeconds(60)
+				TimeBetweenAllowedExecutions = TimeSpan.FromSeconds(60),
+				Enabled = true,
+				ActionOnFail = DataLayer.MongoData.Option.Schedule.ActionOnFailEnum.TryAgain,
 			};
 			DataLayer.MongoData.Option.Options.Logic.SumIndbetaling.Create(Connection, urlLoginName, "Auto Generated indbetaling calculation", recalculateSchedule);
 
