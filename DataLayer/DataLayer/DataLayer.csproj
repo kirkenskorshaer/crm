@@ -73,6 +73,7 @@
     <Compile Include="MongoData\Option\Options\Logic\AdjustDns.cs" />
     <Compile Include="MongoData\Option\Options\Logic\AggregateSubTable.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SetMissingCampaignLeadtarget.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\Shutdown.cs" />
     <Compile Include="MongoData\Option\Options\Logic\SumIndbetaling.cs" />
     <Compile Include="MongoData\Option\Options\Logic\CreateImportFromStub.cs" />
     <Compile Include="MongoData\Option\Options\Logic\ExportContactToMailrelay.cs" />

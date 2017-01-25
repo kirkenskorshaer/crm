@@ -61,6 +61,7 @@
     <Compile Include="Heart.cs" />
     <Compile Include="Option\Options\Logic\AggregateSubTable.cs" />
     <Compile Include="Option\Options\Logic\SetMissingCampaignLeadtarget.cs" />
+    <Compile Include="Option\Options\Logic\Shutdown.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetaling.cs" />
     <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
     <Compile Include="Log.cs" />
