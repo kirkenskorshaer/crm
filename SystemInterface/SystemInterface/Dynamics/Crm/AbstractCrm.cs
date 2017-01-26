@@ -190,7 +190,7 @@ namespace SystemInterface.Dynamics.Crm
 			SystemUser user = SystemUser.ReadFromFetchXml(Connection, new List<string>() { "systemuserid" }, new Dictionary<string, string>() { { "systemuserid", owner.ToString() } }).SingleOrDefault();
 			if (user != null)
 			{
-				return "user";
+				return "systemuser";
 			}
 
 			Team team = Team.ReadFromFetchXml(Connection, new List<string>() { "teamid" }, new Dictionary<string, string>() { { "teamid", owner.ToString() } }).SingleOrDefault();
