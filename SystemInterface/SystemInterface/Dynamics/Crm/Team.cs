@@ -2,6 +2,8 @@
 using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using System.Linq;
+using System;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -41,6 +43,20 @@ namespace SystemInterface.Dynamics.Crm
 		public static List<Team> ReadFromFetchXml(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent)
 		{
 			return StaticCrm.ReadFromFetchXml(dynamicsCrmConnection, fields, keyContent, null, (connection, contactEntity) => new Team(connection, contactEntity), new PagingInformation());
+		}
+
+		public static Guid? GetIdByNamed(IDynamicsCrmConnection dynamicsCrmConnection, string name)
+		{
+			Dictionary<string, string> teamSearch = new Dictionary<string, string>()
+			{
+				{ "name", name }
+			};
+
+			List<Team> teams = ReadFromFetchXml(dynamicsCrmConnection, new List<string>() { "teamid" }, teamSearch);
+
+			Team team = teams.SingleOrDefault();
+
+			return team?.Id;
 		}
 	}
 }
