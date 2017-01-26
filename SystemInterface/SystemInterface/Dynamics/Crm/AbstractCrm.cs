@@ -156,7 +156,7 @@ namespace SystemInterface.Dynamics.Crm
 			return entityReference;
 		}
 
-		public void Assign()
+		public bool Assign()
 		{
 			if (Id == Guid.Empty)
 			{
@@ -172,7 +172,17 @@ namespace SystemInterface.Dynamics.Crm
 				Target = GetAsEntityReference(),
 			};
 
-			Connection.Service.Execute(assignRequest);
+			try
+			{
+				Connection.Service.Execute(assignRequest);
+			}
+
+			catch (System.ServiceModel.FaultException<OrganizationServiceFault>)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		private string GetOwnerEntityName()
