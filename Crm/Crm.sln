@@ -48,6 +48,11 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebInterface", "..\WebInter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "..\TestUtilities\TestUtilities\TestUtilities.csproj", "{2EB7D9DB-D20C-489A-B36C-C2D7AE8FA103}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Script", "Script", "{20C89CD5-338E-433B-A02F-DC4A1AF71FDB}"
+	ProjectSection(SolutionItems) = preProject
+		..\Script\Service.ps1 = ..\Script\Service.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
