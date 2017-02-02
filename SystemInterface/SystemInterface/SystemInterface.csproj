@@ -42,52 +42,68 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Crm.Outlook.Sdk">
-      <HintPath>..\..\External\Bin\Microsoft.Crm.Outlook.Sdk.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Crm.Outlook.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy">
-      <HintPath>..\..\External\Bin\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Tools.EmailProviders">
-      <HintPath>..\..\External\Bin\Microsoft.Crm.Tools.EmailProviders.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Crm.Tools.EmailProviders.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Client">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Client.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Client.CodeGeneration">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Client.CodeGeneration.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Client.CodeGeneration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Portal">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Portal.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Portal.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Portal.Files">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Portal.Files.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Portal.Files.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Sdk.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Deployment">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Workflow">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Connector">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.CrmConnectControl">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.CrmConnectControl.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.CrmConnector.Powershell">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.CrmConnector.Powershell.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.CrmConnector.Powershell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.PackageDeployment.Powershell">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.PackageDeployment.Powershell.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.PackageDeployment.Powershell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Ui.Styles">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.Ui.Styles.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.WebResourceUtility">
-      <HintPath>..\..\External\Bin\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\Microsoft.Xrm.Tooling.WebResourceUtility.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\Crm\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
