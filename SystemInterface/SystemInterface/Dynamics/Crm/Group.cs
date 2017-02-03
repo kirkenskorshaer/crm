@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -43,9 +42,9 @@ namespace SystemInterface.Dynamics.Crm
 			Name = entity.Attributes["new_name"].ToString();
 		}
 
-		private CrmEntity GetGroupAsEntity(bool includeId)
+		private Entity GetGroupAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity("new_group");
+			Entity crmEntity = new Entity("new_group");
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("new_name", Name));
 
 			if (includeId)
@@ -117,14 +116,14 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Insert(IDynamicsCrmConnection connection)
 		{
-			CrmEntity crmEntity = GetGroupAsEntity(false);
+			Entity crmEntity = GetGroupAsEntity(false);
 
 			GroupId = connection.Service.Create(crmEntity);
 		}
 
 		public void Update(IDynamicsCrmConnection connection)
 		{
-			CrmEntity crmEntity = GetGroupAsEntity(true);
+			Entity crmEntity = GetGroupAsEntity(true);
 
 			connection.Service.Update(crmEntity);
 		}

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -24,9 +23,9 @@ namespace SystemInterface.Dynamics.Crm
 			};
 		}
 
-		private CrmEntity GetAddressAsEntity(bool includeId)
+		private Entity GetAddressAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity("customeraddress");
+			Entity crmEntity = new Entity("customeraddress");
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("line1", line1));
 
 			if (includeId)
@@ -48,7 +47,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Update(IDynamicsCrmConnection connection)
 		{
-			CrmEntity crmEntity = GetAddressAsEntity(true);
+			Entity crmEntity = GetAddressAsEntity(true);
 
 			connection.Service.Update(crmEntity);
 		}

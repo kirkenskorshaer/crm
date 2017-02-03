@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -26,9 +25,9 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "systemuser"; } }
 		protected override string idName { get { return "systemuserid"; } }
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity("systemuser");
+			Entity crmEntity = new Entity("systemuser");
 
 			if (includeId)
 			{

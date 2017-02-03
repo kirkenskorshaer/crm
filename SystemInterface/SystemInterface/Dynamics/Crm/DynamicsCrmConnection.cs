@@ -1,7 +1,5 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Client.Services;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
+﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Tooling.Connector;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +9,6 @@ namespace SystemInterface.Dynamics.Crm
 	{
 		private static List<DynamicsCrmConnection> _connections = new List<DynamicsCrmConnection>();
 		public IOrganizationService Service { get; }
-		public OrganizationServiceContext Context { get; }
 
 		private string url;
 		private string username;
@@ -19,13 +16,10 @@ namespace SystemInterface.Dynamics.Crm
 
 		private DynamicsCrmConnection(string url, string username, string password)
 		{
-			string connectionString = $"Url={url}; Username={username}; Password={password};";
-			CrmConnection crmConnection = CrmConnection.Parse(connectionString);
+			string connectionString = $"AuthType=IFD;Domain=KAD;Url={url}; Username={username}; Password={password}";
 
-			Service = new OrganizationService(crmConnection);
-			Context = new OrganizationServiceContext(Service);
-
-			Context.MergeOption = MergeOption.NoTracking;
+			CrmServiceClient client = new CrmServiceClient(connectionString);
+			Service = client.OrganizationServiceProxy;
 		}
 
 		public static DynamicsCrmConnection GetConnection(string url, string username, string password)

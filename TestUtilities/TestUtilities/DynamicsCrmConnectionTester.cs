@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
 using SystemInterface.Dynamics.Crm;
 
 namespace TestUtilities
@@ -12,7 +11,6 @@ namespace TestUtilities
 			Service = new OrganizationServiceTester();
 		}
 
-		public OrganizationServiceContext Context { get; }
 		public IOrganizationService Service { get; }
 
 		public void EnqueueRetrieveMultiple(string entityName, List<Dictionary<string, object>> entityDictionaryList)

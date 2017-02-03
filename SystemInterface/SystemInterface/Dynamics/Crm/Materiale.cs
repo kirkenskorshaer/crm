@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using System.Linq;
@@ -57,9 +56,9 @@ namespace SystemInterface.Dynamics.Crm
 			Afsluttet = 100000001,
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity(entityName);
+			Entity crmEntity = new Entity(entityName);
 
 			if (includeId)
 			{
@@ -77,9 +76,9 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntity;
 		}
 
-		private CrmEntity GetAsUpdateEntity()
+		private Entity GetAsUpdateEntity()
 		{
-			CrmEntity crmEntity = new CrmEntity(entityName);
+			Entity crmEntity = new Entity(entityName);
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>(idName, Id));
 			crmEntity.Id = Id;
@@ -326,9 +325,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> pakkeEntities = GetRelatedEntities(currentEntity, _materialePakkeRelationshipName);
+			EntityCollection pakkeEntities = GetRelatedEntities(currentEntity, _materialePakkeRelationshipName);
 
-			return pakkeEntities.Select(pakkeEntity => new MaterialePakke(Connection, pakkeEntity)).ToList();
+			return pakkeEntities.Entities.Select(pakkeEntity => new MaterialePakke(Connection, pakkeEntity)).ToList();
 		}
 	}
 }

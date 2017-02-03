@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Linq;
@@ -27,9 +26,9 @@ namespace SystemInterface.Dynamics.Crm
 		protected override string entityName { get { return "team"; } }
 		protected override string idName { get { return "teamid"; } }
 
-		protected override CrmEntity GetAsEntity(bool includeContactId)
+		protected override Entity GetAsEntity(bool includeContactId)
 		{
-			CrmEntity crmEntity = new CrmEntity("team");
+			Entity crmEntity = new Entity("team");
 
 			if (includeContactId)
 			{

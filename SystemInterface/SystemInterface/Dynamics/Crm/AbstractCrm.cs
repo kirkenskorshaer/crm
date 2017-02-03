@@ -1,5 +1,4 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -62,17 +61,18 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
-		protected abstract CrmEntity GetAsEntity(bool includeId);
+		protected abstract Entity GetAsEntity(bool includeId);
 
 		public List<RelatedEntityType> ReadNNRelationship<RelatedEntityType>(string relationshipName, Entity currentEntity, Func<Entity, RelatedEntityType> crmEntityCreater)
 		{
 			List<RelatedEntityType> relatedObjects = new List<RelatedEntityType>();
 
 			Relationship relationShip = new Relationship(relationshipName);
-			IEnumerable<Entity> relatedEntities = currentEntity.GetRelatedEntities(Connection.Context, relationShip);
+			EntityCollection relatedEntities = currentEntity.RelatedEntities[relationShip];
 
-			foreach (Entity relatedEntity in relatedEntities)
+			for (int index = 0; index < relatedEntities.TotalRecordCount; index++)
 			{
+				Entity relatedEntity = relatedEntities[index];
 				RelatedEntityType relatedObject = crmEntityCreater(relatedEntity);
 				relatedObjects.Add(relatedObject);
 			}
@@ -122,7 +122,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Insert()
 		{
-			CrmEntity crmEntity = GetAsEntity(false);
+			Entity crmEntity = GetAsEntity(false);
 
 			Id = Connection.Service.Create(crmEntity);
 
@@ -134,14 +134,14 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void InsertWithoutRead()
 		{
-			CrmEntity crmEntity = GetAsEntity(false);
+			Entity crmEntity = GetAsEntity(false);
 
 			Id = Connection.Service.Create(crmEntity);
 		}
 
-		protected CrmEntity GetAsIdEntity()
+		protected Entity GetAsIdEntity()
 		{
-			CrmEntity crmEntity = new CrmEntity(entityName);
+			Entity crmEntity = new Entity(entityName);
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>(idName, Id));
 			crmEntity.Id = Id;
@@ -204,7 +204,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public void Update()
 		{
-			CrmEntity crmEntity = GetAsEntity(true);
+			Entity crmEntity = GetAsEntity(true);
 
 			Connection.Service.Update(crmEntity);
 
@@ -216,7 +216,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public static void Update(IDynamicsCrmConnection dynamicsCrmConnection, string entityName, string entityIdName, Guid entityId, Dictionary<string, object> values)
 		{
-			CrmEntity crmEntity = new CrmEntity(entityName);
+			Entity crmEntity = new Entity(entityName);
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>(entityIdName, entityId));
 			crmEntity.Attributes.AddRange(values);
@@ -294,10 +294,10 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds, SynchronizeActionEnum synchronizeAction)
 		{
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, relationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, relationshipName);
 
-			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.ToDictionary(entity => entity.GetAttributeValue<Guid>(relatedKeyName));
-			List<Guid> remoteIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>(relatedKeyName)).ToList();
+			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.Entities.ToDictionary(entity => entity.GetAttributeValue<Guid>(relatedKeyName));
+			List<Guid> remoteIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>(relatedKeyName)).ToList();
 
 			List<Guid> localButNotInCrm = localIds.Where(id => entitiesByKey.ContainsKey(id) == false).ToList();
 
@@ -315,10 +315,10 @@ namespace SystemInterface.Dynamics.Crm
 			}
 		}
 
-		protected IEnumerable<Entity> GetRelatedEntities(Entity currentEntity, string relationshipName)
+		protected EntityCollection GetRelatedEntities(Entity currentEntity, string relationshipName)
 		{
 			Relationship relationShip = new Relationship(relationshipName);
-			IEnumerable<Entity> relatedEntities = currentEntity.GetRelatedEntities(Connection.Context, relationShip);
+			EntityCollection relatedEntities = currentEntity.RelatedEntities[relationShip];
 
 			return relatedEntities;
 		}

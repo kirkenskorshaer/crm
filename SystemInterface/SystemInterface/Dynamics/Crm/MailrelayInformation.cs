@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using System.Xml.Linq;
@@ -129,7 +128,7 @@ namespace SystemInterface.Dynamics.Crm
 			return informations;
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
 			throw new NotImplementedException();
 		}

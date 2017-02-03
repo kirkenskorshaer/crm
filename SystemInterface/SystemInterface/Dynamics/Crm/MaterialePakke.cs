@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
-using System.Linq;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -35,9 +33,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity(entityName);
+			Entity crmEntity = new Entity(entityName);
 
 			if (includeId)
 			{

@@ -1,14 +1,10 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Utilities;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -440,9 +436,9 @@ namespace SystemInterface.Dynamics.Crm
 			return ReadNNRelationship(_annotationRelationshipName, currentEntity, entity => new Annotation(Connection, entity));
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity("account");
+			Entity crmEntity = new Entity("account");
 
 			if (includeId)
 			{
@@ -591,9 +587,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _contactRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _contactRelationshipName);
 
-			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+			List<Guid> externalIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
 
 			return externalIds;
 		}
@@ -602,9 +598,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _indsamlerRelationshipName);
 
-			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
+			List<Guid> externalIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>("contactid")).ToList();
 
 			return externalIds;
 		}
@@ -613,9 +609,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
 
-			List<Group> externalGroups = relatedEntities.Select(entity => new Group(entity)).ToList();
+			List<Group> externalGroups = relatedEntities.Entities.Select(entity => new Group(entity)).ToList();
 
 			return externalGroups;
 		}

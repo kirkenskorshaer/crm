@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Linq;
@@ -48,9 +47,9 @@ namespace SystemInterface.Dynamics.Crm
 			ContactOgLeadVedEksisterendeContact = 100000001,
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
-			CrmEntity crmEntity = new CrmEntity("campaign");
+			Entity crmEntity = new Entity("campaign");
 
 			if (includeId)
 			{

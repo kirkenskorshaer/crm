@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -44,14 +43,14 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected override string idName { get { return _idName; } }
 
-		protected override CrmEntity GetAsEntity(bool includeId)
+		protected override Entity GetAsEntity(bool includeId)
 		{
 			return GetAsEntity(includeId, false);
 		}
 
-		protected CrmEntity GetAsEntity(bool includeId, bool includeNulls)
+		protected Entity GetAsEntity(bool includeId, bool includeNulls)
 		{
-			CrmEntity crmEntity = new CrmEntity(_entityName);
+			Entity crmEntity = new Entity(_entityName);
 
 			if (includeId)
 			{

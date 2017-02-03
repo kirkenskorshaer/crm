@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xrm.Client;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Crm.Sdk.Messages;
@@ -135,9 +134,9 @@ namespace SystemInterface.Dynamics.Crm
 			Groups = ReadNNRelationship(_groupRelationshipName, contactEntity, entity => new Group(entity));
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeContactId)
+		protected override Entity GetAsEntity(bool includeContactId)
 		{
-			CrmEntity crmEntity = new CrmEntity("contact");
+			Entity crmEntity = new Entity("contact");
 
 			if (includeContactId)
 			{
@@ -287,9 +286,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _accountRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _accountRelationshipName);
 
-			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+			List<Guid> externalIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
 
 			return externalIds;
 		}
@@ -298,9 +297,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _groupRelationshipName);
 
-			List<Group> externalGroups = relatedEntities.Select(entity => new Group(entity)).ToList();
+			List<Group> externalGroups = relatedEntities.Entities.Select(entity => new Group(entity)).ToList();
 
 			return externalGroups;
 		}
@@ -309,9 +308,9 @@ namespace SystemInterface.Dynamics.Crm
 		{
 			Entity currentEntity = GetAsEntity(true);
 
-			IEnumerable<Entity> relatedEntities = GetRelatedEntities(currentEntity, _indsamlerAccountRelationshipName);
+			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, _indsamlerAccountRelationshipName);
 
-			List<Guid> externalIds = relatedEntities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
+			List<Guid> externalIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>("accountid")).ToList();
 
 			return externalIds;
 		}

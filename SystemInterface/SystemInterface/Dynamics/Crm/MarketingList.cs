@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Client;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -191,9 +190,9 @@ namespace SystemInterface.Dynamics.Crm
 			return true;
 		}
 
-		protected override CrmEntity GetAsEntity(bool includeMarketingListId)
+		protected override Entity GetAsEntity(bool includeMarketingListId)
 		{
-			CrmEntity crmEntity = new CrmEntity("list");
+			Entity crmEntity = new Entity("list");
 
 			if (includeMarketingListId)
 			{
