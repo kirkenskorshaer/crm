@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Converter\DynamicXml.cs" />
     <Compile Include="Converter\Md5Helper.cs" />
+    <Compile Include="Converter\StringConverter.cs" />
     <Compile Include="Converter\Xor.cs" />
     <Compile Include="DateTimeHelper.cs" />
     <Compile Include="LinqExtension.cs" />
