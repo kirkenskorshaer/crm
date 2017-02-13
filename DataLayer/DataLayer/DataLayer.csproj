@@ -64,6 +64,8 @@
     <Compile Include="MongoConnection.cs" />
     <Compile Include="MongoData\IntProgress.cs" />
     <Compile Include="MongoData\Option\Finder\OptionFinder.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\BackendMessage.cs" />
+    <Compile Include="MongoData\Option\Options\Logic\BackendMessageParameter.cs" />
     <Compile Include="MongoData\Option\Options\Logic\Test.cs" />
     <Compile Include="MongoData\Option\Status\ActiveOption.cs" />
     <Compile Include="MongoData\Option\Status\OptionResult.cs" />
