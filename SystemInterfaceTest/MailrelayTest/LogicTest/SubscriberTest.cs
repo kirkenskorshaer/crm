@@ -138,7 +138,7 @@ namespace SystemInterfaceTest.MailrelayTest.LogicTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetMailrelaySubscribersAlwaysIncludeGroups()
 		{
 			Subscriber subscriber = new Subscriber(_mailrelayConnection);

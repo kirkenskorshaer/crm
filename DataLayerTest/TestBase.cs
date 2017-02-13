@@ -11,7 +11,7 @@ namespace DataLayerTest
 		protected MongoConnection _mongoConnection;
 		protected Random _random = new Random();
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void SetUp()
 		{
 			_mongoConnection = MongoConnection.GetConnection("test");

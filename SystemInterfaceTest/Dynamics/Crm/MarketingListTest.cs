@@ -49,7 +49,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void CrmIdsAndSubscriberIdsForTestList()
 		{
 			MarketingList list = MarketingList.Read(_connection, Guid.Parse("b70001ba-1569-e611-80f7-001c4215c4a0"));
@@ -62,7 +62,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void ContentIdsForNonMailrelaySubscribersTestList()
 		{
 			MarketingList list = MarketingList.Read(_connection, Guid.Parse("b70001ba-1569-e611-80f7-001c4215c4a0"));
@@ -75,7 +75,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetListForMailrelayUpdateOnlyReturnsListThatShouldBeImported()
 		{
 			PagingInformation pagingInformation = new PagingInformation();

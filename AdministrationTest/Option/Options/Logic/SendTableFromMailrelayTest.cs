@@ -215,7 +215,7 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void LiveTest()
 		{
 			DatabaseSendTableFromMailrelay databaseSendTableFromMailrelay = CreateDatabaseSendTableFromMailrelay();

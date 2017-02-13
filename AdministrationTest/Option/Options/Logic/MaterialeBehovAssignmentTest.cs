@@ -8,7 +8,7 @@ namespace AdministrationTest.Option.Options.Logic
 	public class MaterialeBehovAssignmentTest : TestBase
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void Test()
 		{
 			DatabaseMaterialeBehovAssignment databaseMaterialeBehovAssignment = new DatabaseMaterialeBehovAssignment()

@@ -64,7 +64,7 @@ namespace AdministrationTest.Option.Options.Logic
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void InsertDatabaseCreateImportFromStub()
 		{
 			DatabaseCreateImportFromStub.Create(Connection, "test", "test", CreateScheduleAlwaysOnDoOnce(), CreateScheduleAlwaysOnDoOnce());

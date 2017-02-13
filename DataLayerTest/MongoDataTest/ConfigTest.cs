@@ -17,14 +17,14 @@ namespace DataLayerTest.MongoDataTest
 			_connection.CleanDatabase();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TestFixtureTearDown()
 		{
 			_connection.CleanDatabase();
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetConfigFailsForEmptyDatabase()
 		{
 			Action testAction = () => Config.GetConfig(_connection);
@@ -43,7 +43,7 @@ namespace DataLayerTest.MongoDataTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void ExistsOnEmptyReturnsFalse()
 		{
 			bool existOnEmpty = Config.Exists(_connection);

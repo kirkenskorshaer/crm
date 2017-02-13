@@ -56,7 +56,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void addGroup()
 		{
 			addGroup function = new addGroup() { description = "this is a test group", enable = false, name = "test", position = 3, visible = true };
@@ -65,7 +65,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void updateGroup()
 		{
 			updateGroup function = new updateGroup() { id = 2, description = "this is test group 2", enable = false, name = "test", visible = true, position = 4 };
@@ -74,7 +74,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void deleteGroup()
 		{
 			deleteGroup function = new deleteGroup() { id = 2 };
@@ -83,7 +83,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getCustomFields()
 		{
 			getCustomFields function = new getCustomFields() { };
@@ -92,7 +92,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void addCustomField()
 		{
 			addCustomField function = new addCustomField() { defaultField = "testDefault", enable = true, fieldType = AbstractCustomField.CustomFieldTypeEnum.TextField, name = "test", position = 1 };
@@ -101,7 +101,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void updateCustomField()
 		{
 			updateCustomField function = new updateCustomField() { id = 1, defaultField = "testDefault", enable = true, fieldType = AbstractCustomField.CustomFieldTypeEnum.TextField, name = "test", position = 1 };
@@ -110,7 +110,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void deleteCustomField()
 		{
 			deleteCustomField function = new deleteCustomField() { id = 2 };
@@ -119,7 +119,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void addSubscriber()
 		{
 			addSubscriber function = new addSubscriber()
@@ -149,7 +149,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void updateSubscribers()
 		{
 			updateSubscribers function = new updateSubscribers() { ids = new List<int>() { 2 }, activated = true, banned = false, deleted = false };
@@ -158,7 +158,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void updateSubscriber()
 		{
 			updateSubscriber function = new updateSubscriber()
@@ -181,7 +181,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void assignSubscribersToGroups()
 		{
 			assignSubscribersToGroups function = new assignSubscribersToGroups() { groups = new List<int>() { 3 }, subscribers = new List<string>() { "svend.l.kirkenskorshaer@gmail.com_test2" } };
@@ -190,7 +190,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void unsubscribe()
 		{
 			unsubscribe function = new unsubscribe() { email = "svend.l.kirkenskorshaer@gmail.com" };
@@ -199,7 +199,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void deleteSubscriber()
 		{
 			deleteSubscriber function = new deleteSubscriber() { email = "svend.l.kirkenskorshaer@gmail.com" };
@@ -208,7 +208,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getSmtpTags()
 		{
 			getSmtpTags function = new getSmtpTags() { count = 10, offset = 0 };
@@ -217,7 +217,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getSends()
 		{
 			getSends function = new getSends() { count = 10 };
@@ -226,7 +226,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getDeliveryErrors()
 		{
 			getDeliveryErrors function = new getDeliveryErrors() { count = 10 };
@@ -235,7 +235,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getDayLog()
 		{
 			getDayLog function = new getDayLog() { count = 10 };
@@ -244,7 +244,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getMailRcptNumber()
 		{
 			getMailRcptNumber function = new getMailRcptNumber() { email = "svend.l.kirkenskorshaer@gmail.com", date = DateTime.Now };
@@ -253,7 +253,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getMailRcptInfo()
 		{
 			getMailRcptInfo function = new getMailRcptInfo() { id = 1, email = "svend.l.kirkenskorshaer@gmail.com", date = DateTime.Now };
@@ -262,7 +262,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getPackages()
 		{
 			getPackages function = new getPackages() { sortOrder = AbstractFunction.sortOrderEnum.DESC };
@@ -271,7 +271,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void sendMail()
 		{
 			sendMail function = new sendMail()
@@ -292,7 +292,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getMailboxes()
 		{
 			getMailboxes function = new getMailboxes() { };
@@ -301,7 +301,7 @@ namespace SystemInterfaceTest.MailrelayTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void getCampaigns()
 		{
 			getCampaigns function = new getCampaigns() { };

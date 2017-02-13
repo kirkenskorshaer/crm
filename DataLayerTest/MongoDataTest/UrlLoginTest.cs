@@ -31,7 +31,7 @@ namespace DataLayerTest.MongoDataTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetFirstTest()
 		{
 			_connection.CleanDatabase();

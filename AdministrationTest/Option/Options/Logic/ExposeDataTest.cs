@@ -8,7 +8,7 @@ namespace AdministrationTest.Option.Options.Logic
 	public class ExposeDataTest : TestBase
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void ExposeDataExposesDataInFile()
 		{
 			DatabaseExposeData databaseExposeData = new DatabaseExposeData()

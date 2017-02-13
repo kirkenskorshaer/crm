@@ -49,7 +49,7 @@ namespace AdministrationTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void HeartBeatWithOptions()
 		{
 			Heart heart = new Heart();
@@ -100,7 +100,7 @@ namespace AdministrationTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void RunTest()
 		{
 			Heart heart = new Heart();

@@ -19,7 +19,7 @@ namespace SystemInterfaceTest
 		protected IMailrelayConnection _mailrelayConnection;
 		protected MailrelayConnectionTester _mailrelayConnectionTester;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			_mongoConnection = MongoConnection.GetConnection("test");

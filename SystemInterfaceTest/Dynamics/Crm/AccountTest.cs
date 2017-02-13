@@ -106,7 +106,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetIndsamlingsSted()
 		{
 			Materiale materiale = Materiale.ReadCalculationNeed(_dynamicsCrmConnection, _config.GetResourcePath);

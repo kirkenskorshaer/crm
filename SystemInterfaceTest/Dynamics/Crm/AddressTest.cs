@@ -12,7 +12,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 	public class AddressTest : TestBase
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetAllAttributeNamesTest()
 		{
 			DateTime testDate = DateTime.Now;

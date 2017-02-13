@@ -25,7 +25,7 @@ namespace AdministrationTest
 		protected DynamicsCrmConnectionTester _dynamicsCrmConnectionTester;
 		protected Random _random;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TestFixtureSetUp()
 		{
 			string databaseName = ConfigurationManager.AppSettings["mongoDatabaseName"];

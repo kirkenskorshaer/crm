@@ -10,7 +10,7 @@ namespace DataLayerTest.MongoDataTest.Option.Status
 	public class OptionResultTest : TestBase
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetOptionStatusHandlesLargeAmmountsOfData()
 		{
 			for (int index = 0; index < 1000 * 1000; index++)

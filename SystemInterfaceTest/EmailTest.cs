@@ -9,7 +9,7 @@ namespace SystemInterfaceTest
 	public class EmailTest
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void SendTest()
 		{
 			Email email = new Email();

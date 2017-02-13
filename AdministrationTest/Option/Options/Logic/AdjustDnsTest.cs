@@ -9,7 +9,7 @@ namespace AdministrationTest.Option.Options.Logic
 	public class AdjustDnsTest : TestBase
 	{
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void RetreiveDnsReturnsDns()
 		{
 			DatabaseAdjustDns databaseAdjustDns = new DatabaseAdjustDns()

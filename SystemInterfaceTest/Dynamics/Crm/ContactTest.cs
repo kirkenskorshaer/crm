@@ -27,7 +27,7 @@ namespace SystemInterfaceTest.Dynamics.Crm
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void GetAllAttributeNamesTest()
 		{
 			DateTime testDate = DateTime.Now;

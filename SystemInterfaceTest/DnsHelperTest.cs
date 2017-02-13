@@ -18,7 +18,7 @@ namespace SystemInterfaceTest
 		}
 
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void SetDnsSetsAValidDns()
 		{
 			string newIp = "176.28.51.226";

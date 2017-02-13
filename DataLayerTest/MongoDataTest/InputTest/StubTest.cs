@@ -34,7 +34,7 @@ namespace DataLayerTest.MongoDataTest.InputTest
 		private int completedWorkers;
 		private int failedWorkers;
 		[Test]
-		[Ignore]
+		[Ignore("")]
 		public void StubCanHandleLotsOfPreasure()
 		{
 			DateTime beginTime = DateTime.Now;
