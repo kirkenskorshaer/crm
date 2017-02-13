@@ -34,7 +34,7 @@ namespace Administration.Option.Options
 
 			string finalReport = $"S:{Success} W:{Workload} SW:{SubWorkload}{Environment.NewLine}{TextBuilder.ToString()}";
 
-			Log.WriteLocation(mongoConnection, finalReport, Name, logLevel);
+			Log.Write(mongoConnection, finalReport, typeof(OptionReport), logLevel);
 		}
 
 		public void FinishReport()

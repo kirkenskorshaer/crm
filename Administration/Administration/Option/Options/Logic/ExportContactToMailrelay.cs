@@ -38,7 +38,7 @@ namespace Administration.Option.Options.Logic
 				if (marketingList != null)
 				{
 					UpdateReport<Guid> result = ExportMailrelayContactFromList(dynamicsCrmConnection, marketingList);
-					Log.Write(Connection, result.AsLogText($"ExportContactToMailrelay {marketingList.new_mailrelaygroupid.Value}"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
+					Log.Write(Connection, result.AsLogText($"ExportContactToMailrelay {marketingList.new_mailrelaygroupid.Value}"), typeof(ExportContactToMailrelay), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 				}
 			}
 
@@ -99,7 +99,7 @@ namespace Administration.Option.Options.Logic
 			}
 			catch (Exception exception)
 			{
-				Log.Write(Connection, exception.Message, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, exception.Message, typeof(ExportContactToMailrelay), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				return UpdateResultEnum.Failed;
 			}
 

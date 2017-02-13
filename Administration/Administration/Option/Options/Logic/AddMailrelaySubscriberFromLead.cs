@@ -34,7 +34,7 @@ namespace Administration.Option.Options.Logic
 
 			if (webCampaign == null)
 			{
-				Log.Write(Connection, $"Could not find campaign for {_databaseAddMailrelaySubscriberFromLead.Name}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, $"Could not find campaign for {_databaseAddMailrelaySubscriberFromLead.Name}", typeof(AddMailrelaySubscriberFromLead), DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				report.Success = false;
 				return;
 			}
@@ -43,14 +43,14 @@ namespace Administration.Option.Options.Logic
 
 			if (information == null)
 			{
-				Log.Write(Connection, $"Information for lead {leadId} on {email} could not be found", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+				Log.Write(Connection, $"Information for lead {leadId} on {email} could not be found", typeof(AddMailrelaySubscriberFromLead), DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 				report.Success = true;
 				return;
 			}
 
 			if (information.campaign_new_mailrelaygroupid.HasValue == false)
 			{
-				Log.Write(Connection, $"Subscriber not added, campaign {webCampaign.FormId} has no group", DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
+				Log.Write(Connection, $"Subscriber not added, campaign {webCampaign.FormId} has no group", typeof(AddMailrelaySubscriberFromLead), DataLayer.MongoData.Config.LogLevelEnum.OptionMessage);
 				report.Success = true;
 				return;
 			}
@@ -76,7 +76,7 @@ namespace Administration.Option.Options.Logic
 			}
 			catch (Exception exception)
 			{
-				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, exception.Message, typeof(AddMailrelaySubscriberFromLead), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 			}
 
 			report.Success = true;

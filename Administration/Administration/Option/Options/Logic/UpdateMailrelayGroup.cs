@@ -39,7 +39,7 @@ namespace Administration.Option.Options.Logic
 				if (marketingList != null)
 				{
 					UpdateReport<int> result = UpdateMailrelayGroupFromList(dynamicsCrmConnection, marketingList);
-					Log.Write(Connection, result.AsLogText($"UpdateMailrelayGroup {marketingList.new_mailrelaygroupid.Value}"), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
+					Log.Write(Connection, result.AsLogText($"UpdateMailrelayGroup {marketingList.new_mailrelaygroupid.Value}"), typeof(UpdateMailrelayGroup), DataLayer.MongoData.Config.LogLevelEnum.OptionReport);
 				}
 			}
 

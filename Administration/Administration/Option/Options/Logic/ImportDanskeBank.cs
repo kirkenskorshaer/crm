@@ -264,7 +264,7 @@ namespace Administration.Option.Options.Logic
 				}
 				catch (Exception exception)
 				{
-					Log.WriteLocation(Connection, $"Could not import bankFile {file}", "ImportDanskeBank", exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+					Log.Write(Connection, $"Could not import bankFile {file}", typeof(ImportDanskeBank), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				}
 			}
 

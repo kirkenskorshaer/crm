@@ -26,7 +26,7 @@ namespace DataLayerTest
 		{
 			string messageValue = "test1";
 
-			Log.Write(_connection, messageValue, "MongoConnectionTest", string.Empty, Config.LogLevelEnum.OptionMessage);
+			Log.Write(_connection, messageValue, typeof(MongoConnectionTest), string.Empty, Config.LogLevelEnum.OptionMessage);
 
 			List<Dictionary<string, object>> readList = _connection.ReadAsDictionaries(typeof(Log).Name);
 

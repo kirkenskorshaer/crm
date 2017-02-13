@@ -89,7 +89,7 @@ namespace Administration
 		public void Begin()
 		{
 			_startTime = Clock.Now;
-			Log.WriteLocation(_connection, $"starting", "Heart", Config.LogLevelEnum.HeartMessage);
+			Log.Write(_connection, $"starting", typeof(Heart), Config.LogLevelEnum.HeartMessage);
 		}
 
 		public void Run()
@@ -119,12 +119,12 @@ namespace Administration
 			DateTime endTime = Clock.Now;
 			TimeSpan runtime = endTime - _startTime;
 
-			Log.WriteLocation(_connection, $"stopping, ran from {_startTime.ToString("yyyyMMdd HH:mm:ss")} to {endTime.ToString("yyyyMMdd HH:mm:ss")}, running time = {Math.Round(runtime.TotalSeconds, 0)} Seconds", "Heart", Config.LogLevelEnum.HeartMessage);
+			Log.Write(_connection, $"stopping, ran from {_startTime.ToString("yyyyMMdd HH:mm:ss")} to {endTime.ToString("yyyyMMdd HH:mm:ss")}, running time = {Math.Round(runtime.TotalSeconds, 0)} Seconds", typeof(Heart), Config.LogLevelEnum.HeartMessage);
 		}
 
 		private void WriteException(Exception exception, Config.LogLevelEnum logLevel)
 		{
-			Log.Write(_connection, exception.Message, exception.StackTrace, logLevel);
+			Log.Write(_connection, exception.Message, typeof(Heart), exception.StackTrace, logLevel);
 
 			if (exception.InnerException != null)
 			{
@@ -139,7 +139,7 @@ namespace Administration
 
 		public void HeartBeat()
 		{
-			Log.Write(_connection, "heartbeat", Config.LogLevelEnum.HeartMessage);
+			Log.Write(_connection, "heartbeat", typeof(Heart), Config.LogLevelEnum.HeartMessage);
 
 			ReloadConfig();
 

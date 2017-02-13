@@ -19,7 +19,7 @@ namespace DataLayer.MongoData
 		public DateTime CreatedTime { get; set; }
 		public Config.LogLevelEnum LogLevel { get; set; }
 
-		public static void Write(MongoConnection connection, string message, string location, string stackTrace, Config.LogLevelEnum logLevel)
+		private static void Write(MongoConnection connection, string message, string location, string stackTrace, Config.LogLevelEnum logLevel)
 		{
 			Log log = new Log()
 			{
@@ -33,7 +33,7 @@ namespace DataLayer.MongoData
 			log.Insert(connection);
 		}
 
-		public void Insert(MongoConnection connection)
+		private void Insert(MongoConnection connection)
 		{
 			IMongoCollection<Log> logs = connection.Database.GetCollection<Log>(typeof(Log).Name);
 			Task insertTask = logs.InsertOneAsync(this);
@@ -70,22 +70,12 @@ namespace DataLayer.MongoData
 			}
 		}
 
-		public static void Write(MongoConnection connection, string message, Config.LogLevelEnum logLevel)
+		public static void Write(MongoConnection connection, string message, Type location, Config.LogLevelEnum logLevel)
 		{
-			WriteLocation(connection, message, string.Empty, string.Empty, logLevel);
+			Write(connection, message, location, string.Empty, logLevel);
 		}
 
-		public static void WriteLocation(MongoConnection connection, string message, string location, Config.LogLevelEnum logLevel)
-		{
-			WriteLocation(connection, message, location, string.Empty, logLevel);
-		}
-
-		public static void Write(MongoConnection connection, string message, string stackTrace, Config.LogLevelEnum logLevel)
-		{
-			WriteLocation(connection, message, string.Empty, string.Empty, logLevel);
-		}
-
-		public static void WriteLocation(MongoConnection connection, string message, string location, string stackTrace, Config.LogLevelEnum logLevel)
+		public static void Write(MongoConnection connection, string message, Type location, string stackTrace, Config.LogLevelEnum logLevel)
 		{
 			if (WriteLogLevel.HasFlag(logLevel))
 			{
@@ -93,7 +83,7 @@ namespace DataLayer.MongoData
 				{
 					CreatedTime = DateTime.Now,
 					Message = message,
-					Location = location,
+					Location = location.Name,
 					StackTrace = stackTrace,
 					LogLevel = logLevel,
 				};

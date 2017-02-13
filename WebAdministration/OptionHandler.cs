@@ -38,7 +38,7 @@ namespace WebAdministration
 			}
 			catch (Exception exception)
 			{
-				Log.WriteLocation(_mongoConnection, exception.Message, "OptionHandler", exception.StackTrace, Config.LogLevelEnum.OptionError);
+				Log.Write(_mongoConnection, exception.Message, typeof(OptionHandler), exception.StackTrace, Config.LogLevelEnum.OptionError);
 			}
 
 			return parameters;
@@ -52,7 +52,7 @@ namespace WebAdministration
 
 			if (matchingOptionType == null)
 			{
-				Log.WriteLocation(_mongoConnection, $"Unknown option type {matchingOptionType}", "OptionHandler", Config.LogLevelEnum.OptionError);
+				Log.Write(_mongoConnection, $"Unknown option type {matchingOptionType}", typeof(OptionHandler), Config.LogLevelEnum.OptionError);
 				return null;
 			}
 

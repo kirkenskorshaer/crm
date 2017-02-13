@@ -118,7 +118,7 @@ namespace Administration.Option
 			}
 			catch (Exception exception)
 			{
-				Log.Write(_mongoConnection, exception.Message, exception.StackTrace, Config.LogLevelEnum.HeartError);
+				Log.Write(_mongoConnection, exception.Message, typeof(ThreadHolder), exception.StackTrace, Config.LogLevelEnum.HeartError);
 
 				_optionDecider.DelayOptionFromFails(currentOption);
 

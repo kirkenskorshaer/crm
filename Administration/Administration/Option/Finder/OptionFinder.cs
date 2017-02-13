@@ -51,7 +51,7 @@ namespace Administration.Option.Finder
 
 				if (optionType == null)
 				{
-					Log.WriteLocation(_connection, $"Unknown option type {optionType}", "OptionFinder", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+					Log.Write(_connection, $"Unknown option type {optionType}", typeof(OptionFinder), DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 					continue;
 				}
 

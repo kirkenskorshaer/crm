@@ -211,7 +211,7 @@ namespace Administration.Option.Options.Logic
 
 				if (mailSent == false)
 				{
-					Log.Write(Connection, $"failed sending email to {emailaddress1} sleeping {sleepTimeOnFailiure}", DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+					Log.Write(Connection, $"failed sending email to {emailaddress1} sleeping {sleepTimeOnFailiure}", typeof(SendTableFromMailrelay), DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 					Thread.Sleep(sleepTimeOnFailiure);
 				}
 
@@ -232,7 +232,7 @@ namespace Administration.Option.Options.Logic
 			}
 			catch (Exception exception)
 			{
-				Log.Write(Connection, exception.Message, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, exception.Message, typeof(SendTableFromMailrelay), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				return false;
 			}
 		}
@@ -279,7 +279,7 @@ namespace Administration.Option.Options.Logic
 			}
 			catch (Exception exception)
 			{
-				Log.Write(Connection, exception.Message, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, exception.Message, typeof(SendTableFromMailrelay), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				return false;
 			}
 		}

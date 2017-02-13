@@ -59,7 +59,7 @@ namespace Administration.Option.Options.Logic
 			}
 			catch (Exception exception)
 			{
-				Log.Write(Connection, exception.Message, exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
+				Log.Write(Connection, exception.Message, typeof(ImportFromStub), exception.StackTrace, DataLayer.MongoData.Config.LogLevelEnum.OptionError);
 				stub.ImportAttempt++;
 				stub.Update(Connection);
 				report.Success = false;
