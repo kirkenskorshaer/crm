@@ -8,6 +8,7 @@ using DatabaseWebCampaign = DataLayer.MongoData.Input.WebCampaign;
 using DatabaseUrlLogin = DataLayer.MongoData.UrlLogin;
 using System;
 using SystemInterface.Dynamics.Crm;
+using DataLayer.MongoData;
 
 namespace Administration.Option.Options.Logic
 {

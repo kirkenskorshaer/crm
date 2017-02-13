@@ -60,7 +60,7 @@ namespace Administration
 			}
 
 			_config = Config.GetConfig(_connection);
-			Log.LogLevel = _config.LogLevel;
+			Log.WriteLogLevel = _config.LogLevel;
 
 			//Log.FileWrite(GetType().Name, "Config read start");
 

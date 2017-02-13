@@ -63,7 +63,6 @@
     <Compile Include="Option\Options\Logic\SetMissingCampaignLeadtarget.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetaling.cs" />
     <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="Option\Decider\OptionDecider.cs" />
     <Compile Include="Option\Options\Email.cs" />
     <Compile Include="Option\OptionBase.cs" />

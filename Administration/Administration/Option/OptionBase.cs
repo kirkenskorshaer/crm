@@ -1,5 +1,6 @@
 ﻿using Administration.Option.Options;
 using DataLayer;
+using DataLayer.MongoData;
 using System;
 using System.IO;
 using SystemInterface.Dynamics.Crm;
@@ -21,7 +22,7 @@ namespace Administration.Option
 		{
 			Connection = connection;
 			Config = DataLayer.MongoData.Config.GetConfig(Connection);
-			Log.LogLevel = Config.LogLevel;
+			Log.WriteLogLevel = Config.LogLevel;
 			DatabaseOption = databaseOption;
 
 			string mailrelayUrl = Config.MailrelayUrl;
