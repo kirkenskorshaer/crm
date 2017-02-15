@@ -140,6 +140,7 @@
     <Compile Include="Dynamics\Crm\Contact.cs" />
     <Compile Include="Dynamics\Crm\DynamicFetch.cs" />
     <Compile Include="Dynamics\Crm\DynamicsCrmConnection.cs" />
+    <Compile Include="Dynamics\Crm\EntityRelationshipInfo.cs" />
     <Compile Include="Dynamics\Crm\Group.cs" />
     <Compile Include="Dynamics\Crm\IDynamicsCrmConnection.cs" />
     <Compile Include="Dynamics\Crm\Indbetaling.cs" />

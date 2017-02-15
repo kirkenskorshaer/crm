@@ -1,10 +1,13 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Utilities;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -63,21 +66,56 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected abstract Entity GetAsEntity(bool includeId);
 
-		public List<RelatedEntityType> ReadNNRelationship<RelatedEntityType>(string relationshipName, Entity currentEntity, Func<Entity, RelatedEntityType> crmEntityCreater)
+		public List<RelatedEntityType> ReadNNRelationship<RelatedEntityType>(string relationshipName, Entity currentEntity, Func<Entity, RelatedEntityType> crmEntityCreater, params string[] relatedColumns)
 		{
 			List<RelatedEntityType> relatedObjects = new List<RelatedEntityType>();
 
-			Relationship relationShip = new Relationship(relationshipName);
-			EntityCollection relatedEntities = currentEntity.RelatedEntities[relationShip];
+			ColumnSet columns = new ColumnSet(relatedColumns);
 
-			for (int index = 0; index < relatedEntities.TotalRecordCount; index++)
+			RetrieveRelationshipRequest request = new RetrieveRelationshipRequest()
 			{
-				Entity relatedEntity = relatedEntities[index];
+				Name = relationshipName,
+			};
+
+			RetrieveRelationshipResponse response = (RetrieveRelationshipResponse)Connection.Service.Execute(request);
+
+			ManyToManyRelationshipMetadata metaData = (ManyToManyRelationshipMetadata)response.Results["RelationshipMetadata"];
+
+			KeyValuePair<EntityRelationshipInfo, EntityRelationshipInfo> relationshipInfo = EntityRelationshipInfo.GetFromMetaData(currentEntity.LogicalName, metaData);
+
+			List<Guid> relatedIds = GetRelatedIds(currentEntity.Id, metaData.IntersectEntityName, relationshipInfo.Key.IntersectAttribute, relationshipInfo.Value.IntersectAttribute);
+
+			foreach (Guid entityId in relatedIds)
+			{
+				Entity relatedEntity = Connection.Service.Retrieve(relationshipInfo.Value.LogicalName, entityId, columns);
 				RelatedEntityType relatedObject = crmEntityCreater(relatedEntity);
 				relatedObjects.Add(relatedObject);
 			}
 
 			return relatedObjects;
+		}
+
+		private List<Guid> GetRelatedIds(Guid originId, string intersectEntityName, string originIntersectAttribute, string relatedIntersectAttribute)
+		{
+			ConditionExpression equalsOriginIdExpression = new ConditionExpression
+			{
+				AttributeName = originIntersectAttribute,
+				Operator = ConditionOperator.Equal,
+			};
+			equalsOriginIdExpression.Values.Add(originId);
+
+			FilterExpression filterExpression = new FilterExpression();
+			filterExpression.Conditions.Add(equalsOriginIdExpression);
+
+			QueryExpression query = new QueryExpression(intersectEntityName)
+			{
+				ColumnSet = new ColumnSet(relatedIntersectAttribute),
+			};
+			query.Criteria.AddFilter(filterExpression);
+
+			EntityCollection relatedEntities = Connection.Service.RetrieveMultiple(query);
+
+			return relatedEntities.Entities.Select(entity => (Guid)entity[relatedIntersectAttribute]).ToList();
 		}
 
 		public int CountNNRelationship(string relationshipName, string countIdName)
