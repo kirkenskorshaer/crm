@@ -37,7 +37,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			CreateImportFromStub createImportFromStub = new CreateImportFromStub(Connection, databaseCreateImportFromStub);
 
-			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport("test"));
+			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(CreateImportFromStubTest)));
 
 			DatabaseWebCampaign webCampaign = DatabaseWebCampaign.ReadSingleOrDefault(Connection, _campaign.Id);
 
@@ -53,8 +53,8 @@ namespace AdministrationTest.Option.Options.Logic
 
 			CreateImportFromStub createImportFromStub = new CreateImportFromStub(Connection, databaseCreateImportFromStub);
 
-			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
-			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(CreateImportFromStubTest)));
+			createImportFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(CreateImportFromStubTest)));
 
 			DatabaseWebCampaign webCampaign = DatabaseWebCampaign.ReadSingleOrDefault(Connection, _campaign.Id);
 

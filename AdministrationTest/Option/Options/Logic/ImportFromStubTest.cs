@@ -50,7 +50,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportFromStub importFromStub = new ImportFromStub(Connection, databaseImportFromStub);
 
-			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ImportFromStubTest)));
 
 			Lead lead = Lead.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "firstname" }, new Dictionary<string, string>() { { "firstname", firstname } }).Single();
 			lead.Delete();
@@ -82,7 +82,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportFromStub importFromStub = new ImportFromStub(Connection, databaseImportFromStub);
 
-			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ImportFromStubTest)));
 
 			Lead lead = Lead.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "firstname" }, new Dictionary<string, string>() { { "firstname", firstname } }).Single();
 			lead.Delete();
@@ -109,7 +109,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportFromStub importFromStub = new ImportFromStub(Connection, databaseImportFromStub);
 
-			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ImportFromStubTest)));
 
 			Lead lead = Lead.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "firstname" }, new Dictionary<string, string>() { { "firstname", firstname } }).Single();
 			lead.Delete();
@@ -131,7 +131,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportFromStub importFromStub = new ImportFromStub(Connection, databaseImportFromStub);
 
-			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ImportFromStubTest)));
 
 			Lead lead = Lead.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "emailaddress1" }, new Dictionary<string, string>() { { "emailaddress1", emailaddress1 } }).Single();
 			lead.Delete();
@@ -160,7 +160,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ImportFromStub importFromStub = new ImportFromStub(Connection, databaseImportFromStub);
 
-			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			importFromStub.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ImportFromStubTest)));
 
 			Lead lead = Lead.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "emailaddress1" }, new Dictionary<string, string>() { { "emailaddress1", emailaddress1 } }).Single();
 			Contact contact = Contact.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "contactid", "emailaddress1", "new_indsamler2016" }, new Dictionary<string, string>() { { "emailaddress1", emailaddress1 } }).Single();

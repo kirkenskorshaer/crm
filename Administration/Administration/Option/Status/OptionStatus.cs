@@ -72,17 +72,17 @@ namespace Administration.Option.Status
 
 				if (report != null)
 				{
-					DatabaseOptionResult.Create(_mongoConnection, report.BeginTime, report.EndTime, report.Name, report.Success, report.Memory);
+					DatabaseOptionResult.Create(_mongoConnection, report.BeginTime, report.EndTime, report.OptionType.Name, report.Success, report.Memory);
 
 					UpdateEstimatedStatistics(report);
 
-					if (_databaseOptionStatus.optionLastMemory.ContainsKey(report.Name))
+					if (_databaseOptionStatus.optionLastMemory.ContainsKey(report.OptionType.Name))
 					{
-						_databaseOptionStatus.optionLastMemory[report.Name] = report.Memory;
+						_databaseOptionStatus.optionLastMemory[report.OptionType.Name] = report.Memory;
 					}
 					else
 					{
-						_databaseOptionStatus.optionLastMemory.Add(report.Name, report.Memory);
+						_databaseOptionStatus.optionLastMemory.Add(report.OptionType.Name, report.Memory);
 					}
 				}
 			}
@@ -92,7 +92,7 @@ namespace Administration.Option.Status
 		{
 			lock (_statusLock)
 			{
-				string optionName = report.Name;
+				string optionName = report.OptionType.Name;
 
 				DatabaseOptionStatusLine line = null;
 

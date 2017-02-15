@@ -86,7 +86,7 @@ namespace SystemInterface.Dynamics.Crm
 
 		public List<string> GetKeyFields()
 		{
-			List<Field> fields = ReadNNRelationship(_keyFieldsRelationshipName, GetAsIdEntity(), (entity) => new Field(Connection, entity));
+			List<Field> fields = ReadNNRelationship(_keyFieldsRelationshipName, GetAsIdEntity(), (entity) => new Field(Connection, entity), "new_name");
 
 			return fields.Select(field => field.new_name).ToList();
 		}

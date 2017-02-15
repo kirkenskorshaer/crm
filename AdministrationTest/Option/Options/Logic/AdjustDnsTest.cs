@@ -21,7 +21,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			AdjustDns adjustDns = new AdjustDns(Connection, databaseAdjustDns);
 
-			Administration.Option.Options.OptionReport report = new Administration.Option.Options.OptionReport("test");
+			Administration.Option.Options.OptionReport report = new Administration.Option.Options.OptionReport(typeof(AdjustDnsTest));
 			adjustDns.ExecuteOption(report);
 			bool isSuccess = report.Success;
 

@@ -15,7 +15,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			SumOptalt sumOptalt = new SumOptalt(Connection, databaseSumOptalt);
 
-			sumOptalt.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			sumOptalt.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(SumOptaltTest)));
 		}
 
 		private DatabaseSumOptalt CreateDatabaseSumOptalt()

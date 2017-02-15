@@ -23,7 +23,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			ExposeData exposeData = new ExposeData(Connection, databaseExposeData);
 
-			exposeData.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			exposeData.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ExposeDataTest)));
 		}
 	}
 }

@@ -106,7 +106,7 @@ namespace Administration.Option
 
 			_optionStatus.BeginOption(currentOption, DatabaseWorker);
 
-			OptionReport report = new OptionReport(currentOption.GetType().Name);
+			OptionReport report = new OptionReport(currentOption.GetType());
 
 			try
 			{

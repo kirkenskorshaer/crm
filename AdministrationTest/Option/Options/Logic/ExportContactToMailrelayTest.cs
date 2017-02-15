@@ -42,7 +42,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayIntReply() { status = 1, data = 1 });
 
-			exportContactToMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			exportContactToMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ExportContactToMailrelayTest)));
 
 			Assert.AreEqual(1, _mailrelayConnectionTester.sendFunctions.Count);
 		}
@@ -62,7 +62,7 @@ namespace AdministrationTest.Option.Options.Logic
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayIntReply() { status = 1, data = 1 });
 			_mailrelayConnectionTester.replies.Enqueue(new MailrelayIntReply() { status = 1, data = newId });
 
-			exportContactToMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			exportContactToMailrelay.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(ExportContactToMailrelayTest)));
 
 			MarketingList listRead = MarketingList.GetListForMailrelayUpdate(DynamicsCrmConnection, new PagingInformation(), _list.Id);
 			Contact contactRead = Contact.ReadFromFetchXml(DynamicsCrmConnection, new List<string>() { "contactid", "new_mailrelaysubscriberid" }, new Dictionary<string, string>() { { "contactid", _contact.Id.ToString() } }).Single();

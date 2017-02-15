@@ -14,7 +14,7 @@ namespace AdministrationTest.Option.Options.Logic
 
 			SumIndbetaling sumIndbetaling = new SumIndbetaling(Connection, databaseSumIndbetaling);
 
-			sumIndbetaling.ExecuteOption(new Administration.Option.Options.OptionReport(""));
+			sumIndbetaling.ExecuteOption(new Administration.Option.Options.OptionReport(typeof(SumIndbetalingTest)));
 		}
 
 		private DatabaseSumIndbetaling CreateDatabaseSumIndbetaling()

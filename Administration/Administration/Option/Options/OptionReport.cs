@@ -7,7 +7,7 @@ namespace Administration.Option.Options
 {
 	public class OptionReport
 	{
-		public string Name;
+		public Type OptionType;
 		public int Workload;
 		public int SubWorkload;
 		public bool Success = false;
@@ -17,9 +17,9 @@ namespace Administration.Option.Options
 		public int ProcessId;
 		public long Memory;
 
-		public OptionReport(string name)
+		public OptionReport(Type name)
 		{
-			Name = name;
+			OptionType = name;
 			BeginTime = DateTime.Now;
 		}
 
@@ -34,7 +34,7 @@ namespace Administration.Option.Options
 
 			string finalReport = $"S:{Success} W:{Workload} SW:{SubWorkload}{Environment.NewLine}{TextBuilder.ToString()}";
 
-			Log.Write(mongoConnection, finalReport, typeof(OptionReport), logLevel);
+			Log.Write(mongoConnection, finalReport, OptionType, logLevel);
 		}
 
 		public void FinishReport()
