@@ -60,6 +60,7 @@
     <Compile Include="Conversion\Campaign.cs" />
     <Compile Include="Heart.cs" />
     <Compile Include="Option\Options\Logic\AggregateSubTable.cs" />
+    <Compile Include="Option\Options\Logic\CopyNN.cs" />
     <Compile Include="Option\Options\Logic\SetMissingCampaignLeadtarget.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetaling.cs" />
     <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
