@@ -331,5 +331,10 @@ namespace SystemInterface.Dynamics.Crm
 
 			return xElements;
 		}
+
+		public static Guid GetGuidFromReference(object entityReference)
+		{
+			return ((EntityReference)entityReference).Id;
+		}
 	}
 }
