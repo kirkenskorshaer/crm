@@ -60,6 +60,7 @@
     <Compile Include="HeartTest.cs" />
     <Compile Include="LogTest.cs" />
     <Compile Include="Option\Finder\OptionFinderTest.cs" />
+    <Compile Include="Option\Options\Logic\CopyNNTest.cs" />
     <Compile Include="Option\Status\OptionStatusTest.cs" />
     <Compile Include="Option\Options\Logic\AddMailrelaySubscriberFromLeadTest.cs" />
     <Compile Include="Option\Options\Logic\AdjustDnsTest.cs" />
