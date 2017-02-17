@@ -97,6 +97,24 @@ namespace SystemInterface.Dynamics.Crm
 			return crmEntities;
 		}
 
+		public static void AssociateNN(IDynamicsCrmConnection dynamicsCrmConnection, string relationshipName, string entity1Name, Guid id1, string entity2Name, Guid id2)
+		{
+			EntityReference reference1 = new EntityReference(entity1Name, id1);
+			EntityReference reference2 = new EntityReference(entity2Name, id2);
+
+			AssociateRequest associateRequest = new AssociateRequest
+			{
+				Target = reference1,
+				RelatedEntities = new EntityReferenceCollection
+				{
+					reference2,
+				},
+				Relationship = new Relationship(relationshipName)
+			};
+
+			dynamicsCrmConnection.Service.Execute(associateRequest);
+		}
+
 		public static List<CrmType> ReadFromFetchXml<CrmType>(IDynamicsCrmConnection dynamicsCrmConnection, List<string> fields, Dictionary<string, string> keyContent, int? maxCount, Func<IDynamicsCrmConnection, Entity, CrmType> CrmTypeConstructor, PagingInformation pagingInformation)
 		{
 			return ReadFromFetchXml(dynamicsCrmConnection, typeof(CrmType).Name.ToLower(), fields, keyContent, maxCount, CrmTypeConstructor, pagingInformation);
