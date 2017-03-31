@@ -102,6 +102,20 @@ namespace SystemInterfaceTest.CsvTest
 			Assert.AreEqual("name22", recoveredValues[1]["name"]);
 		}
 
+		[Test]
+		public void ReadReadsLineBreaks()
+		{
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, true, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
+
+			string multiLineText = "part 1" + Environment.NewLine + "part 2";
+
+			csv.WriteLine("1", multiLineText);
+
+			List<Dictionary<string, object>> recoveredValues = csv.ReadFields("id", "1");
+
+			Assert.AreEqual(multiLineText, recoveredValues[0]["name"]);
+		}
+
 		[TestCase(true)]
 		[TestCase(false)]
 		public void DeleteRemovesLines(bool value)

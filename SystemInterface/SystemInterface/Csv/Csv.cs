@@ -130,6 +130,40 @@ namespace SystemInterface.Csv
 			return parts.Select(part => new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, part)).ToList().AsReadOnly();
 		}
 
+		private enum ReadLineState
+		{
+			InQuotes = 1,
+			ExpectingBeginQuote = 2,
+			ExpectingDelimeter = 3,
+			ExpectingEndQuote = 4,
+		}
+		/*
+		private string ReadLine(StreamReader streamReader)
+		{
+			if (_quotedFields == false)
+			{
+				return streamReader.ReadLine();
+			}
+
+			StringBuilder lineBuilder = new StringBuilder();
+
+			int columnCount = Columns.Count;
+			int currentColumn = -1;
+
+			bool inQuotes = false;
+			while (currentColumn < columnCount)
+			{
+				char nextChar = (char)streamReader.Read();
+
+				if(inQuotes)
+				{
+
+				}
+				if(nextChar != '"')
+			}
+		}
+		*/
+
 		private void VerifyFileFormat()
 		{
 			StreamReader streamReader = GetReader();
