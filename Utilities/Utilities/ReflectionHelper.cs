@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -180,6 +181,17 @@ namespace Utilities
 				Guid valueGuid = Guid.Empty;
 				Guid.TryParse(from, out valueGuid);
 				return (Guid?)valueGuid;
+			}
+
+			if (fullName == typeof(DateTime?).FullName)
+			{
+				DateTime valueDateTime;
+
+				if (DateTime.TryParseExact(from, "yyyy-MM-dd HH:mm:ss", null, DateTimeStyles.None, out valueDateTime))
+				{
+					return (DateTime?)valueDateTime;
+				}
+				return (DateTime?)null;
 			}
 
 			throw new Exception($"unknown type {fullName}");
