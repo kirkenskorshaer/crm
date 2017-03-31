@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Utilities;
 
 namespace SystemInterface.Dynamics.Crm
 {
@@ -332,12 +331,9 @@ namespace SystemInterface.Dynamics.Crm
 
 		protected void SynchronizeNNRelationship(Entity currentEntity, string relationshipName, string relatedEntityName, string relatedKeyName, List<Guid> localIds, SynchronizeActionEnum synchronizeAction)
 		{
-			EntityCollection relatedEntities = GetRelatedEntities(currentEntity, relationshipName);
+			List<Guid> remoteIds = GetRelatedIds(currentEntity.Id, relationshipName, idName, relatedKeyName);
 
-			Dictionary<Guid, Entity> entitiesByKey = relatedEntities.Entities.ToDictionary(entity => entity.GetAttributeValue<Guid>(relatedKeyName));
-			List<Guid> remoteIds = relatedEntities.Entities.Select(entity => entity.GetAttributeValue<Guid>(relatedKeyName)).ToList();
-
-			List<Guid> localButNotInCrm = localIds.Where(id => entitiesByKey.ContainsKey(id) == false).ToList();
+			List<Guid> localButNotInCrm = localIds.Where(id => remoteIds.Contains(id) == false).ToList();
 
 			List<Guid> remoteButNotLocal = remoteIds.Where(remoteId => localIds.Any(localId => localId == remoteId) == false).ToList();
 
