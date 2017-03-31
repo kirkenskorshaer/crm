@@ -543,6 +543,12 @@ namespace SystemInterface.Dynamics.Crm
 			SynchronizeNNRelationship(currentEntity, _indsamlerRelationshipName, "contact", "contactid", indsamlerIds, SynchronizeActionEnum.Disassociate);
 		}
 
+		public void SynchronizeGroups(List<string> groupNames)
+		{
+			List<Guid> groupIds = groupNames.Select(groupName => Group.ReadOrCreate(Connection, groupName).GroupId).ToList();
+
+			SynchronizeGroups(groupIds);
+		}
 
 		public void SynchronizeGroups(List<Group> groups)
 		{
