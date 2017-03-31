@@ -12,6 +12,17 @@ namespace SystemInterface.Dynamics.Crm
 		public EntityReference modifiedby;
 		public string notetext;
 
+		public EntityReference objectid;
+		public Guid? objectidReference
+		{
+			get { return GetEntityReferenceId(objectid); }
+		}
+
+		public void ObjectidSet(Guid value, string connectingEntity)
+		{
+			objectid = SetEntityReferenceId(value, connectingEntity);
+		}
+
 		private static readonly ColumnSet ColumnSetAnnotation = new ColumnSet(
 		"annotationid",
 
@@ -47,6 +58,7 @@ namespace SystemInterface.Dynamics.Crm
 			}
 
 			crmEntity.Attributes.Add(new KeyValuePair<string, object>("notetext", notetext));
+			crmEntity.Attributes.Add(new KeyValuePair<string, object>("objectid", objectid));
 
 			return crmEntity;
 		}
