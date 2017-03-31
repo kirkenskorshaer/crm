@@ -142,5 +142,34 @@ namespace SystemInterface.Dynamics.Crm
 
 			return indbetaling;
 		}
+
+		public static Indbetaling CreateAndInsert(IDynamicsCrmConnection dynamicsCrmConnection, string name, decimal amt, string bankid, DateTime? bogføringsDato, string finansKonto, DateTime? indbetalingDato, string indbetalingStatus, string indbetalingsTypeNavn, string indbetalingTekst, string kontoType, kildeEnum kilde, Guid contactid)
+		{
+			/*
+			string finansKonto
+			DateTime indbetalingDato
+			string indbetalingStatus
+			string indbetalingsTypeNavn
+			string kontoType
+			Guid contactid
+			*/
+
+			Indbetaling indbetaling = new Indbetaling(dynamicsCrmConnection);
+
+			indbetaling.new_name = name;
+			indbetaling.SetMoney(amt);
+			indbetaling.new_bankid = bankid;
+
+			if (bogføringsDato.HasValue)
+			{
+				indbetaling.new_valdt = bogføringsDato;
+			}
+
+			indbetaling.kilde = kilde;
+			indbetaling.new_message = indbetalingTekst;
+			indbetaling.InsertWithoutRead();
+
+			return indbetaling;
+		}
 	}
 }
