@@ -26,29 +26,40 @@ namespace SystemInterfaceTest.CsvTest
 			}
 		}
 
-		[Test]
-		public void ConstructorFailsOnMissingFileAndNoColumns()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void ConstructorFailsOnMissingFileAndNoColumns(bool value)
 		{
-			Assert.Throws(typeof(Exception), () => new Csv(';', _fileName, _fileNameTmp));
+			Assert.Throws(typeof(Exception), () => new Csv(';', _fileName, _fileNameTmp, value));
 		}
 
-		[Test]
-		public void WriteLineWritesALine()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void WriteLineWritesALine(bool value)
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, value, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 
 			string[] csvResult = File.ReadAllLines(_fileName);
 
-			Assert.AreEqual("id;name", csvResult[0]);
-			Assert.AreEqual("1;name1", csvResult[1]);
+			if (value)
+			{
+				Assert.AreEqual("\"id\";\"name\"", csvResult[0]);
+				Assert.AreEqual("\"1\";\"name1\"", csvResult[1]);
+			}
+			else
+			{
+				Assert.AreEqual("id;name", csvResult[0]);
+				Assert.AreEqual("1;name1", csvResult[1]);
+			}
 		}
 
-		[Test]
-		public void UpdateUpdates()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void UpdateUpdates(bool value)
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, value, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name2");
@@ -58,16 +69,27 @@ namespace SystemInterfaceTest.CsvTest
 
 			string[] csvResult = File.ReadAllLines(_fileName);
 
-			Assert.AreEqual("id;name", csvResult[0]);
-			Assert.AreEqual("1;name1", csvResult[1]);
-			Assert.AreEqual("2;name2AfterUpdate", csvResult[2]);
-			Assert.AreEqual("3;name3", csvResult[3]);
+			if (value)
+			{
+				Assert.AreEqual("\"id\";\"name\"", csvResult[0]);
+				Assert.AreEqual("\"1\";\"name1\"", csvResult[1]);
+				Assert.AreEqual("\"2\";\"name2AfterUpdate\"", csvResult[2]);
+				Assert.AreEqual("\"3\";\"name3\"", csvResult[3]);
+			}
+			else
+			{
+				Assert.AreEqual("id;name", csvResult[0]);
+				Assert.AreEqual("1;name1", csvResult[1]);
+				Assert.AreEqual("2;name2AfterUpdate", csvResult[2]);
+				Assert.AreEqual("3;name3", csvResult[3]);
+			}
 		}
 
-		[Test]
-		public void ReadReadsMultipleLines()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void ReadReadsMultipleLines(bool value)
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, value, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name21");
@@ -80,10 +102,11 @@ namespace SystemInterfaceTest.CsvTest
 			Assert.AreEqual("name22", recoveredValues[1]["name"]);
 		}
 
-		[Test]
-		public void DeleteRemovesLines()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void DeleteRemovesLines(bool value)
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, value, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "name"));
 
 			csv.WriteLine("1", "name1");
 			csv.WriteLine("2", "name21");
@@ -94,16 +117,26 @@ namespace SystemInterfaceTest.CsvTest
 
 			string[] csvResult = File.ReadAllLines(_fileName);
 
-			Assert.AreEqual("id;name", csvResult[0]);
-			Assert.AreEqual("1;name1", csvResult[1]);
-			Assert.AreEqual("3;name3", csvResult[2]);
+			if (value)
+			{
+				Assert.AreEqual("\"id\";\"name\"", csvResult[0]);
+				Assert.AreEqual("\"1\";\"name1\"", csvResult[1]);
+				Assert.AreEqual("\"3\";\"name3\"", csvResult[2]);
+			}
+			else
+			{
+				Assert.AreEqual("id;name", csvResult[0]);
+				Assert.AreEqual("1;name1", csvResult[1]);
+				Assert.AreEqual("3;name3", csvResult[2]);
+			}
 			Assert.AreEqual(3, csvResult.Count());
 		}
 
-		[Test]
-		public void ReadLatestReturnsOnlyLatestRows()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void ReadLatestReturnsOnlyLatestRows(bool value)
 		{
-			Csv csv = new Csv(';', _fileName, _fileNameTmp, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "changeDate"));
+			Csv csv = new Csv(';', _fileName, _fileNameTmp, value, new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "id"), new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, "changeDate"));
 
 			DateTime testDate = new DateTime(2000, 1, 13, 1, 2, 3);
 			string dateFormat = "yyyyMMdd HH:mm:ss";

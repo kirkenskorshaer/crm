@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace SystemInterface.Csv
 {
-	public class Csv
+	public class Csv : IEnumerable<Dictionary<string, object>>
 	{
 		public readonly ReadOnlyCollection<ColumnDefinition> Columns;
 
@@ -16,12 +17,15 @@ namespace SystemInterface.Csv
 		private string _fileNameTmp;
 		private char _delimeter;
 
-		public Csv(char delimeter, string filename, string fileNameTmp, params ColumnDefinition[] columns)
+		private bool _quotedFields = false;
+
+		public Csv(char delimeter, string filename, string fileNameTmp, bool quotedFields, params ColumnDefinition[] columns)
 		{
 			_fileName = filename;
 			_fileNameTmp = fileNameTmp;
 
 			_delimeter = delimeter;
+			_quotedFields = quotedFields;
 
 			if (columns.Any())
 			{
@@ -41,7 +45,17 @@ namespace SystemInterface.Csv
 			StreamWriter streamWriter = GetWriter();
 
 			string firstLine = streamReader.ReadLine();
-			string firstLineShouldBe = Columns.Select(definition => definition.Name).Aggregate((current, next) => current + _delimeter + next);
+			string firstLineShouldBe;
+
+			if (_quotedFields)
+			{
+				firstLineShouldBe = Columns.Select(definition => "\"" + definition.Name + "\"").Aggregate((current, next) => current + _delimeter + next);
+			}
+			else
+			{
+				firstLineShouldBe = Columns.Select(definition => definition.Name).Aggregate((current, next) => current + _delimeter + next);
+			}
+
 			if (firstLine == firstLineShouldBe)
 			{
 				return;
@@ -55,7 +69,14 @@ namespace SystemInterface.Csv
 					streamWriter.Write(_delimeter);
 				}
 
-				streamWriter.Write(column.Name);
+				if (_quotedFields)
+				{
+					streamWriter.Write("\"" + column.Name + "\"");
+				}
+				else
+				{
+					streamWriter.Write(column.Name);
+				}
 
 				isFirst = false;
 			}
@@ -91,6 +112,7 @@ namespace SystemInterface.Csv
 		{
 			StreamReader streamReader = GetReader();
 			string firstLine = streamReader.ReadLine();
+			//string firstLine = ReadLine(streamReader);
 
 			if (firstLine == null || firstLine.Length == 0)
 			{
@@ -99,6 +121,11 @@ namespace SystemInterface.Csv
 			}
 
 			string[] parts = firstLine.Split(_delimeter);
+
+			if (_quotedFields)
+			{
+				parts = parts.Select(part => part.Trim('"')).ToArray();
+			}
 
 			return parts.Select(part => new ColumnDefinition(ColumnDefinition.DataTypeEnum.stringType, part)).ToList().AsReadOnly();
 		}
@@ -124,6 +151,12 @@ namespace SystemInterface.Csv
 			for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
 			{
 				string partsName = parts[columnIndex];
+
+				if (_quotedFields)
+				{
+					partsName = partsName.Trim('"');
+				}
+
 				string columnsName = Columns[columnIndex].Name;
 
 				if (partsName != columnsName)
@@ -156,7 +189,14 @@ namespace SystemInterface.Csv
 					streamWriter.Write(_delimeter);
 				}
 
-				streamWriter.Write(value);
+				if (_quotedFields)
+				{
+					streamWriter.Write("\"" + value + "\"");
+				}
+				else
+				{
+					streamWriter.Write(value);
+				}
 			}
 
 			streamWriter.Flush();
@@ -196,9 +236,21 @@ namespace SystemInterface.Csv
 
 				string[] parts = line.Split(_delimeter);
 
+				if (_quotedFields)
+				{
+					parts = parts.Select(part => part.Trim('"')).ToArray();
+				}
+
 				if (parts[keyIndex] == keyValue)
 				{
-					line = values.Aggregate((colletor, part) => colletor + _delimeter + part);
+					if (_quotedFields)
+					{
+						line = values.Select(value => "\"" + value + "\"").Aggregate((colletor, part) => colletor + _delimeter + part);
+					}
+					else
+					{
+						line = values.Aggregate((colletor, part) => colletor + _delimeter + part);
+					}
 				}
 
 				streamWriterTmp.Write(line);
@@ -263,6 +315,11 @@ namespace SystemInterface.Csv
 				string line = streamReader.ReadLine();
 				string[] parts = line.Split(_delimeter);
 
+				if (_quotedFields)
+				{
+					parts = parts.Select(part => part.Trim('"')).ToArray();
+				}
+
 				CompareType objectInCsv = convertFunc(parts[dateIndex]);
 
 				if (compareFunc(objectInCsv, compareObject))
@@ -302,16 +359,8 @@ namespace SystemInterface.Csv
 					continue;
 				}
 
-				string[] parts = line.Split(_delimeter);
+				Dictionary<string, object> rowValues = ReadRowValuesFromLine(line);
 
-				Dictionary<string, object> rowValues = new Dictionary<string, object>();
-				for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
-				{
-					string key = Columns[columnIndex].Name;
-					object value = GetValue(parts, columnIndex);
-
-					rowValues.Add(key, value);
-				}
 				collectedValues.Add(rowValues);
 			}
 
@@ -350,6 +399,11 @@ namespace SystemInterface.Csv
 
 				string[] parts = line.Split(_delimeter);
 
+				if (_quotedFields)
+				{
+					parts = parts.Select(part => part.Trim('"')).ToArray();
+				}
+
 				if (parts[keyIndex] != keyValue)
 				{
 					if (isFirst == false)
@@ -381,6 +435,56 @@ namespace SystemInterface.Csv
 			}
 
 			throw new ArgumentException($"column name {columnName} not found");
+		}
+
+		public IEnumerator<Dictionary<string, object>> GetEnumerator()
+		{
+			StreamReader streamReader = GetReader();
+
+			bool IsHeaderRow = true;
+
+			while (streamReader.EndOfStream == false)
+			{
+				string line = streamReader.ReadLine();
+
+				if (IsHeaderRow)
+				{
+					IsHeaderRow = false;
+					continue;
+				}
+
+				Dictionary<string, object> rowValues = ReadRowValuesFromLine(line);
+
+				yield return rowValues;
+			}
+
+			streamReader.Close();
+		}
+
+		private Dictionary<string, object> ReadRowValuesFromLine(string line)
+		{
+			string[] parts = line.Split(_delimeter);
+
+			if (_quotedFields)
+			{
+				parts = parts.Select(part => part.Trim('"')).ToArray();
+			}
+
+			Dictionary<string, object> rowValues = new Dictionary<string, object>();
+			for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++)
+			{
+				string key = Columns[columnIndex].Name;
+				object value = GetValue(parts, columnIndex);
+
+				rowValues.Add(key, value);
+			}
+
+			return rowValues;
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
