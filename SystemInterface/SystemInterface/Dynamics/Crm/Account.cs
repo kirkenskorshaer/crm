@@ -783,5 +783,12 @@ namespace SystemInterface.Dynamics.Crm
 
 			return sum.Value;
 		}
+
+		public static Account Create(IDynamicsCrmConnection dynamicsCrmConnection, Dictionary<string, string> allContent)
+		{
+			Account account = new Account(dynamicsCrmConnection);
+			CreateFromContent(dynamicsCrmConnection, account, allContent);
+			return account;
+		}
 	}
 }
