@@ -64,6 +64,12 @@
     <Compile Include="Heart.cs" />
     <Compile Include="Option\Options\Logic\AggregateSubTable.cs" />
     <Compile Include="Option\Options\Logic\CopyNN.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModel.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModelData\AbstractKKAdminData.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModelData\ImportReport.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModelData\KKAdminStamData.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModelData\KKAdminIndbetaling.cs" />
+    <Compile Include="Option\Options\Logic\ImportFromKKAdminToNewModelData\KKAdminTilknytning.cs" />
     <Compile Include="Option\Options\Logic\SetMissingCampaignLeadtarget.cs" />
     <Compile Include="Option\Options\Logic\SumIndbetaling.cs" />
     <Compile Include="Option\Options\Logic\ImportDanskeBank.cs" />
